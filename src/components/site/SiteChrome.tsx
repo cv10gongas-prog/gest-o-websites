@@ -32,22 +32,24 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 text-sm sm:flex">
-            {NAV.map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                activeOptions={{ exact: l.to === "/" }}
-                activeProps={{ className: "bg-secondary/60 text-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground" }}
-                className="rounded-lg px-3 py-2 transition hover:text-foreground"
-              >
-                {l.label}
-              </Link>
-            ))}
+          <nav className="flex items-center gap-1 text-sm">
+            <span className="hidden items-center gap-1 sm:flex">
+              {NAV.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  activeOptions={{ exact: l.to === "/" }}
+                  activeProps={{ className: "bg-secondary/60 text-foreground" }}
+                  inactiveProps={{ className: "text-muted-foreground" }}
+                  className="rounded-lg px-3 py-2 transition hover:text-foreground"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </span>
             <Link
               to="/contacto"
-              className="ml-2 inline-flex h-9 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+              className="ml-2 inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               Marcar reunião
             </Link>
