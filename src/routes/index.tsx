@@ -103,7 +103,7 @@ function Index() {
           <div className="space-y-4">
             {[
               { valor: "24 h", texto: "Resposta a novos pedidos" },
-              { valor: "2 a 6 semanas", texto: "Prazo típico de entrega" },
+              { valor: "1 a 2 semanas", texto: "Prazo típico de entrega" },
               { valor: "100 %", texto: "Sites responsivos e otimizados" },
             ].map((i) => (
               <div key={i.valor} className="flex items-baseline justify-between gap-4">
