@@ -14,6 +14,18 @@ export const SECCOES = [
   { chave: "/equipa", label: "Equipa" },
 ] as const;
 
+/** Secções que já existiam antes de "/arquivos" — usadas para migrar preferências guardadas. */
+const SECCOES_ANTIGAS: string[] = [
+  "/painel",
+  "/negocios",
+  "/pipeline",
+  "/tarefas",
+  "/emails",
+  "/projetos",
+  "/pedidos",
+  "/equipa",
+];
+
 export const ATALHOS = [
   { chave: "prioridade", label: "Prioridade alta" },
   { chave: "emails", label: "Emails por enviar" },
@@ -222,7 +234,15 @@ export function PreferenciasProvider({ children }: { children: ReactNode }) {
       const limpo = Object.fromEntries(
         Object.entries(guardado).filter(([, valor]) => valor !== null && valor !== undefined),
       ) as Partial<Preferencias>;
-      setPrefs({ ...PREFERENCIAS_PADRAO, ...limpo });
+      const combinado = { ...PREFERENCIAS_PADRAO, ...limpo };
+      // secções novas (adicionadas depois das preferências guardadas) ficam visíveis
+      if (Array.isArray(limpo.seccoes)) {
+        const conhecidas = new Set(limpo.seccoes);
+        combinado.seccoes = SECCOES.map((s) => s.chave).filter(
+          (c) => conhecidas.has(c) || !SECCOES_ANTIGAS.includes(c),
+        );
+      }
+      setPrefs(combinado);
     } catch {
       /* ignora */
     }
