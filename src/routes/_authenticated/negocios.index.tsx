@@ -68,9 +68,14 @@ function Negocios() {
 
   const nomePor = (id: string | null) => perfis.find((p) => p.id === id)?.nome ?? null;
 
+  const vista: Vista = procura.vista ?? "ativos";
+
   const lista = useMemo(() => {
     const texto = q.trim().toLowerCase();
     let r = negocios.filter((n) => {
+      const concluido = ESTADOS_CONCLUIDOS.includes(n.estado);
+      if (vista === "ativos" && concluido) return false;
+      if (vista === "concluidos" && !concluido) return false;
       if (procura.estado && n.estado !== procura.estado) return false;
       if (procura.prioridade && n.prioridade !== procura.prioridade) return false;
       if (!texto) return true;
