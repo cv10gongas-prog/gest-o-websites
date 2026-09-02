@@ -22,9 +22,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               alt="Nova Web Studio"
               className="h-9 w-auto shrink-0 object-contain"
             />
-            <span>
-              <span className="block text-[15px] font-semibold tracking-tight">Nova Web Studio</span>
-              <span className="block text-[10px] uppercase tracking-[.18em] text-muted-foreground">
+            <span className="min-w-0">
+              <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
+                Nova Web Studio
+              </span>
+              <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
                 Websites à medida
               </span>
             </span>
