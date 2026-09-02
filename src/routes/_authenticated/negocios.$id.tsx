@@ -17,6 +17,7 @@ import { DialogChamada } from "@/components/crm/DialogChamada";
 import { DialogNegocio } from "@/components/crm/DialogNegocio";
 import { DialogTarefa } from "@/components/crm/DialogTarefa";
 import { btnPequeno, btnPrimario, btnSecundario, selectClass } from "@/components/crm/Modal";
+import { PainelArquivos } from "@/components/crm/PainelArquivos";
 import {
   ESTADOS,
   estadoInfo,
