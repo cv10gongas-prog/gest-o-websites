@@ -95,7 +95,9 @@ function Negocios() {
       return (b.created_at ?? "").localeCompare(a.created_at ?? "");
     });
     return r.slice(0, prefs.porPagina);
-  }, [negocios, prefs.porPagina, procura.estado, procura.prioridade, q, ordem]);
+  }, [negocios, prefs.porPagina, procura.estado, procura.prioridade, q, ordem, vista]);
+
+  const totalConcluidos = negocios.filter((n) => ESTADOS_CONCLUIDOS.includes(n.estado)).length;
 
   return (
     <>
