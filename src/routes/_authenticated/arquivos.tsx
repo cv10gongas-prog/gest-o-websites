@@ -56,9 +56,18 @@ function Arquivos() {
   );
 
   async function submeter() {
-    if (!negocio) return toast.error("Escolhe o negócio.");
-    if (!ficheiro) return toast.error("Escolhe o ficheiro .rar.");
-    if (ficheiro.size > LIMITE_FICHEIRO) return toast.error("O ficheiro excede os 300 MB.");
+    if (!negocio) {
+      toast.error("Escolhe o negócio.");
+      return;
+    }
+    if (!ficheiro) {
+      toast.error("Escolhe o ficheiro .rar.");
+      return;
+    }
+    if (ficheiro.size > LIMITE_FICHEIRO) {
+      toast.error("O ficheiro excede os 300 MB.");
+      return;
+    }
     await carregar.mutateAsync({
       businessId: negocio,
       ficheiro,
