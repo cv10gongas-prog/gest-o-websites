@@ -10,33 +10,205 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ContactoRouteImport } from './routes/contacto'
+import { Route as PortefolioRouteImport } from './routes/portefolio'
+import { Route as AuthenticatedDefinicoesRouteImport } from './routes/_authenticated/definicoes'
+import { Route as AuthenticatedEmailsRouteImport } from './routes/_authenticated/emails'
+import { Route as AuthenticatedEquipaRouteImport } from './routes/_authenticated/equipa'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
+import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
+import { Route as AuthenticatedProjetosRouteImport } from './routes/_authenticated/projetos'
+import { Route as AuthenticatedTarefasRouteImport } from './routes/_authenticated/tarefas'
+import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
+import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactoRoute = ContactoRouteImport.update({
+  id: '/contacto',
+  path: '/contacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortefolioRoute = PortefolioRouteImport.update({
+  id: '/portefolio',
+  path: '/portefolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDefinicoesRoute = AuthenticatedDefinicoesRouteImport.update({
+  id: '/definicoes',
+  path: '/definicoes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEmailsRoute = AuthenticatedEmailsRouteImport.update({
+  id: '/emails',
+  path: '/emails',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEquipaRoute = AuthenticatedEquipaRouteImport.update({
+  id: '/equipa',
+  path: '/equipa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPedidosRoute = AuthenticatedPedidosRouteImport.update({
+  id: '/pedidos',
+  path: '/pedidos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProjetosRoute = AuthenticatedProjetosRouteImport.update({
+  id: '/projetos',
+  path: '/projetos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTarefasRoute = AuthenticatedTarefasRouteImport.update({
+  id: '/tarefas',
+  path: '/tarefas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNegociosIndexRoute =
+  AuthenticatedNegociosIndexRouteImport.update({
+    id: '/negocios/',
+    path: '/negocios/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNegociosIdRoute = AuthenticatedNegociosIdRouteImport.update({
+  id: '/negocios/$id',
+  path: '/negocios/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/contacto': typeof ContactoRoute
+  '/portefolio': typeof PortefolioRoute
+  '/definicoes': typeof AuthenticatedDefinicoesRoute
+  '/emails': typeof AuthenticatedEmailsRoute
+  '/equipa': typeof AuthenticatedEquipaRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/pedidos': typeof AuthenticatedPedidosRoute
+  '/pipeline': typeof AuthenticatedPipelineRoute
+  '/projetos': typeof AuthenticatedProjetosRoute
+  '/tarefas': typeof AuthenticatedTarefasRoute
+  '/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/negocios/': typeof AuthenticatedNegociosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/contacto': typeof ContactoRoute
+  '/portefolio': typeof PortefolioRoute
+  '/definicoes': typeof AuthenticatedDefinicoesRoute
+  '/emails': typeof AuthenticatedEmailsRoute
+  '/equipa': typeof AuthenticatedEquipaRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/pedidos': typeof AuthenticatedPedidosRoute
+  '/pipeline': typeof AuthenticatedPipelineRoute
+  '/projetos': typeof AuthenticatedProjetosRoute
+  '/tarefas': typeof AuthenticatedTarefasRoute
+  '/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/negocios': typeof AuthenticatedNegociosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/contacto': typeof ContactoRoute
+  '/portefolio': typeof PortefolioRoute
+  '/_authenticated/definicoes': typeof AuthenticatedDefinicoesRoute
+  '/_authenticated/emails': typeof AuthenticatedEmailsRoute
+  '/_authenticated/equipa': typeof AuthenticatedEquipaRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
+  '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
+  '/_authenticated/projetos': typeof AuthenticatedProjetosRoute
+  '/_authenticated/tarefas': typeof AuthenticatedTarefasRoute
+  '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/_authenticated/negocios/': typeof AuthenticatedNegociosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/contacto'
+    | '/portefolio'
+    | '/definicoes'
+    | '/emails'
+    | '/equipa'
+    | '/painel'
+    | '/pedidos'
+    | '/pipeline'
+    | '/projetos'
+    | '/tarefas'
+    | '/negocios/$id'
+    | '/negocios/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/contacto'
+    | '/portefolio'
+    | '/definicoes'
+    | '/emails'
+    | '/equipa'
+    | '/painel'
+    | '/pedidos'
+    | '/pipeline'
+    | '/projetos'
+    | '/tarefas'
+    | '/negocios/$id'
+    | '/negocios'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/contacto'
+    | '/portefolio'
+    | '/_authenticated/definicoes'
+    | '/_authenticated/emails'
+    | '/_authenticated/equipa'
+    | '/_authenticated/painel'
+    | '/_authenticated/pedidos'
+    | '/_authenticated/pipeline'
+    | '/_authenticated/projetos'
+    | '/_authenticated/tarefas'
+    | '/_authenticated/negocios/$id'
+    | '/_authenticated/negocios/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ContactoRoute: typeof ContactoRoute
+  PortefolioRoute: typeof PortefolioRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +220,142 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacto': {
+      id: '/contacto'
+      path: '/contacto'
+      fullPath: '/contacto'
+      preLoaderRoute: typeof ContactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portefolio': {
+      id: '/portefolio'
+      path: '/portefolio'
+      fullPath: '/portefolio'
+      preLoaderRoute: typeof PortefolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/definicoes': {
+      id: '/_authenticated/definicoes'
+      path: '/definicoes'
+      fullPath: '/definicoes'
+      preLoaderRoute: typeof AuthenticatedDefinicoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/emails': {
+      id: '/_authenticated/emails'
+      path: '/emails'
+      fullPath: '/emails'
+      preLoaderRoute: typeof AuthenticatedEmailsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/equipa': {
+      id: '/_authenticated/equipa'
+      path: '/equipa'
+      fullPath: '/equipa'
+      preLoaderRoute: typeof AuthenticatedEquipaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pedidos': {
+      id: '/_authenticated/pedidos'
+      path: '/pedidos'
+      fullPath: '/pedidos'
+      preLoaderRoute: typeof AuthenticatedPedidosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pipeline': {
+      id: '/_authenticated/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof AuthenticatedPipelineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projetos': {
+      id: '/_authenticated/projetos'
+      path: '/projetos'
+      fullPath: '/projetos'
+      preLoaderRoute: typeof AuthenticatedProjetosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tarefas': {
+      id: '/_authenticated/tarefas'
+      path: '/tarefas'
+      fullPath: '/tarefas'
+      preLoaderRoute: typeof AuthenticatedTarefasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/negocios/': {
+      id: '/_authenticated/negocios/'
+      path: '/negocios'
+      fullPath: '/negocios/'
+      preLoaderRoute: typeof AuthenticatedNegociosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/negocios/$id': {
+      id: '/_authenticated/negocios/$id'
+      path: '/negocios/$id'
+      fullPath: '/negocios/$id'
+      preLoaderRoute: typeof AuthenticatedNegociosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDefinicoesRoute: typeof AuthenticatedDefinicoesRoute
+  AuthenticatedEmailsRoute: typeof AuthenticatedEmailsRoute
+  AuthenticatedEquipaRoute: typeof AuthenticatedEquipaRoute
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
+  AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
+  AuthenticatedProjetosRoute: typeof AuthenticatedProjetosRoute
+  AuthenticatedTarefasRoute: typeof AuthenticatedTarefasRoute
+  AuthenticatedNegociosIdRoute: typeof AuthenticatedNegociosIdRoute
+  AuthenticatedNegociosIndexRoute: typeof AuthenticatedNegociosIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDefinicoesRoute: AuthenticatedDefinicoesRoute,
+  AuthenticatedEmailsRoute: AuthenticatedEmailsRoute,
+  AuthenticatedEquipaRoute: AuthenticatedEquipaRoute,
+  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
+  AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
+  AuthenticatedProjetosRoute: AuthenticatedProjetosRoute,
+  AuthenticatedTarefasRoute: AuthenticatedTarefasRoute,
+  AuthenticatedNegociosIdRoute: AuthenticatedNegociosIdRoute,
+  AuthenticatedNegociosIndexRoute: AuthenticatedNegociosIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ContactoRoute: ContactoRoute,
+  PortefolioRoute: PortefolioRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
