@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as PortefolioRouteImport } from './routes/portefolio'
+import { Route as AuthenticatedArquivosRouteImport } from './routes/_authenticated/arquivos'
 import { Route as AuthenticatedDefinicoesRouteImport } from './routes/_authenticated/definicoes'
 import { Route as AuthenticatedEmailsRouteImport } from './routes/_authenticated/emails'
 import { Route as AuthenticatedEquipaRouteImport } from './routes/_authenticated/equipa'
@@ -48,6 +49,11 @@ const PortefolioRoute = PortefolioRouteImport.update({
   id: '/portefolio',
   path: '/portefolio',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedArquivosRoute = AuthenticatedArquivosRouteImport.update({
+  id: '/arquivos',
+  path: '/arquivos',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDefinicoesRoute = AuthenticatedDefinicoesRouteImport.update({
   id: '/definicoes',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contacto': typeof ContactoRoute
   '/portefolio': typeof PortefolioRoute
+  '/arquivos': typeof AuthenticatedArquivosRoute
   '/definicoes': typeof AuthenticatedDefinicoesRoute
   '/emails': typeof AuthenticatedEmailsRoute
   '/equipa': typeof AuthenticatedEquipaRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contacto': typeof ContactoRoute
   '/portefolio': typeof PortefolioRoute
+  '/arquivos': typeof AuthenticatedArquivosRoute
   '/definicoes': typeof AuthenticatedDefinicoesRoute
   '/emails': typeof AuthenticatedEmailsRoute
   '/equipa': typeof AuthenticatedEquipaRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contacto': typeof ContactoRoute
   '/portefolio': typeof PortefolioRoute
+  '/_authenticated/arquivos': typeof AuthenticatedArquivosRoute
   '/_authenticated/definicoes': typeof AuthenticatedDefinicoesRoute
   '/_authenticated/emails': typeof AuthenticatedEmailsRoute
   '/_authenticated/equipa': typeof AuthenticatedEquipaRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contacto'
     | '/portefolio'
+    | '/arquivos'
     | '/definicoes'
     | '/emails'
     | '/equipa'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contacto'
     | '/portefolio'
+    | '/arquivos'
     | '/definicoes'
     | '/emails'
     | '/equipa'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contacto'
     | '/portefolio'
+    | '/_authenticated/arquivos'
     | '/_authenticated/definicoes'
     | '/_authenticated/emails'
     | '/_authenticated/equipa'
@@ -247,6 +259,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/portefolio'
       preLoaderRoute: typeof PortefolioRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/arquivos': {
+      id: '/_authenticated/arquivos'
+      path: '/arquivos'
+      fullPath: '/arquivos'
+      preLoaderRoute: typeof AuthenticatedArquivosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/definicoes': {
       id: '/_authenticated/definicoes'
@@ -322,6 +341,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedArquivosRoute: typeof AuthenticatedArquivosRoute
   AuthenticatedDefinicoesRoute: typeof AuthenticatedDefinicoesRoute
   AuthenticatedEmailsRoute: typeof AuthenticatedEmailsRoute
   AuthenticatedEquipaRoute: typeof AuthenticatedEquipaRoute
@@ -335,6 +355,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedArquivosRoute: AuthenticatedArquivosRoute,
   AuthenticatedDefinicoesRoute: AuthenticatedDefinicoesRoute,
   AuthenticatedEmailsRoute: AuthenticatedEmailsRoute,
   AuthenticatedEquipaRoute: AuthenticatedEquipaRoute,
