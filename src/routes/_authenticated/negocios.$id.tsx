@@ -259,6 +259,8 @@ function FichaNegocio() {
             </Panel>
           )}
 
+          <PainelArquivos businessId={negocio.id} />
+
           <Panel title="Atividade">
             {historico.length === 0 ? (
               <Vazio texto="Sem atividade registada." />
