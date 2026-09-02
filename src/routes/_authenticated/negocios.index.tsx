@@ -23,13 +23,20 @@ import {
 } from "@/lib/preferencias";
 import { useBusinesses, useProfiles } from "@/lib/queries";
 
-type Procura = { estado?: string; prioridade?: string; q?: string };
+type Vista = "ativos" | "concluidos" | "todos";
+type Procura = { estado?: string; prioridade?: string; q?: string; vista?: Vista };
+
+const ESTADOS_CONCLUIDOS = ["aceite", "concluido"];
 
 export const Route = createFileRoute("/_authenticated/negocios/")({
   validateSearch: (s: Record<string, unknown>): Procura => ({
     estado: typeof s.estado === "string" ? s.estado : undefined,
     prioridade: typeof s.prioridade === "string" ? s.prioridade : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
+    vista:
+      s.vista === "concluidos" || s.vista === "todos" || s.vista === "ativos"
+        ? (s.vista as Vista)
+        : undefined,
   }),
   head: () => ({
     meta: [
