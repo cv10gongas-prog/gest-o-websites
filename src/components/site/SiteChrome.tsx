@@ -1,8 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
-import logoAsset from "@/assets/logo-nova-web-studio.png.asset.json";
-
 const NAV = [
   { to: "/", label: "Início" },
   { to: "/portefolio", label: "Portefólio" },
@@ -18,7 +16,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
           <Link to="/" className="flex items-center gap-3">
             <img
-              src={logoAsset.url}
+              src="/logo-nova-web-studio.png"
               alt="Nova Web Studio"
               className="h-9 w-auto shrink-0 object-contain"
             />
