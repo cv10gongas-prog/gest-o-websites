@@ -38,7 +38,7 @@ const TIPOS = [
   "Outro",
 ];
 
-const ORCAMENTOS = ["Até 1.000 €", "1.000 € – 2.500 €", "2.500 € – 5.000 €", "Mais de 5.000 €"];
+const ORCAMENTOS = ["Até 150 €", "150 € – 250 €", "250 € – 400 €", "Mais de 400 €"];
 
 function Contacto() {
   const [nome, setNome] = useState("");
@@ -197,6 +197,11 @@ function Contacto() {
               <button className={`${btnPrimario} w-full`} disabled={aEnviar}>
                 {aEnviar ? "A enviar…" : "Enviar pedido"}
               </button>
+
+              <p className="rounded-lg border border-border/60 bg-secondary/40 px-3 py-2.5 text-center text-xs leading-relaxed text-muted-foreground">
+                Após o envio, entraremos em contacto consigo por email ou telefone para conhecer
+                melhor o projeto.
+              </p>
             </form>
           )}
         </Panel>
