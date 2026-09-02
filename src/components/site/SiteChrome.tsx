@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Target } from "lucide-react";
 import type { ReactNode } from "react";
+
+import logoAsset from "@/assets/logo-nova-web-studio.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Início" },
