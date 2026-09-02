@@ -8,13 +8,13 @@ import { useProjects } from "@/lib/queries";
 export const Route = createFileRoute("/portefolio")({
   head: () => ({
     meta: [
-      { title: "Portefólio de projetos web — Orbit Studio" },
+      { title: "Portefólio de projetos web — Nova Web Studio" },
       {
         name: "description",
         content:
-          "Sites institucionais, lojas online e aplicações web desenvolvidos pela Orbit Studio.",
+          "Sites institucionais, lojas online e aplicações web desenvolvidos pela Nova Web Studio.",
       },
-      { property: "og:title", content: "Portefólio de projetos web — Orbit Studio" },
+      { property: "og:title", content: "Portefólio de projetos web — Nova Web Studio" },
       {
         property: "og:description",
         content: "Trabalhos recentes: sites institucionais, lojas online e aplicações à medida.",

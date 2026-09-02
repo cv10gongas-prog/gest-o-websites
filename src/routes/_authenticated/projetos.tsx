@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export const Route = createFileRoute("/_authenticated/projetos")({
   head: () => ({
     meta: [
-      { title: "Portefólio — Orbit CRM" },
+      { title: "Portefólio — Nova Web CRM" },
       { name: "description", content: "Projetos importados do GitHub e mostrados no site público." },
       { name: "robots", content: "noindex" },
     ],

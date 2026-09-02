@@ -10,7 +10,7 @@ import { useActualizarPedido, useApagarPedido, useWebsiteRequests } from "@/lib/
 export const Route = createFileRoute("/_authenticated/pedidos")({
   head: () => ({
     meta: [
-      { title: "Pedidos do site — Orbit CRM" },
+      { title: "Pedidos do site — Nova Web CRM" },
       { name: "description", content: "Pedidos de orçamento recebidos pelo website público." },
       { name: "robots", content: "noindex" },
     ],

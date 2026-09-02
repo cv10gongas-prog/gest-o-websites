@@ -186,7 +186,7 @@ const FASES_BASE: BusinessStatus[] = [
 ];
 
 export const PREFERENCIAS_PADRAO: Preferencias = {
-  marcaNome: "Orbit CRM",
+  marcaNome: "Nova Web CRM",
   marcaSubtitulo: "Sales workspace",
   seccoes: SECCOES.map((s) => s.chave),
   rotulosSeccoes: {},

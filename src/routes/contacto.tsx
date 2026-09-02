@@ -11,13 +11,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/contacto")({
   head: () => ({
     meta: [
-      { title: "Contacto e pedido de orçamento — Orbit Studio" },
+      { title: "Contacto e pedido de orçamento — Nova Web Studio" },
       {
         name: "description",
         content:
-          "Peça um orçamento para o seu website ou marque uma reunião com a equipa da Orbit Studio.",
+          "Peça um orçamento para o seu website ou marque uma reunião com a equipa da Nova Web Studio.",
       },
-      { property: "og:title", content: "Contacto e pedido de orçamento — Orbit Studio" },
+      { property: "og:title", content: "Contacto e pedido de orçamento — Nova Web Studio" },
       {
         property: "og:description",
         content: "Conte-nos o que precisa. Respondemos em 24 horas úteis.",

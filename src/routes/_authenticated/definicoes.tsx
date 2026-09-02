@@ -42,14 +42,14 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/definicoes")({
   head: () => ({
     meta: [
-      { title: "Definições — Orbit CRM" },
+      { title: "Definições — Nova Web CRM" },
       {
         name: "description",
         content:
           "Configura marca, menu, fases do pipeline, formulário de projeto, lista, painel e formatos do CRM.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Definições — Orbit CRM" },
+      { property: "og:title", content: "Definições — Nova Web CRM" },
       { property: "og:description", content: "Personaliza todo o CRM por tópicos." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

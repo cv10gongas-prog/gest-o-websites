@@ -18,13 +18,13 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Orbit Studio — Websites e lojas online à medida" },
+      { title: "Nova Web Studio — Websites e lojas online à medida" },
       {
         name: "description",
         content:
           "Criamos websites rápidos, modernos e otimizados para conversão: sites institucionais, lojas online e aplicações web.",
       },
-      { property: "og:title", content: "Orbit Studio — Websites e lojas online à medida" },
+      { property: "og:title", content: "Nova Web Studio — Websites e lojas online à medida" },
       {
         property: "og:description",
         content: "Sites institucionais, lojas online e aplicações web feitos à medida do seu negócio.",

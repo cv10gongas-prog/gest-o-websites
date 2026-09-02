@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => ({
     meta: [
-      { title: "Pipeline — Orbit CRM" },
+      { title: "Pipeline — Nova Web CRM" },
       { name: "description", content: "Quadro visual dos projetos de sites por fase." },
       { name: "robots", content: "noindex" },
     ],

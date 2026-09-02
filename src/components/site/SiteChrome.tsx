@@ -20,7 +20,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               <Target className="size-5" />
             </span>
             <span>
-              <span className="block text-[15px] font-semibold tracking-tight">Orbit Studio</span>
+              <span className="block text-[15px] font-semibold tracking-tight">Nova Web Studio</span>
               <span className="block text-[10px] uppercase tracking-[.18em] text-muted-foreground">
                 Websites à medida
               </span>
@@ -54,7 +54,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
       <footer className="relative border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Orbit Studio · Portugal</span>
+          <span>© {new Date().getFullYear()} Nova Web Studio · Portugal</span>
           <div className="flex gap-4">
             <Link to="/portefolio">Portefólio</Link>
             <Link to="/contacto">Contacto</Link>

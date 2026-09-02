@@ -12,9 +12,9 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Entrar — Orbit CRM" },
-      { name: "description", content: "Acesso reservado à equipa comercial do Orbit CRM." },
-      { property: "og:title", content: "Entrar — Orbit CRM" },
+      { title: "Entrar — Nova Web CRM" },
+      { name: "description", content: "Acesso reservado à equipa comercial do Nova Web CRM." },
+      { property: "og:title", content: "Entrar — Nova Web CRM" },
       { property: "og:description", content: "Acesso reservado à equipa comercial." },
       { name: "robots", content: "noindex" },
     ],
@@ -85,7 +85,7 @@ function AuthPage() {
             <Target className="size-5" />
           </span>
           <div>
-            <h1 className="text-lg font-semibold tracking-tight">Orbit CRM</h1>
+            <h1 className="text-lg font-semibold tracking-tight">Nova Web CRM</h1>
             <p className="text-[11px] uppercase tracking-[.18em] text-muted-foreground">
               Área da equipa
             </p>
