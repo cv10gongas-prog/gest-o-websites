@@ -47,7 +47,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             ))}
             <Link
               to="/contacto"
-              className="ml-2 hidden h-9 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90 sm:inline-flex"
+              className="ml-2 inline-flex h-9 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               Marcar reunião
             </Link>
