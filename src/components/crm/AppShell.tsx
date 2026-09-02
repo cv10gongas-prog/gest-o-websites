@@ -15,7 +15,6 @@ import {
   Phone,
   Settings,
   Sparkles,
-  Target,
   Users,
   X,
 } from "lucide-react";
@@ -106,9 +105,11 @@ function AppShellInner({ children }: { children: ReactNode }) {
       >
         <div className="mb-7 flex items-center justify-between px-2 pt-1">
           <Link to="/painel" className="flex items-center gap-3">
-            <span className="orbit-brand-mark grid size-9 place-items-center rounded-xl">
-              <Target className="size-5" />
-            </span>
+            <img
+              src="/logo-nova-web-studio.png"
+              alt="Nova Web Studio"
+              className="size-9 shrink-0 object-contain"
+            />
             <span>
               <span className="block text-[15px] font-semibold tracking-tight">{prefs.marcaNome}</span>
               <span className="block text-[10px] uppercase tracking-[.18em] text-muted-foreground">

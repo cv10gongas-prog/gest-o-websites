@@ -187,7 +187,7 @@ const FASES_BASE: BusinessStatus[] = [
 
 export const PREFERENCIAS_PADRAO: Preferencias = {
   marcaNome: "Nova Web CRM",
-  marcaSubtitulo: "Sales workspace",
+  marcaSubtitulo: "Um site mais moderno para si",
   seccoes: SECCOES.map((s) => s.chave),
   rotulosSeccoes: {},
   mostrarAtalhos: true,
@@ -235,6 +235,9 @@ export function PreferenciasProvider({ children }: { children: ReactNode }) {
         Object.entries(guardado).filter(([, valor]) => valor !== null && valor !== undefined),
       ) as Partial<Preferencias>;
       const combinado = { ...PREFERENCIAS_PADRAO, ...limpo };
+      if (!limpo.marcaSubtitulo || limpo.marcaSubtitulo === "Sales workspace") {
+        combinado.marcaSubtitulo = PREFERENCIAS_PADRAO.marcaSubtitulo;
+      }
       // secções novas (adicionadas depois das preferências guardadas) ficam visíveis
       if (Array.isArray(limpo.seccoes)) {
         const conhecidas = new Set(limpo.seccoes);

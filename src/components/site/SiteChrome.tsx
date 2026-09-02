@@ -25,7 +25,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 Nova Web Studio
               </span>
               <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
-                Websites à medida
+                Um site mais moderno para si
               </span>
             </span>
           </Link>
