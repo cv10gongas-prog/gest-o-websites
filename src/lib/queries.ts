@@ -584,3 +584,89 @@ export function useAlterarFuncao() {
     onError: (e: Error) => toast.error(e.message),
   });
 }
+
+/* ------------------- FICHEIROS DE PROJETO (.rar) ---------------------- */
+
+export type BusinessFile = Database["public"]["Tables"]["business_files"]["Row"];
+
+export const LIMITE_FICHEIRO = 300 * 1024 * 1024;
+
+export function useBusinessFiles(businessId?: string) {
+  return useQuery({
+    queryKey: ["business_files", businessId ?? "todos"],
+    queryFn: async (): Promise<BusinessFile[]> => {
+      let q = supabase.from("business_files").select("*").order("created_at", { ascending: false });
+      if (businessId) q = q.eq("business_id", businessId);
+      const { data, error } = await q;
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useCarregarFicheiro() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (entrada: {
+      businessId: string;
+      ficheiro: File;
+      versao?: string | null;
+      notas?: string | null;
+    }) => {
+      const { ficheiro } = entrada;
+      if (ficheiro.size > LIMITE_FICHEIRO) throw new Error("O ficheiro excede os 300 MB.");
+      const uid = await utilizadorActual();
+      const caminho = `${entrada.businessId}/${Date.now()}-${ficheiro.name.replace(/[^\w.\-]+/g, "_")}`;
+      const { error: eUp } = await supabase.storage
+        .from("projetos")
+        .upload(caminho, ficheiro, { upsert: false });
+      if (eUp) throw eUp;
+      const { error } = await supabase.from("business_files").insert({
+        business_id: entrada.businessId,
+        nome: ficheiro.name,
+        caminho,
+        tamanho: ficheiro.size,
+        versao: entrada.versao ?? null,
+        notas: entrada.notas ?? null,
+        carregado_por: uid,
+      });
+      if (error) throw error;
+      await registarActividade({
+        business_id: entrada.businessId,
+        entidade: "ficheiro",
+        accao: "carregou um arquivo do projeto",
+        detalhe: ficheiro.name,
+      });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["business_files"] });
+      qc.invalidateQueries({ queryKey: ["activity"] });
+      toast.success("Arquivo carregado.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export function useApagarFicheiro() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (f: BusinessFile) => {
+      await supabase.storage.from("projetos").remove([f.caminho]);
+      const { error } = await supabase.from("business_files").delete().eq("id", f.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["business_files"] });
+      toast.success("Arquivo removido.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+}
+
+export async function urlDescarregarFicheiro(caminho: string) {
+  const { data, error } = await supabase.storage.from("projetos").createSignedUrl(caminho, 60 * 10, {
+    download: true,
+  });
+  if (error) throw error;
+  return data.signedUrl;
+}

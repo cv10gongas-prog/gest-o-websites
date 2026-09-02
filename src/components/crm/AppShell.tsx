@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   CalendarClock,
   Clock3,
+  FileArchive,
   Flame,
   Globe,
   LayoutDashboard,
@@ -40,6 +41,7 @@ const LINKS = [
   { to: "/tarefas", label: "Tarefas", icon: CalendarClock, chave: "tarefas" },
   { to: "/emails", label: "Modelos de email", icon: Mail },
   { to: "/projetos", label: "Projetos", icon: Sparkles },
+  { to: "/arquivos", label: "Arquivos de projetos", icon: FileArchive },
   { to: "/pedidos", label: "Pedidos do site", icon: Globe, chave: "pedidos" },
   { to: "/equipa", label: "Equipa", icon: Users },
 ] as const;

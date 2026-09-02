@@ -23,13 +23,20 @@ import {
 } from "@/lib/preferencias";
 import { useBusinesses, useProfiles } from "@/lib/queries";
 
-type Procura = { estado?: string; prioridade?: string; q?: string };
+type Vista = "ativos" | "concluidos" | "todos";
+type Procura = { estado?: string; prioridade?: string; q?: string; vista?: Vista };
+
+const ESTADOS_CONCLUIDOS = ["aceite", "concluido"];
 
 export const Route = createFileRoute("/_authenticated/negocios/")({
   validateSearch: (s: Record<string, unknown>): Procura => ({
     estado: typeof s.estado === "string" ? s.estado : undefined,
     prioridade: typeof s.prioridade === "string" ? s.prioridade : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
+    vista:
+      s.vista === "concluidos" || s.vista === "todos" || s.vista === "ativos"
+        ? (s.vista as Vista)
+        : undefined,
   }),
   head: () => ({
     meta: [
@@ -61,9 +68,14 @@ function Negocios() {
 
   const nomePor = (id: string | null) => perfis.find((p) => p.id === id)?.nome ?? null;
 
+  const vista: Vista = procura.vista ?? "ativos";
+
   const lista = useMemo(() => {
     const texto = q.trim().toLowerCase();
     let r = negocios.filter((n) => {
+      const concluido = ESTADOS_CONCLUIDOS.includes(n.estado);
+      if (vista === "ativos" && concluido) return false;
+      if (vista === "concluidos" && !concluido) return false;
       if (procura.estado && n.estado !== procura.estado) return false;
       if (procura.prioridade && n.prioridade !== procura.prioridade) return false;
       if (!texto) return true;
@@ -83,7 +95,9 @@ function Negocios() {
       return (b.created_at ?? "").localeCompare(a.created_at ?? "");
     });
     return r.slice(0, prefs.porPagina);
-  }, [negocios, prefs.porPagina, procura.estado, procura.prioridade, q, ordem]);
+  }, [negocios, prefs.porPagina, procura.estado, procura.prioridade, q, ordem, vista]);
+
+  const totalConcluidos = negocios.filter((n) => ESTADOS_CONCLUIDOS.includes(n.estado)).length;
 
   return (
     <>
@@ -101,7 +115,29 @@ function Negocios() {
         </button>
       </div>
 
-      <Panel className="mt-6" bodyClassName="p-4">
+      <div className="mt-5 flex flex-wrap gap-2">
+        {(
+          [
+            ["ativos", "Em curso"],
+            ["concluidos", `Concluídos (${totalConcluidos})`],
+            ["todos", "Todos"],
+          ] as const
+        ).map(([chave, rotulo]) => (
+          <button
+            key={chave}
+            onClick={() => setProcura({ vista: chave })}
+            className={
+              vista === chave
+                ? "rounded-xl bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-inset ring-primary/20"
+                : "rounded-xl border border-border/70 px-3 py-1.5 text-xs text-muted-foreground transition hover:text-foreground"
+            }
+          >
+            {rotulo}
+          </button>
+        ))}
+      </div>
+
+      <Panel className="mt-4" bodyClassName="p-4">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />

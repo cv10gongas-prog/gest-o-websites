@@ -9,6 +9,7 @@ export const SECCOES = [
   { chave: "/tarefas", label: "Tarefas" },
   { chave: "/emails", label: "Modelos de email" },
   { chave: "/projetos", label: "Projetos" },
+  { chave: "/arquivos", label: "Arquivos de projetos" },
   { chave: "/pedidos", label: "Pedidos do site" },
   { chave: "/equipa", label: "Equipa" },
 ] as const;
