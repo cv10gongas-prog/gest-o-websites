@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Target } from "lucide-react";
 import type { ReactNode } from "react";
+
+import logoAsset from "@/assets/logo-nova-web-studio.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Início" },
@@ -16,33 +17,39 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <span className="orbit-brand-mark grid size-9 place-items-center rounded-xl">
-              <Target className="size-5" />
-            </span>
-            <span>
-              <span className="block text-[15px] font-semibold tracking-tight">Nova Web Studio</span>
-              <span className="block text-[10px] uppercase tracking-[.18em] text-muted-foreground">
+            <img
+              src={logoAsset.url}
+              alt="Nova Web Studio"
+              className="h-9 w-auto shrink-0 object-contain"
+            />
+            <span className="min-w-0">
+              <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
+                Nova Web Studio
+              </span>
+              <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
                 Websites à medida
               </span>
             </span>
           </Link>
 
           <nav className="flex items-center gap-1 text-sm">
-            {NAV.map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                activeOptions={{ exact: l.to === "/" }}
-                activeProps={{ className: "bg-secondary/60 text-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground" }}
-                className="rounded-lg px-3 py-2 transition hover:text-foreground"
-              >
-                {l.label}
-              </Link>
-            ))}
+            <span className="hidden items-center gap-1 sm:flex">
+              {NAV.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  activeOptions={{ exact: l.to === "/" }}
+                  activeProps={{ className: "bg-secondary/60 text-foreground" }}
+                  inactiveProps={{ className: "text-muted-foreground" }}
+                  className="rounded-lg px-3 py-2 transition hover:text-foreground"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </span>
             <Link
               to="/contacto"
-              className="ml-2 hidden h-9 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90 sm:inline-flex"
+              className="ml-2 inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               Marcar reunião
             </Link>
