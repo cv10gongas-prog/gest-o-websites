@@ -17,9 +17,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <span className="orbit-brand-mark grid size-9 place-items-center rounded-xl">
-              <Target className="size-5" />
-            </span>
+            <img
+              src={logoAsset.url}
+              alt="Nova Web Studio"
+              className="h-9 w-auto shrink-0 object-contain"
+            />
             <span>
               <span className="block text-[15px] font-semibold tracking-tight">Nova Web Studio</span>
               <span className="block text-[10px] uppercase tracking-[.18em] text-muted-foreground">
