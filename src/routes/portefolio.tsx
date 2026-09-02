@@ -1,9 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Github, Sparkles, Star } from "lucide-react";
+import {
+  ArrowUpRight,
+  BedDouble,
+  Hammer,
+  Monitor,
+  Smartphone,
+  Waves,
+} from "lucide-react";
 
-import { Chip, Panel, Vazio } from "@/components/crm/Bits";
+import { Chip, Panel } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
-import { useProjects } from "@/lib/queries";
 
 export const Route = createFileRoute("/portefolio")({
   head: () => ({
@@ -12,12 +18,16 @@ export const Route = createFileRoute("/portefolio")({
       {
         name: "description",
         content:
-          "Sites institucionais, lojas online e aplicações web desenvolvidos pela Nova Web Studio.",
+          "Uma seleção de websites e conceitos desenvolvidos para diferentes áreas de negócio.",
       },
-      { property: "og:title", content: "Portefólio de projetos web — Nova Web Studio" },
+      {
+        property: "og:title",
+        content: "Portefólio de projetos web — Nova Web Studio",
+      },
       {
         property: "og:description",
-        content: "Trabalhos recentes: sites institucionais, lojas online e aplicações à medida.",
+        content:
+          "Websites e conceitos desenvolvidos para diferentes áreas de negócio.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -26,86 +36,248 @@ export const Route = createFileRoute("/portefolio")({
   component: Portefolio,
 });
 
-function Portefolio() {
-  const { data: projetos = [], isLoading } = useProjects(true);
-  const destaques = projetos.filter((p) => p.destaque);
-  const restantes = projetos.filter((p) => !p.destaque);
-  const ordenados = [...destaques, ...restantes];
+const CONCEITOS = [
+  {
+    titulo: "Website para serviços de piscinas",
+    etiqueta: "Projeto demonstrativo",
+    descricao:
+      "Uma presença digital moderna e clara para apresentar serviços e gerar pedidos de orçamento.",
+    icon: Waves,
+    preview: {
+      eyebrow: "Piscinas & Manutenção",
+      headline: "Cuidamos da sua piscina",
+      lines: ["Construção", "Manutenção", "Reparação"],
+    },
+  },
+  {
+    titulo: "Website para alojamento turístico",
+    etiqueta: "Conceito",
+    descricao:
+      "Uma experiência visual pensada para valorizar o espaço e incentivar reservas.",
+    icon: BedDouble,
+    preview: {
+      eyebrow: "Alojamento Local",
+      headline: "Uma estadia especial",
+      lines: ["O espaço", "Localização", "Contactos"],
+    },
+  },
+  {
+    titulo: "Website para carpintaria",
+    etiqueta: "Design desenvolvido",
+    descricao:
+      "Um portefólio elegante para destacar trabalhos, materiais e serviços personalizados.",
+    icon: Hammer,
+    preview: {
+      eyebrow: "Carpintaria",
+      headline: "Trabalho feito à medida",
+      lines: ["Projetos", "Materiais", "Orçamentos"],
+    },
+  },
+];
 
+function BrowserMockup({
+  eyebrow,
+  headline,
+  lines,
+}: {
+  eyebrow: string;
+  headline: string;
+  lines: string[];
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
+      <div className="flex h-8 items-center gap-1.5 border-b border-border/70 px-3">
+        <span className="size-1.5 rounded-full bg-muted-foreground/30" />
+        <span className="size-1.5 rounded-full bg-muted-foreground/30" />
+        <span className="size-1.5 rounded-full bg-muted-foreground/30" />
+
+        <div className="ml-2 h-3 w-24 rounded-full bg-secondary/80" />
+      </div>
+
+      <div className="grid min-h-[210px] grid-cols-[1.25fr_.75fr] gap-4 p-5 sm:min-h-[230px]">
+        <div className="flex flex-col justify-center">
+          <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
+            {eyebrow}
+          </span>
+
+          <div className="mt-3 max-w-[190px] text-xl font-semibold leading-tight tracking-tight">
+            {headline}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {lines.map((line) => (
+              <span
+                key={line}
+                className="rounded-full border border-border/70 px-2.5 py-1 text-[9px] text-muted-foreground"
+              >
+                {line}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-5 h-7 w-24 rounded-lg bg-primary/90" />
+        </div>
+
+        <div className="relative flex items-center justify-center">
+          <div className="absolute inset-2 rounded-[24px] bg-primary/10" />
+          <div className="relative h-28 w-20 rounded-[18px] border border-border bg-background p-2 shadow-sm">
+            <div className="h-10 rounded-xl bg-primary/15" />
+            <div className="mt-2 h-1.5 w-full rounded-full bg-secondary" />
+            <div className="mt-1.5 h-1.5 w-4/5 rounded-full bg-secondary" />
+            <div className="mt-3 h-4 rounded-md bg-primary/80" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Portefolio() {
   return (
     <SiteChrome>
       <section className="max-w-2xl">
         <Chip tone="primary">Portefólio</Chip>
+
         <h1 className="orbit-gradient-text mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-          Projetos que já colocámos no ar
+          Websites pensados para cada negócio
         </h1>
+
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          Uma seleção de trabalhos reais, com as tecnologias usadas em cada um. Se procura algo
-          semelhante, falamos consigo em 24 horas.
+          Uma seleção de websites e conceitos desenvolvidos para diferentes áreas de negócio.
         </p>
       </section>
 
-      <div className="mt-10">
-        {isLoading ? (
-          <Vazio texto="A carregar projetos…" icon={Sparkles} />
-        ) : ordenados.length === 0 ? (
-          <Vazio texto="Portefólio a ser atualizado. Volte em breve." icon={Sparkles} />
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ordenados.map((p) => (
-              <article key={p.id} className="orbit-panel orbit-panel-hover flex flex-col p-5">
-                <div className="flex items-start justify-between gap-2">
-                  <h2 className="text-sm font-semibold">{p.nome}</h2>
-                  {p.destaque && (
-                    <Chip tone="warning">
-                      <Star className="mr-1 inline size-3" />
-                      Destaque
-                    </Chip>
-                  )}
+      {/* Projeto real em destaque */}
+      <section className="mt-10">
+        <article className="orbit-panel overflow-hidden">
+          <div className="grid lg:grid-cols-[1.15fr_.85fr]">
+            <div className="border-b border-border/60 p-5 sm:p-7 lg:border-b-0 lg:border-r">
+              <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-background">
+                <div className="flex h-9 items-center gap-1.5 border-b border-border/70 px-3">
+                  <span className="size-2 rounded-full bg-muted-foreground/30" />
+                  <span className="size-2 rounded-full bg-muted-foreground/30" />
+                  <span className="size-2 rounded-full bg-muted-foreground/30" />
+
+                  <div className="mx-auto h-4 w-40 rounded-full bg-secondary/70" />
                 </div>
-                {p.descricao && (
-                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-                    {p.descricao}
-                  </p>
-                )}
-                {p.tecnologias && p.tecnologias.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {p.tecnologias.slice(0, 5).map((t) => (
-                      <Chip key={t} tone="info">
-                        {t}
-                      </Chip>
-                    ))}
+
+                <div className="relative min-h-[280px] overflow-hidden bg-gradient-to-br from-primary/15 via-background to-secondary/40 p-6 sm:min-h-[340px] sm:p-8">
+                  <div className="absolute right-8 top-8 size-32 rounded-full bg-primary/10 blur-3xl" />
+
+                  <div className="relative flex h-full flex-col justify-between">
+                    <div>
+                      <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+                        Sociedade Recreativa de Manique
+                      </span>
+
+                      <h2 className="mt-4 max-w-sm text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+                        Comunidade, atividades e informação num só espaço
+                      </h2>
+
+                      <p className="mt-4 max-w-md text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                        Um website institucional claro e acessível, pensado para aproximar a
+                        coletividade da comunidade.
+                      </p>
+                    </div>
+
+                    <div className="mt-8 flex items-end justify-between gap-4">
+                      <div className="flex gap-2">
+                        <span className="h-8 w-24 rounded-lg bg-primary" />
+                        <span className="h-8 w-20 rounded-lg border border-border bg-background/70" />
+                      </div>
+
+                      <div className="hidden items-end gap-2 sm:flex">
+                        <Monitor className="size-8 text-primary/60" />
+                        <Smartphone className="size-5 text-muted-foreground/60" />
+                      </div>
+                    </div>
                   </div>
-                )}
-                <div className="mt-4 flex flex-wrap gap-3 border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
-                  {p.site_url && (
-                    <a
-                      className="inline-flex items-center gap-1 hover:text-foreground"
-                      href={p.site_url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Ver site <ArrowUpRight className="size-3" />
-                    </a>
-                  )}
-                  {p.repo_url && (
-                    <a
-                      className="inline-flex items-center gap-1 hover:text-foreground"
-                      href={p.repo_url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Github className="size-3" /> Código
-                    </a>
-                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center p-6 sm:p-8">
+              <div>
+                <Chip tone="primary">Projeto real</Chip>
+
+                <h2 className="mt-4 text-2xl font-semibold tracking-tight">
+                  Manique de Baixo
+                </h2>
+
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Website institucional desenvolvido para modernizar a presença digital da
+                  coletividade e facilitar o acesso às suas atividades, novidades e contactos.
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <a
+                  href="https://31janeiromanique.net"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                >
+                  Visitar website
+                  <ArrowUpRight className="size-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      {/* Conceitos */}
+      <section className="mt-14">
+        <div className="max-w-xl">
+          <h2 className="text-xl font-semibold tracking-tight">Outros conceitos</h2>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            Explorações visuais criadas para demonstrar diferentes abordagens e setores.
+          </p>
+        </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-3">
+          {CONCEITOS.map((projeto) => {
+            const Icon = projeto.icon;
+
+            return (
+              <article
+                key={projeto.titulo}
+                className="orbit-panel orbit-panel-hover flex flex-col overflow-hidden"
+              >
+                <div className="p-4 pb-0">
+                  <BrowserMockup
+                    eyebrow={projeto.preview.eyebrow}
+                    headline={projeto.preview.headline}
+                    lines={projeto.preview.lines}
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary">
+                      <Icon className="size-4 text-primary" />
+                    </span>
+
+                    <span className="rounded-full border border-border/70 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[.08em] text-muted-foreground">
+                      {projeto.etiqueta}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-4 text-sm font-semibold leading-snug">
+                    {projeto.titulo}
+                  </h3>
+
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {projeto.descricao}
+                  </p>
                 </div>
               </article>
-            ))}
-          </div>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      </section>
 
-      <Panel className="mt-12" bodyClassName="p-6 sm:p-8">
+      <Panel className="mt-14" bodyClassName="p-6 sm:p-8">
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold">Tem um projeto em mente?</h2>
@@ -113,6 +285,7 @@ function Portefolio() {
               Conte-nos o que precisa e receba uma proposta sem compromisso.
             </p>
           </div>
+
           <Link
             to="/contacto"
             className="inline-flex h-10 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
