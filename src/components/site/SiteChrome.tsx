@@ -32,7 +32,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1 text-sm">
+          <nav className="hidden items-center gap-1 text-sm sm:flex">
             {NAV.map((l) => (
               <Link
                 key={l.to}
