@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   CalendarClock,
   Clock3,
+  FileArchive,
   Flame,
   Globe,
   LayoutDashboard,
