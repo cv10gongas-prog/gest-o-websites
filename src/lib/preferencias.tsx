@@ -14,6 +14,18 @@ export const SECCOES = [
   { chave: "/equipa", label: "Equipa" },
 ] as const;
 
+/** Secções que já existiam antes de "/arquivos" — usadas para migrar preferências guardadas. */
+const SECCOES_ANTIGAS: string[] = [
+  "/painel",
+  "/negocios",
+  "/pipeline",
+  "/tarefas",
+  "/emails",
+  "/projetos",
+  "/pedidos",
+  "/equipa",
+];
+
 export const ATALHOS = [
   { chave: "prioridade", label: "Prioridade alta" },
   { chave: "emails", label: "Emails por enviar" },
