@@ -115,7 +115,29 @@ function Negocios() {
         </button>
       </div>
 
-      <Panel className="mt-6" bodyClassName="p-4">
+      <div className="mt-5 flex flex-wrap gap-2">
+        {(
+          [
+            ["ativos", "Em curso"],
+            ["concluidos", `Concluídos (${totalConcluidos})`],
+            ["todos", "Todos"],
+          ] as const
+        ).map(([chave, rotulo]) => (
+          <button
+            key={chave}
+            onClick={() => setProcura({ vista: chave })}
+            className={
+              vista === chave
+                ? "rounded-xl bg-primary/10 px-3 py-1.5 text-xs text-primary ring-1 ring-inset ring-primary/20"
+                : "rounded-xl border border-border/70 px-3 py-1.5 text-xs text-muted-foreground transition hover:text-foreground"
+            }
+          >
+            {rotulo}
+          </button>
+        ))}
+      </div>
+
+      <Panel className="mt-4" bodyClassName="p-4">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
