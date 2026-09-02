@@ -96,7 +96,7 @@ function Contacto() {
               <Clock3 className="size-4" /> Resposta em 24 horas úteis
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="size-4" /> ola@orbitstudio.pt
+              <Mail className="size-4" /> geral@novawebstudio.pt
             </li>
             <li className="flex items-center gap-2">
               <MapPin className="size-4" /> Portugal · trabalho remoto
