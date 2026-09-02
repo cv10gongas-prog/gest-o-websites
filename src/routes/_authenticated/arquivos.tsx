@@ -19,7 +19,7 @@ import {
 export const Route = createFileRoute("/_authenticated/arquivos")({
   head: () => ({
     meta: [
-      { title: "Arquivos de projetos — Orbit CRM" },
+      { title: "Arquivos de projetos — Nova Web CRM" },
       {
         name: "description",
         content: "Arquivos .rar com os projetos atualizados de cada negócio, até 300 MB por ficheiro.",

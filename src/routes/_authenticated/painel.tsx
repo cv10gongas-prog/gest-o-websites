@@ -29,7 +29,7 @@ import { useBusinesses, useInteractions, useOpportunities, useProfiles, useTasks
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({
     meta: [
-      { title: "Gestão — Orbit CRM" },
+      { title: "Gestão — Nova Web CRM" },
       { name: "description", content: "Métricas do dia, projetos em curso e tarefas prioritárias." },
       { name: "robots", content: "noindex" },
     ],

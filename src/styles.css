@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Orbit CRM — sistema de design futurista.
+ * Nova Web CRM — sistema de design futurista.
  * Fundo azul-marinho muito escuro, detalhes em ciano, superfícies em vidro.
  * Todas as cores são tokens semânticos em oklch. Nunca escrever cores
  * literais nos componentes: usar os tokens/utilitários definidos aqui.

@@ -26,7 +26,7 @@ import {
 export const Route = createFileRoute("/_authenticated/equipa")({
   head: () => ({
     meta: [
-      { title: "Equipa — Orbit CRM" },
+      { title: "Equipa — Nova Web CRM" },
       { name: "description", content: "Gestão de membros, funções e convites da equipa." },
       { name: "robots", content: "noindex" },
     ],

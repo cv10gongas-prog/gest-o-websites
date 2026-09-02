@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Orbit CRM — Websites para negócios locais" },
+      { title: "Nova Web CRM — Websites para negócios locais" },
       {
         name: "description",
         content:

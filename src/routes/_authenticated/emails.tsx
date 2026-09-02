@@ -19,7 +19,7 @@ import { useUtilizador } from "@/hooks/useAuth";
 export const Route = createFileRoute("/_authenticated/emails")({
   head: () => ({
     meta: [
-      { title: "Modelos de email — Orbit CRM" },
+      { title: "Modelos de email — Nova Web CRM" },
       { name: "description", content: "Modelos de email prontos a personalizar para cada projeto." },
       { name: "robots", content: "noindex" },
     ],

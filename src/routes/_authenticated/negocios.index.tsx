@@ -40,7 +40,7 @@ export const Route = createFileRoute("/_authenticated/negocios/")({
   }),
   head: () => ({
     meta: [
-      { title: "Criação e Modernização de Sites — Orbit CRM" },
+      { title: "Criação e Modernização de Sites — Nova Web CRM" },
       {
         name: "description",
         content: "Lista completa de projetos de criação e modernização de sites, com pesquisa e filtros.",

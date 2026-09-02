@@ -42,7 +42,7 @@ import {
 export const Route = createFileRoute("/_authenticated/negocios/$id")({
   head: () => ({
     meta: [
-      { title: "Ficha de projeto — Orbit CRM" },
+      { title: "Ficha de projeto — Nova Web CRM" },
       { name: "description", content: "Histórico de chamadas, tarefas e oportunidades do projeto." },
       { name: "robots", content: "noindex" },
     ],
