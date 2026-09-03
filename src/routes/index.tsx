@@ -26,7 +26,6 @@ export const Route = createFileRoute("/")({
         content:
           "Criamos websites modernos e profissionais para negócios em Cascais, Oeiras, Sintra e Lisboa. Sites de raiz, redesign e soluções simples para gerar mais contactos.",
       },
-
       {
         property: "og:title",
         content: "Nova Web Studio | Web Design e Criação de Sites em Cascais",
@@ -48,7 +47,6 @@ export const Route = createFileRoute("/")({
         property: "og:image",
         content: "https://www.novawebstudio.pt/logo.png",
       },
-
       {
         name: "twitter:card",
         content: "summary_large_image",
@@ -76,31 +74,6 @@ export const Route = createFileRoute("/")({
     ],
 
     scripts: [
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=G-4BM9SVN2RZ",
-        async: true,
-      },
-
-      {
-        children: `
-          window.dataLayer = window.dataLayer || [];
-
-          function gtag() {
-            dataLayer.push(arguments);
-          }
-
-          gtag('consent', 'default', {
-            analytics_storage: 'denied'
-          });
-
-          gtag('js', new Date());
-
-          gtag('config', 'G-4BM9SVN2RZ', {
-            anonymize_ip: true
-          });
-        `,
-      },
-
       {
         type: "application/ld+json",
         children: JSON.stringify({
