@@ -26,6 +26,7 @@ const EXTRA_TEXT: Record<
     introBadge: string;
 
     selectedWork: string;
+    secondWork: string;
 
     selectedLead: string;
 
@@ -72,20 +73,18 @@ const EXTRA_TEXT: Record<
     introBadge: "Projetos & conceitos",
 
     selectedWork: "Trabalho em destaque",
+    secondWork: "Outro projeto real",
 
     selectedLead:
       "Projetos desenvolvidos com foco em clareza, experiência de utilização e uma presença digital mais profissional.",
 
     projectType: "Tipo",
-
     projectTypeValue: "Website institucional",
 
     objective: "Objetivo",
-
     objectiveValue: "Modernizar a presença digital",
 
     delivery: "Projeto",
-
     deliveryValue: "Desenvolvimento completo",
 
     workTitle: "O que foi trabalhado",
@@ -98,16 +97,13 @@ const EXTRA_TEXT: Record<
     ],
 
     radioBadge: "Projeto real",
-
     radioPartner: "Parceiro Nova Web Studio",
 
     radioText:
       "Projeto desenvolvido para reforçar a presença digital da Rádio AlcabidecheFM, organizar informação e criar uma experiência moderna para a comunidade online.",
 
     radioType: "Website para rádio",
-
     radioObjective: "Reforçar a presença digital",
-
     radioDelivery: "Projeto desenvolvido",
 
     radioItems: [
@@ -165,20 +161,18 @@ const EXTRA_TEXT: Record<
     introBadge: "Projects & concepts",
 
     selectedWork: "Featured work",
+    secondWork: "Another live project",
 
     selectedLead:
       "Projects developed with a focus on clarity, user experience and a stronger digital presence.",
 
     projectType: "Type",
-
     projectTypeValue: "Business website",
 
     objective: "Goal",
-
     objectiveValue: "Modernise the digital presence",
 
     delivery: "Project",
-
     deliveryValue: "Full website development",
 
     workTitle: "What we worked on",
@@ -191,16 +185,13 @@ const EXTRA_TEXT: Record<
     ],
 
     radioBadge: "Live project",
-
     radioPartner: "Nova Web Studio partner",
 
     radioText:
       "A project developed to strengthen Rádio AlcabidecheFM's digital presence and create a modern online experience for its community.",
 
     radioType: "Radio website",
-
     radioObjective: "Strengthen digital presence",
-
     radioDelivery: "Developed project",
 
     radioItems: [
@@ -258,20 +249,18 @@ const EXTRA_TEXT: Record<
     introBadge: "Projekte & Konzepte",
 
     selectedWork: "Ausgewähltes Projekt",
+    secondWork: "Weiteres reales Projekt",
 
     selectedLead:
       "Projekte mit Fokus auf Klarheit, Benutzerfreundlichkeit und einen professionelleren digitalen Auftritt.",
 
     projectType: "Typ",
-
     projectTypeValue: "Unternehmenswebsite",
 
     objective: "Ziel",
-
     objectiveValue: "Digitale Präsenz modernisieren",
 
     delivery: "Projekt",
-
     deliveryValue: "Komplette Entwicklung",
 
     workTitle: "Was umgesetzt wurde",
@@ -284,16 +273,13 @@ const EXTRA_TEXT: Record<
     ],
 
     radioBadge: "Reales Projekt",
-
     radioPartner: "Partner von Nova Web Studio",
 
     radioText:
       "Projekt zur Stärkung der digitalen Präsenz von Rádio AlcabidecheFM.",
 
     radioType: "Radio-Website",
-
     radioObjective: "Digitale Präsenz stärken",
-
     radioDelivery: "Entwickeltes Projekt",
 
     radioItems: [
@@ -347,20 +333,18 @@ const EXTRA_TEXT: Record<
     introBadge: "Projets & concepts",
 
     selectedWork: "Projet à la une",
+    secondWork: "Autre projet réel",
 
     selectedLead:
       "Des projets développés autour de la clarté et de l'expérience utilisateur.",
 
     projectType: "Type",
-
     projectTypeValue: "Site institutionnel",
 
     objective: "Objectif",
-
     objectiveValue: "Moderniser la présence digitale",
 
     delivery: "Projet",
-
     deliveryValue: "Développement complet",
 
     workTitle: "Travail réalisé",
@@ -373,16 +357,13 @@ const EXTRA_TEXT: Record<
     ],
 
     radioBadge: "Projet réel",
-
     radioPartner: "Partenaire Nova Web Studio",
 
     radioText:
       "Projet développé pour renforcer la présence digitale de Rádio AlcabidecheFM.",
 
     radioType: "Site radio",
-
     radioObjective: "Renforcer la présence digitale",
-
     radioDelivery: "Projet développé",
 
     radioItems: [
@@ -436,20 +417,18 @@ const EXTRA_TEXT: Record<
     introBadge: "Proyectos & conceptos",
 
     selectedWork: "Proyecto destacado",
+    secondWork: "Otro proyecto real",
 
     selectedLead:
       "Proyectos desarrollados con foco en claridad y experiencia de usuario.",
 
     projectType: "Tipo",
-
     projectTypeValue: "Web corporativa",
 
     objective: "Objetivo",
-
     objectiveValue: "Modernizar la presencia digital",
 
     delivery: "Proyecto",
-
     deliveryValue: "Desarrollo completo",
 
     workTitle: "Qué se trabajó",
@@ -462,16 +441,13 @@ const EXTRA_TEXT: Record<
     ],
 
     radioBadge: "Proyecto real",
-
     radioPartner: "Socio Nova Web Studio",
 
     radioText:
       "Proyecto desarrollado para reforzar la presencia digital de Rádio AlcabidecheFM.",
 
     radioType: "Web para radio",
-
     radioObjective: "Reforzar la presencia digital",
-
     radioDelivery: "Proyecto desarrollado",
 
     radioItems: [
@@ -564,7 +540,6 @@ function MiniBrowser({
                 className="flex items-center gap-2 text-[9px] text-muted-foreground"
               >
                 <CheckCircle2 className="size-3 text-primary" />
-
                 {line}
               </div>
             ))}
@@ -577,15 +552,14 @@ function MiniBrowser({
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   const t = dict[locale].portfolio;
-
   const paths = PATHS[locale];
-
   const extra = EXTRA_TEXT[locale];
 
   const approachIcons = [Target, Palette, Gauge, BadgeCheck];
 
   return (
     <SiteChrome locale={locale} page="portfolio">
+      {/* INTRO */}
       <section className="max-w-4xl">
         <Chip tone="primary">{extra.introBadge}</Chip>
 
@@ -596,6 +570,11 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
           {t.lead}
         </p>
+
+        <div className="mt-6 inline-flex max-w-2xl items-center gap-3 rounded-2xl border border-border/60 bg-card/30 px-4 py-3 text-xs text-muted-foreground">
+          <Sparkles className="size-4 shrink-0 text-primary" />
+          {extra.selectedLead}
+        </div>
       </section>
 
       {/* MANIQUE */}
@@ -610,26 +589,52 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
         </div>
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40">
+        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
             <div className="relative min-h-[420px] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-8 lg:border-b-0 lg:border-r">
-              <span className="text-[9px] font-semibold uppercase tracking-[.2em] text-primary">
-                Sociedade 31 de Janeiro
-              </span>
+              <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
-              <h2 className="mt-10 max-w-lg text-4xl font-semibold leading-tight tracking-tight">
-                {t.featuredHeadline}
-              </h2>
+              <div className="relative">
+                <span className="text-[9px] font-semibold uppercase tracking-[.2em] text-primary">
+                  Sociedade 31 de Janeiro
+                </span>
 
-              <p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground">
-                {t.featuredText}
-              </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Manique de Baixo
+                </p>
+
+                <h2 className="mt-10 max-w-lg text-4xl font-semibold leading-tight tracking-tight">
+                  {t.featuredHeadline}
+                </h2>
+
+                <p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground">
+                  {t.featuredText}
+                </p>
+
+                <div className="mt-7 flex gap-2">
+                  <span className="h-9 w-28 rounded-lg bg-primary" />
+                  <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
+                </div>
+
+                <div className="mt-10 grid grid-cols-3 gap-3">
+                  {[0, 1, 2].map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-xl border border-border/50 bg-background/50 p-3"
+                    >
+                      <div className="h-10 rounded-lg bg-primary/[0.08]" />
+                      <div className="mt-3 h-1.5 rounded-full bg-secondary" />
+                      <div className="mt-1.5 h-1.5 w-3/4 rounded-full bg-secondary" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="p-7 sm:p-9">
+            <div className="flex flex-col justify-center p-7 sm:p-9">
               <Chip tone="primary">{t.realChip}</Chip>
 
-              <h2 className="mt-5 text-3xl font-semibold">
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight">
                 Manique de Baixo
               </h2>
 
@@ -637,39 +642,85 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 {t.featuredDesc}
               </p>
 
-              <div className="mt-7 space-y-2">
-                {extra.workItems.map((item) => (
-                  <div
-                    key={item}
-                    className="flex gap-2 text-xs text-muted-foreground"
-                  >
-                    <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
+              <div className="mt-7 grid gap-3">
+                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                  <span className="text-muted-foreground">
+                    {extra.projectType}
+                  </span>
 
-                    {item}
-                  </div>
-                ))}
+                  <span className="font-medium">
+                    {extra.projectTypeValue}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                  <span className="text-muted-foreground">
+                    {extra.objective}
+                  </span>
+
+                  <span className="font-medium">
+                    {extra.objectiveValue}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-[90px_1fr] gap-4 text-xs">
+                  <span className="text-muted-foreground">
+                    {extra.delivery}
+                  </span>
+
+                  <span className="font-medium">
+                    {extra.deliveryValue}
+                  </span>
+                </div>
               </div>
 
-              <a
-                href="https://31janeiromanique.net"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
-              >
-                {t.visit}
+              <div className="mt-8">
+                <p className="text-xs font-semibold">
+                  {extra.workTitle}
+                </p>
 
-                <ArrowUpRight className="size-4" />
-              </a>
+                <div className="mt-3 space-y-2">
+                  {extra.workItems.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground"
+                    >
+                      <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="https://31janeiromanique.net"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
+                >
+                  {t.visit}
+                  <ArrowUpRight className="size-4" />
+                </a>
+
+                <Link
+                  to={paths.contact}
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
+                >
+                  {t.ctaButton}
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
             </div>
           </div>
         </article>
       </section>
 
-      {/* RADIO */}
+      {/* RÁDIO */}
       <section className="mt-16">
         <div className="mb-5 flex items-center justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
-            {extra.selectedWork}
+            {extra.secondWork}
           </span>
 
           <span className="text-[10px] uppercase tracking-[.18em] text-muted-foreground">
@@ -677,32 +728,67 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
         </div>
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40">
+        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[.9fr_1.1fr]">
-            <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-[#f5f5f3] p-8 lg:border-b-0 lg:border-r">
-              <img
-                src="/radio-alcabidechefm.png"
-                alt="Rádio AlcabidecheFM"
-                className="max-h-[300px] max-w-[75%] object-contain"
-              />
+            {/* VISUAL DA RÁDIO */}
+            <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-8 lg:border-b-0 lg:border-r">
+              <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+
+              <div className="absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
+
+              <div className="relative w-full max-w-md">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm sm:p-10">
+                  <div className="flex justify-center">
+                    <div className="flex size-44 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                      <img
+                        src="/radio-alcabidechefm.png"
+                        alt="Rádio AlcabidecheFM"
+                        className="max-h-[150px] max-w-[70%] object-contain sm:max-h-[175px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-7 text-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-primary">
+                      Rádio · Alcabideche
+                    </p>
+
+                    <h3 className="mt-3 text-xl font-semibold text-white sm:text-2xl">
+                      Rádio AlcabidecheFM
+                    </h3>
+
+                    <div className="mx-auto mt-5 flex max-w-[230px] items-end justify-center gap-1.5">
+                      {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map(
+                        (height, idx) => (
+                          <span
+                            key={idx}
+                            className="w-1.5 rounded-full bg-primary/70"
+                            style={{ height }}
+                          />
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="p-7 sm:p-9">
+            {/* DETALHES DA RÁDIO */}
+            <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-10">
               <div className="flex flex-wrap gap-2">
                 <Chip tone="primary">{extra.radioBadge}</Chip>
 
-                <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/[0.06] px-3 text-[9px] font-semibold uppercase tracking-[.14em] text-primary">
+                <span className="inline-flex min-h-7 items-center rounded-full border border-primary/20 bg-primary/[0.06] px-3 text-[9px] font-semibold uppercase tracking-[.14em] text-primary">
                   {extra.radioPartner}
                 </span>
               </div>
 
-              <div className="mt-5 flex items-center gap-2 text-xs text-primary">
-                <Radio className="size-4" />
-
-                AlcabidecheFM
+              <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
+                <Radio className="size-3.5" />
+                Rádio · Alcabideche
               </div>
 
-              <h2 className="mt-3 text-3xl font-semibold">
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">
                 Rádio AlcabidecheFM
               </h2>
 
@@ -710,29 +796,67 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 {extra.radioText}
               </p>
 
-              <div className="mt-7 space-y-2">
-                {extra.radioItems.map((item) => (
-                  <div
-                    key={item}
-                    className="flex gap-2 text-xs text-muted-foreground"
-                  >
-                    <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
+              <div className="mt-7 grid gap-3">
+                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                  <span className="text-muted-foreground">
+                    {extra.projectType}
+                  </span>
 
-                    {item}
-                  </div>
-                ))}
+                  <span className="font-medium">
+                    {extra.radioType}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                  <span className="text-muted-foreground">
+                    {extra.objective}
+                  </span>
+
+                  <span className="font-medium">
+                    {extra.radioObjective}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-[90px_1fr] gap-4 text-xs">
+                  <span className="text-muted-foreground">
+                    {extra.delivery}
+                  </span>
+
+                  <span className="font-medium">
+                    {extra.radioDelivery}
+                  </span>
+                </div>
               </div>
 
-              <a
-                href="https://radioalcabidechefm.eu"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
-              >
-                {extra.radioVisit}
+              <div className="mt-8">
+                <p className="text-xs font-semibold">
+                  {extra.workTitle}
+                </p>
 
-                <ArrowUpRight className="size-4" />
-              </a>
+                <div className="mt-3 space-y-2">
+                  {extra.radioItems.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground"
+                    >
+                      <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <a
+                  href="https://radioalcabidechefm.eu"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
+                >
+                  {extra.radioVisit}
+                  <ArrowUpRight className="size-4" />
+                </a>
+              </div>
             </div>
           </div>
         </article>
@@ -740,15 +864,23 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
       {/* CONCEITOS */}
       <section className="mt-20">
-        <Chip tone="primary">{extra.conceptsBadge}</Chip>
+        <div className="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+          <div className="max-w-2xl">
+            <Chip tone="primary">{extra.conceptsBadge}</Chip>
 
-        <h2 className="mt-4 text-3xl font-semibold">
-          {t.othersTitle}
-        </h2>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+              {t.othersTitle}
+            </h2>
 
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-          {extra.conceptNote}
-        </p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              {extra.conceptNote}
+            </p>
+          </div>
+
+          <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
+            03 — 05
+          </span>
+        </div>
 
         <div className="mt-7 grid gap-5 lg:grid-cols-3">
           {t.concepts.map((project, idx) => {
@@ -757,33 +889,42 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
             return (
               <article
                 key={project.titulo}
-                className="rounded-3xl border border-border/70 bg-card/40 p-4"
+                className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/40 transition duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-xl hover:shadow-black/5"
               >
-                <MiniBrowser
-                  eyebrow={project.preview.eyebrow}
-                  headline={project.preview.headline}
-                  lines={project.preview.lines}
-                  icon={Icon}
-                />
+                <div className="p-4 pb-0">
+                  <MiniBrowser
+                    eyebrow={project.preview.eyebrow}
+                    headline={project.preview.headline}
+                    lines={project.preview.lines}
+                    icon={Icon}
+                  />
+                </div>
 
-                <div className="p-2 pt-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] uppercase tracking-[.14em] text-primary">
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="rounded-full border border-primary/15 bg-primary/[0.06] px-3 py-1 text-[9px] font-semibold uppercase tracking-[.12em] text-primary">
                       {project.etiqueta}
                     </span>
 
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
                       0{idx + 3}
                     </span>
                   </div>
 
-                  <h3 className="mt-4 font-semibold">
+                  <h3 className="mt-5 text-base font-semibold leading-snug">
                     {project.titulo}
                   </h3>
 
                   <p className="mt-2 text-xs leading-6 text-muted-foreground">
                     {project.descricao}
                   </p>
+
+                  <div className="mt-auto pt-6">
+                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-[.14em] text-muted-foreground">
+                      <Icon className="size-3.5 text-primary" />
+                      {extra.conceptLabels[idx]}
+                    </div>
+                  </div>
                 </div>
               </article>
             );
@@ -791,7 +932,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* PROCESSO */}
+      {/* ABORDAGEM */}
       <section className="mt-20">
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
           <div>
@@ -799,25 +940,33 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               Nova Web Studio
             </Chip>
 
-            <h2 className="mt-4 text-3xl font-semibold">
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
               {extra.approachTitle}
             </h2>
 
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">
+            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
               {extra.approachLead}
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.approach.map((item, idx) => {
-              const Icon = approachIcons[idx];
+              const Icon = approachIcons[idx] ?? BadgeCheck;
 
               return (
                 <article
                   key={item.title}
                   className="orbit-panel orbit-panel-hover p-5"
                 >
-                  <Icon className="size-4 text-primary" />
+                  <div className="flex items-center justify-between">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
+                      <Icon className="size-4 text-primary" />
+                    </span>
+
+                    <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
+                      0{idx + 1}
+                    </span>
+                  </div>
 
                   <h3 className="mt-4 text-sm font-semibold">
                     {item.title}
@@ -835,28 +984,29 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
       {/* CTA */}
       <section className="mt-20">
-        <div className="rounded-3xl border border-primary/20 bg-primary/[0.06] p-8 sm:p-10">
-          <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
-            {extra.finalBadge}
-          </span>
+        <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-primary/[0.06] p-8 sm:p-10">
+          <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
-          <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <h2 className="text-2xl font-semibold">
+              <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+                {extra.finalBadge}
+              </span>
+
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
                 {t.ctaTitle}
               </h2>
 
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
                 {t.ctaText}
               </p>
             </div>
 
             <Link
               to={paths.contact}
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
             >
               {t.ctaButton}
-
               <ArrowRight className="size-4" />
             </Link>
           </div>
