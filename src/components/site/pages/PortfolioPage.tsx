@@ -8,6 +8,7 @@ import {
   Gauge,
   Hammer,
   Palette,
+  Radio,
   Sparkles,
   Target,
   Waves,
@@ -23,25 +24,40 @@ const EXTRA_TEXT: Record<
   Locale,
   {
     introBadge: string;
+
     selectedWork: string;
+
     selectedLead: string;
 
     projectType: string;
     projectTypeValue: string;
+
     objective: string;
     objectiveValue: string;
+
     delivery: string;
     deliveryValue: string;
 
     workTitle: string;
     workItems: string[];
 
+    radioBadge: string;
+    radioPartner: string;
+    radioText: string;
+    radioType: string;
+    radioObjective: string;
+    radioDelivery: string;
+    radioItems: string[];
+    radioVisit: string;
+
     conceptsBadge: string;
+
     conceptNote: string;
 
     conceptLabels: string[];
 
     approachTitle: string;
+
     approachLead: string;
 
     approach: {
@@ -54,20 +70,26 @@ const EXTRA_TEXT: Record<
 > = {
   pt: {
     introBadge: "Projetos & conceitos",
+
     selectedWork: "Trabalho em destaque",
+
     selectedLead:
       "Projetos desenvolvidos com foco em clareza, experiência de utilização e uma presença digital mais profissional.",
 
     projectType: "Tipo",
+
     projectTypeValue: "Website institucional",
 
     objective: "Objetivo",
+
     objectiveValue: "Modernizar a presença digital",
 
     delivery: "Projeto",
+
     deliveryValue: "Desenvolvimento completo",
 
     workTitle: "O que foi trabalhado",
+
     workItems: [
       "Estrutura e organização do conteúdo",
       "Design responsivo para telemóvel e computador",
@@ -75,7 +97,30 @@ const EXTRA_TEXT: Record<
       "Contactos e navegação simplificados",
     ],
 
+    radioBadge: "Projeto real",
+
+    radioPartner: "Parceiro Nova Web Studio",
+
+    radioText:
+      "Projeto desenvolvido para reforçar a presença digital da Rádio AlcabidecheFM, organizar informação e criar uma experiência moderna para a comunidade online.",
+
+    radioType: "Website para rádio",
+
+    radioObjective: "Reforçar a presença digital",
+
+    radioDelivery: "Projeto desenvolvido",
+
+    radioItems: [
+      "Presença digital adaptada à identidade da rádio",
+      "Estrutura pensada para conteúdos e informação",
+      "Experiência responsiva",
+      "Ligação à comunidade local",
+    ],
+
+    radioVisit: "Visitar website",
+
     conceptsBadge: "Exploração visual",
+
     conceptNote:
       "Os projetos abaixo são conceitos demonstrativos criados para explorar diferentes setores, estilos e necessidades.",
 
@@ -86,25 +131,30 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "Mais do que mudar cores e fontes",
+
     approachLead:
       "Cada projeto é pensado de acordo com o negócio, o público e aquilo que o website precisa realmente de fazer.",
 
     approach: [
       {
         title: "Estratégia",
-        text: "Organizamos a informação para que o visitante perceba rapidamente o negócio e saiba o que fazer a seguir.",
+        text:
+          "Organizamos a informação para que o visitante perceba rapidamente o negócio e saiba o que fazer a seguir.",
       },
       {
         title: "Design",
-        text: "Criamos uma identidade visual coerente, moderna e adequada ao posicionamento de cada projeto.",
+        text:
+          "Criamos uma identidade visual coerente, moderna e adequada ao posicionamento de cada projeto.",
       },
       {
         title: "Performance",
-        text: "Os websites são preparados para carregar rapidamente e funcionar corretamente em diferentes dispositivos.",
+        text:
+          "Os websites são preparados para carregar rapidamente e funcionar corretamente em diferentes dispositivos.",
       },
       {
         title: "Conversão",
-        text: "Botões, contactos e conteúdos são posicionados para facilitar pedidos de informação e orçamento.",
+        text:
+          "Botões, contactos e conteúdos são posicionados para facilitar pedidos de informação e orçamento.",
       },
     ],
 
@@ -113,20 +163,26 @@ const EXTRA_TEXT: Record<
 
   en: {
     introBadge: "Projects & concepts",
+
     selectedWork: "Featured work",
+
     selectedLead:
       "Projects developed with a focus on clarity, user experience and a stronger digital presence.",
 
     projectType: "Type",
+
     projectTypeValue: "Business website",
 
     objective: "Goal",
+
     objectiveValue: "Modernise the digital presence",
 
     delivery: "Project",
+
     deliveryValue: "Full website development",
 
     workTitle: "What we worked on",
+
     workItems: [
       "Content structure and organisation",
       "Responsive design for mobile and desktop",
@@ -134,7 +190,30 @@ const EXTRA_TEXT: Record<
       "Simplified navigation and contact",
     ],
 
+    radioBadge: "Live project",
+
+    radioPartner: "Nova Web Studio partner",
+
+    radioText:
+      "A project developed to strengthen Rádio AlcabidecheFM's digital presence and create a modern online experience for its community.",
+
+    radioType: "Radio website",
+
+    radioObjective: "Strengthen digital presence",
+
+    radioDelivery: "Developed project",
+
+    radioItems: [
+      "Digital presence aligned with the radio brand",
+      "Structure designed around radio content",
+      "Responsive experience",
+      "Strong local community connection",
+    ],
+
+    radioVisit: "Visit website",
+
     conceptsBadge: "Visual exploration",
+
     conceptNote:
       "The projects below are demonstration concepts created to explore different industries, styles and needs.",
 
@@ -145,25 +224,30 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "More than changing colours and fonts",
+
     approachLead:
       "Each project is shaped around the business, its audience and what the website actually needs to achieve.",
 
     approach: [
       {
         title: "Strategy",
-        text: "We organise information so visitors quickly understand the business and know what to do next.",
+        text:
+          "We organise information so visitors quickly understand the business and know what to do next.",
       },
       {
         title: "Design",
-        text: "We create a coherent, modern visual identity suited to each project's positioning.",
+        text:
+          "We create a coherent, modern visual identity suited to each project's positioning.",
       },
       {
         title: "Performance",
-        text: "Websites are prepared to load quickly and work correctly across different devices.",
+        text:
+          "Websites are prepared to load quickly and work correctly across different devices.",
       },
       {
         title: "Conversion",
-        text: "Calls to action, contact details and content are positioned to make enquiries easier.",
+        text:
+          "Calls to action, contact details and content are positioned to make enquiries easier.",
       },
     ],
 
@@ -172,30 +256,59 @@ const EXTRA_TEXT: Record<
 
   de: {
     introBadge: "Projekte & Konzepte",
+
     selectedWork: "Ausgewähltes Projekt",
+
     selectedLead:
       "Projekte mit Fokus auf Klarheit, Benutzerfreundlichkeit und einen professionelleren digitalen Auftritt.",
 
     projectType: "Typ",
+
     projectTypeValue: "Unternehmenswebsite",
 
     objective: "Ziel",
+
     objectiveValue: "Digitale Präsenz modernisieren",
 
     delivery: "Projekt",
+
     deliveryValue: "Komplette Entwicklung",
 
     workTitle: "Was umgesetzt wurde",
+
     workItems: [
       "Struktur und Organisation der Inhalte",
-      "Responsives Design für Mobilgeräte und Desktop",
-      "Klare Präsentation von Aktivitäten und Informationen",
-      "Vereinfachte Navigation und Kontaktaufnahme",
+      "Responsives Design",
+      "Klare Präsentation",
+      "Vereinfachte Navigation",
     ],
 
+    radioBadge: "Reales Projekt",
+
+    radioPartner: "Partner von Nova Web Studio",
+
+    radioText:
+      "Projekt zur Stärkung der digitalen Präsenz von Rádio AlcabidecheFM.",
+
+    radioType: "Radio-Website",
+
+    radioObjective: "Digitale Präsenz stärken",
+
+    radioDelivery: "Entwickeltes Projekt",
+
+    radioItems: [
+      "Digitale Markenpräsenz",
+      "Struktur für Radioinhalte",
+      "Responsive Erfahrung",
+      "Lokale Verbindung",
+    ],
+
+    radioVisit: "Website besuchen",
+
     conceptsBadge: "Visuelle Exploration",
+
     conceptNote:
-      "Die folgenden Projekte sind Demonstrationskonzepte für verschiedene Branchen, Stile und Anforderungen.",
+      "Demonstrationskonzepte für verschiedene Branchen und Anforderungen.",
 
     conceptLabels: [
       "Lokale Dienstleistungen",
@@ -204,25 +317,26 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "Mehr als nur Farben und Schriftarten",
+
     approachLead:
-      "Jedes Projekt wird an das Unternehmen, seine Zielgruppe und die tatsächlichen Ziele der Website angepasst.",
+      "Jedes Projekt wird an das Unternehmen und seine Ziele angepasst.",
 
     approach: [
       {
         title: "Strategie",
-        text: "Wir strukturieren Informationen so, dass Besucher das Unternehmen schnell verstehen.",
+        text: "Wir strukturieren Informationen klar.",
       },
       {
         title: "Design",
-        text: "Wir entwickeln eine moderne und konsistente visuelle Identität.",
+        text: "Wir entwickeln moderne visuelle Identitäten.",
       },
       {
         title: "Performance",
-        text: "Websites werden für schnelle Ladezeiten und verschiedene Geräte optimiert.",
+        text: "Websites werden für schnelle Ladezeiten optimiert.",
       },
       {
         title: "Conversion",
-        text: "Kontaktmöglichkeiten und Inhalte werden gezielt platziert, um Anfragen zu erleichtern.",
+        text: "Kontakte werden gezielt erleichtert.",
       },
     ],
 
@@ -231,30 +345,59 @@ const EXTRA_TEXT: Record<
 
   fr: {
     introBadge: "Projets & concepts",
+
     selectedWork: "Projet à la une",
+
     selectedLead:
-      "Des projets développés autour de la clarté, de l'expérience utilisateur et d'une présence digitale plus professionnelle.",
+      "Des projets développés autour de la clarté et de l'expérience utilisateur.",
 
     projectType: "Type",
+
     projectTypeValue: "Site institutionnel",
 
     objective: "Objectif",
+
     objectiveValue: "Moderniser la présence digitale",
 
     delivery: "Projet",
+
     deliveryValue: "Développement complet",
 
     workTitle: "Travail réalisé",
+
     workItems: [
-      "Structure et organisation du contenu",
-      "Design responsive mobile et ordinateur",
-      "Présentation claire des activités et informations",
-      "Navigation et contact simplifiés",
+      "Organisation du contenu",
+      "Design responsive",
+      "Présentation claire",
+      "Navigation simplifiée",
     ],
 
+    radioBadge: "Projet réel",
+
+    radioPartner: "Partenaire Nova Web Studio",
+
+    radioText:
+      "Projet développé pour renforcer la présence digitale de Rádio AlcabidecheFM.",
+
+    radioType: "Site radio",
+
+    radioObjective: "Renforcer la présence digitale",
+
+    radioDelivery: "Projet développé",
+
+    radioItems: [
+      "Identité digitale",
+      "Structure adaptée à la radio",
+      "Expérience responsive",
+      "Lien avec la communauté",
+    ],
+
+    radioVisit: "Visiter le site",
+
     conceptsBadge: "Exploration visuelle",
+
     conceptNote:
-      "Les projets ci-dessous sont des concepts démonstratifs créés pour explorer différents secteurs et styles.",
+      "Concepts démonstratifs créés pour différents secteurs.",
 
     conceptLabels: [
       "Services locaux",
@@ -263,25 +406,26 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "Bien plus que changer des couleurs",
+
     approachLead:
-      "Chaque projet est pensé selon l'activité, le public et les objectifs réels du site.",
+      "Chaque projet est pensé selon l'activité et ses objectifs.",
 
     approach: [
       {
         title: "Stratégie",
-        text: "Nous organisons l'information pour que le visiteur comprenne rapidement l'activité.",
+        text: "Nous organisons clairement l'information.",
       },
       {
         title: "Design",
-        text: "Nous créons une identité visuelle moderne et cohérente adaptée au projet.",
+        text: "Nous créons une identité visuelle moderne.",
       },
       {
         title: "Performance",
-        text: "Les sites sont préparés pour être rapides et fonctionner sur tous les appareils.",
+        text: "Les sites sont préparés pour être rapides.",
       },
       {
         title: "Conversion",
-        text: "Les appels à l'action et les contacts sont placés pour faciliter les demandes.",
+        text: "Les contacts sont facilités.",
       },
     ],
 
@@ -290,30 +434,59 @@ const EXTRA_TEXT: Record<
 
   es: {
     introBadge: "Proyectos & conceptos",
+
     selectedWork: "Proyecto destacado",
+
     selectedLead:
-      "Proyectos desarrollados con foco en claridad, experiencia de usuario y una presencia digital más profesional.",
+      "Proyectos desarrollados con foco en claridad y experiencia de usuario.",
 
     projectType: "Tipo",
+
     projectTypeValue: "Web corporativa",
 
     objective: "Objetivo",
+
     objectiveValue: "Modernizar la presencia digital",
 
     delivery: "Proyecto",
+
     deliveryValue: "Desarrollo completo",
 
     workTitle: "Qué se trabajó",
+
     workItems: [
-      "Estructura y organización del contenido",
-      "Diseño responsive para móvil y ordenador",
-      "Presentación clara de actividades e información",
-      "Navegación y contacto simplificados",
+      "Organización del contenido",
+      "Diseño responsive",
+      "Presentación clara",
+      "Navegación simplificada",
     ],
 
+    radioBadge: "Proyecto real",
+
+    radioPartner: "Socio Nova Web Studio",
+
+    radioText:
+      "Proyecto desarrollado para reforzar la presencia digital de Rádio AlcabidecheFM.",
+
+    radioType: "Web para radio",
+
+    radioObjective: "Reforzar la presencia digital",
+
+    radioDelivery: "Proyecto desarrollado",
+
+    radioItems: [
+      "Identidad digital",
+      "Estructura adaptada a la radio",
+      "Experiencia responsive",
+      "Conexión local",
+    ],
+
+    radioVisit: "Visitar web",
+
     conceptsBadge: "Exploración visual",
+
     conceptNote:
-      "Los proyectos siguientes son conceptos demostrativos creados para explorar distintos sectores, estilos y necesidades.",
+      "Conceptos demostrativos creados para distintos sectores.",
 
     conceptLabels: [
       "Servicios locales",
@@ -321,26 +494,27 @@ const EXTRA_TEXT: Record<
       "Negocio artesanal",
     ],
 
-    approachTitle: "Mucho más que cambiar colores y tipografías",
+    approachTitle: "Mucho más que cambiar colores",
+
     approachLead:
-      "Cada proyecto se plantea según el negocio, su público y lo que la web realmente necesita conseguir.",
+      "Cada proyecto se plantea según el negocio y sus objetivos.",
 
     approach: [
       {
         title: "Estrategia",
-        text: "Organizamos la información para que el visitante entienda rápidamente el negocio.",
+        text: "Organizamos la información.",
       },
       {
         title: "Diseño",
-        text: "Creamos una identidad visual moderna y coherente adaptada a cada proyecto.",
+        text: "Creamos identidades modernas.",
       },
       {
         title: "Rendimiento",
-        text: "Las webs se preparan para cargar rápido y funcionar correctamente en distintos dispositivos.",
+        text: "Preparamos webs rápidas.",
       },
       {
         title: "Conversión",
-        text: "Los contactos y llamadas a la acción se colocan para facilitar solicitudes.",
+        text: "Facilitamos solicitudes y contactos.",
       },
     ],
 
@@ -353,16 +527,14 @@ function MiniBrowser({
   headline,
   lines,
   icon: Icon,
-  index,
 }: {
   eyebrow: string;
   headline: string;
   lines: string[];
   icon: typeof Waves;
-  index: number;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border/70 bg-background shadow-lg shadow-black/5">
+    <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-background shadow-lg shadow-black/5">
       <div className="flex h-9 items-center gap-1.5 border-b border-border/60 bg-card/60 px-3">
         <span className="size-1.5 rounded-full bg-muted-foreground/30" />
         <span className="size-1.5 rounded-full bg-muted-foreground/20" />
@@ -372,23 +544,8 @@ function MiniBrowser({
       </div>
 
       <div className="relative min-h-[245px] overflow-hidden p-5">
-        <div className="absolute -right-12 -top-12 size-40 rounded-full bg-primary/10 blur-3xl transition duration-500 group-hover:bg-primary/20" />
-
-        <div
-          className={`absolute ${
-            index === 1 ? "bottom-5 right-5" : "right-5 top-16"
-          }`}
-        >
-          <div className="relative grid size-24 place-items-center rounded-[28px] border border-primary/15 bg-primary/[0.06]">
-            <Icon className="size-8 text-primary/60" />
-
-            <div className="absolute -bottom-4 -left-6 h-16 w-10 rounded-xl border border-border bg-background p-1.5 shadow-xl">
-              <div className="h-5 rounded-md bg-primary/15" />
-              <div className="mt-1 h-1 rounded-full bg-secondary" />
-              <div className="mt-1 h-1 w-3/4 rounded-full bg-secondary" />
-              <div className="mt-2 h-2.5 rounded bg-primary/70" />
-            </div>
-          </div>
+        <div className="absolute right-5 top-16 grid size-24 place-items-center rounded-[28px] border border-primary/15 bg-primary/[0.06]">
+          <Icon className="size-8 text-primary/60" />
         </div>
 
         <div className="relative z-10 max-w-[65%]">
@@ -407,12 +564,11 @@ function MiniBrowser({
                 className="flex items-center gap-2 text-[9px] text-muted-foreground"
               >
                 <CheckCircle2 className="size-3 text-primary" />
+
                 {line}
               </div>
             ))}
           </div>
-
-          <div className="mt-6 h-7 w-24 rounded-lg bg-primary/90" />
         </div>
       </div>
     </div>
@@ -421,7 +577,9 @@ function MiniBrowser({
 
 export function PortfolioPage({ locale }: { locale: Locale }) {
   const t = dict[locale].portfolio;
+
   const paths = PATHS[locale];
+
   const extra = EXTRA_TEXT[locale];
 
   const approachIcons = [Target, Palette, Gauge, BadgeCheck];
@@ -438,108 +596,40 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
           {t.lead}
         </p>
-
-        <div className="mt-6 inline-flex max-w-2xl items-center gap-3 rounded-2xl border border-border/60 bg-card/30 px-4 py-3 text-xs text-muted-foreground">
-          <Sparkles className="size-4 shrink-0 text-primary" />
-          {extra.selectedLead}
-        </div>
       </section>
 
+      {/* MANIQUE */}
       <section className="mt-14">
         <div className="mb-5 flex items-center justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
             {extra.selectedWork}
           </span>
 
-          <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
+          <span className="text-[10px] uppercase tracking-[.18em] text-muted-foreground">
             01 — {t.realChip}
           </span>
         </div>
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
+        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
-            <div className="relative overflow-hidden border-b border-border/60 bg-background/30 p-5 sm:p-8 lg:border-b-0 lg:border-r">
-              <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
-              <div className="absolute -bottom-28 right-0 size-64 rounded-full bg-primary/5 blur-3xl" />
+            <div className="relative min-h-[420px] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-8 lg:border-b-0 lg:border-r">
+              <span className="text-[9px] font-semibold uppercase tracking-[.2em] text-primary">
+                Sociedade 31 de Janeiro
+              </span>
 
-              <div className="relative mx-auto max-w-2xl">
-                <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-2xl shadow-black/10">
-                  <div className="flex h-10 items-center gap-1.5 border-b border-border/60 bg-card/80 px-3">
-                    <span className="size-2 rounded-full bg-muted-foreground/30" />
-                    <span className="size-2 rounded-full bg-muted-foreground/20" />
-                    <span className="size-2 rounded-full bg-muted-foreground/10" />
+              <h2 className="mt-10 max-w-lg text-4xl font-semibold leading-tight tracking-tight">
+                {t.featuredHeadline}
+              </h2>
 
-                    <div className="mx-auto flex h-5 w-44 items-center justify-center rounded-md bg-secondary/60 text-[8px] text-muted-foreground">
-                      31janeiromanique.net
-                    </div>
-                  </div>
-
-                  <div className="relative min-h-[350px] overflow-hidden bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-6 sm:min-h-[410px] sm:p-9">
-                    <div className="absolute right-8 top-8 size-40 rounded-full bg-primary/10 blur-3xl" />
-
-                    <div className="relative">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-[9px] font-semibold uppercase tracking-[.2em] text-primary">
-                            Sociedade 31 de Janeiro
-                          </span>
-
-                          <p className="mt-2 text-xs text-muted-foreground">
-                            Manique de Baixo
-                          </p>
-                        </div>
-
-                        <div className="hidden gap-2 sm:flex">
-                          <span className="h-7 w-14 rounded-lg border border-border bg-background/70" />
-                          <span className="h-7 w-20 rounded-lg bg-primary" />
-                        </div>
-                      </div>
-
-                      <div className="mt-12 max-w-lg">
-                        <h2 className="text-3xl font-semibold leading-[1.1] tracking-tight sm:text-4xl">
-                          {t.featuredHeadline}
-                        </h2>
-
-                        <p className="mt-4 max-w-md text-xs leading-6 text-muted-foreground sm:text-sm">
-                          {t.featuredText}
-                        </p>
-
-                        <div className="mt-6 flex gap-2">
-                          <span className="h-9 w-28 rounded-lg bg-primary" />
-                          <span className="h-9 w-24 rounded-lg border border-border bg-background/50" />
-                        </div>
-                      </div>
-
-                      <div className="mt-10 grid grid-cols-3 gap-3">
-                        {[0, 1, 2].map((i) => (
-                          <div
-                            key={i}
-                            className="rounded-xl border border-border/50 bg-background/50 p-3"
-                          >
-                            <div className="h-10 rounded-lg bg-primary/[0.08]" />
-                            <div className="mt-3 h-1.5 rounded-full bg-secondary" />
-                            <div className="mt-1.5 h-1.5 w-3/4 rounded-full bg-secondary" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute -bottom-5 -right-1 hidden h-44 w-24 rounded-[24px] border border-border bg-background p-2 shadow-2xl sm:block">
-                  <div className="h-5 rounded-md bg-secondary" />
-                  <div className="mt-3 h-16 rounded-xl bg-primary/10" />
-                  <div className="mt-3 h-1.5 rounded-full bg-secondary" />
-                  <div className="mt-1.5 h-1.5 w-3/4 rounded-full bg-secondary" />
-                  <div className="mt-4 h-6 rounded-md bg-primary" />
-                </div>
-              </div>
+              <p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground">
+                {t.featuredText}
+              </p>
             </div>
 
-            <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+            <div className="p-7 sm:p-9">
               <Chip tone="primary">{t.realChip}</Chip>
 
-              <h2 className="mt-5 text-2xl font-semibold tracking-tight sm:text-3xl">
+              <h2 className="mt-5 text-3xl font-semibold">
                 Manique de Baixo
               </h2>
 
@@ -547,98 +637,118 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 {t.featuredDesc}
               </p>
 
-              <div className="mt-7 grid gap-3">
-                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
-                  <span className="text-muted-foreground">
-                    {extra.projectType}
-                  </span>
+              <div className="mt-7 space-y-2">
+                {extra.workItems.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-2 text-xs text-muted-foreground"
+                  >
+                    <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
 
-                  <span className="font-medium">
-                    {extra.projectTypeValue}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
-                  <span className="text-muted-foreground">
-                    {extra.objective}
-                  </span>
-
-                  <span className="font-medium">
-                    {extra.objectiveValue}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-[90px_1fr] gap-4 text-xs">
-                  <span className="text-muted-foreground">
-                    {extra.delivery}
-                  </span>
-
-                  <span className="font-medium">
-                    {extra.deliveryValue}
-                  </span>
-                </div>
+                    {item}
+                  </div>
+                ))}
               </div>
 
-              <div className="mt-8">
-                <p className="text-xs font-semibold">
-                  {extra.workTitle}
-                </p>
+              <a
+                href="https://31janeiromanique.net"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+              >
+                {t.visit}
 
-                <div className="mt-3 space-y-2">
-                  {extra.workItems.map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground"
-                    >
-                      <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="https://31janeiromanique.net"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
-                >
-                  {t.visit}
-                  <ArrowUpRight className="size-4" />
-                </a>
-
-                <Link
-                  to={paths.contact}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
-                >
-                  {t.ctaButton}
-                  <ArrowRight className="size-4" />
-                </Link>
-              </div>
+                <ArrowUpRight className="size-4" />
+              </a>
             </div>
           </div>
         </article>
       </section>
 
-      <section className="mt-20">
-        <div className="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
-          <div className="max-w-2xl">
-            <Chip tone="primary">{extra.conceptsBadge}</Chip>
+      {/* RADIO */}
+      <section className="mt-16">
+        <div className="mb-5 flex items-center justify-between">
+          <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+            {extra.selectedWork}
+          </span>
 
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-              {t.othersTitle}
-            </h2>
-
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              {extra.conceptNote}
-            </p>
-          </div>
-
-          <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
-            02 — 04
+          <span className="text-[10px] uppercase tracking-[.18em] text-muted-foreground">
+            02 — {extra.radioBadge}
           </span>
         </div>
+
+        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40">
+          <div className="grid lg:grid-cols-[.9fr_1.1fr]">
+            <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-[#f5f5f3] p-8 lg:border-b-0 lg:border-r">
+              <img
+                src="/radio-alcabidechefm.png"
+                alt="Rádio AlcabidecheFM"
+                className="max-h-[300px] max-w-[75%] object-contain"
+              />
+            </div>
+
+            <div className="p-7 sm:p-9">
+              <div className="flex flex-wrap gap-2">
+                <Chip tone="primary">{extra.radioBadge}</Chip>
+
+                <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/[0.06] px-3 text-[9px] font-semibold uppercase tracking-[.14em] text-primary">
+                  {extra.radioPartner}
+                </span>
+              </div>
+
+              <div className="mt-5 flex items-center gap-2 text-xs text-primary">
+                <Radio className="size-4" />
+
+                AlcabidecheFM
+              </div>
+
+              <h2 className="mt-3 text-3xl font-semibold">
+                Rádio AlcabidecheFM
+              </h2>
+
+              <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                {extra.radioText}
+              </p>
+
+              <div className="mt-7 space-y-2">
+                {extra.radioItems.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-2 text-xs text-muted-foreground"
+                  >
+                    <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
+
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href="https://radioalcabidechefm.eu"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+              >
+                {extra.radioVisit}
+
+                <ArrowUpRight className="size-4" />
+              </a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      {/* CONCEITOS */}
+      <section className="mt-20">
+        <Chip tone="primary">{extra.conceptsBadge}</Chip>
+
+        <h2 className="mt-4 text-3xl font-semibold">
+          {t.othersTitle}
+        </h2>
+
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+          {extra.conceptNote}
+        </p>
 
         <div className="mt-7 grid gap-5 lg:grid-cols-3">
           {t.concepts.map((project, idx) => {
@@ -647,43 +757,33 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
             return (
               <article
                 key={project.titulo}
-                className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/40 transition duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-xl hover:shadow-black/5"
+                className="rounded-3xl border border-border/70 bg-card/40 p-4"
               >
-                <div className="p-4 pb-0">
-                  <MiniBrowser
-                    eyebrow={project.preview.eyebrow}
-                    headline={project.preview.headline}
-                    lines={project.preview.lines}
-                    icon={Icon}
-                    index={idx}
-                  />
-                </div>
+                <MiniBrowser
+                  eyebrow={project.preview.eyebrow}
+                  headline={project.preview.headline}
+                  lines={project.preview.lines}
+                  icon={Icon}
+                />
 
-                <div className="flex flex-1 flex-col p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="rounded-full border border-primary/15 bg-primary/[0.06] px-3 py-1 text-[9px] font-semibold uppercase tracking-[.12em] text-primary">
+                <div className="p-2 pt-5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] uppercase tracking-[.14em] text-primary">
                       {project.etiqueta}
                     </span>
 
-                    <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
-                      0{idx + 2}
+                    <span className="text-[10px] text-muted-foreground">
+                      0{idx + 3}
                     </span>
                   </div>
 
-                  <h3 className="mt-5 text-base font-semibold leading-snug">
+                  <h3 className="mt-4 font-semibold">
                     {project.titulo}
                   </h3>
 
                   <p className="mt-2 text-xs leading-6 text-muted-foreground">
                     {project.descricao}
                   </p>
-
-                  <div className="mt-auto pt-6">
-                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-[.14em] text-muted-foreground">
-                      <Icon className="size-3.5 text-primary" />
-                      {extra.conceptLabels[idx]}
-                    </div>
-                  </div>
                 </div>
               </article>
             );
@@ -691,38 +791,33 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* PROCESSO */}
       <section className="mt-20">
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <Chip tone="primary">Nova Web Studio</Chip>
+            <Chip tone="primary">
+              Nova Web Studio
+            </Chip>
 
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h2 className="mt-4 text-3xl font-semibold">
               {extra.approachTitle}
             </h2>
 
-            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">
               {extra.approachLead}
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.approach.map((item, idx) => {
-              const Icon = approachIcons[idx] ?? BadgeCheck;
+              const Icon = approachIcons[idx];
 
               return (
                 <article
                   key={item.title}
                   className="orbit-panel orbit-panel-hover p-5"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
-                      <Icon className="size-4 text-primary" />
-                    </span>
-
-                    <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
-                      0{idx + 1}
-                    </span>
-                  </div>
+                  <Icon className="size-4 text-primary" />
 
                   <h3 className="mt-4 text-sm font-semibold">
                     {item.title}
@@ -738,31 +833,30 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="mt-20">
-        <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-primary/[0.06] p-7 sm:p-10">
-          <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute -bottom-28 left-20 size-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="rounded-3xl border border-primary/20 bg-primary/[0.06] p-8 sm:p-10">
+          <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+            {extra.finalBadge}
+          </span>
 
-          <div className="relative grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
-                {extra.finalBadge}
-              </span>
-
-              <h2 className="mt-3 max-w-2xl text-2xl font-semibold tracking-tight sm:text-3xl">
+              <h2 className="text-2xl font-semibold">
                 {t.ctaTitle}
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {t.ctaText}
               </p>
             </div>
 
             <Link
               to={paths.contact}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:opacity-90"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
             >
               {t.ctaButton}
+
               <ArrowRight className="size-4" />
             </Link>
           </div>
