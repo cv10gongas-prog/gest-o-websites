@@ -21,6 +21,12 @@ import {
   WandSparkles,
   Zap,
 } from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { Chip } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
@@ -29,6 +35,58 @@ import { dict, PATHS, type Locale } from "@/lib/i18n";
 const SERVICE_ICONS = [LayoutTemplate, Gauge, LineChart];
 const TYPE_ICONS = [Sparkles, ShoppingBag, Smartphone, Rocket];
 const STEP_ICONS = [Target, WandSparkles, Gauge, BadgeCheck];
+
+function Reveal({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setVisible(true);
+        observer.unobserve(node);
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -40px 0px",
+      },
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        visible
+          ? "translate-y-0 opacity-100"
+          : "translate-y-6 opacity-0"
+      } ${className}`}
+      style={{
+        transitionDelay: `${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 const EXTRA: Record<
   Locale,
@@ -327,8 +385,7 @@ const EXTRA: Record<
       "Vom ersten Gespräch bis zur Veröffentlichung ist jeder Schritt klar und transparent.",
 
     finalBadge: "Ihre nächste Website könnte hier entstehen",
-    finalSmall:
-      "Unverbindlich. Erzählen Sie uns, was Sie brauchen.",
+    finalSmall: "Unverbindlich. Erzählen Sie uns, was Sie brauchen.",
   },
 
   fr: {
@@ -414,8 +471,7 @@ const EXTRA: Record<
       "De la première conversation à la publication, chaque étape reste simple et transparente.",
 
     finalBadge: "Votre prochain site peut commencer ici",
-    finalSmall:
-      "Sans engagement. Expliquez-nous votre besoin.",
+    finalSmall: "Sans engagement. Expliquez-nous votre besoin.",
   },
 
   es: {
@@ -499,8 +555,7 @@ const EXTRA: Record<
       "Desde la primera conversación hasta la publicación, cada paso es sencillo y transparente.",
 
     finalBadge: "Tu próxima web puede empezar aquí",
-    finalSmall:
-      "Sin compromiso. Cuéntanos qué necesitas.",
+    finalSmall: "Sin compromiso. Cuéntanos qué necesitas.",
   },
 };
 
@@ -512,155 +567,219 @@ export function HomePage({ locale }: { locale: Locale }) {
 
   return (
     <SiteChrome locale={locale} page="home">
+      <style>{`
+        @keyframes nws-float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+
+        @keyframes nws-wave {
+          0%, 100% { transform: scaleY(.35); opacity: .55; }
+          50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        @keyframes nws-pulse {
+          0%, 100% { opacity: .5; transform: scale(1); }
+          50% { opacity: .85; transform: scale(1.04); }
+        }
+
+        .nws-float {
+          animation: nws-float 6s ease-in-out infinite;
+        }
+
+        .nws-wave {
+          transform-origin: bottom;
+          animation: nws-wave 1.5s ease-in-out infinite;
+        }
+
+        .nws-pulse {
+          animation: nws-pulse 5s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .nws-float,
+          .nws-wave,
+          .nws-pulse {
+            animation: none !important;
+          }
+        }
+      `}</style>
+
       {/* HERO */}
       <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-6 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
-        <div className="absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
+        <div className="nws-pulse absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-primary/5 blur-3xl" />
+
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px)",
+            backgroundSize: "42px 42px",
+          }}
+        />
 
         <div className="relative grid items-center gap-12 lg:grid-cols-[1fr_.95fr]">
           <div>
-            <Chip tone="primary">{t.chip}</Chip>
+            <Reveal>
+              <Chip tone="primary">{t.chip}</Chip>
+            </Reveal>
 
-            <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-muted-foreground">
-              <Sparkles className="size-3.5 text-primary" />
-              {extra.heroKicker}
-            </div>
+            <Reveal delay={80}>
+              <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-muted-foreground">
+                <Sparkles className="size-3.5 text-primary" />
+                {extra.heroKicker}
+              </div>
+            </Reveal>
 
-            <h1 className="orbit-gradient-text mt-4 max-w-3xl text-4xl font-semibold leading-[1.03] tracking-tight sm:text-5xl lg:text-[4rem]">
-              {t.h1}
-            </h1>
+            <Reveal delay={150}>
+              <h1 className="orbit-gradient-text mt-4 max-w-3xl text-4xl font-semibold leading-[1.03] tracking-tight sm:text-5xl lg:text-[4rem]">
+                {t.h1}
+              </h1>
+            </Reveal>
 
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-              {t.lead}
-            </p>
+            <Reveal delay={220}>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                {t.lead}
+              </p>
+            </Reveal>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to={paths.contact}
-                className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:opacity-90"
-              >
-                <CalendarCheck className="size-4" />
-                {t.ctaProposal}
-              </Link>
+            <Reveal delay={290}>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  to={paths.contact}
+                  className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
+                >
+                  <CalendarCheck className="size-4" />
+                  {t.ctaProposal}
 
-              <Link
-                to={paths.portfolio}
-                className="inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-background/50 px-6 text-sm transition hover:-translate-y-0.5 hover:bg-accent"
-              >
-                {t.ctaPortfolio}
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
+                  <ArrowRight className="size-0 opacity-0 transition-all duration-300 group-hover:size-4 group-hover:opacity-100" />
+                </Link>
 
-            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <MapPin className="size-3.5 text-primary" />
-                {t.badgeArea}
-              </span>
+                <Link
+                  to={paths.portfolio}
+                  className="group inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-background/50 px-6 text-sm transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-accent"
+                >
+                  {t.ctaPortfolio}
 
-              <span className="flex items-center gap-1.5">
-                <BadgeCheck className="size-3.5 text-primary" />
-                {t.badgeMobile}
-              </span>
-            </div>
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </Reveal>
+
+            <Reveal delay={360}>
+              <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="size-3.5 text-primary" />
+                  {t.badgeArea}
+                </span>
+
+                <span className="flex items-center gap-1.5">
+                  <BadgeCheck className="size-3.5 text-primary" />
+                  {t.badgeMobile}
+                </span>
+              </div>
+            </Reveal>
           </div>
 
-          <div className="relative">
-            <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
+          <Reveal delay={180}>
+            <div className="nws-float relative">
+              <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
 
-            <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-background shadow-2xl shadow-black/20">
-              <div className="flex h-10 items-center gap-1.5 border-b border-border/60 bg-card/70 px-3">
-                <span className="size-2 rounded-full bg-muted-foreground/30" />
-                <span className="size-2 rounded-full bg-muted-foreground/20" />
-                <span className="size-2 rounded-full bg-muted-foreground/10" />
+              <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-background shadow-2xl shadow-black/20">
+                <div className="flex h-10 items-center gap-1.5 border-b border-border/60 bg-card/70 px-3">
+                  <span className="size-2 rounded-full bg-muted-foreground/30" />
+                  <span className="size-2 rounded-full bg-muted-foreground/20" />
+                  <span className="size-2 rounded-full bg-muted-foreground/10" />
 
-                <div className="mx-auto flex h-5 w-44 items-center justify-center rounded-md bg-secondary/60 text-[8px] text-muted-foreground">
-                  novawebstudio.pt
-                </div>
-              </div>
-
-              <div className="relative min-h-[400px] overflow-hidden bg-gradient-to-br from-primary/[0.06] via-background to-secondary/30 p-6 sm:p-8">
-                <div className="absolute right-5 top-5 size-40 rounded-full bg-primary/10 blur-3xl" />
-
-                <div className="relative flex items-center gap-3">
-                  <img
-                    src="/logo.png"
-                    alt="Nova Web Studio"
-                    className="size-9 object-contain"
-                  />
-
-                  <div>
-                    <p className="text-sm font-semibold">
-                      Nova Web Studio
-                    </p>
-
-                    <p className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
-                      {nav.tagline}
-                    </p>
+                  <div className="mx-auto flex h-5 w-44 items-center justify-center rounded-md bg-secondary/60 text-[8px] text-muted-foreground">
+                    novawebstudio.pt
                   </div>
                 </div>
 
-                <div className="relative mt-10">
-                  <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
-                    {extra.heroProofSmall}
-                  </span>
+                <div className="relative min-h-[400px] overflow-hidden bg-gradient-to-br from-primary/[0.06] via-background to-secondary/30 p-6 sm:p-8">
+                  <div className="absolute right-5 top-5 size-40 rounded-full bg-primary/10 blur-3xl" />
 
-                  <div className="mt-4 h-4 w-4/5 rounded-full bg-foreground/15" />
-                  <div className="mt-3 h-4 w-3/5 rounded-full bg-foreground/10" />
+                  <div className="relative flex items-center gap-3">
+                    <img
+                      src="/logo.png"
+                      alt="Nova Web Studio"
+                      className="size-9 object-contain"
+                    />
 
-                  <div className="mt-7 flex gap-2">
-                    <span className="h-9 w-28 rounded-lg bg-primary" />
-                    <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
-                  </div>
-                </div>
-
-                <div className="relative mt-10 grid grid-cols-3 gap-3">
-                  {t.stats.map((item) => (
-                    <div
-                      key={item.valor}
-                      className="rounded-2xl border border-border/60 bg-background/50 p-3 backdrop-blur"
-                    >
-                      <p className="text-lg font-semibold">
-                        {item.valor}
+                    <div>
+                      <p className="text-sm font-semibold">
+                        Nova Web Studio
                       </p>
 
-                      <p className="mt-1 text-[9px] leading-relaxed text-muted-foreground">
-                        {item.texto}
+                      <p className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
+                        {nav.tagline}
                       </p>
                     </div>
-                  ))}
-                </div>
+                  </div>
 
-                <div className="relative mt-5 grid grid-cols-[1.3fr_.7fr] gap-3">
-                  <div className="h-20 rounded-2xl bg-secondary/70" />
-                  <div className="h-20 rounded-2xl border border-primary/20 bg-primary/10" />
+                  <div className="relative mt-10">
+                    <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
+                      {extra.heroProofSmall}
+                    </span>
+
+                    <div className="mt-4 h-4 w-4/5 rounded-full bg-foreground/15" />
+                    <div className="mt-3 h-4 w-3/5 rounded-full bg-foreground/10" />
+
+                    <div className="mt-7 flex gap-2">
+                      <span className="h-9 w-28 rounded-lg bg-primary" />
+                      <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
+                    </div>
+                  </div>
+
+                  <div className="relative mt-10 grid grid-cols-3 gap-3">
+                    {t.stats.map((item) => (
+                      <div
+                        key={item.valor}
+                        className="rounded-2xl border border-border/60 bg-background/50 p-3 backdrop-blur"
+                      >
+                        <p className="text-lg font-semibold">
+                          {item.valor}
+                        </p>
+
+                        <p className="mt-1 text-[9px] leading-relaxed text-muted-foreground">
+                          {item.texto}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="relative mt-5 grid grid-cols-[1.3fr_.7fr] gap-3">
+                    <div className="h-20 rounded-2xl bg-secondary/70" />
+                    <div className="h-20 rounded-2xl border border-primary/20 bg-primary/10" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute -bottom-5 -left-4 hidden rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-xl backdrop-blur sm:block">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="size-4 text-primary" />
+
+                  <div>
+                    <p className="text-[10px] font-medium">
+                      {extra.heroProof}
+                    </p>
+
+                    <p className="mt-0.5 text-[9px] text-muted-foreground">
+                      31janeiromanique.net
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="absolute -bottom-5 -left-4 hidden rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-xl backdrop-blur sm:block">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-primary" />
-
-                <div>
-                  <p className="text-[10px] font-medium">
-                    {extra.heroProof}
-                  </p>
-
-                  <p className="mt-0.5 text-[9px] text-muted-foreground">
-                    31janeiromanique.net
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* PROBLEMAS */}
+      {/* PROBLEMA */}
       <section className="mt-24">
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
-          <div>
+          <Reveal>
             <Chip tone="primary">{extra.problemBadge}</Chip>
 
             <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
@@ -670,7 +789,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
               {extra.problemLead}
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.problems.map((problem, idx) => {
@@ -684,22 +803,24 @@ export function HomePage({ locale }: { locale: Locale }) {
               const Icon = icons[idx] ?? Sparkles;
 
               return (
-                <article
+                <Reveal
                   key={problem.title}
-                  className="orbit-panel orbit-panel-hover p-5"
+                  delay={idx * 90}
                 >
-                  <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
-                    <Icon className="size-4 text-primary" />
-                  </span>
+                  <article className="group orbit-panel orbit-panel-hover h-full p-5">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition duration-300 group-hover:scale-110 group-hover:bg-primary/15">
+                      <Icon className="size-4 text-primary" />
+                    </span>
 
-                  <h3 className="mt-4 text-sm font-semibold">
-                    {problem.title}
-                  </h3>
+                    <h3 className="mt-4 text-sm font-semibold">
+                      {problem.title}
+                    </h3>
 
-                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                    {problem.text}
-                  </p>
-                </article>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                      {problem.text}
+                    </p>
+                  </article>
+                </Reveal>
               );
             })}
           </div>
@@ -707,221 +828,238 @@ export function HomePage({ locale }: { locale: Locale }) {
       </section>
 
       {/* SOLUÇÃO */}
-      <section className="mt-24">
-        <div className="relative overflow-hidden rounded-3xl border border-primary/15 bg-primary/[0.05] p-7 sm:p-10">
-          <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+      <Reveal>
+        <section className="mt-24">
+          <div className="relative overflow-hidden rounded-3xl border border-primary/15 bg-primary/[0.05] p-7 sm:p-10">
+            <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
-          <div className="relative max-w-3xl">
-            <Chip tone="primary">{extra.solutionBadge}</Chip>
+            <div className="relative max-w-3xl">
+              <Chip tone="primary">{extra.solutionBadge}</Chip>
 
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-              {extra.solutionTitle}
-            </h2>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+                {extra.solutionTitle}
+              </h2>
 
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">
-              {extra.solutionLead}
-            </p>
+              <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                {extra.solutionLead}
+              </p>
+            </div>
+
+            <div className="relative mt-8 grid gap-4 md:grid-cols-3">
+              {t.services.map((service, idx) => {
+                const Icon =
+                  SERVICE_ICONS[idx] ?? LayoutTemplate;
+
+                return (
+                  <article
+                    key={service.titulo}
+                    className="group rounded-2xl border border-border/60 bg-background/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:border-primary/25 hover:shadow-xl hover:shadow-primary/5"
+                  >
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                      <Icon className="size-4 text-primary" />
+                    </span>
+
+                    <h3 className="mt-4 text-sm font-semibold">
+                      {service.titulo}
+                    </h3>
+
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                      {service.texto}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
           </div>
-
-          <div className="relative mt-8 grid gap-4 md:grid-cols-3">
-            {t.services.map((service, idx) => {
-              const Icon = SERVICE_ICONS[idx] ?? LayoutTemplate;
-
-              return (
-                <article
-                  key={service.titulo}
-                  className="rounded-2xl border border-border/60 bg-background/50 p-5 backdrop-blur transition hover:-translate-y-1 hover:border-primary/20"
-                >
-                  <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
-                    <Icon className="size-4 text-primary" />
-                  </span>
-
-                  <h3 className="mt-4 text-sm font-semibold">
-                    {service.titulo}
-                  </h3>
-
-                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                    {service.texto}
-                  </p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+        </section>
+      </Reveal>
 
       {/* RÁDIO */}
       <section className="mt-24">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <Chip tone="primary">{extra.radioBadge}</Chip>
+        <Reveal>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Chip tone="primary">{extra.radioBadge}</Chip>
 
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-              {extra.radioTitle}
-            </h2>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+                {extra.radioTitle}
+              </h2>
+            </div>
+
+            <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.16em] text-primary">
+              {extra.radioPartner}
+            </span>
           </div>
+        </Reveal>
 
-          <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.16em] text-primary">
-            {extra.radioPartner}
-          </span>
-        </div>
+        <Reveal delay={100}>
+          <article className="group overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5 transition duration-500 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5">
+            <div className="grid lg:grid-cols-[.9fr_1.1fr]">
+              <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-8 lg:border-b-0 lg:border-r">
+                <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+                <div className="nws-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
-          <div className="grid lg:grid-cols-[.9fr_1.1fr]">
-            {/* VISUAL DA RÁDIO */}
-            <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-8 lg:border-b-0 lg:border-r">
-              <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
-
-              <div className="absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
-
-              <div className="relative w-full max-w-md">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm sm:p-10">
-                  <div className="flex justify-center">
-                    <div className="flex size-44 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
-                      <img
-                        src="/radio-alcabidechefm.png"
-                        alt="Rádio AlcabidecheFM"
-                        className="max-h-[150px] max-w-[70%] object-contain sm:max-h-[175px]"
-                      />
+                <div className="relative w-full max-w-md">
+                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm transition duration-500 group-hover:-translate-y-1 group-hover:border-white/15 sm:p-10">
+                    <div className="flex justify-center">
+                      <div className="flex size-44 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                        <img
+                          src="/radio-alcabidechefm.png"
+                          alt="Rádio AlcabidecheFM"
+                          className="max-h-[150px] max-w-[70%] object-contain sm:max-h-[175px]"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="mt-7 text-center">
-                    <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-primary">
-                      Rádio · Alcabideche
-                    </p>
+                    <div className="mt-7 text-center">
+                      <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-primary">
+                        Rádio · Alcabideche
+                      </p>
 
-                    <h3 className="mt-3 text-xl font-semibold text-white sm:text-2xl">
-                      Rádio AlcabidecheFM
-                    </h3>
+                      <h3 className="mt-3 text-xl font-semibold text-white sm:text-2xl">
+                        Rádio AlcabidecheFM
+                      </h3>
 
-                    <div className="mx-auto mt-5 flex max-w-[230px] items-end justify-center gap-1.5">
-                      {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map(
-                        (height, idx) => (
+                      <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
+                        {[
+                          14, 28, 20, 38, 24,
+                          46, 30, 18, 34, 22,
+                        ].map((height, idx) => (
                           <span
                             key={idx}
-                            className="w-1.5 rounded-full bg-primary/70"
-                            style={{ height }}
+                            className="nws-wave w-1.5 rounded-full bg-primary/70"
+                            style={{
+                              height,
+                              animationDelay: `${idx * 90}ms`,
+                            }}
                           />
-                        ),
-                      )}
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* TEXTO DA RÁDIO */}
-            <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-11">
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
-                <Radio className="size-3.5" />
-                Rádio · Alcabideche
-              </div>
+              <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-11">
+                <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
+                  <Radio className="size-3.5" />
+                  Rádio · Alcabideche
+                </div>
 
-              <h3 className="mt-4 text-3xl font-semibold tracking-tight">
-                Rádio AlcabidecheFM
-              </h3>
+                <h3 className="mt-4 text-3xl font-semibold tracking-tight">
+                  Rádio AlcabidecheFM
+                </h3>
 
-              <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
-                {extra.radioText}
-              </p>
+                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
+                  {extra.radioText}
+                </p>
 
-              <div className="mt-7 space-y-3">
-                {[
-                  extra.radioFeature1,
-                  extra.radioFeature2,
-                  extra.radioFeature3,
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center gap-2 text-xs text-muted-foreground"
+                <div className="mt-7 space-y-3">
+                  {[
+                    extra.radioFeature1,
+                    extra.radioFeature2,
+                    extra.radioFeature3,
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 text-xs text-muted-foreground"
+                    >
+                      <CheckCircle2 className="size-3.5 text-primary" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <a
+                    href="https://radioalcabidechefm.eu"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/15"
                   >
-                    <CheckCircle2 className="size-3.5 text-primary" />
-                    {item}
-                  </div>
-                ))}
-              </div>
+                    {extra.radioVisit}
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="https://radioalcabidechefm.eu"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
-                >
-                  {extra.radioVisit}
-                  <ArrowUpRight className="size-4" />
-                </a>
+                    <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
 
-                <Link
-                  to={paths.portfolio}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
-                >
-                  {t.ctaPortfolio}
-                  <ArrowRight className="size-4" />
-                </Link>
+                  <Link
+                    to={paths.portfolio}
+                    className="group inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
+                  >
+                    {t.ctaPortfolio}
+
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        </article>
+          </article>
+        </Reveal>
       </section>
 
       {/* TIPOS */}
       <section className="mt-24">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <Chip tone="primary">{t.typesTitle}</Chip>
+        <Reveal>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Chip tone="primary">{t.typesTitle}</Chip>
 
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-              {t.servicesTitle}
-            </h2>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+                {t.servicesTitle}
+              </h2>
+            </div>
+
+            <Link
+              to={paths.contact}
+              className="group inline-flex items-center gap-2 text-sm font-medium text-primary"
+            >
+              {t.ctaProposal}
+
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
-
-          <Link
-            to={paths.contact}
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary"
-          >
-            {t.ctaProposal}
-            <ArrowRight className="size-4" />
-          </Link>
-        </div>
+        </Reveal>
 
         <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {t.types.map((type, idx) => {
             const Icon = TYPE_ICONS[idx] ?? Sparkles;
 
             return (
-              <article
+              <Reveal
                 key={type.titulo}
-                className="orbit-panel orbit-panel-hover relative overflow-hidden p-5"
+                delay={idx * 80}
               >
-                <div className="flex items-center justify-between">
-                  <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
-                    <Icon className="size-4 text-primary" />
-                  </span>
+                <article className="group orbit-panel orbit-panel-hover relative h-full overflow-hidden p-5">
+                  <div className="absolute -right-10 -top-10 size-28 rounded-full bg-primary/0 blur-2xl transition duration-500 group-hover:bg-primary/10" />
 
-                  <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
-                    0{idx + 1}
-                  </span>
-                </div>
+                  <div className="relative flex items-center justify-between">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                      <Icon className="size-4 text-primary" />
+                    </span>
 
-                <h3 className="mt-5 text-sm font-semibold">
-                  {type.titulo}
-                </h3>
+                    <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
+                      0{idx + 1}
+                    </span>
+                  </div>
 
-                <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                  {type.texto}
-                </p>
-              </article>
+                  <h3 className="relative mt-5 text-sm font-semibold">
+                    {type.titulo}
+                  </h3>
+
+                  <p className="relative mt-2 text-xs leading-6 text-muted-foreground">
+                    {type.texto}
+                  </p>
+                </article>
+              </Reveal>
             );
           })}
         </div>
       </section>
 
-      {/* PORQUÊ NÓS */}
+      {/* PORQUÊ */}
       <section className="mt-24">
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
-          <div>
+          <Reveal>
             <Chip tone="primary">{extra.whyBadge}</Chip>
 
             <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -931,7 +1069,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
               {extra.whyLead}
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.whyItems.map((item, idx) => {
@@ -945,22 +1083,24 @@ export function HomePage({ locale }: { locale: Locale }) {
               const Icon = icons[idx] ?? BadgeCheck;
 
               return (
-                <article
+                <Reveal
                   key={item.title}
-                  className="orbit-panel orbit-panel-hover p-5"
+                  delay={idx * 80}
                 >
-                  <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
-                    <Icon className="size-4 text-primary" />
-                  </span>
+                  <article className="group orbit-panel orbit-panel-hover h-full p-5">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                      <Icon className="size-4 text-primary" />
+                    </span>
 
-                  <h3 className="mt-4 text-sm font-semibold">
-                    {item.title}
-                  </h3>
+                    <h3 className="mt-4 text-sm font-semibold">
+                      {item.title}
+                    </h3>
 
-                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                    {item.text}
-                  </p>
-                </article>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                      {item.text}
+                    </p>
+                  </article>
+                </Reveal>
               );
             })}
           </div>
@@ -969,84 +1109,91 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       {/* PROCESSO */}
       <section className="mt-24">
-        <div className="max-w-2xl">
-          <Chip tone="primary">{t.processTitle}</Chip>
+        <Reveal>
+          <div className="max-w-2xl">
+            <Chip tone="primary">{t.processTitle}</Chip>
 
-          <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-            {t.processTitle}
-          </h2>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+              {t.processTitle}
+            </h2>
 
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">
-            {extra.processLead}
-          </p>
-        </div>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              {extra.processLead}
+            </p>
+          </div>
+        </Reveal>
 
         <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {t.process.map((step, idx) => {
             const Icon = STEP_ICONS[idx] ?? Target;
 
             return (
-              <article
+              <Reveal
                 key={step.titulo}
-                className="relative overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-5"
+                delay={idx * 100}
               >
-                <div className="flex items-center justify-between">
-                  <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
-                    <Icon className="size-4 text-primary" />
-                  </span>
+                <article className="group relative h-full overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-5 transition duration-300 hover:-translate-y-1 hover:border-primary/20">
+                  <div className="flex items-center justify-between">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                      <Icon className="size-4 text-primary" />
+                    </span>
 
-                  <span className="text-3xl font-semibold text-primary/15">
-                    0{idx + 1}
-                  </span>
-                </div>
+                    <span className="text-3xl font-semibold text-primary/15">
+                      0{idx + 1}
+                    </span>
+                  </div>
 
-                <h3 className="mt-5 text-sm font-semibold">
-                  {step.titulo}
-                </h3>
+                  <h3 className="mt-5 text-sm font-semibold">
+                    {step.titulo}
+                  </h3>
 
-                <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                  {step.texto}
-                </p>
-              </article>
+                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                    {step.texto}
+                  </p>
+                </article>
+              </Reveal>
             );
           })}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="mt-24">
-        <div className="relative overflow-hidden rounded-[2rem] border border-primary/20 bg-primary/[0.06] px-7 py-10 sm:px-10 sm:py-12">
-          <div className="absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
+      <Reveal>
+        <section className="mt-24">
+          <div className="relative overflow-hidden rounded-[2rem] border border-primary/20 bg-primary/[0.06] px-7 py-10 sm:px-10 sm:py-12">
+            <div className="nws-pulse absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
 
-          <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-              <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
-                {extra.finalBadge}
-              </span>
+            <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+                  {extra.finalBadge}
+                </span>
 
-              <h2 className="mt-4 max-w-2xl text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-                {t.ctaTitle}
-              </h2>
+                <h2 className="mt-4 max-w-2xl text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+                  {t.ctaTitle}
+                </h2>
 
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
-                {t.ctaText}
-              </p>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
+                  {t.ctaText}
+                </p>
 
-              <p className="mt-3 text-xs text-muted-foreground">
-                {extra.finalSmall}
-              </p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  {extra.finalSmall}
+                </p>
+              </div>
+
+              <Link
+                to={paths.contact}
+                className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
+              >
+                {t.ctaButton}
+
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
-
-            <Link
-              to={paths.contact}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:opacity-90"
-            >
-              {t.ctaButton}
-              <ArrowRight className="size-4" />
-            </Link>
           </div>
-        </div>
-      </section>
+        </section>
+      </Reveal>
     </SiteChrome>
   );
 }
