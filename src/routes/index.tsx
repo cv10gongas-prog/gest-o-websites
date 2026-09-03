@@ -40,11 +40,106 @@ export const Route = createFileRoute("/")({
         content: "website",
       },
       {
+        property: "og:url",
+        content: "https://www.novawebstudio.pt/",
+      },
+      {
+        property: "og:image",
+        content: "https://www.novawebstudio.pt/logo.png",
+      },
+      {
         name: "twitter:card",
         content: "summary_large_image",
       },
+      {
+        name: "twitter:title",
+        content: "Nova Web Studio | Web Design e Criação de Sites em Cascais",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Websites modernos e profissionais para negócios em Cascais, Oeiras, Sintra e Lisboa.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://www.novawebstudio.pt/logo.png",
+      },
+    ],
+
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Nova Web Studio",
+          url: "https://www.novawebstudio.pt/",
+          logo: "https://www.novawebstudio.pt/logo.png",
+          image: "https://www.novawebstudio.pt/logo.png",
+          email: "geral@novawebstudio.pt",
+          telephone: "+351937642061",
+          description:
+            "Criação e modernização de websites para negócios locais em Cascais, Oeiras, Sintra, Lisboa e outras zonas de Portugal.",
+          areaServed: [
+            {
+              "@type": "City",
+              name: "Cascais",
+            },
+            {
+              "@type": "City",
+              name: "Oeiras",
+            },
+            {
+              "@type": "City",
+              name: "Sintra",
+            },
+            {
+              "@type": "City",
+              name: "Lisboa",
+            },
+          ],
+          makesOffer: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Criação de websites",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Web design",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Redesign de websites",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Landing pages",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Lojas online",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
+
   component: Index,
 });
 
