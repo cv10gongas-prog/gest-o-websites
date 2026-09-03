@@ -606,7 +606,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       `}</style>
 
       {/* HERO */}
-      <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-6 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
+      <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-5 py-9 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <div className="nws-pulse absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-primary/5 blur-3xl" />
 
@@ -627,7 +627,7 @@ export function HomePage({ locale }: { locale: Locale }) {
 
             <Reveal delay={80}>
               <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-muted-foreground">
-                <Sparkles className="size-3.5 text-primary" />
+                <Sparkles className="size-3.5 shrink-0 text-primary" />
                 {extra.heroKicker}
               </div>
             </Reveal>
@@ -682,76 +682,85 @@ export function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
           </div>
 
+          {/* MOCKUP */}
           <Reveal delay={180}>
             <div className="nws-float relative">
               <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
 
               <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-background shadow-2xl shadow-black/20">
+                {/* browser top */}
                 <div className="flex h-10 items-center gap-1.5 border-b border-border/60 bg-card/70 px-3">
                   <span className="size-2 rounded-full bg-muted-foreground/30" />
                   <span className="size-2 rounded-full bg-muted-foreground/20" />
                   <span className="size-2 rounded-full bg-muted-foreground/10" />
 
-                  <div className="mx-auto flex h-5 w-44 items-center justify-center rounded-md bg-secondary/60 text-[8px] text-muted-foreground">
+                  <div className="mx-auto flex h-5 max-w-[55%] flex-1 items-center justify-center rounded-md bg-secondary/60 px-2 text-[8px] text-muted-foreground sm:max-w-none sm:flex-none sm:w-44">
                     novawebstudio.pt
                   </div>
                 </div>
 
-                <div className="relative min-h-[400px] overflow-hidden bg-gradient-to-br from-primary/[0.06] via-background to-secondary/30 p-6 sm:p-8">
+                <div className="relative overflow-hidden bg-gradient-to-br from-primary/[0.06] via-background to-secondary/30 p-5 sm:min-h-[400px] sm:p-8">
                   <div className="absolute right-5 top-5 size-40 rounded-full bg-primary/10 blur-3xl" />
 
+                  {/* logo */}
                   <div className="relative flex items-center gap-3">
                     <img
                       src="/logo.png"
                       alt="Nova Web Studio"
-                      className="size-9 object-contain"
+                      className="size-9 shrink-0 object-contain"
                     />
 
-                    <div>
-                      <p className="text-sm font-semibold">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold">
                         Nova Web Studio
                       </p>
 
-                      <p className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
+                      <p className="truncate text-[9px] uppercase tracking-[.18em] text-muted-foreground">
                         {nav.tagline}
                       </p>
                     </div>
                   </div>
 
-                  <div className="relative mt-10">
-                    <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
+                  {/* fake hero */}
+                  <div className="relative mt-9 sm:mt-10">
+                    <span className="block max-w-full text-[9px] font-semibold uppercase leading-5 tracking-[.15em] text-primary sm:tracking-[.18em]">
                       {extra.heroProofSmall}
                     </span>
 
-                    <div className="mt-4 h-4 w-4/5 rounded-full bg-foreground/15" />
-                    <div className="mt-3 h-4 w-3/5 rounded-full bg-foreground/10" />
+                    <div className="mt-4 h-3.5 w-4/5 rounded-full bg-foreground/15 sm:h-4" />
+
+                    <div className="mt-3 h-3.5 w-3/5 rounded-full bg-foreground/10 sm:h-4" />
 
                     <div className="mt-7 flex gap-2">
-                      <span className="h-9 w-28 rounded-lg bg-primary" />
-                      <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
+                      <span className="h-9 flex-1 rounded-lg bg-primary sm:w-28 sm:flex-none" />
+
+                      <span className="h-9 flex-1 rounded-lg border border-border bg-background/60 sm:w-24 sm:flex-none" />
                     </div>
                   </div>
 
-                  <div className="relative mt-10 grid grid-cols-3 gap-3">
+                  {/* STATS - CORRIGIDO MOBILE */}
+                  <div className="relative mt-9 grid grid-cols-1 gap-2.5 sm:mt-10 sm:grid-cols-3 sm:gap-3">
                     {t.stats.map((item) => (
                       <div
                         key={item.valor}
-                        className="rounded-2xl border border-border/60 bg-background/50 p-3 backdrop-blur"
+                        className="flex min-h-[72px] items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 backdrop-blur sm:block sm:min-h-[116px] sm:px-3 sm:py-3"
                       >
-                        <p className="text-lg font-semibold">
+                        <p className="shrink-0 whitespace-nowrap text-lg font-semibold leading-none sm:text-lg sm:leading-tight">
                           {item.valor}
                         </p>
 
-                        <p className="mt-1 text-[9px] leading-relaxed text-muted-foreground">
+                        <p className="max-w-[55%] text-right text-[9px] leading-4 text-muted-foreground sm:mt-2 sm:max-w-none sm:text-left sm:leading-relaxed">
                           {item.texto}
                         </p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="relative mt-5 grid grid-cols-[1.3fr_.7fr] gap-3">
-                    <div className="h-20 rounded-2xl bg-secondary/70" />
-                    <div className="h-20 rounded-2xl border border-primary/20 bg-primary/10" />
+                  {/* bottom shapes */}
+                  <div className="relative mt-4 grid grid-cols-[1.3fr_.7fr] gap-3 sm:mt-5">
+                    <div className="h-16 rounded-2xl bg-secondary/70 sm:h-20" />
+
+                    <div className="h-16 rounded-2xl border border-primary/20 bg-primary/10 sm:h-20" />
                   </div>
                 </div>
               </div>
@@ -895,18 +904,19 @@ export function HomePage({ locale }: { locale: Locale }) {
         <Reveal delay={100}>
           <article className="group overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5 transition duration-500 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5">
             <div className="grid lg:grid-cols-[.9fr_1.1fr]">
-              <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-8 lg:border-b-0 lg:border-r">
+              <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-6 sm:p-8 lg:border-b-0 lg:border-r">
                 <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+
                 <div className="nws-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
                 <div className="relative w-full max-w-md">
-                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm transition duration-500 group-hover:-translate-y-1 group-hover:border-white/15 sm:p-10">
+                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm transition duration-500 group-hover:-translate-y-1 group-hover:border-white/15 sm:p-10">
                     <div className="flex justify-center">
-                      <div className="flex size-44 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                      <div className="flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
                         <img
                           src="/radio-alcabidechefm.png"
                           alt="Rádio AlcabidecheFM"
-                          className="max-h-[150px] max-w-[70%] object-contain sm:max-h-[175px]"
+                          className="max-h-[135px] max-w-[70%] object-contain sm:max-h-[175px]"
                         />
                       </div>
                     </div>
@@ -964,7 +974,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                       key={item}
                       className="flex items-center gap-2 text-xs text-muted-foreground"
                     >
-                      <CheckCircle2 className="size-3.5 text-primary" />
+                      <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
                       {item}
                     </div>
                   ))}
