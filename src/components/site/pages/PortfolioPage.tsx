@@ -559,6 +559,48 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
   return (
     <SiteChrome locale={locale} page="portfolio">
+      <style>{`
+        @keyframes nws-portfolio-wave {
+          0%, 100% {
+            transform: scaleY(.32);
+            opacity: .55;
+          }
+
+          50% {
+            transform: scaleY(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes nws-portfolio-pulse {
+          0%, 100% {
+            opacity: .45;
+            transform: scale(1);
+          }
+
+          50% {
+            opacity: .85;
+            transform: scale(1.06);
+          }
+        }
+
+        .nws-portfolio-wave {
+          transform-origin: bottom;
+          animation: nws-portfolio-wave 1.45s ease-in-out infinite;
+        }
+
+        .nws-portfolio-pulse {
+          animation: nws-portfolio-pulse 5s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .nws-portfolio-wave,
+          .nws-portfolio-pulse {
+            animation: none !important;
+          }
+        }
+      `}</style>
+
       {/* INTRO */}
       <section className="max-w-4xl">
         <Chip tone="primary">{extra.introBadge}</Chip>
@@ -613,6 +655,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
                 <div className="mt-7 flex gap-2">
                   <span className="h-9 w-28 rounded-lg bg-primary" />
+
                   <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
                 </div>
 
@@ -623,7 +666,9 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       className="rounded-xl border border-border/50 bg-background/50 p-3"
                     >
                       <div className="h-10 rounded-lg bg-primary/[0.08]" />
+
                       <div className="mt-3 h-1.5 rounded-full bg-secondary" />
+
                       <div className="mt-1.5 h-1.5 w-3/4 rounded-full bg-secondary" />
                     </div>
                   ))}
@@ -686,6 +731,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground"
                     >
                       <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
+
                       {item}
                     </div>
                   ))}
@@ -700,6 +746,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
                 >
                   {t.visit}
+
                   <ArrowUpRight className="size-4" />
                 </a>
 
@@ -708,6 +755,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   className="inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
                 >
                   {t.ctaButton}
+
                   <ArrowRight className="size-4" />
                 </Link>
               </div>
@@ -730,20 +778,21 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
         <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[.9fr_1.1fr]">
-            {/* VISUAL DA RÁDIO */}
-            <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-8 lg:border-b-0 lg:border-r">
+            {/* VISUAL RÁDIO */}
+            <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-6 sm:p-8 lg:border-b-0 lg:border-r">
               <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
-              <div className="absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
+              <div className="nws-portfolio-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
               <div className="relative w-full max-w-md">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm sm:p-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:border-white/15 sm:p-10">
+                  {/* LOGO CORRIGIDO */}
                   <div className="flex justify-center">
-                    <div className="flex size-44 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                    <div className="relative flex size-40 items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
                       <img
                         src="/radio-alcabidechefm.png"
                         alt="Rádio AlcabidecheFM"
-                        className="max-h-[150px] max-w-[70%] object-contain sm:max-h-[175px]"
+                        className="relative w-[92%] max-w-none translate-y-1.5 scale-[1.18] object-contain sm:w-[94%] sm:scale-[1.2]"
                       />
                     </div>
                   </div>
@@ -757,23 +806,28 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       Rádio AlcabidecheFM
                     </h3>
 
-                    <div className="mx-auto mt-5 flex max-w-[230px] items-end justify-center gap-1.5">
-                      {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map(
-                        (height, idx) => (
-                          <span
-                            key={idx}
-                            className="w-1.5 rounded-full bg-primary/70"
-                            style={{ height }}
-                          />
-                        ),
-                      )}
+                    {/* EQUALIZADOR ANIMADO */}
+                    <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
+                      {[
+                        14, 28, 20, 38, 24,
+                        46, 30, 18, 34, 22,
+                      ].map((height, idx) => (
+                        <span
+                          key={idx}
+                          className="nws-portfolio-wave w-1.5 rounded-full bg-primary/80"
+                          style={{
+                            height,
+                            animationDelay: `${idx * 90}ms`,
+                          }}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* DETALHES DA RÁDIO */}
+            {/* DETALHES RÁDIO */}
             <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-10">
               <div className="flex flex-wrap gap-2">
                 <Chip tone="primary">{extra.radioBadge}</Chip>
@@ -785,6 +839,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
               <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
                 <Radio className="size-3.5" />
+
                 Rádio · Alcabideche
               </div>
 
@@ -840,6 +895,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground"
                     >
                       <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
+
                       {item}
                     </div>
                   ))}
@@ -854,6 +910,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
                 >
                   {extra.radioVisit}
+
                   <ArrowUpRight className="size-4" />
                 </a>
               </div>
@@ -922,6 +979,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   <div className="mt-auto pt-6">
                     <div className="flex items-center gap-2 text-[10px] uppercase tracking-[.14em] text-muted-foreground">
                       <Icon className="size-3.5 text-primary" />
+
                       {extra.conceptLabels[idx]}
                     </div>
                   </div>
@@ -1007,6 +1065,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
             >
               {t.ctaButton}
+
               <ArrowRight className="size-4" />
             </Link>
           </div>
