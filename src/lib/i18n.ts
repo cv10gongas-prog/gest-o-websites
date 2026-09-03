@@ -817,7 +817,7 @@ export const dict: Record<Locale, Dict> = {
       submit: "Anfrage senden",
       submitting: "Wird gesendet…",
       note: "Nach dem Absenden melden wir uns per E-Mail oder Telefon, um Ihr Projekt besser kennenzulernen.",
-      errorRequired: "Bitte geben Sie名 Name und E-Mail an.",
+      errorRequired: "Bitte geben Sie Name und E-Mail an.",
       errorSend:
         "Die Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
       success: "Anfrage gesendet. Wir melden uns in Kürze.",
