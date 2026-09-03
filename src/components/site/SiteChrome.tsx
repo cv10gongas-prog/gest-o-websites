@@ -18,13 +18,19 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
           <Link to="/" className="flex items-center gap-3">
             <img
-              src="/logo-nova-web-studio.png"
+              src="/logo.png"
               alt="Nova Web Studio"
-              className="h-9 w-auto shrink-0 object-contain"
+              className="h-9 w-9 shrink-0 object-contain"
             />
 
-            <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
-              Um site mais moderno para si
+            <span className="min-w-0">
+              <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
+                Nova Web Studio
+              </span>
+
+              <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
+                Um site mais moderno para si
+              </span>
             </span>
           </Link>
 
