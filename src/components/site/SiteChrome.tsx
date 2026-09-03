@@ -42,30 +42,34 @@ export function SiteChrome({
       guardado = null;
     }
 
-    // O utilizador chegou a uma versão específica: memoriza a escolha.
     if (locale !== "pt" || guardado) {
       if (guardado !== locale && locale !== "pt") {
         try {
           localStorage.setItem(LOCALE_STORAGE_KEY, locale);
         } catch {
-          /* ignore */
+          // ignore
         }
       }
 
       return;
     }
 
-    // Primeira visita em português: sugere o idioma do browser.
     const detetado = detectBrowserLocale();
 
     try {
       localStorage.setItem(LOCALE_STORAGE_KEY, detetado);
     } catch {
-      /* ignore */
+      // ignore
     }
 
-    if (detetado !== "pt" && (LOCALES as readonly string[]).includes(detetado)) {
-      navigate({ to: PATHS[detetado][page], replace: true });
+    if (
+      detetado !== "pt" &&
+      (LOCALES as readonly string[]).includes(detetado)
+    ) {
+      navigate({
+        to: PATHS[detetado][page],
+        replace: true,
+      });
     }
   }, [locale, page, navigate]);
 
@@ -74,16 +78,19 @@ export function SiteChrome({
       <div className="orbit-glow pointer-events-none fixed inset-0" />
 
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-          <Link to={paths.home} className="flex items-center gap-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-5">
+          <Link
+            to={paths.home}
+            className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3"
+          >
             <img
               src="/logo.png"
               alt="Nova Web Studio"
-              className="h-9 w-9 shrink-0 object-contain"
+              className="h-8 w-8 shrink-0 object-contain sm:h-9 sm:w-9"
             />
 
             <span className="min-w-0">
-              <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
+              <span className="block truncate whitespace-nowrap text-[14px] font-semibold tracking-tight sm:text-[15px]">
                 Nova Web Studio
               </span>
 
@@ -93,13 +100,17 @@ export function SiteChrome({
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1 text-sm">
+          <nav className="flex shrink-0 items-center gap-1 text-sm">
             <span className="hidden items-center gap-1 sm:flex">
               <Link
                 to={paths.home}
                 activeOptions={{ exact: true }}
-                activeProps={{ className: "bg-secondary/60 text-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground" }}
+                activeProps={{
+                  className: "bg-secondary/60 text-foreground",
+                }}
+                inactiveProps={{
+                  className: "text-muted-foreground",
+                }}
                 className="rounded-lg px-3 py-2 transition hover:text-foreground"
               >
                 {t.nav.home}
@@ -107,8 +118,12 @@ export function SiteChrome({
 
               <Link
                 to={paths.portfolio}
-                activeProps={{ className: "bg-secondary/60 text-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground" }}
+                activeProps={{
+                  className: "bg-secondary/60 text-foreground",
+                }}
+                inactiveProps={{
+                  className: "text-muted-foreground",
+                }}
                 className="rounded-lg px-3 py-2 transition hover:text-foreground"
               >
                 {t.nav.portfolio}
@@ -116,23 +131,33 @@ export function SiteChrome({
 
               <Link
                 to={paths.contact}
-                activeProps={{ className: "bg-secondary/60 text-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground" }}
+                activeProps={{
+                  className: "bg-secondary/60 text-foreground",
+                }}
+                inactiveProps={{
+                  className: "text-muted-foreground",
+                }}
                 className="rounded-lg px-3 py-2 transition hover:text-foreground"
               >
                 {t.nav.contact}
               </Link>
             </span>
 
-            <LanguageSwitcher locale={locale} page={page} />
+            <div className="hidden sm:block">
+              <LanguageSwitcher locale={locale} page={page} />
+            </div>
 
             <Link
               to={paths.contact}
-              className="ml-1 inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+              className="ml-0 inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-primary px-3 text-xs font-medium text-primary-foreground transition hover:opacity-90 sm:ml-1 sm:px-4 sm:text-sm"
             >
               {t.nav.cta}
             </Link>
           </nav>
+        </div>
+
+        <div className="flex items-center justify-end border-t border-border/40 px-4 py-2 sm:hidden">
+          <LanguageSwitcher locale={locale} page={page} />
         </div>
       </header>
 
