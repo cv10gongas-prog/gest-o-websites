@@ -23,6 +23,18 @@ import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
 import { Route as AuthenticatedProjetosRouteImport } from './routes/_authenticated/projetos'
 import { Route as AuthenticatedTarefasRouteImport } from './routes/_authenticated/tarefas'
+import { Route as DeIndexRouteImport } from './routes/de.index'
+import { Route as DeContactRouteImport } from './routes/de.contact'
+import { Route as DePortfolioRouteImport } from './routes/de.portfolio'
+import { Route as EnIndexRouteImport } from './routes/en.index'
+import { Route as EnContactRouteImport } from './routes/en.contact'
+import { Route as EnPortfolioRouteImport } from './routes/en.portfolio'
+import { Route as EsIndexRouteImport } from './routes/es.index'
+import { Route as EsContactRouteImport } from './routes/es.contact'
+import { Route as EsPortfolioRouteImport } from './routes/es.portfolio'
+import { Route as FrIndexRouteImport } from './routes/fr.index'
+import { Route as FrContactRouteImport } from './routes/fr.contact'
+import { Route as FrPortfolioRouteImport } from './routes/fr.portfolio'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
 import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
 
@@ -95,6 +107,66 @@ const AuthenticatedTarefasRoute = AuthenticatedTarefasRouteImport.update({
   path: '/tarefas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DeIndexRoute = DeIndexRouteImport.update({
+  id: '/de/',
+  path: '/de/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DeContactRoute = DeContactRouteImport.update({
+  id: '/de/contact',
+  path: '/de/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DePortfolioRoute = DePortfolioRouteImport.update({
+  id: '/de/portfolio',
+  path: '/de/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnIndexRoute = EnIndexRouteImport.update({
+  id: '/en/',
+  path: '/en/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnContactRoute = EnContactRouteImport.update({
+  id: '/en/contact',
+  path: '/en/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnPortfolioRoute = EnPortfolioRouteImport.update({
+  id: '/en/portfolio',
+  path: '/en/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EsIndexRoute = EsIndexRouteImport.update({
+  id: '/es/',
+  path: '/es/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EsContactRoute = EsContactRouteImport.update({
+  id: '/es/contact',
+  path: '/es/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EsPortfolioRoute = EsPortfolioRouteImport.update({
+  id: '/es/portfolio',
+  path: '/es/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrIndexRoute = FrIndexRouteImport.update({
+  id: '/fr/',
+  path: '/fr/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrContactRoute = FrContactRouteImport.update({
+  id: '/fr/contact',
+  path: '/fr/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrPortfolioRoute = FrPortfolioRouteImport.update({
+  id: '/fr/portfolio',
+  path: '/fr/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedNegociosIndexRoute =
   AuthenticatedNegociosIndexRouteImport.update({
     id: '/negocios/',
@@ -121,6 +193,18 @@ export interface FileRoutesByFullPath {
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/projetos': typeof AuthenticatedProjetosRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
+  '/de/contact': typeof DeContactRoute
+  '/de/portfolio': typeof DePortfolioRoute
+  '/en/contact': typeof EnContactRoute
+  '/en/portfolio': typeof EnPortfolioRoute
+  '/es/contact': typeof EsContactRoute
+  '/es/portfolio': typeof EsPortfolioRoute
+  '/fr/contact': typeof FrContactRoute
+  '/fr/portfolio': typeof FrPortfolioRoute
+  '/de/': typeof DeIndexRoute
+  '/en/': typeof EnIndexRoute
+  '/es/': typeof EsIndexRoute
+  '/fr/': typeof FrIndexRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios/': typeof AuthenticatedNegociosIndexRoute
 }
@@ -138,6 +222,18 @@ export interface FileRoutesByTo {
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/projetos': typeof AuthenticatedProjetosRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
+  '/de/contact': typeof DeContactRoute
+  '/de/portfolio': typeof DePortfolioRoute
+  '/en/contact': typeof EnContactRoute
+  '/en/portfolio': typeof EnPortfolioRoute
+  '/es/contact': typeof EsContactRoute
+  '/es/portfolio': typeof EsPortfolioRoute
+  '/fr/contact': typeof FrContactRoute
+  '/fr/portfolio': typeof FrPortfolioRoute
+  '/de': typeof DeIndexRoute
+  '/en': typeof EnIndexRoute
+  '/es': typeof EsIndexRoute
+  '/fr': typeof FrIndexRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/negocios': typeof AuthenticatedNegociosIndexRoute
 }
@@ -157,6 +253,18 @@ export interface FileRoutesById {
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
   '/_authenticated/projetos': typeof AuthenticatedProjetosRoute
   '/_authenticated/tarefas': typeof AuthenticatedTarefasRoute
+  '/de/contact': typeof DeContactRoute
+  '/de/portfolio': typeof DePortfolioRoute
+  '/en/contact': typeof EnContactRoute
+  '/en/portfolio': typeof EnPortfolioRoute
+  '/es/contact': typeof EsContactRoute
+  '/es/portfolio': typeof EsPortfolioRoute
+  '/fr/contact': typeof FrContactRoute
+  '/fr/portfolio': typeof FrPortfolioRoute
+  '/de/': typeof DeIndexRoute
+  '/en/': typeof EnIndexRoute
+  '/es/': typeof EsIndexRoute
+  '/fr/': typeof FrIndexRoute
   '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
   '/_authenticated/negocios/': typeof AuthenticatedNegociosIndexRoute
 }
@@ -176,6 +284,18 @@ export interface FileRouteTypes {
     | '/pipeline'
     | '/projetos'
     | '/tarefas'
+    | '/de/contact'
+    | '/de/portfolio'
+    | '/en/contact'
+    | '/en/portfolio'
+    | '/es/contact'
+    | '/es/portfolio'
+    | '/fr/contact'
+    | '/fr/portfolio'
+    | '/de/'
+    | '/en/'
+    | '/es/'
+    | '/fr/'
     | '/negocios/$id'
     | '/negocios/'
   fileRoutesByTo: FileRoutesByTo
@@ -193,6 +313,18 @@ export interface FileRouteTypes {
     | '/pipeline'
     | '/projetos'
     | '/tarefas'
+    | '/de/contact'
+    | '/de/portfolio'
+    | '/en/contact'
+    | '/en/portfolio'
+    | '/es/contact'
+    | '/es/portfolio'
+    | '/fr/contact'
+    | '/fr/portfolio'
+    | '/de'
+    | '/en'
+    | '/es'
+    | '/fr'
     | '/negocios/$id'
     | '/negocios'
   id:
@@ -211,6 +343,18 @@ export interface FileRouteTypes {
     | '/_authenticated/pipeline'
     | '/_authenticated/projetos'
     | '/_authenticated/tarefas'
+    | '/de/contact'
+    | '/de/portfolio'
+    | '/en/contact'
+    | '/en/portfolio'
+    | '/es/contact'
+    | '/es/portfolio'
+    | '/fr/contact'
+    | '/fr/portfolio'
+    | '/de/'
+    | '/en/'
+    | '/es/'
+    | '/fr/'
     | '/_authenticated/negocios/$id'
     | '/_authenticated/negocios/'
   fileRoutesById: FileRoutesById
@@ -221,6 +365,18 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactoRoute: typeof ContactoRoute
   PortefolioRoute: typeof PortefolioRoute
+  DeContactRoute: typeof DeContactRoute
+  DePortfolioRoute: typeof DePortfolioRoute
+  EnContactRoute: typeof EnContactRoute
+  EnPortfolioRoute: typeof EnPortfolioRoute
+  EsContactRoute: typeof EsContactRoute
+  EsPortfolioRoute: typeof EsPortfolioRoute
+  FrContactRoute: typeof FrContactRoute
+  FrPortfolioRoute: typeof FrPortfolioRoute
+  DeIndexRoute: typeof DeIndexRoute
+  EnIndexRoute: typeof EnIndexRoute
+  EsIndexRoute: typeof EsIndexRoute
+  FrIndexRoute: typeof FrIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -323,6 +479,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTarefasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/de/': {
+      id: '/de/'
+      path: '/de'
+      fullPath: '/de/'
+      preLoaderRoute: typeof DeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/de/contact': {
+      id: '/de/contact'
+      path: '/de/contact'
+      fullPath: '/de/contact'
+      preLoaderRoute: typeof DeContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/de/portfolio': {
+      id: '/de/portfolio'
+      path: '/de/portfolio'
+      fullPath: '/de/portfolio'
+      preLoaderRoute: typeof DePortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/': {
+      id: '/en/'
+      path: '/en'
+      fullPath: '/en/'
+      preLoaderRoute: typeof EnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/contact': {
+      id: '/en/contact'
+      path: '/en/contact'
+      fullPath: '/en/contact'
+      preLoaderRoute: typeof EnContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/portfolio': {
+      id: '/en/portfolio'
+      path: '/en/portfolio'
+      fullPath: '/en/portfolio'
+      preLoaderRoute: typeof EnPortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/es/': {
+      id: '/es/'
+      path: '/es'
+      fullPath: '/es/'
+      preLoaderRoute: typeof EsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/es/contact': {
+      id: '/es/contact'
+      path: '/es/contact'
+      fullPath: '/es/contact'
+      preLoaderRoute: typeof EsContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/es/portfolio': {
+      id: '/es/portfolio'
+      path: '/es/portfolio'
+      fullPath: '/es/portfolio'
+      preLoaderRoute: typeof EsPortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fr/': {
+      id: '/fr/'
+      path: '/fr'
+      fullPath: '/fr/'
+      preLoaderRoute: typeof FrIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fr/contact': {
+      id: '/fr/contact'
+      path: '/fr/contact'
+      fullPath: '/fr/contact'
+      preLoaderRoute: typeof FrContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fr/portfolio': {
+      id: '/fr/portfolio'
+      path: '/fr/portfolio'
+      fullPath: '/fr/portfolio'
+      preLoaderRoute: typeof FrPortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/negocios/': {
       id: '/_authenticated/negocios/'
       path: '/negocios'
@@ -377,6 +617,18 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactoRoute: ContactoRoute,
   PortefolioRoute: PortefolioRoute,
+  DeContactRoute: DeContactRoute,
+  DePortfolioRoute: DePortfolioRoute,
+  EnContactRoute: EnContactRoute,
+  EnPortfolioRoute: EnPortfolioRoute,
+  EsContactRoute: EsContactRoute,
+  EsPortfolioRoute: EsPortfolioRoute,
+  FrContactRoute: FrContactRoute,
+  FrPortfolioRoute: FrPortfolioRoute,
+  DeIndexRoute: DeIndexRoute,
+  EnIndexRoute: EnIndexRoute,
+  EsIndexRoute: EsIndexRoute,
+  FrIndexRoute: FrIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
