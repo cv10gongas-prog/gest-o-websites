@@ -23,14 +23,8 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               className="h-9 w-auto shrink-0 object-contain"
             />
 
-            <span className="min-w-0">
-              <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
-                Nova Web Studio
-              </span>
-
-              <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
-                Um site mais moderno para si
-              </span>
+            <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
+              Um site mais moderno para si
             </span>
           </Link>
 
