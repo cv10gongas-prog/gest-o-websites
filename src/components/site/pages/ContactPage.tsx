@@ -4,9 +4,11 @@ import {
   BadgeCheck,
   Building2,
   CalendarClock,
+  CalendarDays,
   Check,
   CheckCircle2,
   ChevronDown,
+  Globe2,
   Mail,
   MapPin,
   MessageSquareText,
@@ -43,112 +45,251 @@ const EXTRA: Record<
   Locale,
   {
     eyebrow: string;
+
     confidence: string;
     confidenceText: string;
+
     direct: string;
     directText: string;
+
     project: string;
     projectText: string;
+
     details: string;
     contact: string;
+
     optional: string;
     privacy: string;
     choose: string;
+
+    websiteLabel: string;
+    websitePlaceholder: string;
+
+    deadlineLabel: string;
+    deadlineOptions: string[];
+
+    messageWebsiteLabel: string;
+    messageDeadlineLabel: string;
   }
 > = {
   pt: {
     eyebrow: "Conte-nos o que tem em mente",
+
     confidence: "Sem compromisso",
+
     confidenceText:
       "Primeiro percebemos o projeto. Só depois falamos da solução.",
+
     direct: "Contacto direto",
+
     directText:
       "Fala diretamente com a Nova Web Studio, sem intermediários.",
+
     project: "Feito à medida",
+
     projectText:
       "Cada proposta é pensada de acordo com o negócio e os seus objetivos.",
+
     details: "Sobre o projeto",
     contact: "Os seus dados",
+
     optional: "Opcional",
+
     privacy:
       "Os seus dados são utilizados apenas para responder ao pedido.",
+
     choose: "Selecionar",
+
+    websiteLabel: "Website atual",
+    websitePlaceholder: "https://oseusite.pt",
+
+    deadlineLabel: "Prazo desejado",
+
+    deadlineOptions: [
+      "1 semana",
+      "2 semanas",
+      "Entre 3 a 4 semanas",
+      "2 a 3 meses",
+    ],
+
+    messageWebsiteLabel: "Website atual",
+    messageDeadlineLabel: "Prazo desejado",
   },
 
   en: {
     eyebrow: "Tell us what you have in mind",
+
     confidence: "No obligation",
+
     confidenceText:
       "We understand the project first. Then we discuss the right solution.",
+
     direct: "Direct communication",
+
     directText:
       "Speak directly with Nova Web Studio, without intermediaries.",
+
     project: "Built around you",
+
     projectText:
       "Every proposal is shaped around the business and its goals.",
+
     details: "About the project",
     contact: "Your details",
+
     optional: "Optional",
+
     privacy:
       "Your information is only used to respond to your request.",
+
     choose: "Select",
+
+    websiteLabel: "Current website",
+    websitePlaceholder: "https://yourwebsite.com",
+
+    deadlineLabel: "Preferred deadline",
+
+    deadlineOptions: [
+      "1 week",
+      "2 weeks",
+      "3 to 4 weeks",
+      "2 to 3 months",
+    ],
+
+    messageWebsiteLabel: "Current website",
+    messageDeadlineLabel: "Preferred deadline",
   },
 
   de: {
     eyebrow: "Erzählen Sie uns von Ihrem Projekt",
+
     confidence: "Unverbindlich",
+
     confidenceText:
       "Zuerst verstehen wir das Projekt. Danach besprechen wir die passende Lösung.",
+
     direct: "Direkter Kontakt",
+
     directText:
       "Sie sprechen direkt mit Nova Web Studio.",
+
     project: "Individuell entwickelt",
+
     projectText:
       "Jedes Angebot wird an das Unternehmen und seine Ziele angepasst.",
+
     details: "Über das Projekt",
     contact: "Ihre Angaben",
+
     optional: "Optional",
+
     privacy:
       "Ihre Daten werden nur zur Beantwortung Ihrer Anfrage verwendet.",
+
     choose: "Auswählen",
+
+    websiteLabel: "Aktuelle Website",
+    websitePlaceholder: "https://ihrewebsite.de",
+
+    deadlineLabel: "Gewünschter Zeitraum",
+
+    deadlineOptions: [
+      "1 Woche",
+      "2 Wochen",
+      "3 bis 4 Wochen",
+      "2 bis 3 Monate",
+    ],
+
+    messageWebsiteLabel: "Aktuelle Website",
+    messageDeadlineLabel: "Gewünschter Zeitraum",
   },
 
   fr: {
     eyebrow: "Parlez-nous de votre projet",
+
     confidence: "Sans engagement",
+
     confidenceText:
       "Nous commençons par comprendre le projet avant de proposer une solution.",
+
     direct: "Contact direct",
+
     directText:
       "Vous échangez directement avec Nova Web Studio.",
+
     project: "Sur mesure",
+
     projectText:
       "Chaque proposition est adaptée à l'activité et à ses objectifs.",
+
     details: "À propos du projet",
     contact: "Vos coordonnées",
+
     optional: "Facultatif",
+
     privacy:
       "Vos données sont uniquement utilisées pour répondre à votre demande.",
+
     choose: "Sélectionner",
+
+    websiteLabel: "Site actuel",
+    websitePlaceholder: "https://votresite.fr",
+
+    deadlineLabel: "Délai souhaité",
+
+    deadlineOptions: [
+      "1 semaine",
+      "2 semaines",
+      "3 à 4 semaines",
+      "2 à 3 mois",
+    ],
+
+    messageWebsiteLabel: "Site actuel",
+    messageDeadlineLabel: "Délai souhaité",
   },
 
   es: {
     eyebrow: "Cuéntanos qué tienes en mente",
+
     confidence: "Sin compromiso",
+
     confidenceText:
       "Primero entendemos el proyecto. Después hablamos de la solución.",
+
     direct: "Contacto directo",
+
     directText:
       "Hablas directamente con Nova Web Studio.",
+
     project: "A medida",
+
     projectText:
       "Cada propuesta se adapta al negocio y a sus objetivos.",
+
     details: "Sobre el proyecto",
     contact: "Tus datos",
+
     optional: "Opcional",
+
     privacy:
       "Tus datos solo se utilizan para responder a tu solicitud.",
+
     choose: "Seleccionar",
+
+    websiteLabel: "Web actual",
+    websitePlaceholder: "https://tuweb.es",
+
+    deadlineLabel: "Plazo deseado",
+
+    deadlineOptions: [
+      "1 semana",
+      "2 semanas",
+      "Entre 3 y 4 semanas",
+      "2 a 3 meses",
+    ],
+
+    messageWebsiteLabel: "Web actual",
+    messageDeadlineLabel: "Plazo deseado",
   },
 };
 
@@ -262,8 +403,15 @@ function PremiumSelect({
       }
     }
 
-    document.addEventListener("mousedown", closeOnOutsideClick);
-    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener(
+      "mousedown",
+      closeOnOutsideClick,
+    );
+
+    document.addEventListener(
+      "keydown",
+      closeOnEscape,
+    );
 
     return () => {
       document.removeEventListener(
@@ -287,7 +435,9 @@ function PremiumSelect({
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() => setOpen((current) => !current)}
+        onClick={() =>
+          setOpen((current) => !current)
+        }
         className={`group flex min-h-[48px] w-full items-center justify-between gap-3 rounded-xl border px-4 text-left text-[13px] outline-none transition-all duration-200 ${
           open
             ? "border-primary/50 bg-background/90 shadow-[0_0_0_4px_rgba(45,212,191,0.05)]"
@@ -298,7 +448,7 @@ function PremiumSelect({
           className={
             selected
               ? "truncate text-foreground"
-              : "truncate text-muted-foreground"
+              : "truncate text-muted-foreground/60"
           }
         >
           {selected?.label ?? placeholder}
@@ -325,7 +475,8 @@ function PremiumSelect({
         <div className="overflow-hidden rounded-2xl border border-border/80 bg-[#07111c]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-2xl">
           <div className="max-h-[310px] overflow-y-auto">
             {options.map((option) => {
-              const active = option.value === value;
+              const active =
+                option.value === value;
 
               return (
                 <button
@@ -372,27 +523,43 @@ function PremiumSelect({
   );
 }
 
-export function ContactPage({ locale }: { locale: Locale }) {
+export function ContactPage({
+  locale,
+}: {
+  locale: Locale;
+}) {
   const t = dict[locale].contact;
   const nav = dict[locale].nav;
   const paths = PATHS[locale];
   const extra = EXTRA[locale];
 
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [sending, setSending] =
+    useState(false);
+
+  const [sent, setSent] =
+    useState(false);
 
   const [form, setForm] = useState({
     nome: "",
     empresa: "",
     email: "",
     telefone: "",
+
     tipoIndex: "0",
     orcamentoIndex: "0",
+
+    websiteAtual: "",
+
+    // vazio porque é opcional
+    prazoIndex: "",
+
     mensagem: "",
     querReuniao: false,
   });
 
-  function update<K extends keyof typeof form>(
+  function update<
+    K extends keyof typeof form,
+  >(
     key: K,
     value: (typeof form)[K],
   ) {
@@ -402,7 +569,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
     }));
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(
+    event: FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
 
     const nome = form.nome.trim();
@@ -415,60 +584,122 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
     setSending(true);
 
-    const tipoIndex = Number(form.tipoIndex);
-    const orcamentoIndex = Number(form.orcamentoIndex);
+    const tipoIndex =
+      Number(form.tipoIndex);
 
-    const mensagem = form.mensagem.trim();
+    const orcamentoIndex =
+      Number(form.orcamentoIndex);
+
+    const websiteAtual =
+      form.websiteAtual.trim();
+
+    const prazoIndex =
+      form.prazoIndex === ""
+        ? null
+        : Number(form.prazoIndex);
+
+    const prazoDesejado =
+      prazoIndex !== null
+        ? extra.deadlineOptions[
+            prazoIndex
+          ] ?? null
+        : null;
+
+    const mensagemOriginal =
+      form.mensagem.trim();
+
+    const detalhesAdicionais = [
+      websiteAtual
+        ? `${extra.messageWebsiteLabel}: ${websiteAtual}`
+        : null,
+
+      prazoDesejado
+        ? `${extra.messageDeadlineLabel}: ${prazoDesejado}`
+        : null,
+
+      "Origem: Website público",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const mensagemFinal = [
+      mensagemOriginal || null,
+      detalhesAdicionais,
+    ]
+      .filter(Boolean)
+      .join("\n\n");
 
     const { error } = await supabase
       .from("website_requests")
       .insert({
         nome,
-        empresa: form.empresa.trim() || null,
+
+        empresa:
+          form.empresa.trim() || null,
+
         email,
-        telefone: form.telefone.trim() || null,
+
+        telefone:
+          form.telefone.trim() || null,
 
         tipo_projeto:
           TIPO_VALUES[tipoIndex] ??
           TIPO_VALUES[0],
 
         orcamento:
-          ORCAMENTO_VALUES[orcamentoIndex] ??
-          ORCAMENTO_VALUES[0],
+          ORCAMENTO_VALUES[
+            orcamentoIndex
+          ] ?? ORCAMENTO_VALUES[0],
 
-        mensagem: `${
-          mensagem ? `${mensagem}\n\n` : ""
-        }Origem: Website público`,
+        mensagem: mensagemFinal,
 
-        quer_reuniao: form.querReuniao,
+        quer_reuniao:
+          form.querReuniao,
       });
 
     setSending(false);
 
     if (error) {
       console.error(error);
+
       toast.error(t.errorSend);
+
       return;
     }
 
     toast.success(t.success);
+
     setSent(true);
   }
 
-  const tipoOptions = t.tipos.map((label, index) => ({
-    value: String(index),
-    label,
-  }));
-
-  const budgetOptions = t.orcamentos.map(
+  const tipoOptions = t.tipos.map(
     (label, index) => ({
       value: String(index),
       label,
     }),
   );
 
+  const budgetOptions =
+    t.orcamentos.map(
+      (label, index) => ({
+        value: String(index),
+        label,
+      }),
+    );
+
+  const deadlineOptions =
+    extra.deadlineOptions.map(
+      (label, index) => ({
+        value: String(index),
+        label,
+      }),
+    );
+
   return (
-    <SiteChrome locale={locale} page="contact">
+    <SiteChrome
+      locale={locale}
+      page="contact"
+    >
       <style>{`
         @keyframes nws-contact-glow {
           0%, 100% {
@@ -529,7 +760,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
                   </p>
 
                   <p className="mt-1 text-xs leading-6 text-muted-foreground">
-                    {extra.confidenceText}
+                    {
+                      extra.confidenceText
+                    }
                   </p>
                 </div>
               </div>
@@ -609,6 +842,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
           <Reveal delay={320}>
             <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
               <MapPin className="size-3.5 text-primary" />
+
               {t.location}
             </div>
           </Reveal>
@@ -625,7 +859,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
                 style={{
                   backgroundImage:
                     "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)",
-                  backgroundSize: "34px 34px",
+
+                  backgroundSize:
+                    "34px 34px",
                 }}
               />
 
@@ -638,7 +874,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
                   <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
-                        {extra.confidence}
+                        {
+                          extra.confidence
+                        }
                       </span>
 
                       <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
@@ -646,12 +884,15 @@ export function ContactPage({ locale }: { locale: Locale }) {
                       </h2>
 
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {t.panelSubtitle}
+                        {
+                          t.panelSubtitle
+                        }
                       </p>
                     </div>
 
                     <div className="flex max-w-xs items-center gap-2 text-[10px] leading-5 text-muted-foreground">
                       <ShieldCheck className="size-3.5 shrink-0 text-primary" />
+
                       {extra.privacy}
                     </div>
                   </div>
@@ -670,83 +911,121 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={t.labels.nome}
+                        label={
+                          t.labels.nome
+                        }
                         icon={
                           <UserRound className="size-4" />
                         }
                       >
                         <input
-                          value={form.nome}
-                          onChange={(event) =>
+                          value={
+                            form.nome
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "nome",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="name"
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.empresa}
+                        label={
+                          t.labels.empresa
+                        }
                         icon={
                           <Building2 className="size-4" />
                         }
                       >
                         <input
-                          value={form.empresa}
-                          onChange={(event) =>
+                          value={
+                            form.empresa
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "empresa",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="organization"
-                          placeholder={extra.optional}
-                          className={INPUT_CLASS}
+                          placeholder={
+                            extra.optional
+                          }
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.email}
+                        label={
+                          t.labels.email
+                        }
                         icon={
                           <Mail className="size-4" />
                         }
                       >
                         <input
                           type="email"
-                          value={form.email}
-                          onChange={(event) =>
+                          value={
+                            form.email
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "email",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="email"
                           placeholder="email@exemplo.pt"
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.telefone}
+                        label={
+                          t.labels.telefone
+                        }
                         icon={
                           <Phone className="size-4" />
                         }
                       >
                         <input
                           type="tel"
-                          value={form.telefone}
-                          onChange={(event) =>
+                          value={
+                            form.telefone
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "telefone",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="tel"
                           placeholder="+351"
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
                     </div>
@@ -764,61 +1043,161 @@ export function ContactPage({ locale }: { locale: Locale }) {
                       </p>
                     </div>
 
-                    {/* DROPDOWNS PREMIUM */}
+                    {/* LINHA 1 */}
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={t.labels.tipo}
+                        label={
+                          t.labels.tipo
+                        }
                         icon={
                           <BadgeCheck className="size-4" />
                         }
                       >
                         <PremiumSelect
-                          value={form.tipoIndex}
-                          onChange={(value) =>
-                            update("tipoIndex", value)
+                          value={
+                            form.tipoIndex
                           }
-                          options={tipoOptions}
-                          placeholder={extra.choose}
+                          onChange={(
+                            value,
+                          ) =>
+                            update(
+                              "tipoIndex",
+                              value,
+                            )
+                          }
+                          options={
+                            tipoOptions
+                          }
+                          placeholder={
+                            extra.choose
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.orcamento}
+                        label={
+                          t.labels
+                            .orcamento
+                        }
                         icon={
                           <Sparkles className="size-4" />
                         }
                       >
                         <PremiumSelect
-                          value={form.orcamentoIndex}
-                          onChange={(value) =>
+                          value={
+                            form.orcamentoIndex
+                          }
+                          onChange={(
+                            value,
+                          ) =>
                             update(
                               "orcamentoIndex",
                               value,
                             )
                           }
-                          options={budgetOptions}
-                          placeholder={extra.choose}
+                          options={
+                            budgetOptions
+                          }
+                          placeholder={
+                            extra.choose
+                          }
                         />
                       </Field>
                     </div>
 
+                    {/* LINHA 2 — NOVA */}
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      {/* WEBSITE */}
+                      <Field
+                        label={
+                          extra.websiteLabel
+                        }
+                        icon={
+                          <Globe2 className="size-4" />
+                        }
+                      >
+                        <input
+                          type="url"
+                          value={
+                            form.websiteAtual
+                          }
+                          onChange={(
+                            event,
+                          ) =>
+                            update(
+                              "websiteAtual",
+                              event.target
+                                .value,
+                            )
+                          }
+                          autoComplete="url"
+                          placeholder={
+                            extra.websitePlaceholder
+                          }
+                          className={
+                            INPUT_CLASS
+                          }
+                        />
+                      </Field>
+
+                      {/* PRAZO */}
+                      <Field
+                        label={
+                          extra.deadlineLabel
+                        }
+                        icon={
+                          <CalendarDays className="size-4" />
+                        }
+                      >
+                        <PremiumSelect
+                          value={
+                            form.prazoIndex
+                          }
+                          onChange={(
+                            value,
+                          ) =>
+                            update(
+                              "prazoIndex",
+                              value,
+                            )
+                          }
+                          options={
+                            deadlineOptions
+                          }
+                          placeholder={
+                            extra.optional
+                          }
+                        />
+                      </Field>
+                    </div>
+
+                    {/* MENSAGEM */}
                     <div className="mt-5">
                       <Field
-                        label={t.labels.mensagem}
+                        label={
+                          t.labels.mensagem
+                        }
                         icon={
                           <MessageSquareText className="size-4" />
                         }
                       >
                         <textarea
-                          value={form.mensagem}
-                          onChange={(event) =>
+                          value={
+                            form.mensagem
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "mensagem",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           rows={6}
-                          placeholder={t.placeholder}
+                          placeholder={
+                            t.placeholder
+                          }
                           className={`${INPUT_CLASS} min-h-[160px] resize-y py-3 leading-6`}
                         />
                       </Field>
@@ -841,11 +1220,16 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
                     <input
                       type="checkbox"
-                      checked={form.querReuniao}
-                      onChange={(event) =>
+                      checked={
+                        form.querReuniao
+                      }
+                      onChange={(
+                        event,
+                      ) =>
                         update(
                           "querReuniao",
-                          event.target.checked,
+                          event.target
+                            .checked,
                         )
                       }
                       className="sr-only"
@@ -872,7 +1256,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
                       <>
                         <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
 
-                        {t.submitting}
+                        {
+                          t.submitting
+                        }
                       </>
                     ) : (
                       <>
@@ -919,7 +1305,9 @@ export function ContactPage({ locale }: { locale: Locale }) {
                     </Link>
 
                     <Link
-                      to={paths.portfolio}
+                      to={
+                        paths.portfolio
+                      }
                       className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
                     >
                       {nav.portfolio}
