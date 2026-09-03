@@ -4,26 +4,43 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { Campo, Chip, Panel } from "@/components/crm/Bits";
-import { btnPrimario, inputClass, selectClass, textareaClass } from "@/components/crm/Modal";
+import {
+  btnPrimario,
+  inputClass,
+  selectClass,
+  textareaClass,
+} from "@/components/crm/Modal";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/contacto")({
   head: () => ({
     meta: [
-      { title: "Contacto e pedido de orçamento — Nova Web Studio" },
+      {
+        title: "Contacto | Nova Web Studio",
+      },
       {
         name: "description",
         content:
-          "Peça um orçamento para o seu website ou marque uma reunião com a equipa da Nova Web Studio.",
+          "Fale com a Nova Web Studio para criar ou modernizar o website do seu negócio. Peça uma proposta simples e sem compromisso.",
       },
-      { property: "og:title", content: "Contacto e pedido de orçamento — Nova Web Studio" },
+      {
+        property: "og:title",
+        content: "Contacto | Nova Web Studio",
+      },
       {
         property: "og:description",
-        content: "Conte-nos o que precisa. Respondemos em 24 horas úteis.",
+        content:
+          "Peça uma proposta para criar ou modernizar o website do seu negócio.",
       },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
     ],
   }),
   component: Contacto,
@@ -38,7 +55,12 @@ const TIPOS = [
   "Outro",
 ];
 
-const ORCAMENTOS = ["Até 150 €", "150 € – 250 €", "250 € – 400 €", "Mais de 400 €"];
+const ORCAMENTOS = [
+  "Até 150 €",
+  "150 € – 250 €",
+  "250 € – 400 €",
+  "Mais de 400 €",
+];
 
 function Contacto() {
   const [nome, setNome] = useState("");
@@ -54,11 +76,14 @@ function Contacto() {
 
   async function submeter(e: React.FormEvent) {
     e.preventDefault();
+
     if (!nome.trim() || !email.trim()) {
       toast.error("Indique o nome e o email.");
       return;
     }
+
     setAEnviar(true);
+
     const { error } = await supabase.from("website_requests").insert({
       nome: nome.trim(),
       empresa: empresa.trim() || null,
@@ -66,15 +91,21 @@ function Contacto() {
       telefone: telefone.trim() || null,
       tipo_projeto: tipoProjeto,
       orcamento,
-      mensagem: mensagem.trim() ? `${mensagem.trim()}\n\nOrigem: Website público` : "Origem: Website público",
+      mensagem: mensagem.trim()
+        ? `${mensagem.trim()}\n\nOrigem: Website público`
+        : "Origem: Website público",
       quer_reuniao: querReuniao,
     });
+
     setAEnviar(false);
+
     if (error) {
       toast.error("Não foi possível enviar o pedido. Tente novamente.");
       return;
     }
+
     setEnviado(true);
+
     toast.success("Pedido enviado. Entramos em contacto em breve.");
   }
 
@@ -83,23 +114,30 @@ function Contacto() {
       <div className="grid gap-8 lg:grid-cols-[1.1fr_.9fr]">
         <section>
           <Chip tone="primary">Contacto</Chip>
+
           <h1 className="orbit-gradient-text mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
             Vamos falar sobre o seu projeto
           </h1>
+
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
-            Preencha o formulário com o máximo de detalhe possível. Analisamos o pedido e enviamos
-            uma proposta com prazos e valores.
+            Preencha o formulário com o máximo de detalhe possível. Analisamos
+            o pedido e enviamos uma proposta com prazos e valores.
           </p>
 
           <ul className="mt-8 space-y-3 text-sm text-muted-foreground">
             <li className="flex items-center gap-2">
-              <Clock3 className="size-4" /> Resposta em 24 horas úteis
+              <Clock3 className="size-4" />
+              Resposta em 24 horas úteis
             </li>
+
             <li className="flex items-center gap-2">
-              <Mail className="size-4" /> geral@novawebstudio.pt
+              <Mail className="size-4" />
+              geral@novawebstudio.pt
             </li>
+
             <li className="flex items-center gap-2">
-              <MapPin className="size-4" /> Portugal · trabalho remoto
+              <MapPin className="size-4" />
+              Portugal · trabalho remoto
             </li>
           </ul>
         </section>
@@ -108,7 +146,11 @@ function Contacto() {
           {enviado ? (
             <div className="flex flex-col items-center gap-3 py-8 text-center">
               <CheckCircle2 className="size-8 text-primary" />
-              <p className="text-sm font-medium">Pedido recebido, obrigado!</p>
+
+              <p className="text-sm font-medium">
+                Pedido recebido, obrigado!
+              </p>
+
               <p className="text-xs text-muted-foreground">
                 A nossa equipa entra em contacto pelo email indicado.
               </p>
@@ -124,6 +166,7 @@ function Contacto() {
                     required
                   />
                 </Campo>
+
                 <Campo label="Empresa">
                   <input
                     className={inputClass}
@@ -131,6 +174,7 @@ function Contacto() {
                     onChange={(e) => setEmpresa(e.target.value)}
                   />
                 </Campo>
+
                 <Campo label="Email *">
                   <input
                     className={inputClass}
@@ -140,6 +184,7 @@ function Contacto() {
                     required
                   />
                 </Campo>
+
                 <Campo label="Telefone">
                   <input
                     className={inputClass}
@@ -147,6 +192,7 @@ function Contacto() {
                     onChange={(e) => setTelefone(e.target.value)}
                   />
                 </Campo>
+
                 <Campo label="Tipo de projeto">
                   <select
                     className={selectClass}
@@ -160,6 +206,7 @@ function Contacto() {
                     ))}
                   </select>
                 </Campo>
+
                 <Campo label="Orçamento previsto">
                   <select
                     className={selectClass}
@@ -194,13 +241,16 @@ function Contacto() {
                 Quero marcar uma reunião de apresentação
               </label>
 
-              <button className={`${btnPrimario} w-full`} disabled={aEnviar}>
+              <button
+                className={`${btnPrimario} w-full`}
+                disabled={aEnviar}
+              >
                 {aEnviar ? "A enviar…" : "Enviar pedido"}
               </button>
 
               <p className="rounded-lg border border-border/60 bg-secondary/40 px-3 py-2.5 text-center text-xs leading-relaxed text-muted-foreground">
-                Após o envio, entraremos em contacto consigo por email ou telefone para conhecer
-                melhor o projeto.
+                Após o envio, entraremos em contacto consigo por email ou
+                telefone para conhecer melhor o projeto.
               </p>
             </form>
           )}
