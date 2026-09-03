@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Campo } from "@/components/crm/Bits";
-import { btnPrimario, btnSecundario, inputClass } from "@/components/crm/Modal";
+import { btnPrimario, inputClass } from "@/components/crm/Modal";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -24,8 +23,6 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [modo, setModo] = useState<"entrar" | "registar">("entrar");
-  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [aCarregar, setACarregar] = useState(false);
@@ -40,40 +37,14 @@ function AuthPage() {
     e.preventDefault();
     setACarregar(true);
     try {
-      if (modo === "registar") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { nome },
-            emailRedirectTo: `${window.location.origin}/painel`,
-          },
-        });
-        if (error) throw error;
-        toast.success("Conta criada. Já podes entrar.");
-        setModo("entrar");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        navigate({ to: "/painel", replace: true });
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      navigate({ to: "/painel", replace: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível continuar.");
     } finally {
       setACarregar(false);
     }
-  }
-
-  async function entrarComGoogle() {
-    const resultado = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (resultado.error) {
-      toast.error("Não foi possível entrar com o Google.");
-      return;
-    }
-    if (resultado.redirected) return;
-    navigate({ to: "/painel", replace: true });
   }
 
   return (
@@ -93,17 +64,6 @@ function AuthPage() {
         </div>
 
         <form className="mt-7 grid gap-4" onSubmit={submeter}>
-          {modo === "registar" && (
-            <Campo label="Nome">
-              <input
-                className={inputClass}
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="O teu nome"
-                required
-              />
-            </Campo>
-          )}
           <Campo label="Email">
             <input
               className={inputClass}
@@ -125,27 +85,9 @@ function AuthPage() {
           </Campo>
           <button className={btnPrimario} disabled={aCarregar}>
             {aCarregar ? <Loader2 className="size-4 animate-spin" /> : <LogIn className="size-4" />}
-            {modo === "entrar" ? "Entrar" : "Criar conta"}
+            Entrar
           </button>
         </form>
-
-        <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-[.2em] text-muted-foreground">
-          <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
-        </div>
-
-        <button className={`${btnSecundario} w-full`} onClick={entrarComGoogle}>
-          Continuar com Google
-        </button>
-
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          {modo === "entrar" ? "Ainda não tens conta?" : "Já tens conta?"}{" "}
-          <button
-            className="text-primary hover:underline"
-            onClick={() => setModo(modo === "entrar" ? "registar" : "entrar")}
-          >
-            {modo === "entrar" ? "Criar conta" : "Entrar"}
-          </button>
-        </p>
       </div>
     </div>
   );
