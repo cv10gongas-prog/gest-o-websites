@@ -786,7 +786,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       <img
                         src="/radio-alcabidechefm.png"
                         alt="Rádio AlcabidecheFM"
-                        className="max-h-[95%] max-w-[95%] object-contain sm:max-h-[100%] sm:max-w-[100%]"
+                        className="max-h-[100%] max-w-[100%] object-contain sm:max-h-[100%] sm:max-w-[100%]"
                       />
                     </div>
                   </div>
