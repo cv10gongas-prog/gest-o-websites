@@ -76,16 +76,12 @@ const EXTRA: Record<
 > = {
   pt: {
     heroKicker: "Websites modernos para negócios que querem crescer",
-
     heroProof: "Projeto real desenvolvido pela Nova Web Studio",
-
     heroProofSmall: "Design, desenvolvimento e presença digital",
 
     problemBadge: "O problema",
-
     problemTitle:
       "O seu website pode estar a afastar clientes sem perceber",
-
     problemLead:
       "Um site lento, confuso ou desatualizado transmite uma imagem pior do que o próprio negócio merece.",
 
@@ -113,33 +109,22 @@ const EXTRA: Record<
     ],
 
     solutionBadge: "A solução",
-
     solutionTitle: "Transformamos presença online em confiança",
-
     solutionLead:
       "Criamos websites pensados para apresentar melhor o negócio, facilitar a navegação e tornar o contacto simples.",
 
     radioBadge: "Projeto real",
-
     radioPartner: "Parceiro Nova Web Studio",
-
     radioTitle: "Rádio AlcabidecheFM",
-
     radioText:
       "Projeto desenvolvido para reforçar a presença digital da Rádio AlcabidecheFM, organizar a informação da rádio e criar uma experiência moderna e acessível para a comunidade online.",
-
     radioFeature1: "Presença digital modernizada",
-
     radioFeature2: "Estrutura adaptada à rádio",
-
     radioFeature3: "Parceiro local da Nova Web Studio",
-
     radioVisit: "Ver projeto",
 
     whyBadge: "Porquê Nova Web Studio",
-
     whyTitle: "Um processo mais próximo, simples e profissional",
-
     whyLead:
       "Sem processos complicados, sem soluções genéricas e sem desaparecer depois da entrega.",
 
@@ -170,23 +155,18 @@ const EXTRA: Record<
       "Da primeira conversa à publicação, cada etapa é simples e transparente.",
 
     finalBadge: "O próximo website pode ser o seu",
-
     finalSmall:
       "Sem compromisso. Conte-nos o que pretende e analisamos consigo.",
   },
 
   en: {
     heroKicker: "Modern websites for businesses that want to grow",
-
     heroProof: "Real project developed by Nova Web Studio",
-
     heroProofSmall: "Design, development and digital presence",
 
     problemBadge: "The problem",
-
     problemTitle:
       "Your website may be pushing clients away without you noticing",
-
     problemLead:
       "A slow, confusing or outdated website can make a business look less professional than it really is.",
 
@@ -214,33 +194,22 @@ const EXTRA: Record<
     ],
 
     solutionBadge: "The solution",
-
     solutionTitle: "We turn your online presence into trust",
-
     solutionLead:
       "We build websites designed to present the business clearly, make navigation easy and turn contact into a natural next step.",
 
     radioBadge: "Live project",
-
     radioPartner: "Nova Web Studio partner",
-
     radioTitle: "Rádio AlcabidecheFM",
-
     radioText:
       "A project developed to strengthen Rádio AlcabidecheFM's digital presence, organise the station's information and create a modern and accessible experience for its online community.",
-
     radioFeature1: "Modernised digital presence",
-
     radioFeature2: "Structure designed around the radio",
-
     radioFeature3: "Local Nova Web Studio partner",
-
     radioVisit: "View project",
 
     whyBadge: "Why Nova Web Studio",
-
     whyTitle: "A closer, simpler and more professional process",
-
     whyLead:
       "No unnecessary complexity, no generic solutions and no disappearing after launch.",
 
@@ -271,7 +240,6 @@ const EXTRA: Record<
       "From the first conversation to launch, every step is simple and transparent.",
 
     finalBadge: "Your next website could be this one",
-
     finalSmall:
       "No obligation. Tell us what you need and we will review it with you.",
   },
@@ -279,16 +247,12 @@ const EXTRA: Record<
   de: {
     heroKicker:
       "Moderne Websites für Unternehmen mit Wachstumspotenzial",
-
     heroProof: "Reales Projekt von Nova Web Studio",
-
     heroProofSmall: "Design, Entwicklung und digitale Präsenz",
 
     problemBadge: "Das Problem",
-
     problemTitle:
       "Ihre Website kann Kunden abschrecken, ohne dass Sie es merken",
-
     problemLead:
       "Eine langsame, unübersichtliche oder veraltete Website kann ein Unternehmen schlechter darstellen, als es tatsächlich ist.",
 
@@ -316,34 +280,23 @@ const EXTRA: Record<
     ],
 
     solutionBadge: "Die Lösung",
-
     solutionTitle: "Wir machen aus Online-Präsenz Vertrauen",
-
     solutionLead:
       "Wir erstellen Websites, die Unternehmen klar präsentieren, einfach zu bedienen sind und den Kontakt erleichtern.",
 
     radioBadge: "Reales Projekt",
-
     radioPartner: "Partner von Nova Web Studio",
-
     radioTitle: "Rádio AlcabidecheFM",
-
     radioText:
       "Ein Projekt zur Stärkung der digitalen Präsenz von Rádio AlcabidecheFM und zur modernen Präsentation der Radiostation und ihrer Inhalte.",
-
     radioFeature1: "Modernisierte digitale Präsenz",
-
     radioFeature2: "Struktur für eine Radiostation",
-
     radioFeature3: "Lokaler Partner",
-
     radioVisit: "Projekt ansehen",
 
     whyBadge: "Warum Nova Web Studio",
-
     whyTitle:
       "Ein persönlicher, einfacher und professioneller Prozess",
-
     whyLead:
       "Keine unnötige Komplexität, keine Standardlösung und kein Verschwinden nach dem Launch.",
 
@@ -374,7 +327,6 @@ const EXTRA: Record<
       "Vom ersten Gespräch bis zur Veröffentlichung ist jeder Schritt klar und transparent.",
 
     finalBadge: "Ihre nächste Website könnte hier entstehen",
-
     finalSmall:
       "Unverbindlich. Erzählen Sie uns, was Sie brauchen.",
   },
@@ -382,16 +334,12 @@ const EXTRA: Record<
   fr: {
     heroKicker:
       "Des sites modernes pour les entreprises qui veulent grandir",
-
     heroProof: "Projet réel développé par Nova Web Studio",
-
     heroProofSmall: "Design, développement et présence digitale",
 
     problemBadge: "Le problème",
-
     problemTitle:
       "Votre site peut faire fuir des clients sans que vous le sachiez",
-
     problemLead:
       "Un site lent, confus ou dépassé peut donner une image moins professionnelle que votre entreprise ne le mérite.",
 
@@ -419,34 +367,23 @@ const EXTRA: Record<
     ],
 
     solutionBadge: "La solution",
-
     solutionTitle:
       "Nous transformons votre présence digitale en confiance",
-
     solutionLead:
       "Nous créons des sites clairs, simples à utiliser et conçus pour faciliter le contact.",
 
     radioBadge: "Projet réel",
-
     radioPartner: "Partenaire Nova Web Studio",
-
     radioTitle: "Rádio AlcabidecheFM",
-
     radioText:
       "Un projet développé pour renforcer la présence digitale de Rádio AlcabidecheFM et offrir une expérience moderne à sa communauté en ligne.",
-
     radioFeature1: "Présence digitale modernisée",
-
     radioFeature2: "Structure pensée pour la radio",
-
     radioFeature3: "Partenaire local",
-
     radioVisit: "Voir le projet",
 
     whyBadge: "Pourquoi Nova Web Studio",
-
     whyTitle: "Un processus plus proche, simple et professionnel",
-
     whyLead:
       "Pas de complexité inutile, pas de solution générique et pas de disparition après la mise en ligne.",
 
@@ -477,23 +414,18 @@ const EXTRA: Record<
       "De la première conversation à la publication, chaque étape reste simple et transparente.",
 
     finalBadge: "Votre prochain site peut commencer ici",
-
     finalSmall:
       "Sans engagement. Expliquez-nous votre besoin.",
   },
 
   es: {
     heroKicker: "Webs modernas para negocios que quieren crecer",
-
     heroProof: "Proyecto real desarrollado por Nova Web Studio",
-
     heroProofSmall: "Diseño, desarrollo y presencia digital",
 
     problemBadge: "El problema",
-
     problemTitle:
       "Tu web puede estar alejando clientes sin que te des cuenta",
-
     problemLead:
       "Una web lenta, confusa o desactualizada puede transmitir una imagen peor de la que merece tu negocio.",
 
@@ -521,33 +453,22 @@ const EXTRA: Record<
     ],
 
     solutionBadge: "La solución",
-
     solutionTitle: "Convertimos presencia online en confianza",
-
     solutionLead:
       "Creamos webs pensadas para presentar mejor el negocio, facilitar la navegación y simplificar el contacto.",
 
     radioBadge: "Proyecto real",
-
     radioPartner: "Socio Nova Web Studio",
-
     radioTitle: "Rádio AlcabidecheFM",
-
     radioText:
       "Proyecto desarrollado para reforzar la presencia digital de Rádio AlcabidecheFM y ofrecer una experiencia más moderna a su comunidad online.",
-
     radioFeature1: "Presencia digital modernizada",
-
     radioFeature2: "Estructura adaptada a la radio",
-
     radioFeature3: "Socio local",
-
     radioVisit: "Ver proyecto",
 
     whyBadge: "Por qué Nova Web Studio",
-
     whyTitle: "Un proceso más cercano, sencillo y profesional",
-
     whyLead:
       "Sin procesos complicados, sin soluciones genéricas y sin desaparecer después de publicar.",
 
@@ -578,8 +499,8 @@ const EXTRA: Record<
       "Desde la primera conversación hasta la publicación, cada paso es sencillo y transparente.",
 
     finalBadge: "Tu próxima web puede empezar aquí",
-
-    finalSmall: "Sin compromiso. Cuéntanos qué necesitas.",
+    finalSmall:
+      "Sin compromiso. Cuéntanos qué necesitas.",
   },
 };
 
@@ -594,7 +515,6 @@ export function HomePage({ locale }: { locale: Locale }) {
       {/* HERO */}
       <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-6 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <div className="absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
-
         <div className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-primary/5 blur-3xl" />
 
         <div className="relative grid items-center gap-12 lg:grid-cols-[1fr_.95fr]">
@@ -603,7 +523,6 @@ export function HomePage({ locale }: { locale: Locale }) {
 
             <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-muted-foreground">
               <Sparkles className="size-3.5 text-primary" />
-
               {extra.heroKicker}
             </div>
 
@@ -621,7 +540,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                 className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:opacity-90"
               >
                 <CalendarCheck className="size-4" />
-
                 {t.ctaProposal}
               </Link>
 
@@ -630,7 +548,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                 className="inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-background/50 px-6 text-sm transition hover:-translate-y-0.5 hover:bg-accent"
               >
                 {t.ctaPortfolio}
-
                 <ArrowRight className="size-4" />
               </Link>
             </div>
@@ -638,13 +555,11 @@ export function HomePage({ locale }: { locale: Locale }) {
             <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <MapPin className="size-3.5 text-primary" />
-
                 {t.badgeArea}
               </span>
 
               <span className="flex items-center gap-1.5">
                 <BadgeCheck className="size-3.5 text-primary" />
-
                 {t.badgeMobile}
               </span>
             </div>
@@ -691,12 +606,10 @@ export function HomePage({ locale }: { locale: Locale }) {
                   </span>
 
                   <div className="mt-4 h-4 w-4/5 rounded-full bg-foreground/15" />
-
                   <div className="mt-3 h-4 w-3/5 rounded-full bg-foreground/10" />
 
                   <div className="mt-7 flex gap-2">
                     <span className="h-9 w-28 rounded-lg bg-primary" />
-
                     <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
                   </div>
                 </div>
@@ -720,7 +633,6 @@ export function HomePage({ locale }: { locale: Locale }) {
 
                 <div className="relative mt-5 grid grid-cols-[1.3fr_.7fr] gap-3">
                   <div className="h-20 rounded-2xl bg-secondary/70" />
-
                   <div className="h-20 rounded-2xl border border-primary/20 bg-primary/10" />
                 </div>
               </div>
@@ -856,16 +768,50 @@ export function HomePage({ locale }: { locale: Locale }) {
 
         <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[.9fr_1.1fr]">
-            <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-[#f5f5f3] p-8 lg:border-b-0 lg:border-r">
-              <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+            {/* VISUAL DA RÁDIO */}
+            <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-8 lg:border-b-0 lg:border-r">
+              <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
-              <img
-                src="/radio-alcabidechefm.png"
-                alt="Rádio AlcabidecheFM"
-                className="relative max-h-[280px] w-auto max-w-[75%] object-contain"
-              />
+              <div className="absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
+
+              <div className="relative w-full max-w-md">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-sm sm:p-10">
+                  <div className="flex justify-center">
+                    <div className="flex size-44 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                      <img
+                        src="/radio-alcabidechefm.png"
+                        alt="Rádio AlcabidecheFM"
+                        className="max-h-[150px] max-w-[70%] object-contain sm:max-h-[175px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-7 text-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-primary">
+                      Rádio · Alcabideche
+                    </p>
+
+                    <h3 className="mt-3 text-xl font-semibold text-white sm:text-2xl">
+                      Rádio AlcabidecheFM
+                    </h3>
+
+                    <div className="mx-auto mt-5 flex max-w-[230px] items-end justify-center gap-1.5">
+                      {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map(
+                        (height, idx) => (
+                          <span
+                            key={idx}
+                            className="w-1.5 rounded-full bg-primary/70"
+                            style={{ height }}
+                          />
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* TEXTO DA RÁDIO */}
             <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-11">
               <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
                 <Radio className="size-3.5" />
@@ -891,7 +837,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                     className="flex items-center gap-2 text-xs text-muted-foreground"
                   >
                     <CheckCircle2 className="size-3.5 text-primary" />
-
                     {item}
                   </div>
                 ))}
@@ -905,7 +850,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
                 >
                   {extra.radioVisit}
-
                   <ArrowUpRight className="size-4" />
                 </a>
 
@@ -914,7 +858,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                   className="inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
                 >
                   {t.ctaPortfolio}
-
                   <ArrowRight className="size-4" />
                 </Link>
               </div>
@@ -939,7 +882,6 @@ export function HomePage({ locale }: { locale: Locale }) {
             className="inline-flex items-center gap-2 text-sm font-medium text-primary"
           >
             {t.ctaProposal}
-
             <ArrowRight className="size-4" />
           </Link>
         </div>
@@ -1100,7 +1042,6 @@ export function HomePage({ locale }: { locale: Locale }) {
               className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition hover:-translate-y-0.5 hover:opacity-90"
             >
               {t.ctaButton}
-
               <ArrowRight className="size-4" />
             </Link>
           </div>
