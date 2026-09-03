@@ -24,7 +24,11 @@ import { useMemo, useState, type ReactNode } from "react";
 import { Avatar } from "@/components/crm/Bits";
 import { supabase } from "@/integrations/supabase/client";
 import { useUtilizador } from "@/hooks/useAuth";
-import { PreferenciasProvider, rotuloSeccao, usePreferencias } from "@/lib/preferencias";
+import {
+  PreferenciasProvider,
+  rotuloSeccao,
+  usePreferencias,
+} from "@/lib/preferencias";
 import { useBusinesses, useTasks, useWebsiteRequests } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
@@ -36,13 +40,43 @@ const LINKS = [
     icon: BriefcaseBusiness,
     chave: "negocios",
   },
-  { to: "/pipeline", label: "Pipeline", icon: BarChart3 },
-  { to: "/tarefas", label: "Tarefas", icon: CalendarClock, chave: "tarefas" },
-  { to: "/emails", label: "Modelos de email", icon: Mail },
-  { to: "/projetos", label: "Projetos", icon: Sparkles },
-  { to: "/arquivos", label: "Arquivos de projetos", icon: FileArchive },
-  { to: "/pedidos", label: "Pedidos do site", icon: Globe, chave: "pedidos" },
-  { to: "/equipa", label: "Equipa", icon: Users },
+  {
+    to: "/pipeline",
+    label: "Pipeline",
+    icon: BarChart3,
+  },
+  {
+    to: "/tarefas",
+    label: "Tarefas",
+    icon: CalendarClock,
+    chave: "tarefas",
+  },
+  {
+    to: "/emails",
+    label: "Modelos de email",
+    icon: Mail,
+  },
+  {
+    to: "/projetos",
+    label: "Projetos",
+    icon: Sparkles,
+  },
+  {
+    to: "/arquivos",
+    label: "Arquivos de projetos",
+    icon: FileArchive,
+  },
+  {
+    to: "/pedidos",
+    label: "Pedidos do site",
+    icon: Globe,
+    chave: "pedidos",
+  },
+  {
+    to: "/equipa",
+    label: "Equipa",
+    icon: Users,
+  },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -55,25 +89,43 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 function AppShellInner({ children }: { children: ReactNode }) {
   const [menu, setMenu] = useState(false);
+
   const navigate = useNavigate();
   const qc = useQueryClient();
+
   const { perfil, funcao } = useUtilizador();
+
   const { data: negocios = [] } = useBusinesses();
   const { data: tarefas = [] } = useTasks();
   const { data: pedidos = [] } = useWebsiteRequests();
+
   const { prefs } = usePreferencias();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const pathname = useRouterState({
+    select: (s) => s.location.pathname,
+  });
 
   const contagens = useMemo(
     () => ({
       negocios: negocios.length,
+
       tarefas: tarefas.filter((t) => t.estado === "pendente").length,
+
       pedidos: pedidos.filter((p) => !p.tratado).length,
+
       prioridade: negocios.filter(
-        (n) => n.prioridade === "alta" && !["concluido", "arquivado"].includes(n.estado),
+        (n) =>
+          n.prioridade === "alta" &&
+          !["concluido", "arquivado"].includes(n.estado),
       ).length,
-      emails: negocios.filter((n) => n.estado === "email_por_enviar").length,
-      seguimentos: negocios.filter((n) => n.estado === "seguimento").length,
+
+      emails: negocios.filter(
+        (n) => n.estado === "email_por_enviar",
+      ).length,
+
+      seguimentos: negocios.filter(
+        (n) => n.estado === "seguimento",
+      ).length,
     }),
     [negocios, tarefas, pedidos],
   );
@@ -81,8 +133,13 @@ function AppShellInner({ children }: { children: ReactNode }) {
   async function terminarSessao() {
     await qc.cancelQueries();
     qc.clear();
+
     await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
+
+    navigate({
+      to: "/auth",
+      replace: true,
+    });
   }
 
   return (
@@ -104,20 +161,32 @@ function AppShellInner({ children }: { children: ReactNode }) {
         )}
       >
         <div className="mb-7 flex items-center justify-between px-2 pt-1">
-          <Link to="/painel" className="flex items-center gap-3">
+          <Link
+            to="/painel"
+            className="flex min-w-0 items-center gap-3"
+          >
             <img
-              src="/logo-nova-web-studio.png"
+              src="/logo.png"
               alt="Nova Web Studio"
               className="size-9 shrink-0 object-contain"
             />
-            <span>
-              <span className="block text-[15px] font-semibold tracking-tight">{prefs.marcaNome}</span>
-              <span className="block text-[10px] uppercase tracking-[.18em] text-muted-foreground">
-                {prefs.marcaSubtitulo}
+
+            <span className="min-w-0">
+              <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
+                Nova Web Studio
+              </span>
+
+              <span className="block max-w-[150px] text-[9px] uppercase leading-relaxed tracking-[.18em] text-muted-foreground">
+                Um site mais moderno para si
               </span>
             </span>
           </Link>
-          <button className="lg:hidden" onClick={() => setMenu(false)} aria-label="Fechar menu">
+
+          <button
+            className="lg:hidden"
+            onClick={() => setMenu(false)}
+            aria-label="Fechar menu"
+          >
             <X className="size-5" />
           </button>
         </div>
@@ -131,8 +200,12 @@ function AppShellInner({ children }: { children: ReactNode }) {
               label={rotuloSeccao(prefs, l.to, l.label)}
               active={pathname.startsWith(l.to)}
               count={
-                prefs.mostrarContagens && "chave" in l && l.chave
-                  ? contagens[l.chave as "negocios" | "tarefas" | "pedidos"]
+                prefs.mostrarContagens &&
+                "chave" in l &&
+                l.chave
+                  ? contagens[
+                      l.chave as "negocios" | "tarefas" | "pedidos"
+                    ]
                   : undefined
               }
               onClick={() => setMenu(false)}
@@ -145,36 +218,51 @@ function AppShellInner({ children }: { children: ReactNode }) {
             <div className="mt-7 px-3 text-[10px] font-semibold uppercase tracking-[.2em] text-muted-foreground">
               Atalhos
             </div>
+
             <nav className="mt-2 space-y-1 text-sm">
               {prefs.atalhos.includes("prioridade") && (
-              <NavItem
-                to="/negocios"
-                search={{ prioridade: "alta" }}
-                icon={Flame}
-                label="Prioridade alta"
-                count={prefs.mostrarContagens ? contagens.prioridade : undefined}
-                onClick={() => setMenu(false)}
-              />
+                <NavItem
+                  to="/negocios"
+                  search={{ prioridade: "alta" }}
+                  icon={Flame}
+                  label="Prioridade alta"
+                  count={
+                    prefs.mostrarContagens
+                      ? contagens.prioridade
+                      : undefined
+                  }
+                  onClick={() => setMenu(false)}
+                />
               )}
+
               {prefs.atalhos.includes("emails") && (
-              <NavItem
-                to="/negocios"
-                search={{ estado: "email_por_enviar" }}
-                icon={Mail}
-                label="Emails por enviar"
-                count={prefs.mostrarContagens ? contagens.emails : undefined}
-                onClick={() => setMenu(false)}
-              />
+                <NavItem
+                  to="/negocios"
+                  search={{ estado: "email_por_enviar" }}
+                  icon={Mail}
+                  label="Emails por enviar"
+                  count={
+                    prefs.mostrarContagens
+                      ? contagens.emails
+                      : undefined
+                  }
+                  onClick={() => setMenu(false)}
+                />
               )}
+
               {prefs.atalhos.includes("seguimentos") && (
-              <NavItem
-                to="/negocios"
-                search={{ estado: "seguimento" }}
-                icon={Clock3}
-                label="Seguimentos"
-                count={prefs.mostrarContagens ? contagens.seguimentos : undefined}
-                onClick={() => setMenu(false)}
-              />
+                <NavItem
+                  to="/negocios"
+                  search={{ estado: "seguimento" }}
+                  icon={Clock3}
+                  label="Seguimentos"
+                  count={
+                    prefs.mostrarContagens
+                      ? contagens.seguimentos
+                      : undefined
+                  }
+                  onClick={() => setMenu(false)}
+                />
               )}
             </nav>
           </>
@@ -188,11 +276,13 @@ function AppShellInner({ children }: { children: ReactNode }) {
             active={pathname.startsWith("/definicoes")}
             onClick={() => setMenu(false)}
           />
+
           <button
             onClick={terminarSessao}
             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition hover:bg-accent hover:text-foreground"
           >
-            <LogOut className="size-4" /> Terminar sessão
+            <LogOut className="size-4" />
+            Terminar sessão
           </button>
         </div>
       </aside>
@@ -200,16 +290,23 @@ function AppShellInner({ children }: { children: ReactNode }) {
       <main className="relative lg:pl-[250px]">
         <header className="sticky top-0 z-20 flex h-[68px] items-center justify-between border-b border-border/60 bg-background/80 px-4 backdrop-blur-xl sm:px-7">
           <div className="flex items-center gap-3">
-            <button className="lg:hidden" onClick={() => setMenu(true)} aria-label="Abrir menu">
+            <button
+              className="lg:hidden"
+              onClick={() => setMenu(true)}
+              aria-label="Abrir menu"
+            >
               <Menu className="size-5" />
             </button>
+
             <Link
               to="/"
               className="hidden items-center gap-2 rounded-xl border border-border/70 px-3 py-1.5 text-xs text-muted-foreground transition hover:text-foreground sm:flex"
             >
-              <Globe className="size-3.5" /> Ver website público
+              <Globe className="size-3.5" />
+              Ver website público
             </Link>
           </div>
+
           <div className="flex items-center gap-3">
             <Link
               to="/tarefas"
@@ -217,21 +314,40 @@ function AppShellInner({ children }: { children: ReactNode }) {
               aria-label="Tarefas pendentes"
             >
               <Bell className="size-4 text-muted-foreground" />
+
               {contagens.tarefas > 0 && (
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
               )}
             </Link>
+
             <div className="h-7 w-px bg-border" />
-            <Link to="/equipa" className="flex items-center gap-2.5">
-              <Avatar nome={perfil?.nome} url={perfil?.foto_url} size="size-9" />
+
+            <Link
+              to="/equipa"
+              className="flex items-center gap-2.5"
+            >
+              <Avatar
+                nome={perfil?.nome}
+                url={perfil?.foto_url}
+                size="size-9"
+              />
+
               <span className="hidden text-left sm:block">
-                <span className="block text-xs font-medium">{perfil?.nome ?? "Utilizador"}</span>
-                <span className="block text-[10px] capitalize text-muted-foreground">{funcao}</span>
+                <span className="block text-xs font-medium">
+                  {perfil?.nome ?? "Utilizador"}
+                </span>
+
+                <span className="block text-[10px] capitalize text-muted-foreground">
+                  {funcao}
+                </span>
               </span>
             </Link>
           </div>
         </header>
-        <div className="mx-auto max-w-[1500px] p-4 sm:p-7">{children}</div>
+
+        <div className="mx-auto max-w-[1500px] p-4 sm:p-7">
+          {children}
+        </div>
       </main>
     </div>
   );
@@ -267,8 +383,16 @@ function NavItem({
       )}
     >
       <Icon className="size-4" />
-      <span className="flex-1">{label}</span>
-      {count !== undefined && count > 0 && <span className="text-[10px] opacity-70">{count}</span>}
+
+      <span className="flex-1">
+        {label}
+      </span>
+
+      {count !== undefined && count > 0 && (
+        <span className="text-[10px] opacity-70">
+          {count}
+        </span>
+      )}
     </Link>
   );
 }
