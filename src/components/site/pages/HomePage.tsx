@@ -661,7 +661,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                   className="group inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-background/50 px-6 text-sm transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-accent"
                 >
                   {t.ctaPortfolio}
-
                   <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -688,7 +687,6 @@ export function HomePage({ locale }: { locale: Locale }) {
               <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
 
               <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-background shadow-2xl shadow-black/20">
-                {/* browser top */}
                 <div className="flex h-10 items-center gap-1.5 border-b border-border/60 bg-card/70 px-3">
                   <span className="size-2 rounded-full bg-muted-foreground/30" />
                   <span className="size-2 rounded-full bg-muted-foreground/20" />
@@ -702,7 +700,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                 <div className="relative overflow-hidden bg-gradient-to-br from-primary/[0.06] via-background to-secondary/30 p-5 sm:min-h-[400px] sm:p-8">
                   <div className="absolute right-5 top-5 size-40 rounded-full bg-primary/10 blur-3xl" />
 
-                  {/* logo */}
                   <div className="relative flex items-center gap-3">
                     <img
                       src="/logo.png"
@@ -721,7 +718,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                     </div>
                   </div>
 
-                  {/* fake hero */}
                   <div className="relative mt-9 sm:mt-10">
                     <span className="block max-w-full text-[9px] font-semibold uppercase leading-5 tracking-[.15em] text-primary sm:tracking-[.18em]">
                       {extra.heroProofSmall}
@@ -733,33 +729,30 @@ export function HomePage({ locale }: { locale: Locale }) {
 
                     <div className="mt-7 flex gap-2">
                       <span className="h-9 flex-1 rounded-lg bg-primary sm:w-28 sm:flex-none" />
-
                       <span className="h-9 flex-1 rounded-lg border border-border bg-background/60 sm:w-24 sm:flex-none" />
                     </div>
                   </div>
 
-                  {/* STATS - CORRIGIDO MOBILE */}
-                  <div className="relative mt-9 grid grid-cols-1 gap-2.5 sm:mt-10 sm:grid-cols-3 sm:gap-3">
+                  {/* STATS FINAL - MOBILE E PC CORRIGIDOS */}
+                  <div className="relative mt-9 grid grid-cols-1 gap-2.5 lg:mt-10 lg:grid-cols-3 lg:gap-3">
                     {t.stats.map((item) => (
                       <div
                         key={item.valor}
-                        className="flex min-h-[72px] items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 backdrop-blur sm:block sm:min-h-[116px] sm:px-3 sm:py-3"
+                        className="flex min-h-[72px] items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 backdrop-blur lg:block lg:min-h-[124px] lg:px-4 lg:py-4"
                       >
-                        <p className="shrink-0 whitespace-nowrap text-lg font-semibold leading-none sm:text-lg sm:leading-tight">
+                        <p className="shrink-0 whitespace-nowrap text-lg font-semibold leading-none lg:text-[17px] lg:leading-tight xl:text-xl">
                           {item.valor}
                         </p>
 
-                        <p className="max-w-[55%] text-right text-[9px] leading-4 text-muted-foreground sm:mt-2 sm:max-w-none sm:text-left sm:leading-relaxed">
+                        <p className="max-w-[58%] text-right text-[9px] leading-4 text-muted-foreground lg:mt-3 lg:max-w-none lg:text-left lg:text-[9px] lg:leading-[1.55]">
                           {item.texto}
                         </p>
                       </div>
                     ))}
                   </div>
 
-                  {/* bottom shapes */}
                   <div className="relative mt-4 grid grid-cols-[1.3fr_.7fr] gap-3 sm:mt-5">
                     <div className="h-16 rounded-2xl bg-secondary/70 sm:h-20" />
-
                     <div className="h-16 rounded-2xl border border-primary/20 bg-primary/10 sm:h-20" />
                   </div>
                 </div>
@@ -906,7 +899,6 @@ export function HomePage({ locale }: { locale: Locale }) {
             <div className="grid lg:grid-cols-[.9fr_1.1fr]">
               <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-6 sm:p-8 lg:border-b-0 lg:border-r">
                 <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
-
                 <div className="nws-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
                 <div className="relative w-full max-w-md">
