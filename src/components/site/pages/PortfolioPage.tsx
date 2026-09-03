@@ -5,14 +5,9 @@ import {
   BadgeCheck,
   BedDouble,
   CheckCircle2,
-  Code2,
-  ExternalLink,
   Gauge,
   Hammer,
-  Layers3,
-  Monitor,
   Palette,
-  Smartphone,
   Sparkles,
   Target,
   Waves,
@@ -433,34 +428,28 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
   return (
     <SiteChrome locale={locale} page="portfolio">
-      {/* INTRO */}
-      <section className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-        <div className="max-w-3xl">
-          <Chip tone="primary">{extra.introBadge}</Chip>
+      <section className="max-w-4xl">
+        <Chip tone="primary">{extra.introBadge}</Chip>
 
-          <h1 className="orbit-gradient-text mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            {t.h1}
-          </h1>
+        <h1 className="orbit-gradient-text mt-5 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.4rem]">
+          {t.h1}
+        </h1>
 
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-            {t.lead}
-          </p>
-        </div>
+        <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          {t.lead}
+        </p>
 
-        <div className="hidden items-center gap-3 rounded-2xl border border-border/60 bg-card/30 px-4 py-3 text-xs text-muted-foreground lg:flex">
-          <Sparkles className="size-4 text-primary" />
+        <div className="mt-6 inline-flex max-w-2xl items-center gap-3 rounded-2xl border border-border/60 bg-card/30 px-4 py-3 text-xs text-muted-foreground">
+          <Sparkles className="size-4 shrink-0 text-primary" />
           {extra.selectedLead}
         </div>
       </section>
 
-      {/* FEATURED REAL PROJECT */}
       <section className="mt-14">
         <div className="mb-5 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
-              {extra.selectedWork}
-            </span>
-          </div>
+          <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+            {extra.selectedWork}
+          </span>
 
           <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
             01 — {t.realChip}
@@ -469,7 +458,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
         <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
-            {/* VISUAL */}
             <div className="relative overflow-hidden border-b border-border/60 bg-background/30 p-5 sm:p-8 lg:border-b-0 lg:border-r">
               <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
               <div className="absolute -bottom-28 right-0 size-64 rounded-full bg-primary/5 blur-3xl" />
@@ -548,7 +536,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               </div>
             </div>
 
-            {/* DETAILS */}
             <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
               <Chip tone="primary">{t.realChip}</Chip>
 
@@ -634,7 +621,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </article>
       </section>
 
-      {/* CONCEPTS */}
       <section className="mt-20">
         <div className="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
           <div className="max-w-2xl">
@@ -705,7 +691,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* APPROACH */}
       <section className="mt-20">
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
           <div>
@@ -722,7 +707,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.approach.map((item, idx) => {
-              const Icon = approachIcons[idx] ?? Layers3;
+              const Icon = approachIcons[idx] ?? BadgeCheck;
 
               return (
                 <article
@@ -753,7 +738,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="mt-20">
         <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-primary/[0.06] p-7 sm:p-10">
           <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
