@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Globe } from "lucide-react";
+import { Check, ChevronDown, Globe } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   LOCALES,
@@ -19,43 +20,83 @@ export function LanguageSwitcher({
   locale: Locale;
   page: PageKey;
 }) {
+  const [aberto, setAberto] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function fecharAoClicarFora(event: MouseEvent | TouchEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setAberto(false);
+      }
+    }
+
+    document.addEventListener("mousedown", fecharAoClicarFora);
+    document.addEventListener("touchstart", fecharAoClicarFora);
+
+    return () => {
+      document.removeEventListener("mousedown", fecharAoClicarFora);
+      document.removeEventListener("touchstart", fecharAoClicarFora);
+    };
+  }, []);
+
+  function guardarIdioma(idioma: Locale) {
+    try {
+      localStorage.setItem(LOCALE_STORAGE_KEY, idioma);
+    } catch {
+      // ignore
+    }
+
+    setAberto(false);
+  }
+
   return (
-    <div className="group relative">
+    <div ref={containerRef} className="relative">
       <button
         type="button"
-        aria-label={LOCALE_NAMES[locale]}
-        className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+        onClick={() => setAberto((valor) => !valor)}
+        aria-label={`Idioma: ${LOCALE_NAMES[locale]}`}
+        aria-expanded={aberto}
+        className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-muted-foreground transition hover:bg-accent hover:text-foreground"
       >
         <Globe className="size-3.5" />
-        {LOCALE_LABELS[locale]}
+
+        <span>{LOCALE_LABELS[locale]}</span>
+
+        <ChevronDown
+          className={`size-3 transition-transform ${
+            aberto ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
-      <div className="invisible absolute right-0 top-full z-40 w-36 pt-1 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-        <ul className="overflow-hidden rounded-xl border border-border bg-background/95 p-1 shadow-xl backdrop-blur-xl">
-          {LOCALES.map((l) => (
-            <li key={l}>
-              <Link
-                to={PATHS[l][page]}
-                hrefLang={l}
-                onClick={() => {
-                  try {
-                    localStorage.setItem(LOCALE_STORAGE_KEY, l);
-                  } catch {
-                    /* ignore */
-                  }
-                }}
-                className={`block rounded-lg px-3 py-2 text-xs transition hover:bg-accent ${
-                  l === locale
-                    ? "bg-secondary/60 text-foreground"
-                    : "text-muted-foreground"
-                }`}
-              >
-                {LOCALE_NAMES[l]}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {aberto && (
+        <div className="absolute right-0 top-full z-[100] mt-1 w-40">
+          <ul className="overflow-hidden rounded-xl border border-border bg-background p-1 shadow-2xl">
+            {LOCALES.map((l) => (
+              <li key={l}>
+                <Link
+                  to={PATHS[l][page]}
+                  onClick={() => guardarIdioma(l)}
+                  className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-xs transition hover:bg-accent ${
+                    l === locale
+                      ? "bg-secondary/60 text-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <span>{LOCALE_NAMES[l]}</span>
+
+                  {l === locale && (
+                    <Check className="size-3.5 text-primary" />
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
