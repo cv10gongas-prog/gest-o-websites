@@ -14,23 +14,31 @@ import { SiteChrome } from "@/components/site/SiteChrome";
 export const Route = createFileRoute("/portefolio")({
   head: () => ({
     meta: [
-      { title: "Portefólio de projetos web — Nova Web Studio" },
+      {
+        title: "Portefólio de Websites | Nova Web Studio",
+      },
       {
         name: "description",
         content:
-          "Uma seleção de websites e conceitos desenvolvidos para diferentes áreas de negócio.",
+          "Veja projetos e conceitos desenvolvidos pela Nova Web Studio para diferentes áreas de negócio, com foco em design moderno, clareza e contacto fácil.",
       },
       {
         property: "og:title",
-        content: "Portefólio de projetos web — Nova Web Studio",
+        content: "Portefólio de Websites | Nova Web Studio",
       },
       {
         property: "og:description",
         content:
-          "Websites e conceitos desenvolvidos para diferentes áreas de negócio.",
+          "Projetos e conceitos de websites desenvolvidos pela Nova Web Studio para diferentes áreas de negócio.",
       },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
     ],
   }),
   component: Portefolio,
@@ -120,6 +128,7 @@ function BrowserMockup({
 
         <div className="relative flex items-center justify-center">
           <div className="absolute inset-2 rounded-[24px] bg-primary/10" />
+
           <div className="relative h-28 w-20 rounded-[18px] border border-border bg-background p-2 shadow-sm">
             <div className="h-10 rounded-xl bg-primary/15" />
             <div className="mt-2 h-1.5 w-full rounded-full bg-secondary" />
@@ -143,11 +152,11 @@ function Portefolio() {
         </h1>
 
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          Uma seleção de websites e conceitos desenvolvidos para diferentes áreas de negócio.
+          Uma seleção de websites e conceitos desenvolvidos para diferentes
+          áreas de negócio.
         </p>
       </section>
 
-      {/* Projeto real em destaque */}
       <section className="mt-10">
         <article className="orbit-panel overflow-hidden">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
@@ -175,8 +184,8 @@ function Portefolio() {
                       </h2>
 
                       <p className="mt-4 max-w-md text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                        Um website institucional claro e acessível, pensado para aproximar a
-                        coletividade da comunidade.
+                        Um website institucional claro e acessível, pensado
+                        para aproximar a coletividade da comunidade.
                       </p>
                     </div>
 
@@ -205,8 +214,9 @@ function Portefolio() {
                 </h2>
 
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Website institucional desenvolvido para modernizar a presença digital da
-                  coletividade e facilitar o acesso às suas atividades, novidades e contactos.
+                  Website institucional desenvolvido para modernizar a presença
+                  digital da coletividade e facilitar o acesso às suas
+                  atividades, novidades e contactos.
                 </p>
               </div>
 
@@ -226,12 +236,15 @@ function Portefolio() {
         </article>
       </section>
 
-      {/* Conceitos */}
       <section className="mt-14">
         <div className="max-w-xl">
-          <h2 className="text-xl font-semibold tracking-tight">Outros conceitos</h2>
+          <h2 className="text-xl font-semibold tracking-tight">
+            Outros conceitos
+          </h2>
+
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            Explorações visuais criadas para demonstrar diferentes abordagens e setores.
+            Explorações visuais criadas para demonstrar diferentes abordagens e
+            setores.
           </p>
         </div>
 
@@ -281,6 +294,7 @@ function Portefolio() {
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold">Tem um projeto em mente?</h2>
+
             <p className="mt-1 text-xs text-muted-foreground">
               Conte-nos o que precisa e receba uma proposta sem compromisso.
             </p>
