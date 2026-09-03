@@ -574,13 +574,27 @@ export function HomePage({ locale }: { locale: Locale }) {
         }
 
         @keyframes nws-wave {
-          0%, 100% { transform: scaleY(.35); opacity: .55; }
-          50% { transform: scaleY(1); opacity: 1; }
+          0%, 100% {
+            transform: scaleY(.35);
+            opacity: .55;
+          }
+
+          50% {
+            transform: scaleY(1);
+            opacity: 1;
+          }
         }
 
         @keyframes nws-pulse {
-          0%, 100% { opacity: .5; transform: scale(1); }
-          50% { opacity: .85; transform: scale(1.04); }
+          0%, 100% {
+            opacity: .5;
+            transform: scale(1);
+          }
+
+          50% {
+            opacity: .85;
+            transform: scale(1.04);
+          }
         }
 
         .nws-float {
@@ -608,7 +622,6 @@ export function HomePage({ locale }: { locale: Locale }) {
       {/* HERO */}
       <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-5 py-9 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <div className="nws-pulse absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
-
         <div className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-primary/5 blur-3xl" />
 
         <div
@@ -629,7 +642,6 @@ export function HomePage({ locale }: { locale: Locale }) {
             <Reveal delay={80}>
               <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-muted-foreground">
                 <Sparkles className="size-3.5 shrink-0 text-primary" />
-
                 {extra.heroKicker}
               </div>
             </Reveal>
@@ -653,7 +665,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                   className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
                 >
                   <CalendarCheck className="size-4" />
-
                   {t.ctaProposal}
 
                   <ArrowRight className="size-0 opacity-0 transition-all duration-300 group-hover:size-4 group-hover:opacity-100" />
@@ -674,13 +685,11 @@ export function HomePage({ locale }: { locale: Locale }) {
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="size-3.5 text-primary" />
-
                   {t.badgeArea}
                 </span>
 
                 <span className="flex items-center gap-1.5">
                   <BadgeCheck className="size-3.5 text-primary" />
-
                   {t.badgeMobile}
                 </span>
               </div>
@@ -730,7 +739,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                     </span>
 
                     <div className="mt-4 h-3.5 w-4/5 rounded-full bg-foreground/15 sm:h-4" />
-
                     <div className="mt-3 h-3.5 w-3/5 rounded-full bg-foreground/10 sm:h-4" />
 
                     <div className="mt-7 flex gap-2">
@@ -740,7 +748,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                     </div>
                   </div>
 
-                  {/* STATS — FINAL MESMO 😂 */}
                   <div className="relative mt-9 grid min-w-0 grid-cols-1 gap-2.5 lg:mt-10 lg:grid-cols-3 lg:gap-3">
                     {t.stats.map((item) => (
                       <div
@@ -912,12 +919,13 @@ export function HomePage({ locale }: { locale: Locale }) {
 
                 <div className="relative w-full max-w-md">
                   <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm transition duration-500 group-hover:-translate-y-1 group-hover:border-white/15 sm:p-10">
+                    {/* LOGO MAIOR E RECENTRADO */}
                     <div className="flex justify-center">
-                      <div className="flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                      <div className="relative flex size-40 items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
                         <img
                           src="/radio-alcabidechefm.png"
                           alt="Rádio AlcabidecheFM"
-                          className="max-h-[135px] max-w-[70%] object-contain sm:max-h-[175px]"
+                          className="relative w-[92%] max-w-none translate-y-1.5 scale-[1.18] object-contain sm:w-[94%] sm:scale-[1.2]"
                         />
                       </div>
                     </div>
@@ -931,6 +939,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                         Rádio AlcabidecheFM
                       </h3>
 
+                      {/* EQUALIZADOR */}
                       <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
                         {[
                           14, 28, 20, 38, 24,
@@ -938,7 +947,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                         ].map((height, idx) => (
                           <span
                             key={idx}
-                            className="nws-wave w-1.5 rounded-full bg-primary/70"
+                            className="nws-wave w-1.5 rounded-full bg-primary/80"
                             style={{
                               height,
                               animationDelay: `${idx * 90}ms`,
@@ -954,7 +963,6 @@ export function HomePage({ locale }: { locale: Locale }) {
               <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-11">
                 <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
                   <Radio className="size-3.5" />
-
                   Rádio · Alcabideche
                 </div>
 
@@ -977,7 +985,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                       className="flex items-center gap-2 text-xs text-muted-foreground"
                     >
                       <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
-
                       {item}
                     </div>
                   ))}
