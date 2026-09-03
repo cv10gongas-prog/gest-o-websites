@@ -403,41 +403,22 @@ function PremiumSelect({
       }
     }
 
-    document.addEventListener(
-      "mousedown",
-      closeOnOutsideClick,
-    );
-
-    document.addEventListener(
-      "keydown",
-      closeOnEscape,
-    );
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        closeOnOutsideClick,
-      );
-
-      document.removeEventListener(
-        "keydown",
-        closeOnEscape,
-      );
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
     };
   }, []);
 
   return (
-    <div
-      ref={wrapperRef}
-      className="relative"
-    >
+    <div ref={wrapperRef} className="relative">
       <button
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() =>
-          setOpen((current) => !current)
-        }
+        onClick={() => setOpen((current) => !current)}
         className={`group flex min-h-[48px] w-full items-center justify-between gap-3 rounded-xl border px-4 text-left text-[13px] outline-none transition-all duration-200 ${
           open
             ? "border-primary/50 bg-background/90 shadow-[0_0_0_4px_rgba(45,212,191,0.05)]"
@@ -475,8 +456,7 @@ function PremiumSelect({
         <div className="overflow-hidden rounded-2xl border border-border/80 bg-[#07111c]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-2xl">
           <div className="max-h-[310px] overflow-y-auto">
             {options.map((option) => {
-              const active =
-                option.value === value;
+              const active = option.value === value;
 
               return (
                 <button
@@ -533,11 +513,8 @@ export function ContactPage({
   const paths = PATHS[locale];
   const extra = EXTRA[locale];
 
-  const [sending, setSending] =
-    useState(false);
-
-  const [sent, setSent] =
-    useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const [form, setForm] = useState({
     nome: "",
@@ -549,17 +526,13 @@ export function ContactPage({
     orcamentoIndex: "0",
 
     websiteAtual: "",
-
-    // vazio porque é opcional
     prazoIndex: "",
 
     mensagem: "",
     querReuniao: false,
   });
 
-  function update<
-    K extends keyof typeof form,
-  >(
+  function update<K extends keyof typeof form>(
     key: K,
     value: (typeof form)[K],
   ) {
@@ -584,14 +557,10 @@ export function ContactPage({
 
     setSending(true);
 
-    const tipoIndex =
-      Number(form.tipoIndex);
+    const tipoIndex = Number(form.tipoIndex);
+    const orcamentoIndex = Number(form.orcamentoIndex);
 
-    const orcamentoIndex =
-      Number(form.orcamentoIndex);
-
-    const websiteAtual =
-      form.websiteAtual.trim();
+    const websiteAtual = form.websiteAtual.trim();
 
     const prazoIndex =
       form.prazoIndex === ""
@@ -600,13 +569,10 @@ export function ContactPage({
 
     const prazoDesejado =
       prazoIndex !== null
-        ? extra.deadlineOptions[
-            prazoIndex
-          ] ?? null
+        ? extra.deadlineOptions[prazoIndex] ?? null
         : null;
 
-    const mensagemOriginal =
-      form.mensagem.trim();
+    const mensagemOriginal = form.mensagem.trim();
 
     const detalhesAdicionais = [
       websiteAtual
@@ -647,14 +613,12 @@ export function ContactPage({
           TIPO_VALUES[0],
 
         orcamento:
-          ORCAMENTO_VALUES[
-            orcamentoIndex
-          ] ?? ORCAMENTO_VALUES[0],
+          ORCAMENTO_VALUES[orcamentoIndex] ??
+          ORCAMENTO_VALUES[0],
 
         mensagem: mensagemFinal,
 
-        quer_reuniao:
-          form.querReuniao,
+        quer_reuniao: form.querReuniao,
       });
 
     setSending(false);
@@ -679,13 +643,12 @@ export function ContactPage({
     }),
   );
 
-  const budgetOptions =
-    t.orcamentos.map(
-      (label, index) => ({
-        value: String(index),
-        label,
-      }),
-    );
+  const budgetOptions = t.orcamentos.map(
+    (label, index) => ({
+      value: String(index),
+      label,
+    }),
+  );
 
   const deadlineOptions =
     extra.deadlineOptions.map(
@@ -696,10 +659,7 @@ export function ContactPage({
     );
 
   return (
-    <SiteChrome
-      locale={locale}
-      page="contact"
-    >
+    <SiteChrome locale={locale} page="contact">
       <style>{`
         @keyframes nws-contact-glow {
           0%, 100% {
@@ -734,7 +694,6 @@ export function ContactPage({
 
             <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
               <Sparkles className="size-3.5" />
-
               {extra.eyebrow}
             </div>
 
@@ -760,9 +719,7 @@ export function ContactPage({
                   </p>
 
                   <p className="mt-1 text-xs leading-6 text-muted-foreground">
-                    {
-                      extra.confidenceText
-                    }
+                    {extra.confidenceText}
                   </p>
                 </div>
               </div>
@@ -874,9 +831,7 @@ export function ContactPage({
                   <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
-                        {
-                          extra.confidence
-                        }
+                        {extra.confidence}
                       </span>
 
                       <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
@@ -884,9 +839,7 @@ export function ContactPage({
                       </h2>
 
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {
-                          t.panelSubtitle
-                        }
+                        {t.panelSubtitle}
                       </p>
                     </div>
 
@@ -911,121 +864,83 @@ export function ContactPage({
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={
-                          t.labels.nome
-                        }
+                        label={t.labels.nome}
                         icon={
                           <UserRound className="size-4" />
                         }
                       >
                         <input
-                          value={
-                            form.nome
-                          }
-                          onChange={(
-                            event,
-                          ) =>
+                          value={form.nome}
+                          onChange={(event) =>
                             update(
                               "nome",
-                              event.target
-                                .value,
+                              event.target.value,
                             )
                           }
                           autoComplete="name"
-                          className={
-                            INPUT_CLASS
-                          }
+                          className={INPUT_CLASS}
                         />
                       </Field>
 
                       <Field
-                        label={
-                          t.labels.empresa
-                        }
+                        label={t.labels.empresa}
                         icon={
                           <Building2 className="size-4" />
                         }
                       >
                         <input
-                          value={
-                            form.empresa
-                          }
-                          onChange={(
-                            event,
-                          ) =>
+                          value={form.empresa}
+                          onChange={(event) =>
                             update(
                               "empresa",
-                              event.target
-                                .value,
+                              event.target.value,
                             )
                           }
                           autoComplete="organization"
-                          placeholder={
-                            extra.optional
-                          }
-                          className={
-                            INPUT_CLASS
-                          }
+                          placeholder={extra.optional}
+                          className={INPUT_CLASS}
                         />
                       </Field>
 
                       <Field
-                        label={
-                          t.labels.email
-                        }
+                        label={t.labels.email}
                         icon={
                           <Mail className="size-4" />
                         }
                       >
                         <input
                           type="email"
-                          value={
-                            form.email
-                          }
-                          onChange={(
-                            event,
-                          ) =>
+                          value={form.email}
+                          onChange={(event) =>
                             update(
                               "email",
-                              event.target
-                                .value,
+                              event.target.value,
                             )
                           }
                           autoComplete="email"
                           placeholder="email@exemplo.pt"
-                          className={
-                            INPUT_CLASS
-                          }
+                          className={INPUT_CLASS}
                         />
                       </Field>
 
                       <Field
-                        label={
-                          t.labels.telefone
-                        }
+                        label={t.labels.telefone}
                         icon={
                           <Phone className="size-4" />
                         }
                       >
                         <input
                           type="tel"
-                          value={
-                            form.telefone
-                          }
-                          onChange={(
-                            event,
-                          ) =>
+                          value={form.telefone}
+                          onChange={(event) =>
                             update(
                               "telefone",
-                              event.target
-                                .value,
+                              event.target.value,
                             )
                           }
                           autoComplete="tel"
                           placeholder="+351"
-                          className={
-                            INPUT_CLASS
-                          }
+                          className={INPUT_CLASS}
                         />
                       </Field>
                     </div>
@@ -1043,41 +958,29 @@ export function ContactPage({
                       </p>
                     </div>
 
-                    {/* LINHA 1 */}
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={
-                          t.labels.tipo
-                        }
+                        label={t.labels.tipo}
                         icon={
                           <BadgeCheck className="size-4" />
                         }
                       >
                         <PremiumSelect
-                          value={
-                            form.tipoIndex
-                          }
-                          onChange={(
-                            value,
-                          ) =>
+                          value={form.tipoIndex}
+                          onChange={(value) =>
                             update(
                               "tipoIndex",
                               value,
                             )
                           }
-                          options={
-                            tipoOptions
-                          }
-                          placeholder={
-                            extra.choose
-                          }
+                          options={tipoOptions}
+                          placeholder={extra.choose}
                         />
                       </Field>
 
                       <Field
                         label={
-                          t.labels
-                            .orcamento
+                          t.labels.orcamento
                         }
                         icon={
                           <Sparkles className="size-4" />
@@ -1087,27 +990,20 @@ export function ContactPage({
                           value={
                             form.orcamentoIndex
                           }
-                          onChange={(
-                            value,
-                          ) =>
+                          onChange={(value) =>
                             update(
                               "orcamentoIndex",
                               value,
                             )
                           }
-                          options={
-                            budgetOptions
-                          }
-                          placeholder={
-                            extra.choose
-                          }
+                          options={budgetOptions}
+                          placeholder={extra.choose}
                         />
                       </Field>
                     </div>
 
-                    {/* LINHA 2 — NOVA */}
+                    {/* WEBSITE + PRAZO */}
                     <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                      {/* WEBSITE */}
                       <Field
                         label={
                           extra.websiteLabel
@@ -1121,26 +1017,20 @@ export function ContactPage({
                           value={
                             form.websiteAtual
                           }
-                          onChange={(
-                            event,
-                          ) =>
+                          onChange={(event) =>
                             update(
                               "websiteAtual",
-                              event.target
-                                .value,
+                              event.target.value,
                             )
                           }
                           autoComplete="url"
                           placeholder={
                             extra.websitePlaceholder
                           }
-                          className={
-                            INPUT_CLASS
-                          }
+                          className={INPUT_CLASS}
                         />
                       </Field>
 
-                      {/* PRAZO */}
                       <Field
                         label={
                           extra.deadlineLabel
@@ -1150,12 +1040,8 @@ export function ContactPage({
                         }
                       >
                         <PremiumSelect
-                          value={
-                            form.prazoIndex
-                          }
-                          onChange={(
-                            value,
-                          ) =>
+                          value={form.prazoIndex}
+                          onChange={(value) =>
                             update(
                               "prazoIndex",
                               value,
@@ -1185,13 +1071,10 @@ export function ContactPage({
                           value={
                             form.mensagem
                           }
-                          onChange={(
-                            event,
-                          ) =>
+                          onChange={(event) =>
                             update(
                               "mensagem",
-                              event.target
-                                .value,
+                              event.target.value,
                             )
                           }
                           rows={6}
@@ -1205,60 +1088,56 @@ export function ContactPage({
                   </section>
 
                   {/* REUNIÃO */}
-                  <label className="group mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-border/60 bg-background/30 p-4 transition duration-200 hover:border-primary/25 hover:bg-accent/20">
-                    <span
-                      className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border transition ${
-                        form.querReuniao
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-background"
-                      }`}
-                    >
-                      {form.querReuniao && (
-                        <Check className="size-3.5" />
-                      )}
-                    </span>
+                  <div className="mt-6">
+                    <label className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-border/60 bg-background/30 px-4 py-4 transition duration-200 hover:border-primary/25 hover:bg-accent/20">
+                      <span
+                        className={`grid size-5 shrink-0 place-items-center rounded-md border transition ${
+                          form.querReuniao
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-background"
+                        }`}
+                      >
+                        {form.querReuniao && (
+                          <Check className="size-3.5" />
+                        )}
+                      </span>
 
-                    <input
-                      type="checkbox"
-                      checked={
-                        form.querReuniao
-                      }
-                      onChange={(
-                        event,
-                      ) =>
-                        update(
-                          "querReuniao",
-                          event.target
-                            .checked,
-                        )
-                      }
-                      className="sr-only"
-                    />
+                      <input
+                        type="checkbox"
+                        checked={
+                          form.querReuniao
+                        }
+                        onChange={(event) =>
+                          update(
+                            "querReuniao",
+                            event.target.checked,
+                          )
+                        }
+                        className="sr-only"
+                      />
 
-                    <div>
                       <p className="text-sm font-medium">
                         {t.meeting}
                       </p>
+                    </label>
 
-                      <p className="mt-1 text-xs leading-6 text-muted-foreground">
-                        {t.note}
-                      </p>
-                    </div>
-                  </label>
+                    {/* TEXTO AGORA FORA DA OPÇÃO */}
+                    <p className="mt-2 px-1 text-[11px] leading-5 text-muted-foreground">
+                      {t.note}
+                    </p>
+                  </div>
 
                   {/* SUBMIT */}
                   <button
                     type="submit"
                     disabled={sending}
-                    className="group mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/20 disabled:pointer-events-none disabled:opacity-60"
+                    className="group mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/20 disabled:pointer-events-none disabled:opacity-60"
                   >
                     {sending ? (
                       <>
                         <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
 
-                        {
-                          t.submitting
-                        }
+                        {t.submitting}
                       </>
                     ) : (
                       <>
@@ -1305,9 +1184,7 @@ export function ContactPage({
                     </Link>
 
                     <Link
-                      to={
-                        paths.portfolio
-                      }
+                      to={paths.portfolio}
                       className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
                     >
                       {nav.portfolio}
