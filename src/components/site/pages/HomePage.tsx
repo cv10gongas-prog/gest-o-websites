@@ -696,7 +696,6 @@ export function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
           </div>
 
-          {/* MOCKUP */}
           <Reveal delay={180}>
             <div className="nws-float relative min-w-0">
               <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
@@ -743,7 +742,6 @@ export function HomePage({ locale }: { locale: Locale }) {
 
                     <div className="mt-7 flex gap-2">
                       <span className="h-9 flex-1 rounded-lg bg-primary sm:w-28 sm:flex-none" />
-
                       <span className="h-9 flex-1 rounded-lg border border-border bg-background/60 sm:w-24 sm:flex-none" />
                     </div>
                   </div>
@@ -767,7 +765,6 @@ export function HomePage({ locale }: { locale: Locale }) {
 
                   <div className="relative mt-4 grid grid-cols-[1.3fr_.7fr] gap-3 sm:mt-5">
                     <div className="h-16 rounded-2xl bg-secondary/70 sm:h-20" />
-
                     <div className="h-16 rounded-2xl border border-primary/20 bg-primary/10 sm:h-20" />
                   </div>
                 </div>
@@ -820,10 +817,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               const Icon = icons[idx] ?? Sparkles;
 
               return (
-                <Reveal
-                  key={problem.title}
-                  delay={idx * 90}
-                >
+                <Reveal key={problem.title} delay={idx * 90}>
                   <article className="group orbit-panel orbit-panel-hover h-full p-5">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition duration-300 group-hover:scale-110 group-hover:bg-primary/15">
                       <Icon className="size-4 text-primary" />
@@ -919,13 +913,12 @@ export function HomePage({ locale }: { locale: Locale }) {
 
                 <div className="relative w-full max-w-md">
                   <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm transition duration-500 group-hover:-translate-y-1 group-hover:border-white/15 sm:p-10">
-                    {/* LOGO MAIOR E RECENTRADO */}
                     <div className="flex justify-center">
-                      <div className="relative flex size-40 items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
+                      <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] p-3 shadow-xl sm:size-52 sm:p-4">
                         <img
                           src="/radio-alcabidechefm.png"
                           alt="Rádio AlcabidecheFM"
-                          className="relative w-[92%] max-w-none translate-y-1.5 scale-[1.18] object-contain sm:w-[94%] sm:scale-[1.2]"
+                          className="max-h-[82%] max-w-[88%] object-contain sm:max-h-[86%] sm:max-w-[90%]"
                         />
                       </div>
                     </div>
@@ -939,7 +932,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                         Rádio AlcabidecheFM
                       </h3>
 
-                      {/* EQUALIZADOR */}
                       <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
                         {[
                           14, 28, 20, 38, 24,
@@ -1045,10 +1037,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             const Icon = TYPE_ICONS[idx] ?? Sparkles;
 
             return (
-              <Reveal
-                key={type.titulo}
-                delay={idx * 80}
-              >
+              <Reveal key={type.titulo} delay={idx * 80}>
                 <article className="group orbit-panel orbit-panel-hover relative h-full overflow-hidden p-5">
                   <div className="absolute -right-10 -top-10 size-28 rounded-full bg-primary/0 blur-2xl transition duration-500 group-hover:bg-primary/10" />
 
@@ -1103,10 +1092,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               const Icon = icons[idx] ?? BadgeCheck;
 
               return (
-                <Reveal
-                  key={item.title}
-                  delay={idx * 80}
-                >
+                <Reveal key={item.title} delay={idx * 80}>
                   <article className="group orbit-panel orbit-panel-hover h-full p-5">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
                       <Icon className="size-4 text-primary" />
@@ -1148,10 +1134,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             const Icon = STEP_ICONS[idx] ?? Target;
 
             return (
-              <Reveal
-                key={step.titulo}
-                delay={idx * 100}
-              >
+              <Reveal key={step.titulo} delay={idx * 100}>
                 <article className="group relative h-full overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-5 transition duration-300 hover:-translate-y-1 hover:border-primary/20">
                   <div className="flex items-center justify-between">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
