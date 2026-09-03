@@ -131,13 +131,13 @@ export const Route = createRootRouteWithContext<{
 
       {
         rel: "icon",
-        href: "/favicon.ico?v=3",
+        href: "/favicon.ico",
         type: "image/x-icon",
       },
 
       {
         rel: "shortcut icon",
-        href: "/favicon.ico?v=3",
+        href: "/favicon.ico",
         type: "image/x-icon",
       },
 
