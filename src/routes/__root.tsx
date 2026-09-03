@@ -105,56 +105,167 @@ export const Route = createRootRouteWithContext<{
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
+
+      // Nome base
       {
         title: "Nova Web Studio | Web Design e Criação de Sites",
       },
+
       {
         name: "description",
         content:
           "Criação e modernização de websites para negócios locais em Cascais, Oeiras, Sintra e Lisboa.",
       },
+
+      // Cor do browser / Android
+      {
+        name: "theme-color",
+        content: "#07101c",
+      },
+
+      // Nome da aplicação
+      {
+        name: "application-name",
+        content: "Nova Web Studio",
+      },
+
+      // Android / Chrome
+      {
+        name: "mobile-web-app-capable",
+        content: "yes",
+      },
+
+      // iPhone / iPad
+      {
+        name: "apple-mobile-web-app-capable",
+        content: "yes",
+      },
+      {
+        name: "apple-mobile-web-app-status-bar-style",
+        content: "black-translucent",
+      },
+      {
+        name: "apple-mobile-web-app-title",
+        content: "Nova Web Studio",
+      },
+
+      // Open Graph
       {
         property: "og:type",
         content: "website",
       },
       {
+        property: "og:site_name",
+        content: "Nova Web Studio",
+      },
+      {
+        property: "og:image",
+        content: "https://www.novawebstudio.pt/logo.png",
+      },
+
+      // Twitter / partilhas
+      {
         name: "twitter:card",
         content: "summary_large_image",
+      },
+      {
+        name: "twitter:image",
+        content: "https://www.novawebstudio.pt/logo.png",
+      },
+
+      // Microsoft
+      {
+        name: "msapplication-TileColor",
+        content: "#07101c",
+      },
+      {
+        name: "msapplication-TileImage",
+        content: "/mstile-150x150.png",
       },
     ],
 
     links: [
+      // CSS
       {
         rel: "stylesheet",
         href: appCss,
       },
 
+      // Favicon clássico
       {
         rel: "icon",
         href: "/favicon.ico",
         type: "image/x-icon",
       },
 
+      // PNG pequenos para browsers
       {
-        rel: "shortcut icon",
-        href: "/favicon.ico",
-        type: "image/x-icon",
+        rel: "icon",
+        type: "image/png",
+        sizes: "16x16",
+        href: "/favicon-16x16.png",
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "32x32",
+        href: "/favicon-32x32.png",
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "48x48",
+        href: "/favicon-48x48.png",
       },
 
+      // iPhone / iPad
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
+      },
+
+      // Android / Chrome
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "192x192",
+        href: "/android-chrome-192x192.png",
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "512x512",
+        href: "/android-chrome-512x512.png",
+      },
+
+      // Manifest
+      {
+        rel: "manifest",
+        href: "/site.webmanifest",
+      },
+
+      // Safari antigo / pinned tab
+      {
+        rel: "mask-icon",
+        href: "/safari-pinned-tab.svg",
+        color: "#39d9e6",
+      },
+
+      // Fontes
       {
         rel: "preconnect",
         href: "https://fonts.googleapis.com",
       },
-
       {
         rel: "preconnect",
         href: "https://fonts.gstatic.com",
         crossOrigin: "anonymous",
       },
-
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap",
+        href:
+          "https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap",
       },
     ],
   }),
@@ -171,6 +282,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
 
+        {/* Google Analytics */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
