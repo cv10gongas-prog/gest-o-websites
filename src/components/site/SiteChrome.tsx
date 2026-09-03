@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
+import { CookieConsent } from "@/components/site/CookieConsent";
+
 const NAV = [
   { to: "/", label: "Início" },
   { to: "/portefolio", label: "Portefólio" },
@@ -20,10 +22,12 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               alt="Nova Web Studio"
               className="h-9 w-auto shrink-0 object-contain"
             />
+
             <span className="min-w-0">
               <span className="block whitespace-nowrap text-[15px] font-semibold tracking-tight">
                 Nova Web Studio
               </span>
+
               <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
                 Um site mais moderno para si
               </span>
@@ -37,14 +41,19 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   key={l.to}
                   to={l.to}
                   activeOptions={{ exact: l.to === "/" }}
-                  activeProps={{ className: "bg-secondary/60 text-foreground" }}
-                  inactiveProps={{ className: "text-muted-foreground" }}
+                  activeProps={{
+                    className: "bg-secondary/60 text-foreground",
+                  }}
+                  inactiveProps={{
+                    className: "text-muted-foreground",
+                  }}
                   className="rounded-lg px-3 py-2 transition hover:text-foreground"
                 >
                   {l.label}
                 </Link>
               ))}
             </span>
+
             <Link
               to="/contacto"
               className="ml-2 inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
@@ -55,11 +64,16 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="relative mx-auto w-full max-w-6xl px-5 py-12 sm:py-16">{children}</main>
+      <main className="relative mx-auto w-full max-w-6xl px-5 py-12 sm:py-16">
+        {children}
+      </main>
 
       <footer className="relative border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Nova Web Studio · Portugal</span>
+          <span>
+            © {new Date().getFullYear()} Nova Web Studio · Portugal
+          </span>
+
           <div className="flex gap-4">
             <Link to="/portefolio">Portefólio</Link>
             <Link to="/contacto">Contacto</Link>
@@ -67,6 +81,8 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </div>
         </div>
       </footer>
+
+      <CookieConsent />
     </div>
   );
 }
