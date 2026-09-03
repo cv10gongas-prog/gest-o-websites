@@ -26,6 +26,7 @@ export const Route = createFileRoute("/")({
         content:
           "Criamos websites modernos e profissionais para negócios em Cascais, Oeiras, Sintra e Lisboa. Sites de raiz, redesign e soluções simples para gerar mais contactos.",
       },
+
       {
         property: "og:title",
         content: "Nova Web Studio | Web Design e Criação de Sites em Cascais",
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/")({
         property: "og:image",
         content: "https://www.novawebstudio.pt/logo.png",
       },
+
       {
         name: "twitter:card",
         content: "summary_large_image",
@@ -66,20 +68,60 @@ export const Route = createFileRoute("/")({
       },
     ],
 
+    links: [
+      {
+        rel: "canonical",
+        href: "https://www.novawebstudio.pt/",
+      },
+    ],
+
     scripts: [
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-4BM9SVN2RZ",
+        async: true,
+      },
+
+      {
+        children: `
+          window.dataLayer = window.dataLayer || [];
+
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+
+          gtag('consent', 'default', {
+            analytics_storage: 'denied'
+          });
+
+          gtag('js', new Date());
+
+          gtag('config', 'G-4BM9SVN2RZ', {
+            anonymize_ip: true
+          });
+        `,
+      },
+
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
+
           name: "Nova Web Studio",
+
           url: "https://www.novawebstudio.pt/",
+
           logo: "https://www.novawebstudio.pt/logo.png",
+
           image: "https://www.novawebstudio.pt/logo.png",
+
           email: "geral@novawebstudio.pt",
+
           telephone: "+351937642061",
+
           description:
             "Criação e modernização de websites para negócios locais em Cascais, Oeiras, Sintra, Lisboa e outras zonas de Portugal.",
+
           areaServed: [
             {
               "@type": "City",
@@ -98,6 +140,7 @@ export const Route = createFileRoute("/")({
               name: "Lisboa",
             },
           ],
+
           makesOffer: [
             {
               "@type": "Offer",
@@ -269,6 +312,7 @@ function Index() {
                 <span className="text-2xl font-semibold tracking-tight">
                   {i.valor}
                 </span>
+
                 <span className="text-right text-xs text-muted-foreground">
                   {i.texto}
                 </span>
@@ -279,7 +323,9 @@ function Index() {
       </section>
 
       <section className="mt-16">
-        <h2 className="text-xl font-semibold tracking-tight">O que fazemos</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          O que fazemos
+        </h2>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
           {SERVICOS.map((s) => (
@@ -291,7 +337,9 @@ function Index() {
                 <s.icon className="size-4 text-primary" />
               </span>
 
-              <h3 className="mt-3 text-sm font-semibold">{s.titulo}</h3>
+              <h3 className="mt-3 text-sm font-semibold">
+                {s.titulo}
+              </h3>
 
               <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                 {s.texto}
@@ -314,7 +362,9 @@ function Index() {
             >
               <t.icon className="size-5 text-primary" />
 
-              <h3 className="mt-3 text-sm font-semibold">{t.titulo}</h3>
+              <h3 className="mt-3 text-sm font-semibold">
+                {t.titulo}
+              </h3>
 
               <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                 {t.texto}
@@ -331,12 +381,17 @@ function Index() {
 
         <ol className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {PROCESSO.map((p) => (
-            <li key={p.n} className="orbit-panel p-5">
+            <li
+              key={p.n}
+              className="orbit-panel p-5"
+            >
               <span className="text-[11px] font-semibold tracking-[.2em] text-primary">
                 {p.n}
               </span>
 
-              <h3 className="mt-2 text-sm font-semibold">{p.titulo}</h3>
+              <h3 className="mt-2 text-sm font-semibold">
+                {p.titulo}
+              </h3>
 
               <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                 {p.texto}
@@ -346,10 +401,15 @@ function Index() {
         </ol>
       </section>
 
-      <Panel className="mt-16" bodyClassName="p-6 sm:p-8">
+      <Panel
+        className="mt-16"
+        bodyClassName="p-6 sm:p-8"
+      >
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Pronto para começar?</h2>
+            <h2 className="text-lg font-semibold">
+              Pronto para começar?
+            </h2>
 
             <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
               <Search className="size-3.5" />
