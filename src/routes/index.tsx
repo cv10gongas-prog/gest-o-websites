@@ -10,6 +10,8 @@ import {
   ShoppingBag,
   Smartphone,
   Sparkles,
+  MapPin,
+  BadgeCheck,
 } from "lucide-react";
 
 import { Chip, Panel } from "@/components/crm/Bits";
@@ -19,16 +21,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "Nova Web Studio | Web Design e Criação de Sites em Cascais",
+        title: "Criação de Sites em Cascais | Nova Web Studio",
       },
       {
         name: "description",
         content:
-          "Criamos websites modernos e profissionais para negócios em Cascais, Oeiras, Sintra e Lisboa. Sites de raiz, redesign e soluções simples para gerar mais contactos.",
+          "Criação e modernização de websites em Cascais, Oeiras, Sintra e Lisboa. Sites profissionais, rápidos e preparados para gerar mais contactos para o seu negócio.",
       },
       {
         property: "og:title",
-        content: "Nova Web Studio | Web Design e Criação de Sites em Cascais",
+        content: "Criação de Sites em Cascais | Nova Web Studio",
       },
       {
         property: "og:description",
@@ -53,12 +55,12 @@ export const Route = createFileRoute("/")({
       },
       {
         name: "twitter:title",
-        content: "Nova Web Studio | Web Design e Criação de Sites em Cascais",
+        content: "Criação de Sites em Cascais | Nova Web Studio",
       },
       {
         name: "twitter:description",
         content:
-          "Websites modernos e profissionais para negócios em Cascais, Oeiras, Sintra e Lisboa.",
+          "Criação e modernização de websites para negócios locais em Cascais, Oeiras, Sintra e Lisboa.",
       },
       {
         name: "twitter:image",
@@ -93,7 +95,7 @@ export const Route = createFileRoute("/")({
           telephone: "+351937642061",
 
           description:
-            "Criação e modernização de websites para negócios locais em Cascais, Oeiras, Sintra, Lisboa e outras zonas de Portugal.",
+            "Criação de sites, web design e modernização de websites para negócios locais em Cascais, Oeiras, Sintra e Lisboa.",
 
           areaServed: [
             {
@@ -119,7 +121,7 @@ export const Route = createFileRoute("/")({
               "@type": "Offer",
               itemOffered: {
                 "@type": "Service",
-                name: "Criação de websites",
+                name: "Criação de sites em Cascais",
               },
             },
             {
@@ -162,21 +164,21 @@ export const Route = createFileRoute("/")({
 const SERVICOS = [
   {
     icon: LayoutTemplate,
-    titulo: "Design e desenvolvimento",
+    titulo: "Criação de websites",
     texto:
-      "Interfaces desenhadas de raiz, sem modelos genéricos, focadas no seu público.",
+      "Criamos sites profissionais de raiz, adaptados ao seu negócio e preparados para gerar contactos.",
   },
   {
     icon: Gauge,
-    titulo: "Performance e SEO",
+    titulo: "Redesign e modernização",
     texto:
-      "Páginas rápidas, acessíveis e preparadas para aparecer nos motores de busca.",
+      "Atualizamos websites antigos, melhorando o design, organização, velocidade e experiência em telemóvel.",
   },
   {
     icon: LineChart,
-    titulo: "Acompanhamento contínuo",
+    titulo: "SEO e acompanhamento",
     texto:
-      "Manutenção, atualizações de conteúdo e análise de resultados mês a mês.",
+      "Preparamos o website para motores de pesquisa e acompanhamos a sua presença digital ao longo do tempo.",
   },
 ];
 
@@ -184,45 +186,45 @@ const TIPOS = [
   {
     icon: Sparkles,
     titulo: "Site institucional",
-    texto: "Apresente a empresa com credibilidade.",
+    texto: "Apresente a empresa, serviços e contactos com uma imagem profissional.",
   },
   {
     icon: ShoppingBag,
     titulo: "Loja online",
-    texto: "Venda com pagamentos e stock integrados.",
+    texto: "Venda produtos através de uma loja simples, moderna e adaptada ao seu negócio.",
   },
   {
     icon: Smartphone,
     titulo: "Landing page",
-    texto: "Uma página focada em captar contactos.",
+    texto: "Uma página focada em apresentar um serviço e gerar pedidos de contacto.",
   },
   {
     icon: Rocket,
     titulo: "Aplicação web",
-    texto: "Plataformas e áreas reservadas à medida.",
+    texto: "Soluções digitais e áreas reservadas desenvolvidas à medida.",
   },
 ];
 
 const PROCESSO = [
   {
     n: "01",
-    titulo: "Reunião inicial",
-    texto: "Percebemos o negócio, objetivos e prazos.",
+    titulo: "Falamos sobre o negócio",
+    texto: "Percebemos o que faz, o que precisa e quais são os objetivos do website.",
   },
   {
     n: "02",
-    titulo: "Proposta",
-    texto: "Enviamos âmbito, calendário e valores fechados.",
+    titulo: "Enviamos uma proposta",
+    texto: "Recebe uma proposta clara com o trabalho, prazo e valor previstos.",
   },
   {
     n: "03",
-    titulo: "Design e desenvolvimento",
-    texto: "Validação por etapas, sem surpresas.",
+    titulo: "Criamos o website",
+    texto: "Desenvolvemos o projeto e mostramos a evolução antes da publicação.",
   },
   {
     n: "04",
-    titulo: "Lançamento",
-    texto: "Publicação, formação e acompanhamento.",
+    titulo: "Publicamos e acompanhamos",
+    texto: "Colocamos o site online e ajudamos com os últimos ajustes necessários.",
   },
 ];
 
@@ -231,16 +233,16 @@ function Index() {
     <SiteChrome>
       <section className="grid items-center gap-10 lg:grid-cols-[1.15fr_.85fr]">
         <div>
-          <Chip tone="primary">Estúdio digital em Portugal</Chip>
+          <Chip tone="primary">Web Design em Cascais</Chip>
 
           <h1 className="orbit-gradient-text mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Websites que trabalham para o seu negócio
+            Criação de sites profissionais para negócios locais
           </h1>
 
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Desenhamos e desenvolvemos sites institucionais, lojas online e
-            aplicações web rápidas, bonitas e preparadas para gerar contactos
-            reais.
+            Criamos e modernizamos websites para empresas e negócios em Cascais,
+            Oeiras, Sintra e Lisboa, com foco numa imagem profissional,
+            utilização simples e mais oportunidades de contacto.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
@@ -249,7 +251,7 @@ function Index() {
               className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               <CalendarCheck className="size-4" />
-              Marcar reunião
+              Pedir proposta
             </Link>
 
             <Link
@@ -259,6 +261,18 @@ function Index() {
               Ver portefólio
               <ArrowRight className="size-4" />
             </Link>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <MapPin className="size-3.5 text-primary" />
+              Cascais, Oeiras, Sintra e Lisboa
+            </span>
+
+            <span className="flex items-center gap-1.5">
+              <BadgeCheck className="size-3.5 text-primary" />
+              Sites adaptados a telemóvel
+            </span>
           </div>
         </div>
 
@@ -293,6 +307,28 @@ function Index() {
             ))}
           </div>
         </Panel>
+      </section>
+
+      <section className="mt-16">
+        <div className="max-w-2xl">
+          <h2 className="text-xl font-semibold tracking-tight">
+            Websites para empresas e negócios locais
+          </h2>
+
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Um website é muitas vezes o primeiro contacto entre um potencial
+            cliente e uma empresa. A Nova Web Studio desenvolve websites
+            modernos para pequenos negócios que precisam de apresentar os seus
+            serviços de forma clara, transmitir confiança e facilitar o contacto
+            com novos clientes.
+          </p>
+
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Trabalhamos principalmente com negócios em Cascais, Oeiras, Sintra
+            e Lisboa, tanto na criação de novos websites como na modernização de
+            sites existentes.
+          </p>
+        </div>
       </section>
 
       <section className="mt-16">
@@ -374,6 +410,31 @@ function Index() {
         </ol>
       </section>
 
+      <section className="mt-16">
+        <div className="orbit-panel p-6 sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <h2 className="text-lg font-semibold">
+                Precisa de criar ou modernizar o website do seu negócio?
+              </h2>
+
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Diga-nos o que precisa. Podemos analisar o website atual ou
+                preparar uma solução de raiz adaptada ao seu negócio.
+              </p>
+            </div>
+
+            <Link
+              to="/contacto"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+            >
+              Pedir orçamento
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Panel
         className="mt-16"
         bodyClassName="p-6 sm:p-8"
@@ -381,12 +442,13 @@ function Index() {
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold">
-              Pronto para começar?
+              Fale com a Nova Web Studio
             </h2>
 
             <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
               <Search className="size-3.5" />
-              Diga-nos o que precisa e recebe uma proposta detalhada.
+              Criamos websites para negócios em Cascais, Oeiras, Sintra e
+              Lisboa.
             </p>
           </div>
 
@@ -394,7 +456,7 @@ function Index() {
             to="/contacto"
             className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
           >
-            Pedir orçamento
+            Contactar
             <ArrowRight className="size-4" />
           </Link>
         </div>
