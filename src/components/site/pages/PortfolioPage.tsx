@@ -108,7 +108,7 @@ const EXTRA_TEXT: Record<
       "Ligação à comunidade local",
     ],
 
-    radioVisit: "Visitar website",
+    radioVisit: "Ver projeto",
 
     conceptsBadge: "Exploração visual",
 
@@ -195,7 +195,7 @@ const EXTRA_TEXT: Record<
       "Strong local community connection",
     ],
 
-    radioVisit: "Visit website",
+    radioVisit: "View project",
 
     conceptsBadge: "Visual exploration",
 
@@ -283,7 +283,7 @@ const EXTRA_TEXT: Record<
       "Lokale Verbindung",
     ],
 
-    radioVisit: "Website besuchen",
+    radioVisit: "Projekt ansehen",
 
     conceptsBadge: "Visuelle Exploration",
     conceptNote:
@@ -365,7 +365,7 @@ const EXTRA_TEXT: Record<
       "Lien avec la communauté",
     ],
 
-    radioVisit: "Visiter le site",
+    radioVisit: "Voir le projet",
 
     conceptsBadge: "Exploration visuelle",
     conceptNote:
@@ -447,7 +447,7 @@ const EXTRA_TEXT: Record<
       "Conexión local",
     ],
 
-    radioVisit: "Visitar web",
+    radioVisit: "Ver proyecto",
 
     conceptsBadge: "Exploración visual",
     conceptNote:
@@ -610,24 +610,23 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
       {/* MANIQUE */}
       <section className="mt-14">
-        <div className="mb-5 flex items-center justify-between">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
             {extra.selectedWork}
           </span>
 
-          <span className="text-[10px] uppercase tracking-[.18em] text-muted-foreground">
-            01 — {t.realChip}
+          <span className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
+            01 — {extra.projectTypeValue}
           </span>
         </div>
 
         <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
-            {/* MOCKUP MANIQUE */}
+            {/* MOCKUP */}
             <div className="relative min-h-[430px] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-5 sm:p-8 lg:border-b-0 lg:border-r">
               <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
               <div className="relative mx-auto max-w-2xl rounded-[1.75rem] border border-border/60 bg-background/60 p-5 shadow-2xl backdrop-blur sm:p-7">
-                {/* IDENTIDADE */}
                 <div className="flex items-center gap-4">
                   <div className="flex size-20 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-white p-2 sm:size-24">
                     <img
@@ -662,7 +661,6 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
                 <div className="mt-7 flex gap-2">
                   <span className="h-9 w-28 rounded-lg bg-primary" />
-
                   <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
                 </div>
 
@@ -673,9 +671,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       className="rounded-xl border border-border/50 bg-background/50 p-2.5 sm:p-3"
                     >
                       <div className="h-8 rounded-lg bg-primary/[0.08] sm:h-10" />
-
                       <div className="mt-3 h-1.5 rounded-full bg-secondary" />
-
                       <div className="mt-1.5 h-1.5 w-3/4 rounded-full bg-secondary" />
                     </div>
                   ))}
@@ -683,31 +679,20 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               </div>
             </div>
 
-            {/* INFO MANIQUE */}
+            {/* INFO — SEM SEGUNDO LOGO */}
             <div className="flex flex-col justify-center p-6 sm:p-9">
-              {/* CORRIGIDO: não ocupa largura toda */}
               <div className="flex justify-center sm:justify-start">
                 <Chip tone="primary">{t.realChip}</Chip>
               </div>
 
-              <div className="mt-6 flex flex-col items-center gap-3 text-center sm:flex-row sm:items-center sm:text-left">
-                <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-white p-1.5">
-                  <img
-                    src="/gmd-manique.png"
-                    alt="Grupo Musical e Desportivo 31 de Janeiro"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                </div>
+              <div className="mt-6 text-center sm:text-left">
+                <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                  Manique de Baixo
+                </h2>
 
-                <div>
-                  <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                    Manique de Baixo
-                  </h2>
-
-                  <p className="mt-1 text-[9px] uppercase tracking-[.14em] text-muted-foreground">
-                    Grupo Musical e Desportivo 31 de Janeiro
-                  </p>
-                </div>
+                <p className="mt-2 text-[9px] uppercase leading-5 tracking-[.14em] text-muted-foreground">
+                  Grupo Musical e Desportivo 31 de Janeiro
+                </p>
               </div>
 
               <p className="mt-5 text-sm leading-7 text-muted-foreground">
@@ -715,7 +700,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               </p>
 
               <div className="mt-7 grid gap-3">
-                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
                   <span className="text-muted-foreground">
                     {extra.projectType}
                   </span>
@@ -725,7 +710,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
                   <span className="text-muted-foreground">
                     {extra.objective}
                   </span>
@@ -735,7 +720,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-[90px_1fr] gap-4 text-xs">
+                <div className="grid grid-cols-1 gap-1 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
                   <span className="text-muted-foreground">
                     {extra.delivery}
                   </span>
@@ -792,13 +777,13 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
       {/* RÁDIO */}
       <section className="mt-16">
-        <div className="mb-5 flex items-center justify-between">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
             {extra.secondWork}
           </span>
 
-          <span className="text-[10px] uppercase tracking-[.18em] text-muted-foreground">
-            02 — {extra.radioBadge}
+          <span className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
+            02 — {extra.radioType}
           </span>
         </div>
 
@@ -873,7 +858,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               </p>
 
               <div className="mt-7 grid gap-3">
-                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
                   <span className="text-muted-foreground">
                     {extra.projectType}
                   </span>
@@ -883,7 +868,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-[90px_1fr] gap-4 border-b border-border/60 pb-3 text-xs">
+                <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
                   <span className="text-muted-foreground">
                     {extra.objective}
                   </span>
@@ -893,7 +878,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-[90px_1fr] gap-4 text-xs">
+                <div className="grid grid-cols-1 gap-1 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
                   <span className="text-muted-foreground">
                     {extra.delivery}
                   </span>
