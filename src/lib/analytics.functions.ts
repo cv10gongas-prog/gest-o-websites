@@ -80,6 +80,52 @@ type GAReportResponse = {
   rowCount?: number;
 };
 
+const ROTAS_INTERNAS = [
+  "/auth",
+  "/arquivos",
+  "/definicoes",
+  "/emails",
+  "/equipa",
+  "/negocios",
+  "/painel",
+  "/pedidos",
+  "/pipeline",
+  "/projetos",
+  "/tarefas",
+];
+
+function filtroSitePublico() {
+  return {
+    notExpression: {
+      filter: {
+        fieldName: "pagePath",
+
+        inListFilter: {
+          values: ROTAS_INTERNAS,
+          caseSensitive: false,
+        },
+      },
+    },
+  };
+}
+
+function paginaInterna(
+  path: string,
+) {
+  const normalizado =
+    path
+      .split("?")[0]
+      .split("#")[0];
+
+  return ROTAS_INTERNAS.some(
+    (rota) =>
+      normalizado === rota ||
+      normalizado.startsWith(
+        `${rota}/`,
+      ),
+  );
+}
+
 function obterCredenciais() {
   const propertyId =
     process.env
@@ -344,7 +390,7 @@ function configuracaoPeriodo(
     case "7d":
       return {
         startDate:
-          "7daysAgo",
+          "6daysAgo",
 
         endDate:
           "today",
@@ -356,7 +402,7 @@ function configuracaoPeriodo(
     case "30d":
       return {
         startDate:
-          "30daysAgo",
+          "29daysAgo",
 
         endDate:
           "today",
@@ -368,7 +414,7 @@ function configuracaoPeriodo(
     case "90d":
       return {
         startDate:
-          "90daysAgo",
+          "89daysAgo",
 
         endDate:
           "today",
@@ -425,18 +471,203 @@ function formatarLabelGrafico(
   return `${dia}/${mes}`;
 }
 
-function limitar24Horas(
+function formatarChaveData(
+  data: Date,
+) {
+  const ano =
+    data
+      .getFullYear()
+      .toString();
+
+  const mes =
+    String(
+      data.getMonth() + 1,
+    ).padStart(
+      2,
+      "0",
+    );
+
+  const dia =
+    String(
+      data.getDate(),
+    ).padStart(
+      2,
+      "0",
+    );
+
+  return `${ano}${mes}${dia}`;
+}
+
+function preencherDiasSemDados(
+  linhas:
+    LinhaGrafico[],
+  dias: number,
+) {
+  const porChave =
+    new Map(
+      linhas.map(
+        (linha) => [
+          linha.chave,
+          linha,
+        ],
+      ),
+    );
+
+  const resultado:
+    LinhaGrafico[] = [];
+
+  const hoje =
+    new Date();
+
+  for (
+    let i = dias - 1;
+    i >= 0;
+    i--
+  ) {
+    const data =
+      new Date(
+        hoje.getFullYear(),
+        hoje.getMonth(),
+        hoje.getDate() - i,
+      );
+
+    const chave =
+      formatarChaveData(
+        data,
+      );
+
+    const existente =
+      porChave.get(
+        chave,
+      );
+
+    resultado.push(
+      existente ?? {
+        chave,
+
+        label:
+          formatarLabelGrafico(
+            chave,
+            "7d",
+          ),
+
+        visitas: 0,
+        utilizadores: 0,
+        pageviews: 0,
+      },
+    );
+  }
+
+  return resultado;
+}
+
+function preencherHorasSemDados(
   linhas:
     LinhaGrafico[],
 ) {
-  return [...linhas]
-    .sort(
-      (a, b) =>
-        a.chave.localeCompare(
-          b.chave,
-        ),
-    )
-    .slice(-24);
+  const porChave =
+    new Map(
+      linhas.map(
+        (linha) => [
+          linha.chave,
+          linha,
+        ],
+      ),
+    );
+
+  const resultado:
+    LinhaGrafico[] = [];
+
+  const agora =
+    new Date();
+
+  for (
+    let i = 23;
+    i >= 0;
+    i--
+  ) {
+    const data =
+      new Date(
+        agora.getTime() -
+          i *
+            60 *
+            60 *
+            1000,
+      );
+
+    const chave =
+      `${formatarChaveData(
+        data,
+      )}${String(
+        data.getHours(),
+      ).padStart(
+        2,
+        "0",
+      )}`;
+
+    const existente =
+      porChave.get(
+        chave,
+      );
+
+    resultado.push(
+      existente ?? {
+        chave,
+
+        label:
+          `${String(
+            data.getHours(),
+          ).padStart(
+            2,
+            "0",
+          )}h`,
+
+        visitas: 0,
+        utilizadores: 0,
+        pageviews: 0,
+      },
+    );
+  }
+
+  return resultado;
+}
+
+function completarGrafico(
+  linhas:
+    LinhaGrafico[],
+  periodo:
+    PeriodoAnalytics,
+) {
+  if (
+    periodo === "24h"
+  ) {
+    return preencherHorasSemDados(
+      linhas,
+    );
+  }
+
+  if (
+    periodo === "7d"
+  ) {
+    return preencherDiasSemDados(
+      linhas,
+      7,
+    );
+  }
+
+  if (
+    periodo === "30d"
+  ) {
+    return preencherDiasSemDados(
+      linhas,
+      30,
+    );
+  }
+
+  return preencherDiasSemDados(
+    linhas,
+    90,
+  );
 }
 
 export const obterAnalytics =
@@ -489,6 +720,9 @@ export const obterAnalytics =
           },
         ];
 
+        const dimensionFilter =
+          filtroSitePublico();
+
         const [
           totaisResponse,
           graficoResponse,
@@ -502,6 +736,8 @@ export const obterAnalytics =
               propertyId,
               {
                 dateRanges,
+
+                dimensionFilter,
 
                 metrics: [
                   {
@@ -529,6 +765,8 @@ export const obterAnalytics =
               propertyId,
               {
                 dateRanges,
+
+                dimensionFilter,
 
                 dimensions: [
                   {
@@ -575,6 +813,8 @@ export const obterAnalytics =
               {
                 dateRanges,
 
+                dimensionFilter,
+
                 dimensions: [
                   {
                     name:
@@ -608,7 +848,7 @@ export const obterAnalytics =
                   },
                 ],
 
-                limit: "8",
+                limit: "20",
               },
             ),
 
@@ -617,6 +857,8 @@ export const obterAnalytics =
               propertyId,
               {
                 dateRanges,
+
+                dimensionFilter,
 
                 dimensions: [
                   {
@@ -656,6 +898,8 @@ export const obterAnalytics =
               propertyId,
               {
                 dateRanges,
+
+                dimensionFilter,
 
                 dimensions: [
                   {
@@ -721,7 +965,7 @@ export const obterAnalytics =
             ),
         };
 
-        let grafico:
+        const linhasGrafico:
           LinhaGrafico[] =
             (
               graficoResponse
@@ -767,49 +1011,57 @@ export const obterAnalytics =
               },
             );
 
-        if (
-          periodo === "24h"
-        ) {
-          grafico =
-            limitar24Horas(
-              grafico,
-            );
-        }
+        const grafico =
+          completarGrafico(
+            linhasGrafico,
+            periodo,
+          );
 
         const paginas:
           PaginaAnalytics[] =
             (
               paginasResponse
                 .rows ?? []
-            ).map(
-              (row) => ({
-                path:
-                  row
-                    .dimensionValues?.[0]
-                    ?.value ??
-                  "/",
-
-                titulo:
-                  row
-                    .dimensionValues?.[1]
-                    ?.value ??
-                  "Sem título",
-
-                pageviews:
-                  numero(
+            )
+              .map(
+                (row) => ({
+                  path:
                     row
-                      .metricValues?.[0]
-                      ?.value,
-                  ),
+                      .dimensionValues?.[0]
+                      ?.value ??
+                    "/",
 
-                utilizadores:
-                  numero(
+                  titulo:
                     row
-                      .metricValues?.[1]
-                      ?.value,
+                      .dimensionValues?.[1]
+                      ?.value ??
+                    "Sem título",
+
+                  pageviews:
+                    numero(
+                      row
+                        .metricValues?.[0]
+                        ?.value,
+                    ),
+
+                  utilizadores:
+                    numero(
+                      row
+                        .metricValues?.[1]
+                        ?.value,
+                    ),
+                }),
+              )
+              .filter(
+                (pagina) =>
+                  !paginaInterna(
+                    pagina.path,
                   ),
-              }),
-            );
+              )
+              .slice(
+                0,
+                8,
+              );
 
         const paises:
           PaisAnalytics[] =
@@ -817,28 +1069,45 @@ export const obterAnalytics =
               paisesResponse
                 .rows ?? []
             ).map(
-              (row) => ({
-                pais:
+              (row) => {
+                const paisOriginal =
                   row
                     .dimensionValues?.[0]
                     ?.value ??
-                  "Desconhecido",
+                  "";
 
-                codigo:
-                  (
-                    row
-                      .dimensionValues?.[1]
-                      ?.value ??
-                    ""
-                  ).toUpperCase(),
+                const codigoOriginal =
+                  row
+                    .dimensionValues?.[1]
+                    ?.value ??
+                  "";
 
-                utilizadores:
-                  numero(
-                    row
-                      .metricValues?.[0]
-                      ?.value,
-                  ),
-              }),
+                const desconhecido =
+                  !paisOriginal ||
+                  paisOriginal ===
+                    "(not set)" ||
+                  paisOriginal ===
+                    "not set";
+
+                return {
+                  pais:
+                    desconhecido
+                      ? "Desconhecido"
+                      : paisOriginal,
+
+                  codigo:
+                    desconhecido
+                      ? ""
+                      : codigoOriginal.toUpperCase(),
+
+                  utilizadores:
+                    numero(
+                      row
+                        .metricValues?.[0]
+                        ?.value,
+                    ),
+                };
+              },
             );
 
         const dispositivos:
