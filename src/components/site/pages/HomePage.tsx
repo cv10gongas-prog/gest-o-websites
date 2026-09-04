@@ -108,6 +108,15 @@ const EXTRA: Record<
     solutionTitle: string;
     solutionLead: string;
 
+    gmdSection: string;
+    gmdBadge: string;
+    gmdTitle: string;
+    gmdText: string;
+    gmdFeature1: string;
+    gmdFeature2: string;
+    gmdFeature3: string;
+    gmdVisit: string;
+
     radioBadge: string;
     radioPartner: string;
     radioTitle: string;
@@ -170,6 +179,16 @@ const EXTRA: Record<
     solutionTitle: "Transformamos presença online em confiança",
     solutionLead:
       "Criamos websites pensados para apresentar melhor o negócio, facilitar a navegação e tornar o contacto simples.",
+
+    gmdSection: "Projeto em destaque",
+    gmdBadge: "Projeto real",
+    gmdTitle: "Manique de Baixo",
+    gmdText:
+      "Website institucional desenvolvido para modernizar a presença digital do Grupo Musical e Desportivo 31 de Janeiro, organizar informação e aproximar a coletividade da comunidade.",
+    gmdFeature1: "Website institucional responsivo",
+    gmdFeature2: "Informação e atividades organizadas",
+    gmdFeature3: "Presença digital modernizada",
+    gmdVisit: "Ver projeto",
 
     radioBadge: "Projeto real",
     radioPartner: "Parceiro Nova Web Studio",
@@ -256,6 +275,16 @@ const EXTRA: Record<
     solutionLead:
       "We build websites designed to present the business clearly, make navigation easy and turn contact into a natural next step.",
 
+    gmdSection: "Featured project",
+    gmdBadge: "Live project",
+    gmdTitle: "Manique de Baixo",
+    gmdText:
+      "An institutional website developed to modernise the digital presence of Grupo Musical e Desportivo 31 de Janeiro and bring the organisation closer to its community.",
+    gmdFeature1: "Responsive institutional website",
+    gmdFeature2: "Organised information and activities",
+    gmdFeature3: "Modernised digital presence",
+    gmdVisit: "View project",
+
     radioBadge: "Live project",
     radioPartner: "Nova Web Studio partner",
     radioTitle: "Rádio AlcabidecheFM",
@@ -341,6 +370,16 @@ const EXTRA: Record<
     solutionTitle: "Wir machen aus Online-Präsenz Vertrauen",
     solutionLead:
       "Wir erstellen Websites, die Unternehmen klar präsentieren, einfach zu bedienen sind und den Kontakt erleichtern.",
+
+    gmdSection: "Projekt im Fokus",
+    gmdBadge: "Reales Projekt",
+    gmdTitle: "Manique de Baixo",
+    gmdText:
+      "Eine institutionelle Website für Grupo Musical e Desportivo 31 de Janeiro mit modernerer Struktur und digitaler Präsenz.",
+    gmdFeature1: "Responsive Website",
+    gmdFeature2: "Strukturierte Informationen",
+    gmdFeature3: "Modernisierte digitale Präsenz",
+    gmdVisit: "Projekt ansehen",
 
     radioBadge: "Reales Projekt",
     radioPartner: "Partner von Nova Web Studio",
@@ -429,6 +468,16 @@ const EXTRA: Record<
     solutionLead:
       "Nous créons des sites clairs, simples à utiliser et conçus pour faciliter le contact.",
 
+    gmdSection: "Projet à la une",
+    gmdBadge: "Projet réel",
+    gmdTitle: "Manique de Baixo",
+    gmdText:
+      "Site institutionnel développé pour moderniser la présence digitale du Grupo Musical e Desportivo 31 de Janeiro.",
+    gmdFeature1: "Site institutionnel responsive",
+    gmdFeature2: "Informations mieux organisées",
+    gmdFeature3: "Présence digitale modernisée",
+    gmdVisit: "Voir le projet",
+
     radioBadge: "Projet réel",
     radioPartner: "Partenaire Nova Web Studio",
     radioTitle: "Rádio AlcabidecheFM",
@@ -512,6 +561,16 @@ const EXTRA: Record<
     solutionTitle: "Convertimos presencia online en confianza",
     solutionLead:
       "Creamos webs pensadas para presentar mejor el negocio, facilitar la navegación y simplificar el contacto.",
+
+    gmdSection: "Proyecto destacado",
+    gmdBadge: "Proyecto real",
+    gmdTitle: "Manique de Baixo",
+    gmdText:
+      "Web institucional desarrollada para modernizar la presencia digital del Grupo Musical e Desportivo 31 de Janeiro.",
+    gmdFeature1: "Web institucional responsive",
+    gmdFeature2: "Información organizada",
+    gmdFeature3: "Presencia digital modernizada",
+    gmdVisit: "Ver proyecto",
 
     radioBadge: "Proyecto real",
     radioPartner: "Socio Nova Web Studio",
@@ -622,6 +681,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       {/* HERO */}
       <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-5 py-9 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <div className="nws-pulse absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
+
         <div className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-primary/5 blur-3xl" />
 
         <div
@@ -665,6 +725,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                   className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
                 >
                   <CalendarCheck className="size-4" />
+
                   {t.ctaProposal}
 
                   <ArrowRight className="size-0 opacity-0 transition-all duration-300 group-hover:size-4 group-hover:opacity-100" />
@@ -696,6 +757,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
           </div>
 
+          {/* HERO MOCKUP */}
           <Reveal delay={180}>
             <div className="nws-float relative min-w-0">
               <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
@@ -733,15 +795,17 @@ export function HomePage({ locale }: { locale: Locale }) {
                   </div>
 
                   <div className="relative mt-9 sm:mt-10">
-                    <span className="block max-w-full text-[9px] font-semibold uppercase leading-5 tracking-[.15em] text-primary sm:tracking-[.18em]">
+                    <span className="block text-[9px] font-semibold uppercase leading-5 tracking-[.15em] text-primary">
                       {extra.heroProofSmall}
                     </span>
 
-                    <div className="mt-4 h-3.5 w-4/5 rounded-full bg-foreground/15 sm:h-4" />
-                    <div className="mt-3 h-3.5 w-3/5 rounded-full bg-foreground/10 sm:h-4" />
+                    <div className="mt-4 h-3.5 w-4/5 rounded-full bg-foreground/15" />
+
+                    <div className="mt-3 h-3.5 w-3/5 rounded-full bg-foreground/10" />
 
                     <div className="mt-7 flex gap-2">
                       <span className="h-9 flex-1 rounded-lg bg-primary sm:w-28 sm:flex-none" />
+
                       <span className="h-9 flex-1 rounded-lg border border-border bg-background/60 sm:w-24 sm:flex-none" />
                     </div>
                   </div>
@@ -752,19 +816,20 @@ export function HomePage({ locale }: { locale: Locale }) {
                         key={item.valor}
                         className="flex min-w-0 items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 backdrop-blur lg:min-h-[126px] lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:px-4 lg:py-4"
                       >
-                        <p className="min-w-0 shrink text-lg font-semibold leading-tight text-foreground lg:w-full lg:text-[16px] xl:text-[17px]">
+                        <p className="min-w-0 text-lg font-semibold leading-tight lg:w-full lg:text-[16px] xl:text-[17px]">
                           {item.valor}
                         </p>
 
-                        <p className="min-w-0 max-w-[58%] text-right text-[9px] leading-4 text-muted-foreground lg:mt-3 lg:max-w-none lg:text-left lg:leading-[1.55]">
+                        <p className="max-w-[58%] text-right text-[9px] leading-4 text-muted-foreground lg:mt-3 lg:max-w-none lg:text-left">
                           {item.texto}
                         </p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="relative mt-4 grid grid-cols-[1.3fr_.7fr] gap-3 sm:mt-5">
+                  <div className="relative mt-4 grid grid-cols-[1.3fr_.7fr] gap-3">
                     <div className="h-16 rounded-2xl bg-secondary/70 sm:h-20" />
+
                     <div className="h-16 rounded-2xl border border-primary/20 bg-primary/10 sm:h-20" />
                   </div>
                 </div>
@@ -817,9 +882,12 @@ export function HomePage({ locale }: { locale: Locale }) {
               const Icon = icons[idx] ?? Sparkles;
 
               return (
-                <Reveal key={problem.title} delay={idx * 90}>
+                <Reveal
+                  key={problem.title}
+                  delay={idx * 90}
+                >
                   <article className="group orbit-panel orbit-panel-hover h-full p-5">
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition duration-300 group-hover:scale-110 group-hover:bg-primary/15">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
@@ -864,9 +932,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                 return (
                   <article
                     key={service.titulo}
-                    className="group rounded-2xl border border-border/60 bg-background/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:border-primary/25 hover:shadow-xl hover:shadow-primary/5"
+                    className="group rounded-2xl border border-border/60 bg-background/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1"
                   >
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
@@ -885,10 +953,151 @@ export function HomePage({ locale }: { locale: Locale }) {
         </section>
       </Reveal>
 
+      {/* GMD / MANIQUE */}
+      <section className="mt-24">
+        <Reveal>
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Chip tone="primary">{extra.gmdSection}</Chip>
+
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+                {extra.gmdTitle}
+              </h2>
+            </div>
+
+            <span className="self-start rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.16em] text-primary sm:self-auto">
+              {extra.gmdBadge}
+            </span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
+            <div className="grid lg:grid-cols-[1fr_1fr]">
+              {/* VISUAL */}
+              <div className="relative flex min-h-[380px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-6 sm:min-h-[440px] sm:p-10 lg:border-b-0 lg:border-r">
+                <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+
+                <div className="relative w-full max-w-md rounded-[2rem] border border-border/60 bg-background/55 p-5 shadow-2xl backdrop-blur sm:p-8">
+                  <div className="flex items-center gap-4">
+                    <div className="flex size-20 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-white p-2 sm:size-24">
+                      <img
+                        src="/gmd-manique.png"
+                        alt="Grupo Musical e Desportivo 31 de Janeiro"
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
+                        Grupo Musical e Desportivo
+                      </p>
+
+                      <h3 className="mt-2 text-lg font-semibold sm:text-xl">
+                        31 de Janeiro
+                      </h3>
+
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Manique de Baixo
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-8">
+                    <h3 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+                      Comunidade, atividades e informação num só espaço
+                    </h3>
+
+                    <div className="mt-5 h-2.5 w-4/5 rounded-full bg-foreground/15" />
+
+                    <div className="mt-2.5 h-2.5 w-3/5 rounded-full bg-foreground/10" />
+
+                    <div className="mt-6 flex gap-2">
+                      <span className="h-9 w-28 rounded-lg bg-primary" />
+
+                      <span className="h-9 w-24 rounded-lg border border-border bg-background/70" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* TEXTO */}
+              <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-11">
+                <div className="flex justify-center sm:justify-start">
+                  <Chip tone="primary">{extra.gmdBadge}</Chip>
+                </div>
+
+                <div className="mt-6 flex items-center justify-center gap-3 sm:justify-start">
+                  <div className="flex size-14 items-center justify-center rounded-xl border border-border/60 bg-white p-1.5">
+                    <img
+                      src="/gmd-manique.png"
+                      alt="GMD 31 de Janeiro"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
+
+                  <div>
+                    <h3 className="text-2xl font-semibold tracking-tight">
+                      {extra.gmdTitle}
+                    </h3>
+
+                    <p className="mt-1 text-[10px] uppercase tracking-[.15em] text-muted-foreground">
+                      Grupo Musical e Desportivo 31 de Janeiro
+                    </p>
+                  </div>
+                </div>
+
+                <p className="mt-5 text-sm leading-7 text-muted-foreground">
+                  {extra.gmdText}
+                </p>
+
+                <div className="mt-7 space-y-3">
+                  {[
+                    extra.gmdFeature1,
+                    extra.gmdFeature2,
+                    extra.gmdFeature3,
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 text-xs text-muted-foreground"
+                    >
+                      <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <a
+                    href="https://31janeiromanique.net"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
+                  >
+                    {extra.gmdVisit}
+
+                    <ArrowUpRight className="size-4" />
+                  </a>
+
+                  <Link
+                    to={paths.portfolio}
+                    className="group inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
+                  >
+                    {t.ctaPortfolio}
+
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </article>
+        </Reveal>
+      </section>
+
       {/* RÁDIO */}
       <section className="mt-24">
         <Reveal>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <Chip tone="primary">{extra.radioBadge}</Chip>
 
@@ -897,14 +1106,14 @@ export function HomePage({ locale }: { locale: Locale }) {
               </h2>
             </div>
 
-            <span className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.16em] text-primary">
+            <span className="self-start rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.16em] text-primary sm:self-auto">
               {extra.radioPartner}
             </span>
           </div>
         </Reveal>
 
         <Reveal delay={100}>
-          <article className="group overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5 transition duration-500 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5">
+          <article className="group overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
             <div className="grid lg:grid-cols-[.9fr_1.1fr]">
               <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-6 sm:p-8 lg:border-b-0 lg:border-r">
                 <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
@@ -912,9 +1121,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                 <div className="nws-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
                 <div className="relative w-full max-w-md">
-                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm transition duration-500 group-hover:-translate-y-1 group-hover:border-white/15 sm:p-10">
+                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm sm:p-10">
                     <div className="flex justify-center">
-                      <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] p-3 shadow-xl sm:size-52 sm:p-4">
+                      <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
                         <img
                           src="/radio-alcabidechefm.png"
                           alt="Rádio AlcabidecheFM"
@@ -982,25 +1191,25 @@ export function HomePage({ locale }: { locale: Locale }) {
                   ))}
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-3">
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <a
                     href="https://radioalcabidechefm.eu"
                     target="_blank"
                     rel="noreferrer"
-                    className="group inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/15"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
                   >
                     {extra.radioVisit}
 
-                    <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <ArrowUpRight className="size-4" />
                   </a>
 
                   <Link
                     to={paths.portfolio}
-                    className="group inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm hover:bg-accent"
                   >
                     {t.ctaPortfolio}
 
-                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="size-4" />
                   </Link>
                 </div>
               </div>
@@ -1027,7 +1236,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             >
               {t.ctaProposal}
 
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="size-4" />
             </Link>
           </div>
         </Reveal>
@@ -1037,12 +1246,13 @@ export function HomePage({ locale }: { locale: Locale }) {
             const Icon = TYPE_ICONS[idx] ?? Sparkles;
 
             return (
-              <Reveal key={type.titulo} delay={idx * 80}>
-                <article className="group orbit-panel orbit-panel-hover relative h-full overflow-hidden p-5">
-                  <div className="absolute -right-10 -top-10 size-28 rounded-full bg-primary/0 blur-2xl transition duration-500 group-hover:bg-primary/10" />
-
-                  <div className="relative flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+              <Reveal
+                key={type.titulo}
+                delay={idx * 80}
+              >
+                <article className="orbit-panel orbit-panel-hover h-full p-5">
+                  <div className="flex items-center justify-between">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
@@ -1051,11 +1261,11 @@ export function HomePage({ locale }: { locale: Locale }) {
                     </span>
                   </div>
 
-                  <h3 className="relative mt-5 text-sm font-semibold">
+                  <h3 className="mt-5 text-sm font-semibold">
                     {type.titulo}
                   </h3>
 
-                  <p className="relative mt-2 text-xs leading-6 text-muted-foreground">
+                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
                     {type.texto}
                   </p>
                 </article>
@@ -1092,9 +1302,12 @@ export function HomePage({ locale }: { locale: Locale }) {
               const Icon = icons[idx] ?? BadgeCheck;
 
               return (
-                <Reveal key={item.title} delay={idx * 80}>
-                  <article className="group orbit-panel orbit-panel-hover h-full p-5">
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                <Reveal
+                  key={item.title}
+                  delay={idx * 80}
+                >
+                  <article className="orbit-panel orbit-panel-hover h-full p-5">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
@@ -1134,10 +1347,13 @@ export function HomePage({ locale }: { locale: Locale }) {
             const Icon = STEP_ICONS[idx] ?? Target;
 
             return (
-              <Reveal key={step.titulo} delay={idx * 100}>
-                <article className="group relative h-full overflow-hidden rounded-2xl border border-border/70 bg-card/40 p-5 transition duration-300 hover:-translate-y-1 hover:border-primary/20">
+              <Reveal
+                key={step.titulo}
+                delay={idx * 100}
+              >
+                <article className="h-full rounded-2xl border border-border/70 bg-card/40 p-5 transition hover:-translate-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10 transition group-hover:scale-110">
+                    <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
@@ -1187,11 +1403,11 @@ export function HomePage({ locale }: { locale: Locale }) {
 
               <Link
                 to={paths.contact}
-                className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground"
               >
                 {t.ctaButton}
 
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
