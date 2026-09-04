@@ -93,7 +93,7 @@ const EXTRA: Record<
     details: "Sobre o projeto",
     contact: "Os seus dados",
 
-    optional: "Opcional",
+    optional: "opcional",
 
     privacy:
       "Os seus dados são utilizados apenas para responder ao pedido.",
@@ -101,7 +101,7 @@ const EXTRA: Record<
     choose: "Selecionar",
 
     websiteLabel: "Website atual",
-    websitePlaceholder: "https://oseusite.pt",
+    websitePlaceholder: "oseusite.pt",
 
     deadlineLabel: "Prazo desejado",
 
@@ -137,7 +137,7 @@ const EXTRA: Record<
     details: "About the project",
     contact: "Your details",
 
-    optional: "Optional",
+    optional: "optional",
 
     privacy:
       "Your information is only used to respond to your request.",
@@ -145,7 +145,7 @@ const EXTRA: Record<
     choose: "Select",
 
     websiteLabel: "Current website",
-    websitePlaceholder: "https://yourwebsite.com",
+    websitePlaceholder: "yourwebsite.com",
 
     deadlineLabel: "Preferred deadline",
 
@@ -181,7 +181,7 @@ const EXTRA: Record<
     details: "Über das Projekt",
     contact: "Ihre Angaben",
 
-    optional: "Optional",
+    optional: "optional",
 
     privacy:
       "Ihre Daten werden nur zur Beantwortung Ihrer Anfrage verwendet.",
@@ -189,7 +189,7 @@ const EXTRA: Record<
     choose: "Auswählen",
 
     websiteLabel: "Aktuelle Website",
-    websitePlaceholder: "https://ihrewebsite.de",
+    websitePlaceholder: "ihrewebsite.de",
 
     deadlineLabel: "Gewünschter Zeitraum",
 
@@ -225,7 +225,7 @@ const EXTRA: Record<
     details: "À propos du projet",
     contact: "Vos coordonnées",
 
-    optional: "Facultatif",
+    optional: "facultatif",
 
     privacy:
       "Vos données sont uniquement utilisées pour répondre à votre demande.",
@@ -233,7 +233,7 @@ const EXTRA: Record<
     choose: "Sélectionner",
 
     websiteLabel: "Site actuel",
-    websitePlaceholder: "https://votresite.fr",
+    websitePlaceholder: "votresite.fr",
 
     deadlineLabel: "Délai souhaité",
 
@@ -269,7 +269,7 @@ const EXTRA: Record<
     details: "Sobre el proyecto",
     contact: "Tus datos",
 
-    optional: "Opcional",
+    optional: "opcional",
 
     privacy:
       "Tus datos solo se utilizan para responder a tu solicitud.",
@@ -277,7 +277,7 @@ const EXTRA: Record<
     choose: "Seleccionar",
 
     websiteLabel: "Web actual",
-    websitePlaceholder: "https://tuweb.es",
+    websitePlaceholder: "tuweb.es",
 
     deadlineLabel: "Plazo deseado",
 
@@ -349,17 +349,42 @@ function Field({
   label,
   icon,
   children,
+  required = false,
+  optionalLabel,
 }: {
   label: string;
   icon: ReactNode;
   children: ReactNode;
+  required?: boolean;
+  optionalLabel?: string;
 }) {
+  const cleanLabel = label
+    .replace(/\s*\*+\s*$/, "")
+    .trim();
+
   return (
     <div>
-      <div className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <span className="text-primary">{icon}</span>
+      <div className="mb-2 flex min-h-5 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs font-medium text-muted-foreground">
+        <span className="mr-0.5 text-primary">
+          {icon}
+        </span>
 
-        <span>{label}</span>
+        <span>{cleanLabel}</span>
+
+        {required && (
+          <span
+            aria-hidden="true"
+            className="font-semibold text-primary"
+          >
+            *
+          </span>
+        )}
+
+        {!required && optionalLabel && (
+          <span className="text-[9px] font-normal tracking-normal text-muted-foreground/45">
+            ({optionalLabel})
+          </span>
+        )}
       </div>
 
       {children}
@@ -403,22 +428,41 @@ function PremiumSelect({
       }
     }
 
-    document.addEventListener("mousedown", closeOnOutsideClick);
-    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener(
+      "mousedown",
+      closeOnOutsideClick,
+    );
+
+    document.addEventListener(
+      "keydown",
+      closeOnEscape,
+    );
 
     return () => {
-      document.removeEventListener("mousedown", closeOnOutsideClick);
-      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener(
+        "mousedown",
+        closeOnOutsideClick,
+      );
+
+      document.removeEventListener(
+        "keydown",
+        closeOnEscape,
+      );
     };
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative">
+    <div
+      ref={wrapperRef}
+      className="relative"
+    >
       <button
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() => setOpen((current) => !current)}
+        onClick={() =>
+          setOpen((current) => !current)
+        }
         className={`group flex min-h-[48px] w-full items-center justify-between gap-3 rounded-xl border px-4 text-left text-[13px] outline-none transition-all duration-200 ${
           open
             ? "border-primary/50 bg-background/90 shadow-[0_0_0_4px_rgba(45,212,191,0.05)]"
@@ -456,7 +500,8 @@ function PremiumSelect({
         <div className="overflow-hidden rounded-2xl border border-border/80 bg-[#07111c]/95 p-1.5 shadow-2xl shadow-black/50 backdrop-blur-2xl">
           <div className="max-h-[310px] overflow-y-auto">
             {options.map((option) => {
-              const active = option.value === value;
+              const active =
+                option.value === value;
 
               return (
                 <button
@@ -503,6 +548,24 @@ function PremiumSelect({
   );
 }
 
+function normalizeWebsite(
+  value: string,
+) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  if (
+    /^https?:\/\//i.test(trimmed)
+  ) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
+
 export function ContactPage({
   locale,
 }: {
@@ -513,8 +576,11 @@ export function ContactPage({
   const paths = PATHS[locale];
   const extra = EXTRA[locale];
 
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [sending, setSending] =
+    useState(false);
+
+  const [sent, setSent] =
+    useState(false);
 
   const [form, setForm] = useState({
     nome: "",
@@ -532,7 +598,9 @@ export function ContactPage({
     querReuniao: false,
   });
 
-  function update<K extends keyof typeof form>(
+  function update<
+    K extends keyof typeof form,
+  >(
     key: K,
     value: (typeof form)[K],
   ) {
@@ -557,10 +625,16 @@ export function ContactPage({
 
     setSending(true);
 
-    const tipoIndex = Number(form.tipoIndex);
-    const orcamentoIndex = Number(form.orcamentoIndex);
+    const tipoIndex =
+      Number(form.tipoIndex);
 
-    const websiteAtual = form.websiteAtual.trim();
+    const orcamentoIndex =
+      Number(form.orcamentoIndex);
+
+    const websiteAtual =
+      normalizeWebsite(
+        form.websiteAtual,
+      );
 
     const prazoIndex =
       form.prazoIndex === ""
@@ -569,10 +643,13 @@ export function ContactPage({
 
     const prazoDesejado =
       prazoIndex !== null
-        ? extra.deadlineOptions[prazoIndex] ?? null
+        ? extra.deadlineOptions[
+            prazoIndex
+          ] ?? null
         : null;
 
-    const mensagemOriginal = form.mensagem.trim();
+    const mensagemOriginal =
+      form.mensagem.trim();
 
     const detalhesAdicionais = [
       websiteAtual
@@ -613,12 +690,14 @@ export function ContactPage({
           TIPO_VALUES[0],
 
         orcamento:
-          ORCAMENTO_VALUES[orcamentoIndex] ??
-          ORCAMENTO_VALUES[0],
+          ORCAMENTO_VALUES[
+            orcamentoIndex
+          ] ?? ORCAMENTO_VALUES[0],
 
         mensagem: mensagemFinal,
 
-        quer_reuniao: form.querReuniao,
+        quer_reuniao:
+          form.querReuniao,
       });
 
     setSending(false);
@@ -643,12 +722,13 @@ export function ContactPage({
     }),
   );
 
-  const budgetOptions = t.orcamentos.map(
-    (label, index) => ({
-      value: String(index),
-      label,
-    }),
-  );
+  const budgetOptions =
+    t.orcamentos.map(
+      (label, index) => ({
+        value: String(index),
+        label,
+      }),
+    );
 
   const deadlineOptions =
     extra.deadlineOptions.map(
@@ -659,7 +739,10 @@ export function ContactPage({
     );
 
   return (
-    <SiteChrome locale={locale} page="contact">
+    <SiteChrome
+      locale={locale}
+      page="contact"
+    >
       <style>{`
         @keyframes nws-contact-glow {
           0%, 100% {
@@ -694,6 +777,7 @@ export function ContactPage({
 
             <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
               <Sparkles className="size-3.5" />
+
               {extra.eyebrow}
             </div>
 
@@ -719,7 +803,9 @@ export function ContactPage({
                   </p>
 
                   <p className="mt-1 text-xs leading-6 text-muted-foreground">
-                    {extra.confidenceText}
+                    {
+                      extra.confidenceText
+                    }
                   </p>
                 </div>
               </div>
@@ -811,17 +897,6 @@ export function ContactPage({
             <div className="nws-contact-glow absolute -right-12 -top-12 -z-10 size-64 rounded-full bg-primary/10 blur-3xl" />
 
             <div className="relative rounded-[2rem] border border-border/70 bg-card/40 shadow-2xl shadow-black/10">
-              <div
-                className="pointer-events-none absolute inset-0 -z-10 rounded-[2rem] opacity-[0.025]"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)",
-
-                  backgroundSize:
-                    "34px 34px",
-                }}
-              />
-
               {!sent ? (
                 <form
                   onSubmit={submit}
@@ -831,7 +906,9 @@ export function ContactPage({
                   <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
-                        {extra.confidence}
+                        {
+                          extra.confidence
+                        }
                       </span>
 
                       <h2 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
@@ -839,7 +916,9 @@ export function ContactPage({
                       </h2>
 
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {t.panelSubtitle}
+                        {
+                          t.panelSubtitle
+                        }
                       </p>
                     </div>
 
@@ -864,83 +943,126 @@ export function ContactPage({
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={t.labels.nome}
+                        label={
+                          t.labels.nome
+                        }
+                        required
                         icon={
                           <UserRound className="size-4" />
                         }
                       >
                         <input
-                          value={form.nome}
-                          onChange={(event) =>
+                          value={
+                            form.nome
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "nome",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="name"
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.empresa}
+                        label={
+                          t.labels.empresa
+                        }
+                        optionalLabel={
+                          extra.optional
+                        }
                         icon={
                           <Building2 className="size-4" />
                         }
                       >
                         <input
-                          value={form.empresa}
-                          onChange={(event) =>
+                          value={
+                            form.empresa
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "empresa",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="organization"
-                          placeholder={extra.optional}
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.email}
+                        label={
+                          t.labels.email
+                        }
+                        required
                         icon={
                           <Mail className="size-4" />
                         }
                       >
                         <input
                           type="email"
-                          value={form.email}
-                          onChange={(event) =>
+                          value={
+                            form.email
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "email",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="email"
                           placeholder="email@exemplo.pt"
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
                       <Field
-                        label={t.labels.telefone}
+                        label={
+                          t.labels.telefone
+                        }
+                        optionalLabel={
+                          extra.optional
+                        }
                         icon={
                           <Phone className="size-4" />
                         }
                       >
                         <input
                           type="tel"
-                          value={form.telefone}
-                          onChange={(event) =>
+                          value={
+                            form.telefone
+                          }
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "telefone",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="tel"
                           placeholder="+351"
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
                     </div>
@@ -960,27 +1082,38 @@ export function ContactPage({
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={t.labels.tipo}
+                        label={
+                          t.labels.tipo
+                        }
                         icon={
                           <BadgeCheck className="size-4" />
                         }
                       >
                         <PremiumSelect
-                          value={form.tipoIndex}
-                          onChange={(value) =>
+                          value={
+                            form.tipoIndex
+                          }
+                          onChange={(
+                            value,
+                          ) =>
                             update(
                               "tipoIndex",
                               value,
                             )
                           }
-                          options={tipoOptions}
-                          placeholder={extra.choose}
+                          options={
+                            tipoOptions
+                          }
+                          placeholder={
+                            extra.choose
+                          }
                         />
                       </Field>
 
                       <Field
                         label={
-                          t.labels.orcamento
+                          t.labels
+                            .orcamento
                         }
                         icon={
                           <Sparkles className="size-4" />
@@ -990,44 +1123,58 @@ export function ContactPage({
                           value={
                             form.orcamentoIndex
                           }
-                          onChange={(value) =>
+                          onChange={(
+                            value,
+                          ) =>
                             update(
                               "orcamentoIndex",
                               value,
                             )
                           }
-                          options={budgetOptions}
-                          placeholder={extra.choose}
+                          options={
+                            budgetOptions
+                          }
+                          placeholder={
+                            extra.choose
+                          }
                         />
                       </Field>
                     </div>
 
-                    {/* WEBSITE + PRAZO */}
                     <div className="mt-4 grid gap-4 sm:grid-cols-2">
                       <Field
                         label={
                           extra.websiteLabel
+                        }
+                        optionalLabel={
+                          extra.optional
                         }
                         icon={
                           <Globe2 className="size-4" />
                         }
                       >
                         <input
-                          type="url"
+                          type="text"
+                          inputMode="url"
                           value={
                             form.websiteAtual
                           }
-                          onChange={(event) =>
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "websiteAtual",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           autoComplete="url"
                           placeholder={
                             extra.websitePlaceholder
                           }
-                          className={INPUT_CLASS}
+                          className={
+                            INPUT_CLASS
+                          }
                         />
                       </Field>
 
@@ -1035,13 +1182,20 @@ export function ContactPage({
                         label={
                           extra.deadlineLabel
                         }
+                        optionalLabel={
+                          extra.optional
+                        }
                         icon={
                           <CalendarDays className="size-4" />
                         }
                       >
                         <PremiumSelect
-                          value={form.prazoIndex}
-                          onChange={(value) =>
+                          value={
+                            form.prazoIndex
+                          }
+                          onChange={(
+                            value,
+                          ) =>
                             update(
                               "prazoIndex",
                               value,
@@ -1050,18 +1204,18 @@ export function ContactPage({
                           options={
                             deadlineOptions
                           }
-                          placeholder={
-                            extra.optional
-                          }
+                          placeholder="—"
                         />
                       </Field>
                     </div>
 
-                    {/* MENSAGEM */}
                     <div className="mt-5">
                       <Field
                         label={
                           t.labels.mensagem
+                        }
+                        optionalLabel={
+                          extra.optional
                         }
                         icon={
                           <MessageSquareText className="size-4" />
@@ -1071,10 +1225,13 @@ export function ContactPage({
                           value={
                             form.mensagem
                           }
-                          onChange={(event) =>
+                          onChange={(
+                            event,
+                          ) =>
                             update(
                               "mensagem",
-                              event.target.value,
+                              event.target
+                                .value,
                             )
                           }
                           rows={6}
@@ -1107,10 +1264,13 @@ export function ContactPage({
                         checked={
                           form.querReuniao
                         }
-                        onChange={(event) =>
+                        onChange={(
+                          event,
+                        ) =>
                           update(
                             "querReuniao",
-                            event.target.checked,
+                            event.target
+                              .checked,
                           )
                         }
                         className="sr-only"
@@ -1121,7 +1281,6 @@ export function ContactPage({
                       </p>
                     </label>
 
-                    {/* TEXTO AGORA FORA DA OPÇÃO */}
                     <p className="mt-2 px-1 text-[11px] leading-5 text-muted-foreground">
                       {t.note}
                     </p>
@@ -1137,7 +1296,9 @@ export function ContactPage({
                       <>
                         <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
 
-                        {t.submitting}
+                        {
+                          t.submitting
+                        }
                       </>
                     ) : (
                       <>
@@ -1151,7 +1312,6 @@ export function ContactPage({
                   </button>
                 </form>
               ) : (
-                /* SUCESSO */
                 <div className="flex min-h-[650px] flex-col items-center justify-center p-8 text-center">
                   <div className="relative">
                     <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
@@ -1184,7 +1344,9 @@ export function ContactPage({
                     </Link>
 
                     <Link
-                      to={paths.portfolio}
+                      to={
+                        paths.portfolio
+                      }
                       className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
                     >
                       {nav.portfolio}
