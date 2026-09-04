@@ -3,6 +3,7 @@ import {
   Activity,
   ArrowRight,
   ArrowUpRight,
+  BarChart3,
   BriefcaseBusiness,
   CalendarCheck2,
   CheckCircle2,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { AnalyticsPainel } from "@/components/crm/AnalyticsPainel";
 import {
   Avatar,
   Chip,
@@ -57,20 +59,28 @@ import {
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({
     meta: [
-      { title: "Gestão — Nova Web CRM" },
+      {
+        title: "Gestão — Nova Web CRM",
+      },
       {
         name: "description",
         content:
-          "Métricas do dia, projetos em curso, atividade e tarefas prioritárias.",
+          "Métricas, projetos, atividade da equipa e Analytics do website.",
       },
-      { name: "robots", content: "noindex" },
+      {
+        name: "robots",
+        content: "noindex",
+      },
     ],
   }),
 
   component: Painel,
 });
 
-type PainelTab = "resumo" | "atividade";
+type PainelTab =
+  | "resumo"
+  | "atividade"
+  | "analytics";
 
 type PeriodoAtividade =
   | "24h"
@@ -260,17 +270,11 @@ function diaAtividade(value: string) {
   const ontem = new Date();
   ontem.setDate(hoje.getDate() - 1);
 
-  if (
-    data.toDateString() ===
-    hoje.toDateString()
-  ) {
+  if (data.toDateString() === hoje.toDateString()) {
     return "Hoje";
   }
 
-  if (
-    data.toDateString() ===
-    ontem.toDateString()
-  ) {
+  if (data.toDateString() === ontem.toDateString()) {
     return "Ontem";
   }
 
@@ -290,14 +294,12 @@ function Painel() {
   const [
     periodoAtividade,
     setPeriodoAtividade,
-  ] =
-    useState<PeriodoAtividade>("7d");
+  ] = useState<PeriodoAtividade>("7d");
 
   const [
     tipoAtividade,
     setTipoAtividade,
-  ] =
-    useState<TipoAtividade>("tudo");
+  ] = useState<TipoAtividade>("tudo");
 
   const { perfil } = useUtilizador();
 
@@ -527,7 +529,7 @@ function Painel() {
   return (
     <>
       {/* TABS PRINCIPAIS */}
-      <div className="mb-5 flex items-center gap-1 rounded-2xl border border-border/60 bg-card/30 p-1.5">
+      <div className="mb-5 flex flex-wrap items-center gap-1 rounded-2xl border border-border/60 bg-card/30 p-1.5">
         <button
           type="button"
           onClick={() =>
@@ -555,19 +557,36 @@ function Painel() {
           }`}
         >
           <Activity className="size-3.5" />
+
           Atividade
 
           {atividades.length > 0 && (
-            <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[8px] font-semibold">
+            <span className="ml-0.5 rounded-full border border-current/10 bg-current/[0.06] px-1.5 py-0.5 text-[8px] font-semibold">
               {atividades.length}
             </span>
           )}
         </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            setTab("analytics")
+          }
+          className={`flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-medium transition ${
+            tab === "analytics"
+              ? "bg-primary/10 text-primary shadow-sm"
+              : "text-muted-foreground hover:bg-accent/40 hover:text-foreground"
+          }`}
+        >
+          <BarChart3 className="size-3.5" />
+          Analytics
+        </button>
       </div>
 
-      {tab === "resumo" ? (
+      {/* RESUMO */}
+      {tab === "resumo" && (
         <>
-          {/* HERO / RESUMO */}
+          {/* HERO */}
           {verCartao("saudacao") && (
             <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/20 px-5 py-5 sm:px-7 sm:py-6">
               <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-primary/[0.07] blur-3xl" />
@@ -593,35 +612,34 @@ function Painel() {
 
                     <span className="hidden items-center gap-1.5 text-[10px] text-muted-foreground sm:flex">
                       <Sparkles className="size-3 text-primary" />
-                      Resumo comercial
-                      de hoje
+
+                      Resumo comercial de hoje
                     </span>
                   </div>
 
                   <h1 className="mt-2.5 text-2xl font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
                     {saudacao()},{" "}
                     {nomePrimeiro}.{" "}
+
                     <span className="text-foreground/65">
-                      Vamos fechar
-                      projetos.
+                      Vamos fechar projetos.
                     </span>
                   </h1>
 
                   <p className="mt-2 text-sm text-muted-foreground">
                     Tens{" "}
+
                     <span className="font-medium text-foreground">
-                      {
-                        pendentes.length
-                      }
+                      {pendentes.length}
                     </span>{" "}
+
                     ações pendentes e{" "}
+
                     <span className="font-medium text-foreground">
-                      {
-                        metricas.interessados
-                      }
+                      {metricas.interessados}
                     </span>{" "}
-                    oportunidades
-                    quentes.
+
+                    oportunidades quentes.
                   </p>
                 </div>
 
@@ -631,6 +649,7 @@ function Painel() {
                     className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-border/70 bg-background/35 px-4 text-xs font-medium text-muted-foreground transition hover:border-primary/25 hover:bg-accent hover:text-foreground"
                   >
                     <BriefcaseBusiness className="size-3.5" />
+
                     Ver pipeline
                   </Link>
 
@@ -643,8 +662,8 @@ function Painel() {
                     }
                   >
                     <Plus className="size-4" />
-                    Novo projeto de
-                    site
+
+                    Novo projeto de site
                   </button>
                 </div>
               </div>
@@ -737,13 +756,11 @@ function Painel() {
 
                     <div>
                       <h2 className="text-sm font-semibold">
-                        Pipeline de
-                        projetos
+                        Pipeline de projetos
                       </h2>
 
                       <p className="mt-0.5 text-[10px] text-muted-foreground">
-                        Últimos contactos
-                        e próximas ações
+                        Últimos contactos e próximas ações
                       </p>
                     </div>
                   </div>
@@ -758,8 +775,7 @@ function Painel() {
                   </Link>
                 </div>
 
-                {recentes.length ===
-                0 ? (
+                {recentes.length === 0 ? (
                   <div className="p-5">
                     <Vazio texto="Ainda não há negócios. Adiciona o primeiro." />
                   </div>
@@ -769,8 +785,7 @@ function Painel() {
                       <thead className="border-b border-border/45 bg-background/20 text-[9px] uppercase tracking-[.14em] text-muted-foreground">
                         <tr>
                           <th className="px-5 py-3 font-medium">
-                            Cliente /
-                            Projeto
+                            Cliente / Projeto
                           </th>
 
                           <th className="px-3 py-3 font-medium">
@@ -821,9 +836,7 @@ function Painel() {
                                     }}
                                     className="inline-flex items-center gap-1.5 font-medium transition group-hover:text-primary"
                                   >
-                                    {
-                                      n.nome
-                                    }
+                                    {n.nome}
 
                                     <ArrowUpRight className="size-3 opacity-0 transition duration-200 group-hover:opacity-60" />
                                   </Link>
@@ -859,9 +872,7 @@ function Painel() {
                                       }
                                     />
 
-                                    {
-                                      prioridade.label
-                                    }
+                                    {prioridade.label}
                                   </span>
                                 </td>
 
@@ -919,8 +930,7 @@ function Painel() {
                         </h2>
 
                         <p className="mt-0.5 text-[10px] text-muted-foreground">
-                          Por ordem de
-                          data
+                          Por ordem de data
                         </p>
                       </div>
                     </div>
@@ -928,9 +938,7 @@ function Painel() {
                     {pendentes.length >
                       0 && (
                       <span className="grid min-w-6 place-items-center rounded-full border border-primary/15 bg-primary/[0.07] px-1.5 py-1 text-[9px] font-semibold text-primary">
-                        {
-                          pendentes.length
-                        }
+                        {pendentes.length}
                       </span>
                     )}
                   </div>
@@ -943,16 +951,12 @@ function Painel() {
                       </span>
 
                       <p className="mt-4 text-xs font-medium">
-                        Tudo tratado por
-                        agora
+                        Tudo tratado por agora
                       </p>
 
                       <p className="mt-1 max-w-[220px] text-[10px] leading-5 text-muted-foreground">
-                        Não tens tarefas
-                        pendentes.
-                        Aproveita para
-                        preparar os
-                        próximos
+                        Não tens tarefas pendentes.
+                        Aproveita para preparar os próximos
                         contactos.
                       </p>
 
@@ -998,17 +1002,14 @@ function Painel() {
                                       ? "danger"
                                       : prioridadeInfo(
                                           t.prioridade,
-                                        )
-                                          .tone
+                                        ).tone
                                   }
                                 />
                               </span>
 
                               <span className="min-w-0 flex-1">
                                 <span className="block truncate text-[11px] font-medium">
-                                  {
-                                    t.titulo
-                                  }
+                                  {t.titulo}
                                 </span>
 
                                 <span className="mt-0.5 block truncate text-[9px] text-muted-foreground">
@@ -1033,8 +1034,8 @@ function Painel() {
                         to="/tarefas"
                         className="flex items-center justify-center gap-1.5 py-2 text-[10px] font-medium text-muted-foreground transition hover:text-primary"
                       >
-                        Ver todas as
-                        tarefas
+                        Ver todas as tarefas
+
                         <ArrowRight className="size-3" />
                       </Link>
                     </div>
@@ -1057,15 +1058,12 @@ function Painel() {
                         </span>
 
                         <span className="rounded-full border border-emerald-400/15 bg-emerald-400/[0.07] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[.16em] text-emerald-300">
-                          Melhor
-                          oportunidade
+                          Melhor oportunidade
                         </span>
                       </div>
 
                       <h3 className="mt-5 text-sm font-semibold">
-                        {
-                          negocioOportunidade.nome
-                        }
+                        {negocioOportunidade.nome}
                       </h3>
 
                       <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
@@ -1080,10 +1078,7 @@ function Painel() {
                           </p>
 
                           <p className="mt-1 text-sm font-semibold text-emerald-300">
-                            {
-                              melhorOportunidade.probabilidade
-                            }
-                            %
+                            {melhorOportunidade.probabilidade}%
                           </p>
                         </div>
 
@@ -1102,8 +1097,7 @@ function Painel() {
                       </div>
 
                       <p className="mt-3 text-[9px] text-muted-foreground">
-                        Próxima conversa
-                        ·{" "}
+                        Próxima conversa ·{" "}
                         {formatarData(
                           melhorOportunidade.data_proxima_conversa,
                         )}
@@ -1112,7 +1106,8 @@ function Painel() {
                       <Link
                         to="/negocios/$id"
                         params={{
-                          id: negocioOportunidade.id,
+                          id:
+                            negocioOportunidade.id,
                         }}
                         className="mt-4 flex items-center gap-1.5 text-[11px] font-medium text-emerald-300"
                       >
@@ -1126,8 +1121,10 @@ function Painel() {
             </div>
           </section>
         </>
-      ) : (
-        /* ATIVIDADE */
+      )}
+
+      {/* ATIVIDADE */}
+      {tab === "atividade" && (
         <section>
           <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/20 px-5 py-5 sm:px-7">
             <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-primary/[0.06] blur-3xl" />
@@ -1136,6 +1133,7 @@ function Painel() {
               <div>
                 <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
                   <Activity className="size-3.5" />
+
                   Registos internos
                 </div>
 
@@ -1144,10 +1142,8 @@ function Painel() {
                 </h1>
 
                 <p className="mt-1.5 max-w-2xl text-xs leading-6 text-muted-foreground">
-                  Histórico de alterações,
-                  chamadas, tarefas e
-                  ações realizadas dentro
-                  do CRM.
+                  Histórico de alterações, chamadas,
+                  tarefas e ações realizadas dentro do CRM.
                 </p>
               </div>
 
@@ -1162,7 +1158,9 @@ function Painel() {
                 ).map(
                   (periodo) => (
                     <button
-                      key={periodo}
+                      key={
+                        periodo
+                      }
                       type="button"
                       onClick={() =>
                         setPeriodoAtividade(
@@ -1224,9 +1222,7 @@ function Painel() {
                       : "border-border/60 bg-card/20 text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {
-                    item.label
-                  }
+                  {item.label}
                 </button>
               ),
             )}
@@ -1245,13 +1241,11 @@ function Painel() {
                 </span>
 
                 <p className="mt-4 text-sm font-medium">
-                  Sem atividade neste
-                  período
+                  Sem atividade neste período
                 </p>
 
                 <p className="mt-1 text-[10px] text-muted-foreground">
-                  Experimenta alterar os
-                  filtros acima.
+                  Experimenta alterar os filtros acima.
                 </p>
               </div>
             ) : (
@@ -1321,22 +1315,17 @@ function Painel() {
                                     <div className="min-w-0">
                                       <p className="text-xs leading-5">
                                         <span className="font-semibold text-foreground">
-                                          {
-                                            autor
-                                          }
+                                          {autor}
                                         </span>{" "}
+
                                         <span className="text-muted-foreground">
-                                          {
-                                            atividade.accao
-                                          }
+                                          {atividade.accao}
                                         </span>
                                       </p>
 
                                       {atividade.detalhe && (
                                         <p className="mt-1 text-[10px] leading-5 text-muted-foreground">
-                                          {
-                                            atividade.detalhe
-                                          }
+                                          {atividade.detalhe}
                                         </p>
                                       )}
 
@@ -1345,9 +1334,7 @@ function Painel() {
                                           <span className="inline-flex items-center gap-1.5 rounded-full border border-border/55 bg-background/25 px-2.5 py-1 text-[9px] text-muted-foreground">
                                             <BriefcaseBusiness className="size-3 text-primary/70" />
 
-                                            {
-                                              negocio
-                                            }
+                                            {negocio}
                                           </span>
                                         )}
 
@@ -1356,9 +1343,7 @@ function Painel() {
                                             className={`size-1.5 rounded-full ${estilo.dot}`}
                                           />
 
-                                          {
-                                            atividade.entidade
-                                          }
+                                          {atividade.entidade}
                                         </span>
                                       </div>
                                     </div>
@@ -1388,10 +1373,15 @@ function Painel() {
             <UserRound className="size-3" />
 
             Ações associadas a utilizadores
-            autenticados aparecem com o
-            respetivo membro da equipa.
+            autenticados aparecem com o respetivo
+            membro da equipa.
           </div>
         </section>
+      )}
+
+      {/* ANALYTICS */}
+      {tab === "analytics" && (
+        <AnalyticsPainel />
       )}
 
       <DialogNegocio
