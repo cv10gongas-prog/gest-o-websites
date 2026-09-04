@@ -24,10 +24,8 @@ const EXTRA_TEXT: Record<
   Locale,
   {
     introBadge: string;
-
     selectedWork: string;
     secondWork: string;
-
     selectedLead: string;
 
     projectType: string;
@@ -52,13 +50,10 @@ const EXTRA_TEXT: Record<
     radioVisit: string;
 
     conceptsBadge: string;
-
     conceptNote: string;
-
     conceptLabels: string[];
 
     approachTitle: string;
-
     approachLead: string;
 
     approach: {
@@ -159,7 +154,6 @@ const EXTRA_TEXT: Record<
 
   en: {
     introBadge: "Projects & concepts",
-
     selectedWork: "Featured work",
     secondWork: "Another live project",
 
@@ -242,12 +236,12 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge: "Does your business deserve a stronger online presence?",
+    finalBadge:
+      "Does your business deserve a stronger online presence?",
   },
 
   de: {
     introBadge: "Projekte & Konzepte",
-
     selectedWork: "Ausgewähltes Projekt",
     secondWork: "Weiteres reales Projekt",
 
@@ -292,7 +286,6 @@ const EXTRA_TEXT: Record<
     radioVisit: "Website besuchen",
 
     conceptsBadge: "Visuelle Exploration",
-
     conceptNote:
       "Demonstrationskonzepte für verschiedene Branchen und Anforderungen.",
 
@@ -303,7 +296,6 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "Mehr als nur Farben und Schriftarten",
-
     approachLead:
       "Jedes Projekt wird an das Unternehmen und seine Ziele angepasst.",
 
@@ -326,12 +318,12 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge: "Verdient Ihr Unternehmen einen besseren Online-Auftritt?",
+    finalBadge:
+      "Verdient Ihr Unternehmen einen besseren Online-Auftritt?",
   },
 
   fr: {
     introBadge: "Projets & concepts",
-
     selectedWork: "Projet à la une",
     secondWork: "Autre projet réel",
 
@@ -376,7 +368,6 @@ const EXTRA_TEXT: Record<
     radioVisit: "Visiter le site",
 
     conceptsBadge: "Exploration visuelle",
-
     conceptNote:
       "Concepts démonstratifs créés pour différents secteurs.",
 
@@ -387,7 +378,6 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "Bien plus que changer des couleurs",
-
     approachLead:
       "Chaque projet est pensé selon l'activité et ses objectifs.",
 
@@ -410,12 +400,12 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge: "Votre entreprise mérite une meilleure présence en ligne ?",
+    finalBadge:
+      "Votre entreprise mérite une meilleure présence en ligne ?",
   },
 
   es: {
     introBadge: "Proyectos & conceptos",
-
     selectedWork: "Proyecto destacado",
     secondWork: "Otro proyecto real",
 
@@ -460,7 +450,6 @@ const EXTRA_TEXT: Record<
     radioVisit: "Visitar web",
 
     conceptsBadge: "Exploración visual",
-
     conceptNote:
       "Conceptos demostrativos creados para distintos sectores.",
 
@@ -471,7 +460,6 @@ const EXTRA_TEXT: Record<
     ],
 
     approachTitle: "Mucho más que cambiar colores",
-
     approachLead:
       "Cada proyecto se plantea según el negocio y sus objetivos.",
 
@@ -494,7 +482,8 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge: "¿Tu negocio merece una mejor presencia online?",
+    finalBadge:
+      "¿Tu negocio merece una mejor presencia online?",
   },
 };
 
@@ -633,19 +622,37 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
         <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
-            <div className="relative min-h-[420px] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-8 lg:border-b-0 lg:border-r">
+            {/* MOCKUP MANIQUE */}
+            <div className="relative min-h-[430px] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-5 sm:p-8 lg:border-b-0 lg:border-r">
               <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
-              <div className="relative">
-                <span className="text-[9px] font-semibold uppercase tracking-[.2em] text-primary">
-                  Sociedade 31 de Janeiro
-                </span>
+              <div className="relative mx-auto max-w-2xl rounded-[1.75rem] border border-border/60 bg-background/60 p-5 shadow-2xl backdrop-blur sm:p-7">
+                {/* IDENTIDADE */}
+                <div className="flex items-center gap-4">
+                  <div className="flex size-20 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-white p-2 sm:size-24">
+                    <img
+                      src="/gmd-manique.png"
+                      alt="Grupo Musical e Desportivo 31 de Janeiro"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
 
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Manique de Baixo
-                </p>
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
+                      Grupo Musical e Desportivo
+                    </span>
 
-                <h2 className="mt-10 max-w-lg text-4xl font-semibold leading-tight tracking-tight">
+                    <h3 className="mt-2 text-lg font-semibold sm:text-xl">
+                      31 de Janeiro
+                    </h3>
+
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Manique de Baixo
+                    </p>
+                  </div>
+                </div>
+
+                <h2 className="mt-8 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:mt-10 sm:text-4xl">
                   {t.featuredHeadline}
                 </h2>
 
@@ -655,17 +662,20 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
                 <div className="mt-7 flex gap-2">
                   <span className="h-9 w-28 rounded-lg bg-primary" />
+
                   <span className="h-9 w-24 rounded-lg border border-border bg-background/60" />
                 </div>
 
-                <div className="mt-10 grid grid-cols-3 gap-3">
+                <div className="mt-8 grid grid-cols-3 gap-2 sm:mt-10 sm:gap-3">
                   {[0, 1, 2].map((item) => (
                     <div
                       key={item}
-                      className="rounded-xl border border-border/50 bg-background/50 p-3"
+                      className="rounded-xl border border-border/50 bg-background/50 p-2.5 sm:p-3"
                     >
-                      <div className="h-10 rounded-lg bg-primary/[0.08]" />
+                      <div className="h-8 rounded-lg bg-primary/[0.08] sm:h-10" />
+
                       <div className="mt-3 h-1.5 rounded-full bg-secondary" />
+
                       <div className="mt-1.5 h-1.5 w-3/4 rounded-full bg-secondary" />
                     </div>
                   ))}
@@ -673,14 +683,34 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center p-7 sm:p-9">
-              <Chip tone="primary">{t.realChip}</Chip>
+            {/* INFO MANIQUE */}
+            <div className="flex flex-col justify-center p-6 sm:p-9">
+              {/* CORRIGIDO: não ocupa largura toda */}
+              <div className="flex justify-center sm:justify-start">
+                <Chip tone="primary">{t.realChip}</Chip>
+              </div>
 
-              <h2 className="mt-5 text-3xl font-semibold tracking-tight">
-                Manique de Baixo
-              </h2>
+              <div className="mt-6 flex flex-col items-center gap-3 text-center sm:flex-row sm:items-center sm:text-left">
+                <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-white p-1.5">
+                  <img
+                    src="/gmd-manique.png"
+                    alt="Grupo Musical e Desportivo 31 de Janeiro"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
 
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                <div>
+                  <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                    Manique de Baixo
+                  </h2>
+
+                  <p className="mt-1 text-[9px] uppercase tracking-[.14em] text-muted-foreground">
+                    Grupo Musical e Desportivo 31 de Janeiro
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-5 text-sm leading-7 text-muted-foreground">
                 {t.featuredDesc}
               </p>
 
@@ -734,12 +764,12 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="https://31janeiromanique.net"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
                 >
                   {t.visit}
 
@@ -748,7 +778,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
                 <Link
                   to={paths.contact}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
                 >
                   {t.ctaButton}
 
@@ -780,9 +810,9 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               <div className="nws-portfolio-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
               <div className="relative w-full max-w-md">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:border-white/15 sm:p-10">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm sm:p-10">
                   <div className="flex justify-center">
-                    <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] p-3 shadow-xl sm:size-52 sm:p-4">
+                    <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
                       <img
                         src="/radio-alcabidechefm.png"
                         alt="Rádio AlcabidecheFM"
@@ -820,8 +850,8 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center p-7 sm:p-9 lg:p-10">
-              <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-10">
+              <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
                 <Chip tone="primary">{extra.radioBadge}</Chip>
 
                 <span className="inline-flex min-h-7 items-center rounded-full border border-primary/20 bg-primary/[0.06] px-3 text-[9px] font-semibold uppercase tracking-[.14em] text-primary">
@@ -829,12 +859,12 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 </span>
               </div>
 
-              <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
+              <div className="mt-5 flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary sm:justify-start">
                 <Radio className="size-3.5" />
                 Rádio · Alcabideche
               </div>
 
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+              <h2 className="mt-3 text-center text-2xl font-semibold tracking-tight sm:text-left sm:text-3xl">
                 Rádio AlcabidecheFM
               </h2>
 
@@ -897,7 +927,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   href="https://radioalcabidechefm.eu"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 sm:w-auto"
                 >
                   {extra.radioVisit}
 
@@ -936,7 +966,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
             return (
               <article
                 key={project.titulo}
-                className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/40 transition duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-xl hover:shadow-black/5"
+                className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/40 transition duration-300 hover:-translate-y-1 hover:border-primary/25"
               >
                 <div className="p-4 pb-0">
                   <MiniBrowser
@@ -998,7 +1028,8 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.approach.map((item, idx) => {
-              const Icon = approachIcons[idx] ?? BadgeCheck;
+              const Icon =
+                approachIcons[idx] ?? BadgeCheck;
 
               return (
                 <article
@@ -1031,7 +1062,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
       {/* CTA */}
       <section className="mt-20">
-        <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-primary/[0.06] p-8 sm:p-10">
+        <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-primary/[0.06] p-7 sm:p-10">
           <div className="absolute -right-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
 
           <div className="relative grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -1051,7 +1082,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
             <Link
               to={paths.contact}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 hover:opacity-90"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground"
             >
               {t.ctaButton}
 
