@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
+import { registarEventoSeguranca } from "@/lib/security.functions";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -46,9 +47,16 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [aCarregar, setACarregar] = useState(false);
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [
+    aCarregar,
+    setACarregar,
+  ] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -56,7 +64,10 @@ function AuthPage() {
     supabase.auth
       .getSession()
       .then(({ data }) => {
-        if (active && data.session) {
+        if (
+          active &&
+          data.session
+        ) {
           navigate({
             to: "/painel",
             replace: true,
@@ -69,6 +80,50 @@ function AuthPage() {
     };
   }, [navigate]);
 
+  async function registarSeguranca(
+    dados: {
+      evento:
+        | "login_sucesso"
+        | "login_falhou";
+
+      email: string;
+
+      userId?: string | null;
+
+      motivo?: string | null;
+    },
+  ) {
+    try {
+      await registarEventoSeguranca({
+        data: {
+          evento:
+            dados.evento,
+
+          email:
+            dados.email,
+
+          userId:
+            dados.userId ??
+            null,
+
+          motivo:
+            dados.motivo ??
+            null,
+        },
+      });
+    } catch (error) {
+      /*
+       * Um problema no registo de segurança
+       * nunca deve impedir o utilizador de
+       * entrar no CRM.
+       */
+      console.error(
+        "[Segurança] Não foi possível registar o evento:",
+        error,
+      );
+    }
+  }
+
   async function submeter(
     event: React.FormEvent<HTMLFormElement>,
   ) {
@@ -78,20 +133,62 @@ function AuthPage() {
       return;
     }
 
+    const emailNormalizado =
+      email
+        .trim()
+        .toLowerCase();
+
     setACarregar(true);
 
     try {
-      const { error } =
-        await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        });
+      const {
+        data,
+        error,
+      } =
+        await supabase.auth
+          .signInWithPassword({
+            email:
+              emailNormalizado,
+
+            password,
+          });
 
       if (error) {
+        await registarSeguranca({
+          evento:
+            "login_falhou",
+
+          email:
+            emailNormalizado,
+
+          userId:
+            null,
+
+          motivo:
+            error.message,
+        });
+
         throw error;
       }
 
-      toast.success("Sessão iniciada.");
+      await registarSeguranca({
+        evento:
+          "login_sucesso",
+
+        email:
+          emailNormalizado,
+
+        userId:
+          data.user?.id ??
+          null,
+
+        motivo:
+          null,
+      });
+
+      toast.success(
+        "Sessão iniciada.",
+      );
 
       navigate({
         to: "/painel",
@@ -115,8 +212,12 @@ function AuthPage() {
       email={email}
       password={password}
       loading={aCarregar}
-      onEmailChange={setEmail}
-      onPasswordChange={setPassword}
+      onEmailChange={
+        setEmail
+      }
+      onPasswordChange={
+        setPassword
+      }
       onSubmit={submeter}
     />
   );
