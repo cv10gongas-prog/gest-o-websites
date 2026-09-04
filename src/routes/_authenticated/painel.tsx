@@ -268,7 +268,7 @@ function Painel() {
     <>
       {/* HERO / RESUMO */}
       {verCartao("saudacao") && (
-        <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/20 px-5 py-6 sm:px-7 sm:py-7">
+        <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/20 px-5 py-5 sm:px-7 sm:py-6">
           <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-primary/[0.07] blur-3xl" />
 
           <div
@@ -280,7 +280,7 @@ function Painel() {
             }}
           />
 
-          <div className="relative flex flex-col justify-between gap-6 xl:flex-row xl:items-end">
+          <div className="relative flex flex-col justify-between gap-4 xl:flex-row xl:items-end">
             <div className="max-w-4xl">
               <div className="flex flex-wrap items-center gap-3">
                 <p className="text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
@@ -295,9 +295,9 @@ function Painel() {
                 </span>
               </div>
 
-              <h1 className="mt-3 text-2xl font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
+              <h1 className="mt-2.5 text-2xl font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
                 {saudacao()}, {nomePrimeiro}.{" "}
-                <span className="text-muted-foreground">
+                <span className="text-foreground/65">
                   Vamos fechar projetos.
                 </span>
               </h1>
