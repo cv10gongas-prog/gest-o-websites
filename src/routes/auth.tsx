@@ -11,63 +11,44 @@ import { toast } from "sonner";
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route =
-  createFileRoute("/auth")({
-    ssr: false,
+export const Route = createFileRoute("/auth")({
+  ssr: false,
 
-    head: () => ({
-      meta: [
-        {
-          title:
-            "Entrar — Nova Web CRM",
-        },
+  head: () => ({
+    meta: [
+      {
+        title: "Entrar — Nova Web CRM",
+      },
+      {
+        name: "description",
+        content:
+          "Acesso reservado à equipa comercial da Nova Web Studio.",
+      },
+      {
+        property: "og:title",
+        content: "Entrar — Nova Web CRM",
+      },
+      {
+        property: "og:description",
+        content:
+          "Acesso reservado à equipa comercial da Nova Web Studio.",
+      },
+      {
+        name: "robots",
+        content: "noindex",
+      },
+    ],
+  }),
 
-        {
-          name: "description",
-          content:
-            "Acesso reservado à equipa comercial da Nova Web Studio.",
-        },
-
-        {
-          property: "og:title",
-          content:
-            "Entrar — Nova Web CRM",
-        },
-
-        {
-          property:
-            "og:description",
-
-          content:
-            "Acesso reservado à equipa comercial da Nova Web Studio.",
-        },
-
-        {
-          name: "robots",
-          content: "noindex",
-        },
-      ],
-    }),
-
-    component: AuthPage,
-  });
+  component: AuthPage,
+});
 
 function AuthPage() {
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  const [email, setEmail] =
-    useState("");
-
-  const [
-    password,
-    setPassword,
-  ] = useState("");
-
-  const [
-    aCarregar,
-    setACarregar,
-  ] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [aCarregar, setACarregar] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -75,10 +56,7 @@ function AuthPage() {
     supabase.auth
       .getSession()
       .then(({ data }) => {
-        if (
-          active &&
-          data.session
-        ) {
+        if (active && data.session) {
           navigate({
             to: "/painel",
             replace: true,
@@ -103,25 +81,17 @@ function AuthPage() {
     setACarregar(true);
 
     try {
-      const {
-        error,
-      } =
-        await supabase.auth.signInWithPassword(
-          {
-            email:
-              email.trim(),
-
-            password,
-          },
-        );
+      const { error } =
+        await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
 
       if (error) {
         throw error;
       }
 
-      toast.success(
-        "Sessão iniciada.",
-      );
+      toast.success("Sessão iniciada.");
 
       navigate({
         to: "/painel",
@@ -145,12 +115,8 @@ function AuthPage() {
       email={email}
       password={password}
       loading={aCarregar}
-      onEmailChange={
-        setEmail
-      }
-      onPasswordChange={
-        setPassword
-      }
+      onEmailChange={setEmail}
+      onPasswordChange={setPassword}
       onSubmit={submeter}
     />
   );
