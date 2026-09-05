@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2, CalendarCheck, Check, Globe, Mail, Phone, Trash2 } from "lucide-react";
 import {
   Building2,
   CalendarCheck,
@@ -18,7 +17,6 @@ import { useMemo, useState } from "react";
 import { Chip, Panel, Vazio } from "@/components/crm/Bits";
 import { btnPequeno, selectClass } from "@/components/crm/Modal";
 import { formatarData } from "@/lib/crm";
-import { useActualizarPedido, useApagarPedido, useWebsiteRequests } from "@/lib/queries";
 import {
   useActualizarPedido,
   useApagarPedido,
@@ -28,19 +26,28 @@ import {
 export const Route = createFileRoute("/_authenticated/pedidos")({
   head: () => ({
     meta: [
-      { title: "Pedidos do site — Nova Web CRM" },
-      { name: "description", content: "Pedidos de orçamento recebidos pelo website público." },
+      {
+        title: "Pedidos do site — Nova Web CRM",
+      },
       {
         name: "description",
         content:
           "Pedidos de orçamento recebidos pelo website público.",
       },
-      { name: "robots", content: "noindex" },
+      {
+        name: "robots",
+        content: "noindex",
+      },
     ],
   }),
-@@ -20,114 +40,420 @@ export const Route = createFileRoute("/_authenticated/pedidos")({
 
-type Filtro = "pendentes" | "tratados" | "todos";
+  component: Pedidos,
+});
+
+type Filtro =
+  | "pendentes"
+  | "tratados"
+  | "todos";
 
 type MensagemParsed = {
   mensagem: string | null;
@@ -49,7 +56,9 @@ type MensagemParsed = {
   origem: string | null;
 };
 
-function parseMensagem(mensagem?: string | null): MensagemParsed {
+function parseMensagem(
+  mensagem?: string | null,
+): MensagemParsed {
   if (!mensagem) {
     return {
       mensagem: null,
@@ -71,71 +80,180 @@ function parseMensagem(mensagem?: string | null): MensagemParsed {
   const mensagemNormal: string[] = [];
 
   for (const linha of linhas) {
-    const linhaLower = linha.toLowerCase();
+    const linhaLower =
+      linha.toLowerCase();
 
-    if (linhaLower.startsWith("website atual:")) {
-      website = linha.slice("website atual:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("current website:")) {
-      website = linha.slice("current website:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("aktuelle website:")) {
-      website = linha.slice("aktuelle website:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("site actuel:")) {
-      website = linha.slice("site actuel:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("web actual:")) {
-      website = linha.slice("web actual:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("prazo desejado:")) {
-      prazo = linha.slice("prazo desejado:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("preferred deadline:")) {
-      prazo = linha.slice("preferred deadline:".length).trim();
-      continue;
-    }
-
-    if (linhaLower.startsWith("gewünschter zeitraum:")) {
-      prazo = linha
-        .slice("gewünschter zeitraum:".length)
+    if (
+      linhaLower.startsWith(
+        "website atual:",
+      )
+    ) {
+      website = linha
+        .slice(
+          "website atual:".length,
+        )
         .trim();
+
       continue;
     }
 
-    if (linhaLower.startsWith("délai souhaité:")) {
-      prazo = linha.slice("délai souhaité:".length).trim();
+    if (
+      linhaLower.startsWith(
+        "current website:",
+      )
+    ) {
+      website = linha
+        .slice(
+          "current website:".length,
+        )
+        .trim();
+
       continue;
     }
 
-    if (linhaLower.startsWith("plazo deseado:")) {
-      prazo = linha.slice("plazo deseado:".length).trim();
+    if (
+      linhaLower.startsWith(
+        "aktuelle website:",
+      )
+    ) {
+      website = linha
+        .slice(
+          "aktuelle website:".length,
+        )
+        .trim();
+
       continue;
     }
 
-    if (linhaLower.startsWith("origem:")) {
-      origem = linha.slice("origem:".length).trim();
+    if (
+      linhaLower.startsWith(
+        "site actuel:",
+      )
+    ) {
+      website = linha
+        .slice(
+          "site actuel:".length,
+        )
+        .trim();
+
       continue;
     }
 
-    if (linhaLower.startsWith("source:")) {
-      origem = linha.slice("source:".length).trim();
+    if (
+      linhaLower.startsWith(
+        "web actual:",
+      )
+    ) {
+      website = linha
+        .slice(
+          "web actual:".length,
+        )
+        .trim();
+
       continue;
     }
 
-    mensagemNormal.push(linha);
+    if (
+      linhaLower.startsWith(
+        "prazo desejado:",
+      )
+    ) {
+      prazo = linha
+        .slice(
+          "prazo desejado:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    if (
+      linhaLower.startsWith(
+        "preferred deadline:",
+      )
+    ) {
+      prazo = linha
+        .slice(
+          "preferred deadline:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    if (
+      linhaLower.startsWith(
+        "gewünschter zeitraum:",
+      )
+    ) {
+      prazo = linha
+        .slice(
+          "gewünschter zeitraum:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    if (
+      linhaLower.startsWith(
+        "délai souhaité:",
+      )
+    ) {
+      prazo = linha
+        .slice(
+          "délai souhaité:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    if (
+      linhaLower.startsWith(
+        "plazo deseado:",
+      )
+    ) {
+      prazo = linha
+        .slice(
+          "plazo deseado:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    if (
+      linhaLower.startsWith(
+        "origem:",
+      )
+    ) {
+      origem = linha
+        .slice(
+          "origem:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    if (
+      linhaLower.startsWith(
+        "source:",
+      )
+    ) {
+      origem = linha
+        .slice(
+          "source:".length,
+        )
+        .trim();
+
+      continue;
+    }
+
+    mensagemNormal.push(
+      linha,
+    );
   }
 
   return {
@@ -151,49 +269,70 @@ function parseMensagem(mensagem?: string | null): MensagemParsed {
 }
 
 function Pedidos() {
-  const { data: pedidos = [], isLoading } = useWebsiteRequests();
-  const { data: pedidos = [], isLoading } =
+  const {
+    data: pedidos = [],
+    isLoading,
+  } =
     useWebsiteRequests();
 
-  const actualizar = useActualizarPedido();
-  const apagar = useApagarPedido();
-  const [filtro, setFiltro] = useState<Filtro>("pendentes");
+  const actualizar =
+    useActualizarPedido();
 
-  const [filtro, setFiltro] =
-    useState<Filtro>("pendentes");
+  const apagar =
+    useApagarPedido();
 
-  const lista = useMemo(() => {
-    if (filtro === "pendentes") return pedidos.filter((p) => !p.tratado);
-    if (filtro === "tratados") return pedidos.filter((p) => p.tratado);
-    if (filtro === "pendentes") {
-      return pedidos.filter((p) => !p.tratado);
-    }
+  const [
+    filtro,
+    setFiltro,
+  ] =
+    useState<Filtro>(
+      "pendentes",
+    );
 
-    if (filtro === "tratados") {
-      return pedidos.filter((p) => p.tratado);
-    }
+  const lista =
+    useMemo(() => {
+      if (
+        filtro ===
+        "pendentes"
+      ) {
+        return pedidos.filter(
+          (p) =>
+            !p.tratado,
+        );
+      }
 
-    return pedidos;
-  }, [pedidos, filtro]);
+      if (
+        filtro ===
+        "tratados"
+      ) {
+        return pedidos.filter(
+          (p) =>
+            p.tratado,
+        );
+      }
 
-  const porTratar = pedidos.filter((p) => !p.tratado).length;
-  const porTratar = pedidos.filter(
-    (p) => !p.tratado,
-  ).length;
+      return pedidos;
+    }, [
+      pedidos,
+      filtro,
+    ]);
+
+  const porTratar =
+    pedidos.filter(
+      (p) =>
+        !p.tratado,
+    ).length;
 
   return (
     <div className="space-y-5">
       {/* HEADER */}
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">Pedidos do site</h1>
           <h1 className="text-xl font-semibold tracking-tight">
             Pedidos do site
           </h1>
 
           <p className="mt-1 text-xs text-muted-foreground">
-            {porTratar} {porTratar === 1 ? "pedido por tratar" : "pedidos por tratar"} · origem:
-            Website público
             {porTratar}{" "}
             {porTratar === 1
               ? "pedido por tratar"
@@ -205,16 +344,12 @@ function Pedidos() {
         <select
           className={`${selectClass} w-auto`}
           value={filtro}
-          onChange={(e) => setFiltro(e.target.value as Filtro)}
           onChange={(e) =>
             setFiltro(
               e.target.value as Filtro,
             )
           }
         >
-          <option value="pendentes">Por tratar</option>
-          <option value="tratados">Tratados</option>
-          <option value="todos">Todos</option>
           <option value="pendentes">
             Por tratar
           </option>
@@ -231,32 +366,23 @@ function Pedidos() {
 
       <Panel bodyClassName="p-0">
         {isLoading ? (
-          <Vazio texto="A carregar pedidos…" icon={Globe} />
           <Vazio
             texto="A carregar pedidos…"
             icon={Globe}
           />
-        ) : lista.length === 0 ? (
-          <Vazio texto="Sem pedidos nesta vista." icon={Globe} />
+        ) : lista.length ===
+          0 ? (
           <Vazio
             texto="Sem pedidos nesta vista."
             icon={Globe}
           />
         ) : (
           <ul className="divide-y divide-border/60">
-            {lista.map((p) => (
-              <li key={p.id} className="p-4 sm:p-5">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-medium">{p.nome}</span>
-                      {p.empresa && (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                          <Building2 className="size-3" />
-                          {p.empresa}
             {lista.map((p) => {
               const detalhes =
-                parseMensagem(p.mensagem);
+                parseMensagem(
+                  p.mensagem,
+                );
 
               return (
                 <li
@@ -270,11 +396,6 @@ function Pedidos() {
                         <span className="text-sm font-semibold">
                           {p.nome}
                         </span>
-                      )}
-                      {p.quer_reuniao && (
-                        <Chip tone="warning">
-                          <CalendarCheck className="mr-1 inline size-3" />
-                          Quer reunião
 
                         {p.empresa && (
                           <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
@@ -303,20 +424,6 @@ function Pedidos() {
                             ? "Tratado"
                             : "Por tratar"}
                         </Chip>
-                      )}
-                      <Chip tone={p.tratado ? "success" : "primary"}>
-                        {p.tratado ? "Tratado" : "Por tratar"}
-                      </Chip>
-                    </div>
-                    <div className="mt-1.5 flex flex-wrap gap-3 text-[11px] text-muted-foreground">
-                      <a className="inline-flex items-center gap-1" href={`mailto:${p.email}`}>
-                        <Mail className="size-3" />
-                        {p.email}
-                      </a>
-                      {p.telefone && (
-                        <a className="inline-flex items-center gap-1" href={`tel:${p.telefone}`}>
-                          <Phone className="size-3" />
-                          {p.telefone}
                       </div>
 
                       {/* CONTACTOS */}
@@ -331,8 +438,6 @@ function Pedidos() {
                             {p.email}
                           </span>
                         </a>
-                      )}
-                      <span>{formatarData(p.created_at, true)}</span>
 
                         {p.telefone && (
                           <a
@@ -378,7 +483,9 @@ function Pedidos() {
                       <button
                         className={btnPequeno}
                         onClick={() =>
-                          apagar.mutate(p.id)
+                          apagar.mutate(
+                            p.id,
+                          )
                         }
                       >
                         <Trash2 className="size-3.5" />
@@ -388,20 +495,6 @@ function Pedidos() {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2">
-                    <button
-                      className={btnPequeno}
-                      onClick={() =>
-                        actualizar.mutate({ id: p.id, valores: { tratado: !p.tratado } })
-                      }
-                    >
-                      <Check className="size-3.5" />
-                      {p.tratado ? "Reabrir" : "Marcar tratado"}
-                    </button>
-                    <button className={btnPequeno} onClick={() => apagar.mutate(p.id)}>
-                      <Trash2 className="size-3.5" />
-                      Apagar
-                    </button>
                   {/* CHIPS */}
                   <div className="mt-4 flex flex-wrap gap-2">
                     {p.tipo_projeto && (
@@ -412,7 +505,8 @@ function Pedidos() {
 
                     {p.orcamento && (
                       <Chip tone="muted">
-                        Orçamento: {p.orcamento}
+                        Orçamento:{" "}
+                        {p.orcamento}
                       </Chip>
                     )}
 
@@ -424,20 +518,6 @@ function Pedidos() {
                       </Chip>
                     )}
                   </div>
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {p.tipo_projeto && <Chip tone="info">{p.tipo_projeto}</Chip>}
-                  {p.orcamento && <Chip tone="muted">Orçamento: {p.orcamento}</Chip>}
-                </div>
-
-                {p.mensagem && (
-                  <p className="mt-3 rounded-xl border border-border/60 bg-secondary/25 p-3 text-xs leading-relaxed">
-                    {p.mensagem}
-                  </p>
-                )}
-              </li>
-            ))}
 
                   {/* DETALHES */}
                   {(detalhes.mensagem ||
@@ -483,9 +563,7 @@ function Pedidos() {
                                 className="mt-2 flex items-start gap-1.5 break-all text-xs font-medium text-foreground transition hover:text-primary"
                               >
                                 <span>
-                                  {
-                                    detalhes.website
-                                  }
+                                  {detalhes.website}
                                 </span>
 
                                 <ExternalLink className="mt-0.5 size-3 shrink-0" />
@@ -532,3 +610,6 @@ function Pedidos() {
           </ul>
         )}
       </Panel>
+    </div>
+  );
+}
