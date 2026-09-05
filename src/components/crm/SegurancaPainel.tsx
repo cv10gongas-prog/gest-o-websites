@@ -6,6 +6,8 @@ import {
   Laptop,
   MapPin,
   MonitorSmartphone,
+  Network,
+  ShieldAlert,
   ShieldCheck,
   Smartphone,
   UserRound,
@@ -36,6 +38,12 @@ type DetalheSeguranca = {
   sucesso?: boolean;
   user_agent?: string | null;
 };
+
+type EstadoAcesso =
+  | "primeiro"
+  | "conhecido"
+  | "ip_novo"
+  | "pais_novo";
 
 function interpretarDetalhe(
   value: string | null,
@@ -185,8 +193,7 @@ function dispositivoPorUserAgent(
     )
   ) {
     return {
-      nome:
-        "Windows",
+      nome: "Windows",
       Icon: Laptop,
     };
   }
@@ -226,6 +233,68 @@ function formatarDataHora(
   );
 }
 
+function estiloEstado(
+  estado: EstadoAcesso,
+) {
+  switch (estado) {
+    case "pais_novo":
+      return {
+        label:
+          "País novo",
+        detalhe:
+          "Origem diferente do histórico deste utilizador",
+        badge:
+          "border-red-400/20 bg-red-400/10 text-red-300",
+        icon:
+          "border-red-400/20 bg-red-400/10 text-red-300",
+        Icon:
+          ShieldAlert,
+      };
+
+    case "ip_novo":
+      return {
+        label:
+          "Novo IP",
+        detalhe:
+          "Primeiro acesso através deste endereço IP",
+        badge:
+          "border-amber-400/20 bg-amber-400/10 text-amber-300",
+        icon:
+          "border-amber-400/20 bg-amber-400/10 text-amber-300",
+        Icon:
+          Network,
+      };
+
+    case "primeiro":
+      return {
+        label:
+          "Primeiro acesso",
+        detalhe:
+          "Primeiro login registado deste utilizador",
+        badge:
+          "border-cyan-400/20 bg-cyan-400/10 text-cyan-300",
+        icon:
+          "border-cyan-400/20 bg-cyan-400/10 text-cyan-300",
+        Icon:
+          ShieldCheck,
+      };
+
+    default:
+      return {
+        label:
+          "IP conhecido",
+        detalhe:
+          "Endereço já utilizado anteriormente",
+        badge:
+          "border-emerald-400/15 bg-emerald-400/[0.07] text-emerald-300",
+        icon:
+          "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
+        Icon:
+          ShieldCheck,
+      };
+  }
+}
+
 export function SegurancaPainel() {
   const [
     periodo,
@@ -243,6 +312,165 @@ export function SegurancaPainel() {
   const {
     data: perfis = [],
   } = useProfiles();
+
+  const todosLogins =
+    useMemo(() => {
+      const base =
+        atividades
+          .filter(
+            (atividade) =>
+              atividade.entidade ===
+              "seguranca",
+          )
+          .map(
+            (atividade) => ({
+              ...atividade,
+
+              seguranca:
+                interpretarDetalhe(
+                  atividade.detalhe,
+                ),
+            }),
+          );
+
+      /*
+       * Para descobrir se um IP ou país
+       * já tinha sido utilizado antes,
+       * analisamos do login mais antigo
+       * para o mais recente.
+       */
+      const cronologico = [
+        ...base,
+      ].sort(
+        (a, b) =>
+          new Date(
+            a.created_at,
+          ).getTime() -
+          new Date(
+            b.created_at,
+          ).getTime(),
+      );
+
+      const historico =
+        new Map<
+          string,
+          {
+            ips: Set<string>;
+            paises: Set<string>;
+            quantidade: number;
+          }
+        >();
+
+      const estados =
+        new Map<
+          string,
+          EstadoAcesso
+        >();
+
+      for (
+        const login of cronologico
+      ) {
+        const utilizador =
+          login.autor ??
+          login.seguranca
+            .user_id ??
+          login.seguranca
+            .email ??
+          "desconhecido";
+
+        const ip =
+          login.seguranca
+            .ip ??
+          "";
+
+        const pais =
+          login.seguranca
+            .pais ??
+          "";
+
+        const anterior =
+          historico.get(
+            utilizador,
+          ) ?? {
+            ips:
+              new Set<string>(),
+            paises:
+              new Set<string>(),
+            quantidade: 0,
+          };
+
+        let estado:
+          EstadoAcesso;
+
+        if (
+          anterior.quantidade ===
+          0
+        ) {
+          estado =
+            "primeiro";
+        } else if (
+          pais &&
+          anterior.paises.size >
+            0 &&
+          !anterior.paises.has(
+            pais,
+          )
+        ) {
+          estado =
+            "pais_novo";
+        } else if (
+          ip &&
+          !anterior.ips.has(
+            ip,
+          )
+        ) {
+          estado =
+            "ip_novo";
+        } else {
+          estado =
+            "conhecido";
+        }
+
+        estados.set(
+          login.id,
+          estado,
+        );
+
+        if (ip) {
+          anterior.ips.add(
+            ip,
+          );
+        }
+
+        if (pais) {
+          anterior.paises.add(
+            pais,
+          );
+        }
+
+        anterior.quantidade +=
+          1;
+
+        historico.set(
+          utilizador,
+          anterior,
+        );
+      }
+
+      return base.map(
+        (login) => ({
+          ...login,
+
+          estadoAcesso:
+            estados.get(
+              login.id,
+            ) ??
+            "conhecido",
+        }),
+      );
+    }, [
+      atividades,
+    ]);
 
   const logins =
     useMemo(() => {
@@ -270,42 +498,27 @@ export function SegurancaPainel() {
                 1000
               : null;
 
-      return atividades
-        .filter(
-          (atividade) =>
-            atividade.entidade ===
-            "seguranca",
-        )
-        .filter(
-          (atividade) => {
-            if (
-              limite === null
-            ) {
-              return true;
-            }
+      return todosLogins.filter(
+        (login) => {
+          if (
+            limite === null
+          ) {
+            return true;
+          }
 
-            const tempo =
-              new Date(
-                atividade.created_at,
-              ).getTime();
+          const tempo =
+            new Date(
+              login.created_at,
+            ).getTime();
 
-            return (
-              agora - tempo <=
-              limite
-            );
-          },
-        )
-        .map(
-          (atividade) => ({
-            ...atividade,
-            seguranca:
-              interpretarDetalhe(
-                atividade.detalhe,
-              ),
-          }),
-        );
+          return (
+            agora - tempo <=
+            limite
+          );
+        },
+      );
     }, [
-      atividades,
+      todosLogins,
       periodo,
     ]);
 
@@ -336,10 +549,21 @@ export function SegurancaPainel() {
       logins
         .map(
           (item) =>
-            item.autor,
+            item.autor ??
+            item.seguranca
+              .user_id,
         )
         .filter(Boolean),
     ).size;
+
+  const alertas =
+    logins.filter(
+      (item) =>
+        item.estadoAcesso ===
+          "ip_novo" ||
+        item.estadoAcesso ===
+          "pais_novo",
+    ).length;
 
   function nomeUtilizador(
     id: string | null,
@@ -383,8 +607,8 @@ export function SegurancaPainel() {
 
             <p className="mt-1.5 max-w-2xl text-xs leading-6 text-muted-foreground">
               Histórico de acessos autenticados ao CRM,
-              incluindo endereço IP, localização aproximada
-              e dispositivo utilizado.
+              identificação de novos IPs, novas localizações
+              e dispositivos utilizados.
             </p>
           </div>
 
@@ -424,7 +648,7 @@ export function SegurancaPainel() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">
@@ -485,6 +709,38 @@ export function SegurancaPainel() {
           </p>
         </article>
 
+        <article
+          className={`rounded-2xl border p-4 ${
+            alertas > 0
+              ? "border-amber-400/20 bg-amber-400/[0.035]"
+              : "border-border/65 bg-card/30"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] text-muted-foreground">
+              Novos acessos
+            </p>
+
+            <span
+              className={`grid size-8 place-items-center rounded-lg border ${
+                alertas > 0
+                  ? "border-amber-400/20 bg-amber-400/10 text-amber-300"
+                  : "border-border/60 bg-background/30 text-muted-foreground"
+              }`}
+            >
+              <ShieldAlert className="size-3.5" />
+            </span>
+          </div>
+
+          <p className="mt-4 text-2xl font-semibold tracking-[-.04em]">
+            {alertas}
+          </p>
+
+          <p className="mt-1 text-[9px] text-muted-foreground">
+            IP ou país nunca vistos
+          </p>
+        </article>
+
         <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">
@@ -538,7 +794,7 @@ export function SegurancaPainel() {
 
             <p className="mt-1 max-w-sm text-[10px] leading-5 text-muted-foreground">
               Faz logout e volta a iniciar sessão para
-              gerar o primeiro registo de segurança.
+              gerar um registo de segurança.
             </p>
           </div>
         ) : (
@@ -547,6 +803,14 @@ export function SegurancaPainel() {
               (item) => {
                 const info =
                   item.seguranca;
+
+                const estado =
+                  estiloEstado(
+                    item.estadoAcesso,
+                  );
+
+                const EstadoIcon =
+                  estado.Icon;
 
                 const {
                   nome:
@@ -568,12 +832,22 @@ export function SegurancaPainel() {
                     key={
                       item.id
                     }
-                    className="group p-4 transition hover:bg-background/20 sm:p-5"
+                    className={`group p-4 transition sm:p-5 ${
+                      item.estadoAcesso ===
+                      "pais_novo"
+                        ? "bg-red-400/[0.018] hover:bg-red-400/[0.03]"
+                        : item.estadoAcesso ===
+                            "ip_novo"
+                          ? "bg-amber-400/[0.012] hover:bg-amber-400/[0.025]"
+                          : "hover:bg-background/20"
+                    }`}
                   >
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                       <div className="flex min-w-0 items-start gap-3">
-                        <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-emerald-400/15 bg-emerald-400/10 text-emerald-300">
-                          <ShieldCheck className="size-4" />
+                        <span
+                          className={`grid size-10 shrink-0 place-items-center rounded-xl border ${estado.icon}`}
+                        >
+                          <EstadoIcon className="size-4" />
                         </span>
 
                         <div className="min-w-0">
@@ -588,11 +862,21 @@ export function SegurancaPainel() {
                             <span className="rounded-full border border-emerald-400/15 bg-emerald-400/[0.07] px-2 py-0.5 text-[8px] font-semibold text-emerald-300">
                               Login autorizado
                             </span>
+
+                            <span
+                              className={`rounded-full border px-2 py-0.5 text-[8px] font-semibold ${estado.badge}`}
+                            >
+                              {estado.label}
+                            </span>
                           </div>
 
                           <p className="mt-1 truncate text-[10px] text-muted-foreground">
                             {info.email ??
                               "Email indisponível"}
+                          </p>
+
+                          <p className="mt-1 text-[9px] text-muted-foreground/70">
+                            {estado.detalhe}
                           </p>
                         </div>
                       </div>
@@ -678,11 +962,10 @@ export function SegurancaPainel() {
         <AlertTriangle className="mt-0.5 size-3 shrink-0 text-amber-300" />
 
         <span>
-          Por agora são registados apenas logins
-          autenticados com sucesso. A deteção de tentativas
-          falhadas e bloqueio automático de IPs pode ser
-          adicionada depois com uma camada de segurança
-          própria.
+          Um IP ou país novo não significa automaticamente
+          que exista uma ameaça. Pode acontecer por mudança
+          de rede, dados móveis, VPN ou localização aproximada
+          do fornecedor de Internet.
         </span>
       </div>
     </section>
