@@ -27,28 +27,24 @@ export const Route =
         {
           name:
             "description",
-
           content:
             "Acesso reservado à equipa comercial da Nova Web Studio.",
         },
         {
           property:
             "og:title",
-
           content:
             "Entrar — Nova Web CRM",
         },
         {
           property:
             "og:description",
-
           content:
             "Acesso reservado à equipa comercial da Nova Web Studio.",
         },
         {
           name:
             "robots",
-
           content:
             "noindex",
         },
@@ -111,9 +107,36 @@ function AuthPage() {
 
   async function registarLogin(
     emailUtilizador: string,
-    userId: string,
   ) {
     try {
+      /*
+       * Força o Supabase a validar e utilizar
+       * a sessão acabada de criar.
+       */
+      const {
+        data:
+          dadosUtilizador,
+        error:
+          erroUtilizador,
+      } =
+        await supabase.auth
+          .getUser();
+
+      if (
+        erroUtilizador
+      ) {
+        throw erroUtilizador;
+      }
+
+      const user =
+        dadosUtilizador.user;
+
+      if (!user) {
+        throw new Error(
+          "Sessão iniciada mas utilizador não encontrado.",
+        );
+      }
+
       const contexto =
         await obterContextoSeguranca();
 
@@ -132,7 +155,7 @@ function AuthPage() {
             emailUtilizador,
 
           user_id:
-            userId,
+            user.id,
 
           sucesso:
             true,
@@ -142,7 +165,8 @@ function AuthPage() {
         });
 
       const {
-        error,
+        error:
+          erroInsert,
       } =
         await supabase
           .from(
@@ -153,7 +177,7 @@ function AuthPage() {
               "seguranca",
 
             entidade_id:
-              userId,
+              user.id,
 
             accao:
               "iniciou sessão",
@@ -161,23 +185,52 @@ function AuthPage() {
             detalhe,
 
             autor:
-              userId,
+              user.id,
 
             business_id:
               null,
           });
 
-      if (error) {
-        console.error(
-          "[Segurança] Erro Supabase:",
-          error,
-        );
+      if (
+        erroInsert
+      ) {
+        throw erroInsert;
       }
+
+      console.log(
+        "[Segurança] Login registado com sucesso.",
+      );
+
+      return true;
     } catch (error) {
       console.error(
-        "[Segurança] Não foi possível registar o login:",
+        "[Segurança] Erro:",
         error,
       );
+
+      const mensagem =
+        error instanceof Error
+          ? error.message
+          : typeof error ===
+                "object" &&
+              error !== null &&
+              "message" in
+                error
+            ? String(
+                (
+                  error as {
+                    message:
+                      unknown;
+                  }
+                ).message,
+              )
+            : "Erro desconhecido.";
+
+      toast.error(
+        `Segurança: ${mensagem}`,
+      );
+
+      return false;
     }
   }
 
@@ -186,7 +239,9 @@ function AuthPage() {
   ) {
     event.preventDefault();
 
-    if (aCarregar) {
+    if (
+      aCarregar
+    ) {
       return;
     }
 
@@ -217,13 +272,31 @@ function AuthPage() {
       }
 
       if (
-        data.user?.id
+        !data.session
       ) {
-        await registarLogin(
-          emailNormalizado,
-          data.user.id,
+        throw new Error(
+          "O login não devolveu uma sessão válida.",
         );
       }
+
+      /*
+       * Espera explicitamente que o cliente
+       * confirme a sessão antes do INSERT.
+       */
+      await supabase.auth
+        .setSession({
+          access_token:
+            data.session
+              .access_token,
+
+          refresh_token:
+            data.session
+              .refresh_token,
+        });
+
+      await registarLogin(
+        emailNormalizado,
+      );
 
       toast.success(
         "Sessão iniciada.",
