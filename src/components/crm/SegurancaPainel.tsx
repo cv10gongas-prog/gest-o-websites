@@ -13,7 +13,9 @@ import {
   Smartphone,
   UserRound,
   Wifi,
+  XCircle,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import {
   useMemo,
   useState,
@@ -23,6 +25,7 @@ import {
   useActivity,
   useProfiles,
 } from "@/lib/queries";
+import { supabase } from "@/integrations/supabase/client";
 
 type PeriodoSeguranca =
   | "24h"
@@ -47,15 +50,42 @@ type EstadoAcesso =
   | "ip_novo"
   | "pais_novo";
 
-type EventoSeguranca = {
+type EventoLogin = {
   id: string;
   created_at: string;
   autor: string | null;
-  accao: string;
   seguranca: DetalheSeguranca;
-  tipo: "login" | "logout";
-  estadoAcesso?: EstadoAcesso;
+  tipo: "login";
+  estadoAcesso: EstadoAcesso;
 };
+
+type EventoLogout = {
+  id: string;
+  created_at: string;
+  autor: string | null;
+  seguranca: DetalheSeguranca;
+  tipo: "logout";
+};
+
+type EventoFalha = {
+  id: string;
+  created_at: string;
+  autor: null;
+  seguranca: {
+    ip: string | null;
+    pais: string | null;
+    cidade: string | null;
+    email: string | null;
+    user_agent: string | null;
+  };
+  tipo: "falha";
+  motivo: string | null;
+};
+
+type EventoSeguranca =
+  | EventoLogin
+  | EventoLogout
+  | EventoFalha;
 
 function interpretarDetalhe(
   value: string | null,
@@ -245,71 +275,10 @@ function formatarDataHora(
   );
 }
 
-function estiloEstado(
-  estado: EstadoAcesso,
-) {
-  switch (estado) {
-    case "pais_novo":
-      return {
-        label:
-          "País novo",
-        detalhe:
-          "Origem diferente do histórico deste utilizador",
-        badge:
-          "border-red-400/20 bg-red-400/10 text-red-300",
-        icon:
-          "border-red-400/20 bg-red-400/10 text-red-300",
-        Icon:
-          ShieldAlert,
-      };
-
-    case "ip_novo":
-      return {
-        label:
-          "Novo IP",
-        detalhe:
-          "Primeiro acesso através deste endereço IP",
-        badge:
-          "border-amber-400/20 bg-amber-400/10 text-amber-300",
-        icon:
-          "border-amber-400/20 bg-amber-400/10 text-amber-300",
-        Icon:
-          Network,
-      };
-
-    case "primeiro":
-      return {
-        label:
-          "Primeiro acesso",
-        detalhe:
-          "Primeiro login registado deste utilizador",
-        badge:
-          "border-cyan-400/20 bg-cyan-400/10 text-cyan-300",
-        icon:
-          "border-cyan-400/20 bg-cyan-400/10 text-cyan-300",
-        Icon:
-          ShieldCheck,
-      };
-
-    default:
-      return {
-        label:
-          "IP conhecido",
-        detalhe:
-          "Endereço já utilizado anteriormente",
-        badge:
-          "border-emerald-400/15 bg-emerald-400/[0.07] text-emerald-300",
-        icon:
-          "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
-        Icon:
-          ShieldCheck,
-      };
-  }
-}
-
 function dentroPeriodo(
   data: string,
-  periodo: PeriodoSeguranca,
+  periodo:
+    PeriodoSeguranca,
 ) {
   if (
     periodo ===
@@ -318,34 +287,102 @@ function dentroPeriodo(
     return true;
   }
 
-  const agora =
-    Date.now();
-
-  const limite =
+  const horas =
     periodo === "24h"
-      ? 24 *
-        60 *
-        60 *
-        1000
+      ? 24
       : periodo === "7d"
-        ? 7 *
-          24 *
-          60 *
-          60 *
-          1000
-        : 30 *
-          24 *
-          60 *
-          60 *
-          1000;
+        ? 24 * 7
+        : 24 * 30;
 
   return (
-    agora -
+    Date.now() -
       new Date(
         data,
       ).getTime() <=
-    limite
+    horas *
+      60 *
+      60 *
+      1000
   );
+}
+
+function estiloEstado(
+  estado:
+    EstadoAcesso,
+) {
+  switch (estado) {
+    case "pais_novo":
+      return {
+        label:
+          "País novo",
+
+        detalhe:
+          "Origem diferente do histórico deste utilizador",
+
+        badge:
+          "border-red-400/20 bg-red-400/10 text-red-300",
+
+        icon:
+          "border-red-400/20 bg-red-400/10 text-red-300",
+
+        Icon:
+          ShieldAlert,
+      };
+
+    case "ip_novo":
+      return {
+        label:
+          "Novo IP",
+
+        detalhe:
+          "Primeiro acesso através deste endereço IP",
+
+        badge:
+          "border-amber-400/20 bg-amber-400/10 text-amber-300",
+
+        icon:
+          "border-amber-400/20 bg-amber-400/10 text-amber-300",
+
+        Icon:
+          Network,
+      };
+
+    case "primeiro":
+      return {
+        label:
+          "Primeiro acesso",
+
+        detalhe:
+          "Primeiro login registado deste utilizador",
+
+        badge:
+          "border-cyan-400/20 bg-cyan-400/10 text-cyan-300",
+
+        icon:
+          "border-cyan-400/20 bg-cyan-400/10 text-cyan-300",
+
+        Icon:
+          ShieldCheck,
+      };
+
+    default:
+      return {
+        label:
+          "IP conhecido",
+
+        detalhe:
+          "Endereço já utilizado anteriormente",
+
+        badge:
+          "border-emerald-400/15 bg-emerald-400/[0.07] text-emerald-300",
+
+        icon:
+          "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
+
+        Icon:
+          ShieldCheck,
+      };
+  }
 }
 
 export function SegurancaPainel() {
@@ -358,38 +395,97 @@ export function SegurancaPainel() {
     );
 
   const {
-    data: atividades = [],
-    isLoading,
-  } = useActivity();
+    data:
+      atividades = [],
+
+    isLoading:
+      atividadeLoading,
+  } =
+    useActivity();
 
   const {
-    data: perfis = [],
-  } = useProfiles();
+    data:
+      perfis = [],
+  } =
+    useProfiles();
+
+  const {
+    data:
+      falhasTodas = [],
+
+    isLoading:
+      falhasLoading,
+
+    isError:
+      falhasErro,
+  } =
+    useQuery({
+      queryKey: [
+        "security-login-attempts",
+      ],
+
+      queryFn:
+        async () => {
+          const {
+            data,
+            error,
+          } =
+            await supabase
+              .from(
+                "security_login_attempts",
+              )
+              .select(
+                "id,email,ip,pais,cidade,user_agent,motivo,created_at",
+              )
+              .order(
+                "created_at",
+                {
+                  ascending:
+                    false,
+                },
+              )
+              .limit(
+                200,
+              );
+
+          if (error) {
+            throw error;
+          }
+
+          return (
+            data ??
+            []
+          );
+        },
+
+      refetchInterval:
+        15000,
+    });
 
   const eventosBase =
     useMemo(() => {
       return atividades
         .filter(
-          (atividade) =>
+          (
+            atividade,
+          ) =>
             atividade.entidade ===
             "seguranca",
         )
         .map(
-          (atividade) => {
+          (
+            atividade,
+          ) => {
             const seguranca =
               interpretarDetalhe(
                 atividade.detalhe,
               );
 
-            const tipo:
-              | "login"
-              | "logout" =
+            const logout =
               atividade.accao ===
                 "terminou sessão" ||
               seguranca.tipo ===
-                "logout"
-                ? "logout"
-                : "login";
+                "logout";
 
             return {
               id:
@@ -401,74 +497,88 @@ export function SegurancaPainel() {
               autor:
                 atividade.autor,
 
-              accao:
-                atividade.accao,
-
               seguranca,
 
-              tipo,
-            } satisfies EventoSeguranca;
+              tipo:
+                logout
+                  ? "logout"
+                  : "login",
+            };
           },
         );
     }, [
       atividades,
     ]);
 
-  const loginsComEstado =
+  const loginsProcessados =
     useMemo(() => {
-      const apenasLogins =
+      const logins =
         eventosBase.filter(
-          (evento) =>
+          (
+            evento,
+          ) =>
             evento.tipo ===
             "login",
         );
 
-      const cronologico = [
-        ...apenasLogins,
-      ].sort(
-        (a, b) =>
-          new Date(
-            a.created_at,
-          ).getTime() -
-          new Date(
-            b.created_at,
-          ).getTime(),
-      );
+      const cronologico =
+        [
+          ...logins,
+        ].sort(
+          (
+            a,
+            b,
+          ) =>
+            new Date(
+              a.created_at,
+            ).getTime() -
+            new Date(
+              b.created_at,
+            ).getTime(),
+        );
 
       const historico =
         new Map<
           string,
           {
-            ips: Set<string>;
-            paises: Set<string>;
-            quantidade: number;
+            ips:
+              Set<string>;
+
+            paises:
+              Set<string>;
+
+            quantidade:
+              number;
           }
         >();
 
-      const estados =
-        new Map<
-          string,
-          EstadoAcesso
-        >();
+      const resultado:
+        EventoLogin[] =
+        [];
 
       for (
-        const login of cronologico
+        const login
+        of cronologico
       ) {
         const utilizador =
           login.autor ??
-          login.seguranca
+          login
+            .seguranca
             .user_id ??
-          login.seguranca
+          login
+            .seguranca
             .email ??
           "desconhecido";
 
         const ip =
-          login.seguranca
+          login
+            .seguranca
             .ip ??
           "";
 
         const pais =
-          login.seguranca
+          login
+            .seguranca
             .pais ??
           "";
 
@@ -477,38 +587,46 @@ export function SegurancaPainel() {
             utilizador,
           ) ?? {
             ips:
-              new Set<string>(),
+              new Set(),
 
             paises:
-              new Set<string>(),
+              new Set(),
 
-            quantidade: 0,
+            quantidade:
+              0,
           };
 
         let estado:
           EstadoAcesso;
 
         if (
-          anterior.quantidade ===
+          anterior
+            .quantidade ===
           0
         ) {
           estado =
             "primeiro";
         } else if (
           pais &&
-          anterior.paises.size >
+          anterior
+            .paises
+            .size >
             0 &&
-          !anterior.paises.has(
-            pais,
-          )
+          !anterior
+            .paises
+            .has(
+              pais,
+            )
         ) {
           estado =
             "pais_novo";
         } else if (
           ip &&
-          !anterior.ips.has(
-            ip,
-          )
+          !anterior
+            .ips
+            .has(
+              ip,
+            )
         ) {
           estado =
             "ip_novo";
@@ -517,169 +635,319 @@ export function SegurancaPainel() {
             "conhecido";
         }
 
-        estados.set(
-          login.id,
-          estado,
-        );
-
         if (ip) {
-          anterior.ips.add(
-            ip,
-          );
+          anterior
+            .ips
+            .add(
+              ip,
+            );
         }
 
         if (pais) {
-          anterior.paises.add(
-            pais,
-          );
+          anterior
+            .paises
+            .add(
+              pais,
+            );
         }
 
-        anterior.quantidade +=
+        anterior
+          .quantidade +=
           1;
 
         historico.set(
           utilizador,
           anterior,
         );
-      }
 
-      return apenasLogins.map(
-        (login) => ({
-          ...login,
+        resultado.push({
+          id:
+            login.id,
+
+          created_at:
+            login.created_at,
+
+          autor:
+            login.autor,
+
+          seguranca:
+            login.seguranca,
+
+          tipo:
+            "login",
 
           estadoAcesso:
-            estados.get(
-              login.id,
-            ) ??
-            "conhecido",
-        }),
-      );
+            estado,
+        });
+      }
+
+      return resultado;
     }, [
       eventosBase,
     ]);
-
-  const eventos =
-    useMemo(() => {
-      const mapaLogins =
-        new Map(
-          loginsComEstado.map(
-            (login) => [
-              login.id,
-              login,
-            ],
-          ),
-        );
-
-      return eventosBase
-        .map(
-          (evento) => {
-            if (
-              evento.tipo ===
-              "login"
-            ) {
-              return (
-                mapaLogins.get(
-                  evento.id,
-                ) ??
-                evento
-              );
-            }
-
-            return evento;
-          },
-        )
-        .filter(
-          (evento) =>
-            dentroPeriodo(
-              evento.created_at,
-              periodo,
-            ),
-        )
-        .sort(
-          (a, b) =>
-            new Date(
-              b.created_at,
-            ).getTime() -
-            new Date(
-              a.created_at,
-            ).getTime(),
-        );
-    }, [
-      eventosBase,
-      loginsComEstado,
-      periodo,
-    ]);
-
-  const logins =
-    eventos.filter(
-      (evento) =>
-        evento.tipo ===
-        "login",
-    );
 
   const logouts =
+    useMemo(
+      () =>
+        eventosBase
+          .filter(
+            (
+              evento,
+            ) =>
+              evento.tipo ===
+              "logout",
+          )
+          .map(
+            (
+              evento,
+            ): EventoLogout => ({
+              id:
+                evento.id,
+
+              created_at:
+                evento.created_at,
+
+              autor:
+                evento.autor,
+
+              seguranca:
+                evento.seguranca,
+
+              tipo:
+                "logout",
+            }),
+          ),
+
+      [
+        eventosBase,
+      ],
+    );
+
+  const falhas:
+    EventoFalha[] =
+    useMemo(
+      () =>
+        falhasTodas.map(
+          (
+            falha,
+          ) => ({
+            id:
+              falha.id,
+
+            created_at:
+              falha.created_at,
+
+            autor:
+              null,
+
+            seguranca: {
+              ip:
+                falha.ip,
+
+              pais:
+                falha.pais,
+
+              cidade:
+                falha.cidade,
+
+              email:
+                falha.email,
+
+              user_agent:
+                falha.user_agent,
+            },
+
+            tipo:
+              "falha",
+
+            motivo:
+              falha.motivo,
+          }),
+        ),
+
+      [
+        falhasTodas,
+      ],
+    );
+
+  const eventos =
+    useMemo(
+      () =>
+        [
+          ...loginsProcessados,
+          ...logouts,
+          ...falhas,
+        ]
+          .filter(
+            (
+              evento,
+            ) =>
+              dentroPeriodo(
+                evento.created_at,
+                periodo,
+              ),
+          )
+          .sort(
+            (
+              a,
+              b,
+            ) =>
+              new Date(
+                b.created_at,
+              ).getTime() -
+              new Date(
+                a.created_at,
+              ).getTime(),
+          ),
+
+      [
+        loginsProcessados,
+        logouts,
+        falhas,
+        periodo,
+      ],
+    );
+
+  const loginsPeriodo =
     eventos.filter(
-      (evento) =>
+      (
+        evento,
+      ) =>
+        evento.tipo ===
+        "login",
+    ) as EventoLogin[];
+
+  const logoutsPeriodo =
+    eventos.filter(
+      (
+        evento,
+      ) =>
         evento.tipo ===
         "logout",
-    );
+    ) as EventoLogout[];
+
+  const falhasPeriodo =
+    eventos.filter(
+      (
+        evento,
+      ) =>
+        evento.tipo ===
+        "falha",
+    ) as EventoFalha[];
 
   const ipsUnicos =
     new Set(
-      logins
+      loginsPeriodo
         .map(
-          (item) =>
-            item.seguranca
+          (
+            item,
+          ) =>
+            item
+              .seguranca
               .ip,
         )
-        .filter(Boolean),
+        .filter(
+          Boolean,
+        ),
     ).size;
 
   const paisesUnicos =
     new Set(
-      logins
+      loginsPeriodo
         .map(
-          (item) =>
-            item.seguranca
+          (
+            item,
+          ) =>
+            item
+              .seguranca
               .pais,
         )
-        .filter(Boolean),
+        .filter(
+          Boolean,
+        ),
     ).size;
 
   const utilizadoresUnicos =
     new Set(
-      logins
+      loginsPeriodo
         .map(
-          (item) =>
+          (
+            item,
+          ) =>
             item.autor ??
-            item.seguranca
+            item
+              .seguranca
               .user_id,
         )
-        .filter(Boolean),
+        .filter(
+          Boolean,
+        ),
     ).size;
 
-  const alertas =
-    logins.filter(
-      (item) =>
-        "estadoAcesso" in
-          item &&
-        (
-          item.estadoAcesso ===
-            "ip_novo" ||
-          item.estadoAcesso ===
-            "pais_novo"
-        ),
+  const novosAcessos =
+    loginsPeriodo.filter(
+      (
+        item,
+      ) =>
+        item.estadoAcesso ===
+          "ip_novo" ||
+        item.estadoAcesso ===
+          "pais_novo",
     ).length;
 
+  const falhasPorIp =
+    useMemo(() => {
+      const mapa =
+        new Map<
+          string,
+          number
+        >();
+
+      for (
+        const falha
+        of falhasPeriodo
+      ) {
+        const ip =
+          falha
+            .seguranca
+            .ip;
+
+        if (!ip) {
+          continue;
+        }
+
+        mapa.set(
+          ip,
+          (
+            mapa.get(
+              ip,
+            ) ??
+            0
+          ) +
+            1,
+        );
+      }
+
+      return mapa;
+    }, [
+      falhasPeriodo,
+    ]);
+
   function nomeUtilizador(
-    id: string | null,
-    email?: string | null,
+    id:
+      string | null,
+
+    email?:
+      string | null,
   ) {
     if (id) {
       const perfil =
         perfis.find(
-          (item) =>
-            item.id === id,
+          (
+            item,
+          ) =>
+            item.id ===
+            id,
         );
 
       if (
@@ -694,6 +962,10 @@ export function SegurancaPainel() {
       "Utilizador"
     );
   }
+
+  const loading =
+    atividadeLoading ||
+    falhasLoading;
 
   return (
     <section>
@@ -713,9 +985,8 @@ export function SegurancaPainel() {
             </h1>
 
             <p className="mt-1.5 max-w-2xl text-xs leading-6 text-muted-foreground">
-              Histórico de entradas e saídas do CRM,
-              identificação de novos IPs, localizações
-              e dispositivos utilizados.
+              Histórico de logins, logouts e tentativas
+              falhadas de acesso ao CRM.
             </p>
           </div>
 
@@ -728,7 +999,9 @@ export function SegurancaPainel() {
                 "tudo",
               ] as PeriodoSeguranca[]
             ).map(
-              (item) => (
+              (
+                item,
+              ) => (
                 <button
                   key={
                     item
@@ -757,7 +1030,7 @@ export function SegurancaPainel() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-7">
         <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">
@@ -770,11 +1043,11 @@ export function SegurancaPainel() {
           </div>
 
           <p className="mt-4 text-2xl font-semibold tracking-[-.04em]">
-            {logins.length}
+            {loginsPeriodo.length}
           </p>
 
           <p className="mt-1 text-[9px] text-muted-foreground">
-            entradas autorizadas
+            acessos autorizados
           </p>
         </article>
 
@@ -790,7 +1063,7 @@ export function SegurancaPainel() {
           </div>
 
           <p className="mt-4 text-2xl font-semibold tracking-[-.04em]">
-            {logouts.length}
+            {logoutsPeriodo.length}
           </p>
 
           <p className="mt-1 text-[9px] text-muted-foreground">
@@ -798,10 +1071,37 @@ export function SegurancaPainel() {
           </p>
         </article>
 
+        <article
+          className={`rounded-2xl border p-4 ${
+            falhasPeriodo.length >
+            0
+              ? "border-red-400/20 bg-red-400/[0.035]"
+              : "border-border/65 bg-card/30"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] text-muted-foreground">
+              Falhas
+            </p>
+
+            <span className="grid size-8 place-items-center rounded-lg border border-red-400/20 bg-red-400/10 text-red-300">
+              <XCircle className="size-3.5" />
+            </span>
+          </div>
+
+          <p className="mt-4 text-2xl font-semibold tracking-[-.04em]">
+            {falhasPeriodo.length}
+          </p>
+
+          <p className="mt-1 text-[9px] text-muted-foreground">
+            tentativas rejeitadas
+          </p>
+        </article>
+
         <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">
-              IPs diferentes
+              IPs
             </p>
 
             <span className="grid size-8 place-items-center rounded-lg border border-cyan-400/15 bg-cyan-400/10 text-cyan-300">
@@ -838,35 +1138,23 @@ export function SegurancaPainel() {
           </p>
         </article>
 
-        <article
-          className={`rounded-2xl border p-4 ${
-            alertas > 0
-              ? "border-amber-400/20 bg-amber-400/[0.035]"
-              : "border-border/65 bg-card/30"
-          }`}
-        >
+        <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">
               Novos acessos
             </p>
 
-            <span
-              className={`grid size-8 place-items-center rounded-lg border ${
-                alertas > 0
-                  ? "border-amber-400/20 bg-amber-400/10 text-amber-300"
-                  : "border-border/60 bg-background/30 text-muted-foreground"
-              }`}
-            >
+            <span className="grid size-8 place-items-center rounded-lg border border-amber-400/15 bg-amber-400/10 text-amber-300">
               <ShieldAlert className="size-3.5" />
             </span>
           </div>
 
           <p className="mt-4 text-2xl font-semibold tracking-[-.04em]">
-            {alertas}
+            {novosAcessos}
           </p>
 
           <p className="mt-1 text-[9px] text-muted-foreground">
-            IP ou país nunca vistos
+            IP ou país novo
           </p>
         </article>
 
@@ -891,22 +1179,35 @@ export function SegurancaPainel() {
         </article>
       </div>
 
+      {falhasErro && (
+        <div className="mt-4 flex items-start gap-2 rounded-xl border border-red-400/20 bg-red-400/[0.04] px-3 py-2.5 text-[10px] leading-5 text-red-200">
+          <XCircle className="mt-0.5 size-3.5 shrink-0" />
+
+          <span>
+            Não foi possível carregar as tentativas
+            falhadas. Confirma que a migration do Lovable
+            ficou aplicada e que a policy SELECT permite
+            acesso à equipa autenticada.
+          </span>
+        </div>
+      )}
+
       <div className="mt-4 overflow-hidden rounded-3xl border border-border/65 bg-card/25">
         <div className="flex items-center justify-between border-b border-border/50 px-5 py-4">
           <div>
             <h2 className="text-sm font-semibold">
-              Histórico de sessões
+              Histórico de segurança
             </h2>
 
             <p className="mt-0.5 text-[9px] text-muted-foreground">
-              Entradas e saídas do CRM
+              Logins, logouts e tentativas rejeitadas
             </p>
           </div>
 
           <ShieldCheck className="size-4 text-emerald-300" />
         </div>
 
-        {isLoading ? (
+        {loading ? (
           <div className="flex min-h-[280px] items-center justify-center text-xs text-muted-foreground">
             A carregar registos de segurança…
           </div>
@@ -918,19 +1219,22 @@ export function SegurancaPainel() {
             </span>
 
             <p className="mt-4 text-sm font-medium">
-              Ainda não há eventos registados
+              Sem eventos neste período
             </p>
           </div>
         ) : (
           <div className="divide-y divide-border/45">
             {eventos.map(
-              (item) => {
+              (
+                item,
+              ) => {
                 const info =
                   item.seguranca;
 
                 const {
                   nome:
                     dispositivo,
+
                   Icon:
                     DispositivoIcon,
                 } =
@@ -943,17 +1247,140 @@ export function SegurancaPainel() {
                     info.user_agent,
                   );
 
-                const logout =
+                if (
                   item.tipo ===
-                  "logout";
+                  "falha"
+                ) {
+                  const repeticoes =
+                    info.ip
+                      ? falhasPorIp.get(
+                          info.ip,
+                        ) ??
+                        0
+                      : 0;
 
-                if (logout) {
                   return (
                     <article
                       key={
                         item.id
                       }
-                      className="group p-4 transition hover:bg-background/20 sm:p-5"
+                      className="bg-red-400/[0.018] p-4 transition hover:bg-red-400/[0.035] sm:p-5"
+                    >
+                      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                        <div className="flex min-w-0 items-start gap-3">
+                          <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-red-400/20 bg-red-400/10 text-red-300">
+                            <XCircle className="size-4" />
+                          </span>
+
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-xs font-semibold">
+                                {info.email ??
+                                  "Email desconhecido"}
+                              </p>
+
+                              <span className="rounded-full border border-red-400/20 bg-red-400/10 px-2 py-0.5 text-[8px] font-semibold text-red-300">
+                                Login falhado
+                              </span>
+
+                              {repeticoes >=
+                                3 && (
+                                <span className="rounded-full border border-amber-400/20 bg-amber-400/10 px-2 py-0.5 text-[8px] font-semibold text-amber-300">
+                                  {repeticoes} tentativas deste IP
+                                </span>
+                              )}
+                            </div>
+
+                            <p className="mt-1 text-[9px] text-muted-foreground/70">
+                              {item.motivo ??
+                                "Credenciais rejeitadas"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+                          <div className="min-w-[120px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <Wifi className="size-3" />
+                              IP
+                            </div>
+
+                            <p className="mt-1.5 font-mono text-[10px]">
+                              {info.ip ??
+                                "Desconhecido"}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[125px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <Globe2 className="size-3" />
+                              País
+                            </div>
+
+                            <p className="mt-1.5 text-[10px]">
+                              {bandeiraPais(
+                                info.pais,
+                              )}{" "}
+                              {info.pais ??
+                                "Desconhecido"}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[125px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <MapPin className="size-3" />
+                              Cidade
+                            </div>
+
+                            <p className="mt-1.5 truncate text-[10px]">
+                              {info.cidade ??
+                                "Desconhecida"}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[145px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <DispositivoIcon className="size-3" />
+                              Dispositivo
+                            </div>
+
+                            <p className="mt-1.5 text-[10px]">
+                              {dispositivo}
+                            </p>
+
+                            <p className="mt-0.5 text-[8px] text-muted-foreground">
+                              {browser}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[135px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <Clock3 className="size-3" />
+                              Data
+                            </div>
+
+                            <p className="mt-1.5 text-[10px]">
+                              {formatarDataHora(
+                                item.created_at,
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                }
+
+                if (
+                  item.tipo ===
+                  "logout"
+                ) {
+                  return (
+                    <article
+                      key={
+                        item.id
+                      }
+                      className="p-4 transition hover:bg-background/20 sm:p-5"
                     >
                       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div className="flex min-w-0 items-start gap-3">
@@ -1061,14 +1488,7 @@ export function SegurancaPainel() {
 
                 const estado =
                   estiloEstado(
-                    (
-                      item as EventoSeguranca & {
-                        estadoAcesso:
-                          EstadoAcesso;
-                      }
-                    )
-                      .estadoAcesso ??
-                      "conhecido",
+                    item.estadoAcesso,
                   );
 
                 const EstadoIcon =
@@ -1079,7 +1499,15 @@ export function SegurancaPainel() {
                     key={
                       item.id
                     }
-                    className="group p-4 transition hover:bg-background/20 sm:p-5"
+                    className={`p-4 transition sm:p-5 ${
+                      item.estadoAcesso ===
+                      "pais_novo"
+                        ? "bg-red-400/[0.018] hover:bg-red-400/[0.03]"
+                        : item.estadoAcesso ===
+                            "ip_novo"
+                          ? "bg-amber-400/[0.012] hover:bg-amber-400/[0.025]"
+                          : "hover:bg-background/20"
+                    }`}
                   >
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                       <div className="flex min-w-0 items-start gap-3">
@@ -1201,10 +1629,10 @@ export function SegurancaPainel() {
         <AlertTriangle className="mt-0.5 size-3 shrink-0 text-amber-300" />
 
         <span>
-          Um IP ou país novo não significa automaticamente
-          que exista uma ameaça. Pode acontecer por mudança
-          de rede, dados móveis, VPN ou localização aproximada
-          do fornecedor de Internet.
+          Um IP, país novo ou login falhado não significa
+          automaticamente uma ameaça. Mudanças de rede,
+          VPNs, dados móveis e erros de password também
+          podem gerar estes eventos.
         </span>
       </div>
     </section>
