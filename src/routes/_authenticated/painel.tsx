@@ -15,6 +15,7 @@ import {
   Phone,
   PhoneCall,
   Plus,
+  ShieldCheck,
   Sparkles,
   TrendingUp,
   UserRound,
@@ -31,6 +32,7 @@ import {
 } from "@/components/crm/Bits";
 import { DialogNegocio } from "@/components/crm/DialogNegocio";
 import { btnPrimario } from "@/components/crm/Modal";
+import { SegurancaPainel } from "@/components/crm/SegurancaPainel";
 import { useUtilizador } from "@/hooks/useAuth";
 import {
   dataExtenso,
@@ -65,7 +67,7 @@ export const Route = createFileRoute("/_authenticated/painel")({
       {
         name: "description",
         content:
-          "Métricas, projetos, atividade da equipa e Analytics do website.",
+          "Métricas, projetos, atividade da equipa, Analytics e segurança.",
       },
       {
         name: "robots",
@@ -80,7 +82,8 @@ export const Route = createFileRoute("/_authenticated/painel")({
 type PainelTab =
   | "resumo"
   | "atividade"
-  | "analytics";
+  | "analytics"
+  | "seguranca";
 
 type PeriodoAtividade =
   | "24h"
@@ -215,6 +218,9 @@ function iconeAtividade(entidade: string) {
     case "chamada":
       return PhoneCall;
 
+    case "seguranca":
+      return ShieldCheck;
+
     default:
       return Activity;
   }
@@ -237,6 +243,13 @@ function estiloAtividade(entidade: string) {
       };
 
     case "chamada":
+      return {
+        icon:
+          "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
+        dot: "bg-emerald-300",
+      };
+
+    case "seguranca":
       return {
         icon:
           "border-emerald-400/15 bg-emerald-400/10 text-emerald-300",
@@ -580,6 +593,21 @@ function Painel() {
         >
           <BarChart3 className="size-3.5" />
           Analytics
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            setTab("seguranca")
+          }
+          className={`flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-medium transition ${
+            tab === "seguranca"
+              ? "bg-emerald-400/10 text-emerald-300 shadow-sm"
+              : "text-muted-foreground hover:bg-accent/40 hover:text-foreground"
+          }`}
+        >
+          <ShieldCheck className="size-3.5" />
+          Segurança
         </button>
       </div>
 
@@ -1324,7 +1352,7 @@ function Painel() {
                                       </p>
 
                                       {atividade.detalhe && (
-                                        <p className="mt-1 text-[10px] leading-5 text-muted-foreground">
+                                        <p className="mt-1 break-all text-[10px] leading-5 text-muted-foreground">
                                           {atividade.detalhe}
                                         </p>
                                       )}
@@ -1382,6 +1410,11 @@ function Painel() {
       {/* ANALYTICS */}
       {tab === "analytics" && (
         <AnalyticsPainel />
+      )}
+
+      {/* SEGURANÇA */}
+      {tab === "seguranca" && (
+        <SegurancaPainel />
       )}
 
       <DialogNegocio
