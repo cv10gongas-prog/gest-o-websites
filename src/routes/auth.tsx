@@ -10,10 +10,10 @@ import { toast } from "sonner";
 
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  obterContextoSeguranca,
-  registarTentativaFalhada,
-} from "@/lib/security.functions";
+import { obterContextoSeguranca } from "@/lib/security.functions";
+
+const MARCADOR_FALHA_LOGIN =
+  "__security_login_attempt__";
 
 export const Route =
   createFileRoute(
@@ -199,15 +199,11 @@ function AuthPage() {
       ) {
         throw erroInsert;
       }
-
-      return true;
     } catch (error) {
       console.error(
         "[Segurança] Erro no registo de login:",
         error,
       );
-
-      return false;
     }
   }
 
@@ -215,20 +211,75 @@ function AuthPage() {
     emailTentado: string,
   ) {
     try {
-      await registarTentativaFalhada({
-        data: {
-          email:
-            emailTentado,
-        },
-      });
+      const contexto =
+        await obterContextoSeguranca();
+
+      const mensagem =
+        JSON.stringify({
+          ip:
+            contexto.ip,
+
+          pais:
+            contexto.pais,
+
+          cidade:
+            contexto.cidade,
+
+          user_agent:
+            contexto.userAgent,
+
+          motivo:
+            "Credenciais rejeitadas",
+        });
+
+      const {
+        error,
+      } =
+        await supabase
+          .from(
+            "website_requests",
+          )
+          .insert({
+            nome:
+              "Tentativa de login falhada",
+
+            empresa:
+              "Nova Web CRM",
+
+            email:
+              emailTentado ||
+              "desconhecido",
+
+            telefone:
+              null,
+
+            tipo_projeto:
+              MARCADOR_FALHA_LOGIN,
+
+            orcamento:
+              null,
+
+            mensagem,
+
+            quer_reuniao:
+              false,
+
+            tratado:
+              true,
+
+            business_id:
+              null,
+          });
+
+      if (error) {
+        console.error(
+          "[Segurança] Erro ao guardar tentativa falhada:",
+          error,
+        );
+      }
     } catch (error) {
-      /*
-       * Um erro no histórico de segurança
-       * não deve alterar o funcionamento
-       * normal do formulário de login.
-       */
       console.error(
-        "[Segurança] Erro ao registar tentativa falhada:",
+        "[Segurança] Falha ao obter contexto:",
         error,
       );
     }
@@ -268,13 +319,6 @@ function AuthPage() {
           });
 
       if (error) {
-        /*
-         * A tentativa é registada antes
-         * de mostrarmos o erro ao utilizador.
-         *
-         * A password nunca é enviada para
-         * o nosso histórico.
-         */
         await registarFalha(
           emailNormalizado,
         );
