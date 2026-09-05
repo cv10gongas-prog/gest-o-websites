@@ -10,7 +10,10 @@ import { toast } from "sonner";
 
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
-import { obterContextoSeguranca } from "@/lib/security.functions";
+import {
+  obterContextoSeguranca,
+  registarTentativaFalhada,
+} from "@/lib/security.functions";
 
 export const Route =
   createFileRoute(
@@ -27,24 +30,28 @@ export const Route =
         {
           name:
             "description",
+
           content:
             "Acesso reservado à equipa comercial da Nova Web Studio.",
         },
         {
           property:
             "og:title",
+
           content:
             "Entrar — Nova Web CRM",
         },
         {
           property:
             "og:description",
+
           content:
             "Acesso reservado à equipa comercial da Nova Web Studio.",
         },
         {
           name:
             "robots",
+
           content:
             "noindex",
         },
@@ -109,10 +116,6 @@ function AuthPage() {
     emailUtilizador: string,
   ) {
     try {
-      /*
-       * Força o Supabase a validar e utilizar
-       * a sessão acabada de criar.
-       */
       const {
         data:
           dadosUtilizador,
@@ -197,40 +200,37 @@ function AuthPage() {
         throw erroInsert;
       }
 
-      console.log(
-        "[Segurança] Login registado com sucesso.",
-      );
-
       return true;
     } catch (error) {
       console.error(
-        "[Segurança] Erro:",
+        "[Segurança] Erro no registo de login:",
         error,
       );
 
-      const mensagem =
-        error instanceof Error
-          ? error.message
-          : typeof error ===
-                "object" &&
-              error !== null &&
-              "message" in
-                error
-            ? String(
-                (
-                  error as {
-                    message:
-                      unknown;
-                  }
-                ).message,
-              )
-            : "Erro desconhecido.";
-
-      toast.error(
-        `Segurança: ${mensagem}`,
-      );
-
       return false;
+    }
+  }
+
+  async function registarFalha(
+    emailTentado: string,
+  ) {
+    try {
+      await registarTentativaFalhada({
+        data: {
+          email:
+            emailTentado,
+        },
+      });
+    } catch (error) {
+      /*
+       * Um erro no histórico de segurança
+       * não deve alterar o funcionamento
+       * normal do formulário de login.
+       */
+      console.error(
+        "[Segurança] Erro ao registar tentativa falhada:",
+        error,
+      );
     }
   }
 
@@ -268,6 +268,17 @@ function AuthPage() {
           });
 
       if (error) {
+        /*
+         * A tentativa é registada antes
+         * de mostrarmos o erro ao utilizador.
+         *
+         * A password nunca é enviada para
+         * o nosso histórico.
+         */
+        await registarFalha(
+          emailNormalizado,
+        );
+
         throw error;
       }
 
@@ -279,10 +290,6 @@ function AuthPage() {
         );
       }
 
-      /*
-       * Espera explicitamente que o cliente
-       * confirme a sessão antes do INSERT.
-       */
       await supabase.auth
         .setSession({
           access_token:
