@@ -29,7 +29,12 @@ import {
   rotuloSeccao,
   usePreferencias,
 } from "@/lib/preferencias";
-import { useBusinesses, useTasks, useWebsiteRequests } from "@/lib/queries";
+import { obterContextoSeguranca } from "@/lib/security.functions";
+import {
+  useBusinesses,
+  useTasks,
+  useWebsiteRequests,
+} from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
@@ -130,7 +135,68 @@ function AppShellInner({ children }: { children: ReactNode }) {
     [negocios, tarefas, pedidos],
   );
 
+  async function registarLogout() {
+    try {
+      const {
+        data: dadosUtilizador,
+        error: erroUtilizador,
+      } = await supabase.auth.getUser();
+
+      if (erroUtilizador) {
+        throw erroUtilizador;
+      }
+
+      const user = dadosUtilizador.user;
+
+      if (!user) {
+        return;
+      }
+
+      const contexto = await obterContextoSeguranca();
+
+      const detalhe = JSON.stringify({
+        ip: contexto.ip,
+        pais: contexto.pais,
+        cidade: contexto.cidade,
+        email: user.email ?? null,
+        user_id: user.id,
+        sucesso: true,
+        tipo: "logout",
+        user_agent: contexto.userAgent,
+      });
+
+      const { error } = await supabase
+        .from("activity_log")
+        .insert({
+          entidade: "seguranca",
+          entidade_id: user.id,
+          accao: "terminou sessão",
+          detalhe,
+          autor: user.id,
+          business_id: null,
+        });
+
+      if (error) {
+        console.error(
+          "[Segurança] Erro ao registar logout:",
+          error,
+        );
+      }
+    } catch (error) {
+      console.error(
+        "[Segurança] Não foi possível registar logout:",
+        error,
+      );
+    }
+  }
+
   async function terminarSessao() {
+    /*
+     * Regista primeiro enquanto o utilizador
+     * ainda tem sessão válida.
+     */
+    await registarLogout();
+
     await qc.cancelQueries();
     qc.clear();
 
