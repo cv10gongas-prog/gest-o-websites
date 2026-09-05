@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
-import { registarLoginSucesso } from "@/lib/security.functions";
+import { obterContextoSeguranca } from "@/lib/security.functions";
 
 export const Route =
   createFileRoute(
@@ -109,16 +109,70 @@ function AuthPage() {
     navigate,
   ]);
 
-  async function registarSeguranca(
+  async function registarLogin(
     emailUtilizador: string,
+    userId: string,
   ) {
     try {
-      await registarLoginSucesso({
-        data: {
+      const contexto =
+        await obterContextoSeguranca();
+
+      const detalhe =
+        JSON.stringify({
+          ip:
+            contexto.ip,
+
+          pais:
+            contexto.pais,
+
+          cidade:
+            contexto.cidade,
+
           email:
             emailUtilizador,
-        },
-      });
+
+          user_id:
+            userId,
+
+          sucesso:
+            true,
+
+          user_agent:
+            contexto.userAgent,
+        });
+
+      const {
+        error,
+      } =
+        await supabase
+          .from(
+            "activity_log",
+          )
+          .insert({
+            entidade:
+              "seguranca",
+
+            entidade_id:
+              userId,
+
+            accao:
+              "iniciou sessão",
+
+            detalhe,
+
+            autor:
+              userId,
+
+            business_id:
+              null,
+          });
+
+      if (error) {
+        console.error(
+          "[Segurança] Erro Supabase:",
+          error,
+        );
+      }
     } catch (error) {
       console.error(
         "[Segurança] Não foi possível registar o login:",
@@ -141,10 +195,13 @@ function AuthPage() {
         .trim()
         .toLowerCase();
 
-    setACarregar(true);
+    setACarregar(
+      true,
+    );
 
     try {
       const {
+        data,
         error,
       } =
         await supabase.auth
@@ -159,9 +216,14 @@ function AuthPage() {
         throw error;
       }
 
-      await registarSeguranca(
-        emailNormalizado,
-      );
+      if (
+        data.user?.id
+      ) {
+        await registarLogin(
+          emailNormalizado,
+          data.user.id,
+        );
+      }
 
       toast.success(
         "Sessão iniciada.",
