@@ -4,11 +4,6 @@ import {
 import {
   getRequest,
 } from "@tanstack/react-start/server";
-import { z } from "zod";
-
-import {
-  requireSupabaseAuth,
-} from "@/integrations/supabase/auth-middleware";
 
 function obterIp(
   request: Request,
@@ -84,122 +79,49 @@ function limitarTexto(
   );
 }
 
-export const registarLoginSucesso =
+export const obterContextoSeguranca =
   createServerFn({
-    method: "POST",
-  })
-    .middleware([
-      requireSupabaseAuth,
-    ])
-    .inputValidator(
-      (data: unknown) =>
-        z
-          .object({
-            email: z
-              .string()
-              .email()
-              .max(320),
-          })
-          .parse(data),
-    )
-    .handler(
-      async ({
-        data,
-        context,
-      }) => {
-        const request =
-          getRequest();
+    method: "GET",
+  }).handler(
+    async () => {
+      const request =
+        getRequest();
 
-        if (!request) {
-          throw new Error(
-            "Pedido indisponível.",
-          );
-        }
+      if (!request) {
+        return {
+          ip:
+            "desconhecido",
+          pais: null,
+          cidade: null,
+          userAgent: null,
+        };
+      }
 
-        const ip =
+      const pais =
+        obterPais(
+          request,
+        );
+
+      return {
+        ip:
           obterIp(
             request,
-          );
+          ),
 
-        const pais =
-          obterPais(
-            request,
-          );
+        pais:
+          pais || null,
 
-        const cidade =
+        cidade:
           obterCidade(
             request,
-          );
+          ),
 
-        const userAgent =
+        userAgent:
           limitarTexto(
             request.headers.get(
               "user-agent",
             ),
-          );
-
-        const detalhe =
-          JSON.stringify({
-            ip,
-
-            pais:
-              pais || null,
-
-            cidade,
-
-            email:
-              data.email
-                .trim()
-                .toLowerCase(),
-
-            user_id:
-              context.userId,
-
-            sucesso: true,
-
-            user_agent:
-              userAgent,
-          });
-
-        const {
-          error,
-        } =
-          await context.supabase
-            .from(
-              "activity_log",
-            )
-            .insert({
-              entidade:
-                "seguranca",
-
-              entidade_id:
-                context.userId,
-
-              accao:
-                "iniciou sessão",
-
-              detalhe,
-
-              autor:
-                context.userId,
-
-              business_id:
-                null,
-            });
-
-        if (error) {
-          console.error(
-            "[Segurança] Erro ao registar login:",
-            error,
-          );
-
-          throw new Error(
-            "Não foi possível registar o login.",
-          );
-        }
-
-        return {
-          ok: true,
-        };
-      },
-    );
+          ),
+      };
+    },
+  );
