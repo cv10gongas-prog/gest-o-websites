@@ -230,6 +230,44 @@ function AuthPage() {
     }
   }
 
+  async function registarTentativaFalhada(
+    emailUtilizador: string,
+  ) {
+    try {
+      const contexto =
+        await obterContextoSeguranca();
+
+      await supabase
+        .from(
+          "security_login_attempts",
+        )
+        .insert({
+          email:
+            emailUtilizador,
+
+          ip:
+            contexto.ip,
+
+          pais:
+            contexto.pais,
+
+          cidade:
+            contexto.cidade,
+
+          user_agent:
+            contexto.userAgent,
+
+          motivo:
+            "Credenciais rejeitadas",
+        });
+    } catch (error) {
+      console.error(
+        "[Segurança] Não foi possível registar tentativa falhada:",
+        error,
+      );
+    }
+  }
+
   async function submeter(
     event: React.FormEvent<HTMLFormElement>,
   ) {
@@ -264,6 +302,10 @@ function AuthPage() {
           });
 
       if (error) {
+        await registarTentativaFalhada(
+          emailNormalizado,
+        );
+
         throw error;
       }
 
