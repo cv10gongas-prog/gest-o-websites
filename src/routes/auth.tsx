@@ -12,9 +12,6 @@ import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
 import { obterContextoSeguranca } from "@/lib/security.functions";
 
-const MARCADOR_FALHA_LOGIN =
-  "__security_login_attempt__";
-
 export const Route =
   createFileRoute(
     "/auth",
@@ -30,28 +27,24 @@ export const Route =
         {
           name:
             "description",
-
           content:
             "Acesso reservado à equipa comercial da Nova Web Studio.",
         },
         {
           property:
             "og:title",
-
           content:
             "Entrar — Nova Web CRM",
         },
         {
           property:
             "og:description",
-
           content:
             "Acesso reservado à equipa comercial da Nova Web Studio.",
         },
         {
           name:
             "robots",
-
           content:
             "noindex",
         },
@@ -199,89 +192,41 @@ function AuthPage() {
       ) {
         throw erroInsert;
       }
+
+      console.log(
+        "[Segurança] Login registado com sucesso.",
+      );
+
+      return true;
     } catch (error) {
       console.error(
-        "[Segurança] Erro no registo de login:",
+        "[Segurança] Erro:",
         error,
       );
-    }
-  }
-
-  async function registarFalha(
-    emailTentado: string,
-  ) {
-    try {
-      const contexto =
-        await obterContextoSeguranca();
 
       const mensagem =
-        JSON.stringify({
-          ip:
-            contexto.ip,
+        error instanceof Error
+          ? error.message
+          : typeof error ===
+                "object" &&
+              error !== null &&
+              "message" in
+                error
+            ? String(
+                (
+                  error as {
+                    message:
+                      unknown;
+                  }
+                ).message,
+              )
+            : "Erro desconhecido.";
 
-          pais:
-            contexto.pais,
-
-          cidade:
-            contexto.cidade,
-
-          user_agent:
-            contexto.userAgent,
-
-          motivo:
-            "Credenciais rejeitadas",
-        });
-
-      const {
-        error,
-      } =
-        await supabase
-          .from(
-            "website_requests",
-          )
-          .insert({
-            nome:
-              "Tentativa de login falhada",
-
-            empresa:
-              "Nova Web CRM",
-
-            email:
-              emailTentado ||
-              "desconhecido",
-
-            telefone:
-              null,
-
-            tipo_projeto:
-              MARCADOR_FALHA_LOGIN,
-
-            orcamento:
-              null,
-
-            mensagem,
-
-            quer_reuniao:
-              false,
-
-            tratado:
-              true,
-
-            business_id:
-              null,
-          });
-
-      if (error) {
-        console.error(
-          "[Segurança] Erro ao guardar tentativa falhada:",
-          error,
-        );
-      }
-    } catch (error) {
-      console.error(
-        "[Segurança] Falha ao obter contexto:",
-        error,
+      toast.error(
+        `Segurança: ${mensagem}`,
       );
+
+      return false;
     }
   }
 
@@ -319,10 +264,6 @@ function AuthPage() {
           });
 
       if (error) {
-        await registarFalha(
-          emailNormalizado,
-        );
-
         throw error;
       }
 
