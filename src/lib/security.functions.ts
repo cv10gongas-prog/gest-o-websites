@@ -1,31 +1,43 @@
-import { getRequest } from "@tanstack/react-start/server";
-import { createServerFn } from "@tanstack/react-start";
+import {
+  createServerFn,
+} from "@tanstack/react-start";
+import {
+  getRequest,
+} from "@tanstack/react-start/server";
 import { z } from "zod";
 
-const eventoSchema = z.enum([
-  "login_sucesso",
-  "login_falhou",
-]);
+import {
+  requireSupabaseAuth,
+} from "@/integrations/supabase/auth-middleware";
 
-function obterIp(request: Request) {
+function obterIp(
+  request: Request,
+) {
   const forwarded =
-    request.headers.get("x-forwarded-for");
+    request.headers.get(
+      "x-forwarded-for",
+    );
 
   if (forwarded) {
     return (
       forwarded
         .split(",")[0]
-        ?.trim() || "desconhecido"
+        ?.trim() ||
+      "desconhecido"
     );
   }
 
   return (
-    request.headers.get("x-real-ip") ??
+    request.headers.get(
+      "x-real-ip",
+    ) ??
     "desconhecido"
   );
 }
 
-function obterPais(request: Request) {
+function obterPais(
+  request: Request,
+) {
   return (
     request.headers.get(
       "x-vercel-ip-country",
@@ -37,7 +49,9 @@ function obterPais(request: Request) {
   ).toUpperCase();
 }
 
-function obterCidade(request: Request) {
+function obterCidade(
+  request: Request,
+) {
   const cidade =
     request.headers.get(
       "x-vercel-ip-city",
@@ -70,39 +84,28 @@ function limitarTexto(
   );
 }
 
-export const registarEventoSeguranca =
+export const registarLoginSucesso =
   createServerFn({
     method: "POST",
   })
+    .middleware([
+      requireSupabaseAuth,
+    ])
     .inputValidator(
       (data: unknown) =>
         z
           .object({
-            evento:
-              eventoSchema,
-
             email: z
               .string()
               .email()
               .max(320),
-
-            userId: z
-              .string()
-              .uuid()
-              .nullable()
-              .optional(),
-
-            motivo: z
-              .string()
-              .max(300)
-              .nullable()
-              .optional(),
           })
           .parse(data),
     )
     .handler(
       async ({
         data,
+        context,
       }) => {
         const request =
           getRequest();
@@ -114,13 +117,19 @@ export const registarEventoSeguranca =
         }
 
         const ip =
-          obterIp(request);
+          obterIp(
+            request,
+          );
 
         const pais =
-          obterPais(request);
+          obterPais(
+            request,
+          );
 
         const cidade =
-          obterCidade(request);
+          obterCidade(
+            request,
+          );
 
         const userAgent =
           limitarTexto(
@@ -132,36 +141,30 @@ export const registarEventoSeguranca =
         const detalhe =
           JSON.stringify({
             ip,
+
             pais:
               pais || null,
+
             cidade,
+
             email:
               data.email
                 .trim()
                 .toLowerCase(),
+
             user_id:
-              data.userId ??
-              null,
-            sucesso:
-              data.evento ===
-              "login_sucesso",
-            motivo:
-              data.motivo ??
-              null,
+              context.userId,
+
+            sucesso: true,
+
             user_agent:
               userAgent,
           });
 
         const {
-          supabaseAdmin,
-        } = await import(
-          "@/integrations/supabase/client.server"
-        );
-
-        const {
           error,
         } =
-          await supabaseAdmin
+          await context.supabase
             .from(
               "activity_log",
             )
@@ -170,20 +173,15 @@ export const registarEventoSeguranca =
                 "seguranca",
 
               entidade_id:
-                data.userId ??
-                null,
+                context.userId,
 
               accao:
-                data.evento ===
-                "login_sucesso"
-                  ? "iniciou sessão"
-                  : "tentativa de login falhada",
+                "iniciou sessão",
 
               detalhe,
 
               autor:
-                data.userId ??
-                null,
+                context.userId,
 
               business_id:
                 null,
@@ -191,12 +189,12 @@ export const registarEventoSeguranca =
 
         if (error) {
           console.error(
-            "[Segurança] Falha ao registar evento:",
+            "[Segurança] Erro ao registar login:",
             error,
           );
 
           throw new Error(
-            "Não foi possível registar o evento de segurança.",
+            "Não foi possível registar o login.",
           );
         }
 
