@@ -10,115 +10,118 @@ import { toast } from "sonner";
 
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
-import { registarEventoSeguranca } from "@/lib/security.functions";
+import { registarLoginSucesso } from "@/lib/security.functions";
 
-export const Route = createFileRoute("/auth")({
-  ssr: false,
+export const Route =
+  createFileRoute(
+    "/auth",
+  )({
+    ssr: false,
 
-  head: () => ({
-    meta: [
-      {
-        title: "Entrar — Nova Web CRM",
-      },
-      {
-        name: "description",
-        content:
-          "Acesso reservado à equipa comercial da Nova Web Studio.",
-      },
-      {
-        property: "og:title",
-        content: "Entrar — Nova Web CRM",
-      },
-      {
-        property: "og:description",
-        content:
-          "Acesso reservado à equipa comercial da Nova Web Studio.",
-      },
-      {
-        name: "robots",
-        content: "noindex",
-      },
-    ],
-  }),
+    head: () => ({
+      meta: [
+        {
+          title:
+            "Entrar — Nova Web CRM",
+        },
+        {
+          name:
+            "description",
 
-  component: AuthPage,
-});
+          content:
+            "Acesso reservado à equipa comercial da Nova Web Studio.",
+        },
+        {
+          property:
+            "og:title",
+
+          content:
+            "Entrar — Nova Web CRM",
+        },
+        {
+          property:
+            "og:description",
+
+          content:
+            "Acesso reservado à equipa comercial da Nova Web Studio.",
+        },
+        {
+          name:
+            "robots",
+
+          content:
+            "noindex",
+        },
+      ],
+    }),
+
+    component:
+      AuthPage,
+  });
 
 function AuthPage() {
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  const [email, setEmail] =
+  const [
+    email,
+    setEmail,
+  ] =
     useState("");
 
-  const [password, setPassword] =
+  const [
+    password,
+    setPassword,
+  ] =
     useState("");
 
   const [
     aCarregar,
     setACarregar,
-  ] = useState(false);
+  ] =
+    useState(false);
 
   useEffect(() => {
     let active = true;
 
     supabase.auth
       .getSession()
-      .then(({ data }) => {
-        if (
-          active &&
-          data.session
-        ) {
-          navigate({
-            to: "/painel",
-            replace: true,
-          });
-        }
-      });
+      .then(
+        ({
+          data,
+        }) => {
+          if (
+            active &&
+            data.session
+          ) {
+            navigate({
+              to: "/painel",
+              replace: true,
+            });
+          }
+        },
+      );
 
     return () => {
       active = false;
     };
-  }, [navigate]);
+  }, [
+    navigate,
+  ]);
 
   async function registarSeguranca(
-    dados: {
-      evento:
-        | "login_sucesso"
-        | "login_falhou";
-
-      email: string;
-
-      userId?: string | null;
-
-      motivo?: string | null;
-    },
+    emailUtilizador: string,
   ) {
     try {
-      await registarEventoSeguranca({
+      await registarLoginSucesso({
         data: {
-          evento:
-            dados.evento,
-
           email:
-            dados.email,
-
-          userId:
-            dados.userId ??
-            null,
-
-          motivo:
-            dados.motivo ??
-            null,
+            emailUtilizador,
         },
       });
     } catch (error) {
-      /*
-       * Um problema no registo de segurança
-       * nunca deve impedir o utilizador de
-       * entrar no CRM.
-       */
       console.error(
-        "[Segurança] Não foi possível registar o evento:",
+        "[Segurança] Não foi possível registar o login:",
         error,
       );
     }
@@ -142,7 +145,6 @@ function AuthPage() {
 
     try {
       const {
-        data,
         error,
       } =
         await supabase.auth
@@ -154,37 +156,12 @@ function AuthPage() {
           });
 
       if (error) {
-        await registarSeguranca({
-          evento:
-            "login_falhou",
-
-          email:
-            emailNormalizado,
-
-          userId:
-            null,
-
-          motivo:
-            error.message,
-        });
-
         throw error;
       }
 
-      await registarSeguranca({
-        evento:
-          "login_sucesso",
-
-        email:
-          emailNormalizado,
-
-        userId:
-          data.user?.id ??
-          null,
-
-        motivo:
-          null,
-      });
+      await registarSeguranca(
+        emailNormalizado,
+      );
 
       toast.success(
         "Sessão iniciada.",
@@ -195,7 +172,9 @@ function AuthPage() {
         replace: true,
       });
     } catch (error) {
-      console.error(error);
+      console.error(
+        error,
+      );
 
       toast.error(
         error instanceof Error
@@ -203,22 +182,32 @@ function AuthPage() {
           : "Não foi possível continuar.",
       );
     } finally {
-      setACarregar(false);
+      setACarregar(
+        false,
+      );
     }
   }
 
   return (
     <SignInFlow
-      email={email}
-      password={password}
-      loading={aCarregar}
+      email={
+        email
+      }
+      password={
+        password
+      }
+      loading={
+        aCarregar
+      }
       onEmailChange={
         setEmail
       }
       onPasswordChange={
         setPassword
       }
-      onSubmit={submeter}
+      onSubmit={
+        submeter
+      }
     />
   );
 }
