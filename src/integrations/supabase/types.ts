@@ -455,6 +455,39 @@ export type Database = {
         }
         Relationships: []
       }
+      security_login_attempts: {
+        Row: {
+          cidade: string | null
+          created_at: string
+          email: string
+          id: string
+          ip: string | null
+          motivo: string | null
+          pais: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          cidade?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          ip?: string | null
+          motivo?: string | null
+          pais?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          cidade?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          ip?: string | null
+          motivo?: string | null
+          pais?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       tasks: {
         Row: {
           business_id: string | null
