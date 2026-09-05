@@ -4,6 +4,7 @@ import {
   Clock3,
   Globe2,
   Laptop,
+  LogOut,
   MapPin,
   MonitorSmartphone,
   Network,
@@ -36,6 +37,7 @@ type DetalheSeguranca = {
   email?: string | null;
   user_id?: string | null;
   sucesso?: boolean;
+  tipo?: string | null;
   user_agent?: string | null;
 };
 
@@ -44,6 +46,16 @@ type EstadoAcesso =
   | "conhecido"
   | "ip_novo"
   | "pais_novo";
+
+type EventoSeguranca = {
+  id: string;
+  created_at: string;
+  autor: string | null;
+  accao: string;
+  seguranca: DetalheSeguranca;
+  tipo: "login" | "logout";
+  estadoAcesso?: EstadoAcesso;
+};
 
 function interpretarDetalhe(
   value: string | null,
@@ -295,6 +307,47 @@ function estiloEstado(
   }
 }
 
+function dentroPeriodo(
+  data: string,
+  periodo: PeriodoSeguranca,
+) {
+  if (
+    periodo ===
+    "tudo"
+  ) {
+    return true;
+  }
+
+  const agora =
+    Date.now();
+
+  const limite =
+    periodo === "24h"
+      ? 24 *
+        60 *
+        60 *
+        1000
+      : periodo === "7d"
+        ? 7 *
+          24 *
+          60 *
+          60 *
+          1000
+        : 30 *
+          24 *
+          60 *
+          60 *
+          1000;
+
+  return (
+    agora -
+      new Date(
+        data,
+      ).getTime() <=
+    limite
+  );
+}
+
 export function SegurancaPainel() {
   const [
     periodo,
@@ -313,28 +366,65 @@ export function SegurancaPainel() {
     data: perfis = [],
   } = useProfiles();
 
-  const todosLogins =
+  const eventosBase =
     useMemo(() => {
-      const base =
-        atividades
-          .filter(
-            (atividade) =>
-              atividade.entidade ===
-              "seguranca",
-          )
-          .map(
-            (atividade) => ({
-              ...atividade,
+      return atividades
+        .filter(
+          (atividade) =>
+            atividade.entidade ===
+            "seguranca",
+        )
+        .map(
+          (atividade) => {
+            const seguranca =
+              interpretarDetalhe(
+                atividade.detalhe,
+              );
 
-              seguranca:
-                interpretarDetalhe(
-                  atividade.detalhe,
-                ),
-            }),
-          );
+            const tipo:
+              | "login"
+              | "logout" =
+              atividade.accao ===
+                "terminou sessão" ||
+              seguranca.tipo ===
+                "logout"
+                ? "logout"
+                : "login";
+
+            return {
+              id:
+                atividade.id,
+
+              created_at:
+                atividade.created_at,
+
+              autor:
+                atividade.autor,
+
+              accao:
+                atividade.accao,
+
+              seguranca,
+
+              tipo,
+            } satisfies EventoSeguranca;
+          },
+        );
+    }, [
+      atividades,
+    ]);
+
+  const loginsComEstado =
+    useMemo(() => {
+      const apenasLogins =
+        eventosBase.filter(
+          (evento) =>
+            evento.tipo ===
+            "login",
+        );
 
       const cronologico = [
-        ...base,
+        ...apenasLogins,
       ].sort(
         (a, b) =>
           new Date(
@@ -388,8 +478,10 @@ export function SegurancaPainel() {
           ) ?? {
             ips:
               new Set<string>(),
+
             paises:
               new Set<string>(),
+
             quantidade: 0,
           };
 
@@ -451,7 +543,7 @@ export function SegurancaPainel() {
         );
       }
 
-      return base.map(
+      return apenasLogins.map(
         (login) => ({
           ...login,
 
@@ -463,58 +555,74 @@ export function SegurancaPainel() {
         }),
       );
     }, [
-      atividades,
+      eventosBase,
+    ]);
+
+  const eventos =
+    useMemo(() => {
+      const mapaLogins =
+        new Map(
+          loginsComEstado.map(
+            (login) => [
+              login.id,
+              login,
+            ],
+          ),
+        );
+
+      return eventosBase
+        .map(
+          (evento) => {
+            if (
+              evento.tipo ===
+              "login"
+            ) {
+              return (
+                mapaLogins.get(
+                  evento.id,
+                ) ??
+                evento
+              );
+            }
+
+            return evento;
+          },
+        )
+        .filter(
+          (evento) =>
+            dentroPeriodo(
+              evento.created_at,
+              periodo,
+            ),
+        )
+        .sort(
+          (a, b) =>
+            new Date(
+              b.created_at,
+            ).getTime() -
+            new Date(
+              a.created_at,
+            ).getTime(),
+        );
+    }, [
+      eventosBase,
+      loginsComEstado,
+      periodo,
     ]);
 
   const logins =
-    useMemo(() => {
-      const agora =
-        Date.now();
+    eventos.filter(
+      (evento) =>
+        evento.tipo ===
+        "login",
+    );
 
-      const limite =
-        periodo === "24h"
-          ? 24 *
-            60 *
-            60 *
-            1000
-          : periodo === "7d"
-            ? 7 *
-              24 *
-              60 *
-              60 *
-              1000
-            : periodo ===
-                "30d"
-              ? 30 *
-                24 *
-                60 *
-                60 *
-                1000
-              : null;
-
-      return todosLogins.filter(
-        (login) => {
-          if (
-            limite === null
-          ) {
-            return true;
-          }
-
-          const tempo =
-            new Date(
-              login.created_at,
-            ).getTime();
-
-          return (
-            agora - tempo <=
-            limite
-          );
-        },
-      );
-    }, [
-      todosLogins,
-      periodo,
-    ]);
+  const logouts =
+    eventos.filter(
+      (evento) =>
+        evento.tipo ===
+        "logout",
+    );
 
   const ipsUnicos =
     new Set(
@@ -553,10 +661,14 @@ export function SegurancaPainel() {
   const alertas =
     logins.filter(
       (item) =>
-        item.estadoAcesso ===
-          "ip_novo" ||
-        item.estadoAcesso ===
-          "pais_novo",
+        "estadoAcesso" in
+          item &&
+        (
+          item.estadoAcesso ===
+            "ip_novo" ||
+          item.estadoAcesso ===
+            "pais_novo"
+        ),
     ).length;
 
   function nomeUtilizador(
@@ -601,8 +713,8 @@ export function SegurancaPainel() {
             </h1>
 
             <p className="mt-1.5 max-w-2xl text-xs leading-6 text-muted-foreground">
-              Histórico de acessos autenticados ao CRM,
-              identificação de novos IPs, novas localizações
+              Histórico de entradas e saídas do CRM,
+              identificação de novos IPs, localizações
               e dispositivos utilizados.
             </p>
           </div>
@@ -618,7 +730,9 @@ export function SegurancaPainel() {
             ).map(
               (item) => (
                 <button
-                  key={item}
+                  key={
+                    item
+                  }
                   type="button"
                   onClick={() =>
                     setPeriodo(
@@ -643,11 +757,11 @@ export function SegurancaPainel() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
         <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
           <div className="flex items-center justify-between">
             <p className="text-[10px] text-muted-foreground">
-              Logins registados
+              Logins
             </p>
 
             <span className="grid size-8 place-items-center rounded-lg border border-emerald-400/15 bg-emerald-400/10 text-emerald-300">
@@ -660,7 +774,27 @@ export function SegurancaPainel() {
           </p>
 
           <p className="mt-1 text-[9px] text-muted-foreground">
-            acessos bem-sucedidos
+            entradas autorizadas
+          </p>
+        </article>
+
+        <article className="rounded-2xl border border-border/65 bg-card/30 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] text-muted-foreground">
+              Logouts
+            </p>
+
+            <span className="grid size-8 place-items-center rounded-lg border border-slate-400/15 bg-slate-400/10 text-slate-300">
+              <LogOut className="size-3.5" />
+            </span>
+          </div>
+
+          <p className="mt-4 text-2xl font-semibold tracking-[-.04em]">
+            {logouts.length}
+          </p>
+
+          <p className="mt-1 text-[9px] text-muted-foreground">
+            sessões terminadas
           </p>
         </article>
 
@@ -761,11 +895,11 @@ export function SegurancaPainel() {
         <div className="flex items-center justify-between border-b border-border/50 px-5 py-4">
           <div>
             <h2 className="text-sm font-semibold">
-              Histórico de acessos
+              Histórico de sessões
             </h2>
 
             <p className="mt-0.5 text-[9px] text-muted-foreground">
-              Últimas sessões autenticadas
+              Entradas e saídas do CRM
             </p>
           </div>
 
@@ -776,7 +910,7 @@ export function SegurancaPainel() {
           <div className="flex min-h-[280px] items-center justify-center text-xs text-muted-foreground">
             A carregar registos de segurança…
           </div>
-        ) : logins.length ===
+        ) : eventos.length ===
           0 ? (
           <div className="flex min-h-[280px] flex-col items-center justify-center px-5 text-center">
             <span className="grid size-12 place-items-center rounded-2xl border border-border/60 bg-background/40 text-muted-foreground">
@@ -784,28 +918,15 @@ export function SegurancaPainel() {
             </span>
 
             <p className="mt-4 text-sm font-medium">
-              Ainda não há acessos registados
-            </p>
-
-            <p className="mt-1 max-w-sm text-[10px] leading-5 text-muted-foreground">
-              Faz logout e volta a iniciar sessão para
-              gerar um registo de segurança.
+              Ainda não há eventos registados
             </p>
           </div>
         ) : (
           <div className="divide-y divide-border/45">
-            {logins.map(
+            {eventos.map(
               (item) => {
                 const info =
                   item.seguranca;
-
-                const estado =
-                  estiloEstado(
-                    item.estadoAcesso,
-                  );
-
-                const EstadoIcon =
-                  estado.Icon;
 
                 const {
                   nome:
@@ -822,18 +943,143 @@ export function SegurancaPainel() {
                     info.user_agent,
                   );
 
+                const logout =
+                  item.tipo ===
+                  "logout";
+
+                if (logout) {
+                  return (
+                    <article
+                      key={
+                        item.id
+                      }
+                      className="group p-4 transition hover:bg-background/20 sm:p-5"
+                    >
+                      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                        <div className="flex min-w-0 items-start gap-3">
+                          <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-slate-400/15 bg-slate-400/10 text-slate-300">
+                            <LogOut className="size-4" />
+                          </span>
+
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-xs font-semibold">
+                                {nomeUtilizador(
+                                  item.autor,
+                                  info.email,
+                                )}
+                              </p>
+
+                              <span className="rounded-full border border-slate-400/15 bg-slate-400/[0.07] px-2 py-0.5 text-[8px] font-semibold text-slate-300">
+                                Logout
+                              </span>
+                            </div>
+
+                            <p className="mt-1 truncate text-[10px] text-muted-foreground">
+                              {info.email ??
+                                "Email indisponível"}
+                            </p>
+
+                            <p className="mt-1 text-[9px] text-muted-foreground/70">
+                              Sessão terminada pelo utilizador
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+                          <div className="min-w-[120px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <Wifi className="size-3" />
+                              IP
+                            </div>
+
+                            <p className="mt-1.5 font-mono text-[10px]">
+                              {info.ip ??
+                                "Desconhecido"}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[125px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <Globe2 className="size-3" />
+                              País
+                            </div>
+
+                            <p className="mt-1.5 text-[10px]">
+                              {bandeiraPais(
+                                info.pais,
+                              )}{" "}
+                              {info.pais ??
+                                "Desconhecido"}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[125px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <MapPin className="size-3" />
+                              Cidade
+                            </div>
+
+                            <p className="mt-1.5 truncate text-[10px]">
+                              {info.cidade ??
+                                "Desconhecida"}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[145px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <DispositivoIcon className="size-3" />
+                              Dispositivo
+                            </div>
+
+                            <p className="mt-1.5 text-[10px]">
+                              {dispositivo}
+                            </p>
+
+                            <p className="mt-0.5 text-[8px] text-muted-foreground">
+                              {browser}
+                            </p>
+                          </div>
+
+                          <div className="min-w-[135px] rounded-xl border border-border/50 bg-background/25 px-3 py-2.5">
+                            <div className="flex items-center gap-1.5 text-[8px] uppercase tracking-[.12em] text-muted-foreground">
+                              <Clock3 className="size-3" />
+                              Data
+                            </div>
+
+                            <p className="mt-1.5 text-[10px]">
+                              {formatarDataHora(
+                                item.created_at,
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                }
+
+                const estado =
+                  estiloEstado(
+                    (
+                      item as EventoSeguranca & {
+                        estadoAcesso:
+                          EstadoAcesso;
+                      }
+                    )
+                      .estadoAcesso ??
+                      "conhecido",
+                  );
+
+                const EstadoIcon =
+                  estado.Icon;
+
                 return (
                   <article
-                    key={item.id}
-                    className={`group p-4 transition sm:p-5 ${
-                      item.estadoAcesso ===
-                      "pais_novo"
-                        ? "bg-red-400/[0.018] hover:bg-red-400/[0.03]"
-                        : item.estadoAcesso ===
-                            "ip_novo"
-                          ? "bg-amber-400/[0.012] hover:bg-amber-400/[0.025]"
-                          : "hover:bg-background/20"
-                    }`}
+                    key={
+                      item.id
+                    }
+                    className="group p-4 transition hover:bg-background/20 sm:p-5"
                   >
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                       <div className="flex min-w-0 items-start gap-3">
