@@ -26,6 +26,39 @@
   </url>
 
   <url>
+    <loc>https://www.novawebstudio.pt/restaurantes</loc>
+    <xhtml:link rel="alternate" hreflang="pt-PT" href="https://www.novawebstudio.pt/restaurantes"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.novawebstudio.pt/en/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.novawebstudio.pt/de/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.novawebstudio.pt/fr/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.novawebstudio.pt/es/restaurantes"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.novawebstudio.pt/restaurantes"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://www.novawebstudio.pt/en/restaurants</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.novawebstudio.pt/de/restaurants</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.novawebstudio.pt/fr/restaurants</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.novawebstudio.pt/es/restaurantes</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://www.novawebstudio.pt/contacto</loc>
     <xhtml:link rel="alternate" hreflang="pt-PT" href="https://www.novawebstudio.pt/contacto"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.novawebstudio.pt/en/contact"/>

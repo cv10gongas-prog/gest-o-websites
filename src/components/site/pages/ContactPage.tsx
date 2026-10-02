@@ -598,6 +598,23 @@ export function ContactPage({
     querReuniao: false,
   });
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tipoParam = params.get("tipo")?.toLowerCase();
+      if (
+        tipoParam === "restaurantes" ||
+        tipoParam === "restaurante" ||
+        tipoParam === "0"
+      ) {
+        setForm((prev) => ({ ...prev, tipoIndex: "0" }));
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   function update<
     K extends keyof typeof form,
   >(

@@ -117,6 +117,19 @@ export function SiteChrome({
               </Link>
 
               <Link
+                to={paths.restaurantes}
+                activeProps={{
+                  className: "bg-secondary/60 text-foreground",
+                }}
+                inactiveProps={{
+                  className: "text-muted-foreground",
+                }}
+                className="rounded-lg px-3 py-2 transition hover:text-foreground"
+              >
+                {t.nav.restaurantes}
+              </Link>
+
+              <Link
                 to={paths.portfolio}
                 activeProps={{
                   className: "bg-secondary/60 text-foreground",
@@ -156,7 +169,29 @@ export function SiteChrome({
           </nav>
         </div>
 
-        <div className="flex items-center justify-end border-t border-border/40 px-4 py-2 sm:hidden">
+        <div className="flex items-center justify-between gap-3 overflow-x-auto border-t border-border/40 px-4 py-2 sm:hidden">
+          <nav className="flex items-center gap-1 text-xs">
+            <Link
+              to={paths.home}
+              activeOptions={{ exact: true }}
+              className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+            >
+              {t.nav.home}
+            </Link>
+            <Link
+              to={paths.restaurantes}
+              className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+            >
+              {t.nav.restaurantes}
+            </Link>
+            <Link
+              to={paths.portfolio}
+              className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+            >
+              {t.nav.portfolio}
+            </Link>
+          </nav>
+
           <LanguageSwitcher locale={locale} page={page} />
         </div>
       </header>
@@ -171,7 +206,8 @@ export function SiteChrome({
             © {new Date().getFullYear()} Nova Web Studio · {t.footer.rights}
           </span>
 
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
+            <Link to={paths.restaurantes}>{t.nav.restaurantes}</Link>
             <Link to={paths.portfolio}>{t.nav.portfolio}</Link>
             <Link to={paths.contact}>{t.nav.contact}</Link>
             <Link to="/auth">{t.nav.team}</Link>

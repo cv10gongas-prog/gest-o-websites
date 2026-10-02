@@ -5,12 +5,14 @@ import {
   BadgeCheck,
   CalendarCheck,
   CheckCircle2,
+  ExternalLink,
   Gauge,
   LayoutTemplate,
   LineChart,
   MapPin,
   MessageSquareText,
   MonitorSmartphone,
+  QrCode,
   Radio,
   Rocket,
   ShieldCheck,
@@ -18,6 +20,7 @@ import {
   Smartphone,
   Sparkles,
   Target,
+  UtensilsCrossed,
   WandSparkles,
   Zap,
 } from "lucide-react";
@@ -30,7 +33,11 @@ import {
 
 import { Chip } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
-import { dict, PATHS, type Locale } from "@/lib/i18n";
+import {
+  dict,
+  PATHS,
+  type Locale,
+} from "@/lib/i18n";
 
 const SERVICE_ICONS = [LayoutTemplate, Gauge, LineChart];
 const TYPE_ICONS = [Sparkles, ShoppingBag, Smartphone, Rocket];
@@ -127,6 +134,16 @@ const EXTRA: Record<
     radioFeature3: string;
     radioVisit: string;
 
+    restaurantSection: string;
+    restaurantBadge: string;
+    restaurantTitle: string;
+    restaurantText: string;
+    restaurantCtaPage: string;
+    restaurantCtaDemo: string;
+    restaurantFeature1: string;
+    restaurantFeature2: string;
+    restaurantFeature3: string;
+
     whyBadge: string;
     whyTitle: string;
     whyLead: string;
@@ -201,6 +218,17 @@ const EXTRA: Record<
     radioFeature2: "Estrutura adaptada à rádio",
     radioFeature3: "Parceiro local da Nova Web Studio",
     radioVisit: "Ver projeto",
+
+    restaurantSection: "Solução Digital",
+    restaurantBadge: "Setor da Restauração",
+    restaurantTitle: "Uma solução completa para restaurantes.",
+    restaurantText:
+      "Do website aos pedidos por QR Code, reunimos as ferramentas essenciais para simplificar o funcionamento do teu restaurante.",
+    restaurantCtaPage: "Conhecer solução",
+    restaurantCtaDemo: "Ver demonstração",
+    restaurantFeature1: "Website institucional & menu digital atualizável",
+    restaurantFeature2: "Pedidos e chamadas por QR Code por mesa",
+    restaurantFeature3: "Reservas online e acompanhamento em direto",
 
     whyBadge: "Porquê Nova Web Studio",
     whyTitle: "Um processo mais próximo, simples e profissional",
@@ -298,6 +326,17 @@ const EXTRA: Record<
     radioFeature3: "Local Nova Web Studio partner",
     radioVisit: "View project",
 
+    restaurantSection: "Digital Solution",
+    restaurantBadge: "Restaurant Industry",
+    restaurantTitle: "A complete solution for restaurants.",
+    restaurantText:
+      "From custom websites to table QR Code ordering, we bring together the essential tools to streamline your restaurant operations.",
+    restaurantCtaPage: "Explore solution",
+    restaurantCtaDemo: "View live demo",
+    restaurantFeature1: "Custom website & live editable digital menu",
+    restaurantFeature2: "Table QR Code ordering & waiter call",
+    restaurantFeature3: "Online reservations & live dashboard",
+
     whyBadge: "Why Nova Web Studio",
     whyTitle: "A closer, simpler and more professional process",
     whyLead:
@@ -394,6 +433,17 @@ const EXTRA: Record<
     radioFeature2: "Struktur für eine Radiostation",
     radioFeature3: "Lokaler Partner",
     radioVisit: "Projekt ansehen",
+
+    restaurantSection: "Digitale Lösung",
+    restaurantBadge: "Gastronomiebranche",
+    restaurantTitle: "Eine Komplettlösung für Restaurants.",
+    restaurantText:
+      "Von der eigenen Website bis zu QR-Code-Bestellungen am Tisch vereinen wir alle wichtigen Werkzeuge für einen reibungslosen Ablauf.",
+    restaurantCtaPage: "Lösung entdecken",
+    restaurantCtaDemo: "Live-Demo ansehen",
+    restaurantFeature1: "Website & editierbare digitale Speisekarte",
+    restaurantFeature2: "QR-Code-Bestellungen & Service-Ruf pro Tisch",
+    restaurantFeature3: "Online-Reservierungen & Live-Bestellpanel",
 
     whyBadge: "Warum Nova Web Studio",
     whyTitle:
@@ -493,6 +543,17 @@ const EXTRA: Record<
     radioFeature3: "Partenaire local",
     radioVisit: "Voir le projet",
 
+    restaurantSection: "Solution Digitale",
+    restaurantBadge: "Restauration",
+    restaurantTitle: "Une solution complète pour restaurants.",
+    restaurantText:
+      "Du site web aux commandes par QR Code à table, nous réunissons les outils essentiels pour simplifier le service de votre restaurant.",
+    restaurantCtaPage: "Découvrir la solution",
+    restaurantCtaDemo: "Voir la démo",
+    restaurantFeature1: "Site web sur mesure & menu digital modifiable",
+    restaurantFeature2: "Commandes & appel serveur par QR Code par table",
+    restaurantFeature3: "Réservations en ligne & gestion des commandes",
+
     whyBadge: "Pourquoi Nova Web Studio",
     whyTitle: "Un processus plus proche, simple et professionnel",
     whyLead:
@@ -587,6 +648,17 @@ const EXTRA: Record<
     radioFeature2: "Estructura adaptada a la radio",
     radioFeature3: "Socio local",
     radioVisit: "Ver proyecto",
+
+    restaurantSection: "Solución Digital",
+    restaurantBadge: "Sector de Restauración",
+    restaurantTitle: "Una solución completa para restaurantes.",
+    restaurantText:
+      "Del sitio web a los pedidos por código QR, reunimos las herramientas esenciales para simplificar el funcionamiento de tu restaurante.",
+    restaurantCtaPage: "Conocer solución",
+    restaurantCtaDemo: "Ver demostración",
+    restaurantFeature1: "Sitio web & menú digital actualizable",
+    restaurantFeature2: "Pedidos y aviso a camarero por código QR en mesa",
+    restaurantFeature3: "Reservas online y panel de control en directo",
 
     whyBadge: "Por qué Nova Web Studio",
     whyTitle: "Un proceso más cercano, sencillo y profesional",
@@ -1199,6 +1271,138 @@ export function HomePage({ locale }: { locale: Locale }) {
                     {t.ctaPortfolio}
 
                     <ArrowRight className="size-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </article>
+        </Reveal>
+      </section>
+
+      {/* RESTAURANTES HIGHLIGHT SECTION */}
+      <section className="mt-24">
+        <Reveal>
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Chip tone="primary">
+                <span className="flex items-center gap-1.5">
+                  <UtensilsCrossed className="size-3.5" />
+                  {extra.restaurantBadge}
+                </span>
+              </Chip>
+
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                {extra.restaurantText}
+              </p>
+            </div>
+
+            <Link
+              to={paths.restaurantes}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {extra.restaurantCtaPage}
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <article className="overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-card/60 via-card/30 to-primary/[0.04] shadow-xl shadow-black/10">
+            <div className="grid lg:grid-cols-[1fr_1fr]">
+              {/* Visual Mockup - Phone & Dashboard snippet */}
+              <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-6 sm:min-h-[420px] sm:p-8 lg:border-b-0 lg:border-r">
+                <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
+
+                {/* Composition Card */}
+                <div className="relative w-full max-w-md">
+                  <div className="rounded-2xl border border-border/70 bg-background/90 p-5 shadow-2xl backdrop-blur">
+                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-xs font-semibold">NOVA Restaurante</span>
+                      </div>
+                      <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[9px] font-bold text-primary">
+                        Mesa 04 · Live
+                      </span>
+                    </div>
+
+                    <div className="mt-3.5 space-y-2.5">
+                      <div className="flex items-center justify-between rounded-xl border border-border/60 bg-card/60 p-2.5 text-xs">
+                        <div className="flex items-center gap-2">
+                          <QrCode className="size-4 text-primary shrink-0" />
+                          <div>
+                            <p className="font-medium text-[11px]">QR Code Pedidos</p>
+                            <p className="text-[9px] text-muted-foreground">Menu digital direto à mesa</p>
+                          </div>
+                        </div>
+                        <span className="rounded-md bg-emerald-500/15 px-2 py-0.5 text-[9px] font-medium text-emerald-400">
+                          Ativo
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between rounded-xl border border-border/60 bg-card/60 p-2.5 text-xs">
+                        <div className="flex items-center gap-2">
+                          <CalendarCheck className="size-4 text-primary shrink-0" />
+                          <div>
+                            <p className="font-medium text-[11px]">Reservas Integradas</p>
+                            <p className="text-[9px] text-muted-foreground">Online & por telefone</p>
+                          </div>
+                        </div>
+                        <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[9px] font-medium text-primary">
+                          Sincronizado
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Text & CTAs */}
+              <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-11">
+                <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
+                  <UtensilsCrossed className="size-3.5" />
+                  {extra.restaurantSection}
+                </div>
+
+                <h3 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+                  {extra.restaurantTitle}
+                </h3>
+
+                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
+                  {extra.restaurantText}
+                </p>
+
+                <div className="mt-7 space-y-3">
+                  {[
+                    extra.restaurantFeature1,
+                    extra.restaurantFeature2,
+                    extra.restaurantFeature3,
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 text-xs text-muted-foreground"
+                    >
+                      <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    to={paths.restaurantes}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
+                  >
+                    {extra.restaurantCtaPage}
+                    <ArrowRight className="size-4" />
+                  </Link>
+
+                  <Link
+                    to={paths.restaurantesDemo}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm hover:bg-accent"
+                  >
+                    <ExternalLink className="size-4" />
+                    {extra.restaurantCtaDemo}
                   </Link>
                 </div>
               </div>
