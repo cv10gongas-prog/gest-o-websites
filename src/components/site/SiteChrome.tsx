@@ -34,6 +34,16 @@ export function SiteChrome({
   }, [locale]);
 
   useEffect(() => {
+    // Nas páginas de Restaurantes (comercial e demo), manter estritamente a rota solicitada e evitar redirecionamento automático por idioma do navegador (preserva SEO e canonical)
+    if (page === "restaurantes" || page === "restaurantesDemo") {
+      try {
+        localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
     let guardado: string | null = null;
 
     try {
