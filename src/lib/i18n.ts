@@ -122,9 +122,65 @@ export function buildHead(locale: Locale, page: PageKey) {
     { name: "twitter:image", content: `${SITE_URL}/logo.png` },
   ];
 
+  let scriptsList: { type: string; children: string }[] | undefined = undefined;
+
+  if (page === "restaurantes") {
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "@id": `${url}#software`,
+          name: m.title,
+          description: m.description,
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web (Navegador Web / Web Browser)",
+          url: url,
+          image: `${SITE_URL}/logo.png`,
+          featureList: dict[locale].restaurantes.featureList.map((f) => f.title),
+          provider: {
+            "@type": "Organization",
+            "@id": `${SITE_URL}/#organization`,
+            name: "Nova Web Studio",
+            url: SITE_URL,
+            logo: `${SITE_URL}/logo.png`,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Cascais",
+              addressRegion: "Lisboa",
+              addressCountry: "PT",
+            },
+          },
+        },
+        {
+          "@type": "WebPage",
+          "@id": `${url}#webpage`,
+          url: url,
+          name: m.title,
+          description: m.description,
+          inLanguage: HTML_LANG[locale],
+          isPartOf: {
+            "@type": "WebSite",
+            "@id": `${SITE_URL}/#website`,
+            name: "Nova Web Studio",
+            url: SITE_URL,
+          },
+        },
+      ],
+    };
+
+    scriptsList = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(structuredData),
+      },
+    ];
+  }
+
   return {
     meta: metaList,
     links: [{ rel: "canonical", href: url }, ...alternateLinks(page)],
+    ...(scriptsList ? { scripts: scriptsList } : {}),
   };
 }
 
@@ -553,9 +609,9 @@ export const dict: Record<Locale, Dict> = {
           "Veja projetos e conceitos desenvolvidos pela Nova Web Studio para diferentes áreas de negócio, com foco em design moderno, clareza e contacto fácil.",
       },
       restaurantes: {
-        title: "Solução para Restaurantes | Nova Web Studio",
+        title: "Software de Gestão para Restaurantes | Nova Web Studio",
         description:
-          "Website, menu digital, reservas e pedidos por QR Code. Uma solução completa que simplifica o serviço e a gestão do teu restaurante.",
+          "Simplifique a gestão do seu restaurante com pedidos por QR Code, reservas online, gestão de mesas e cozinha. Conheça a solução e experimente a demonstração.",
       },
       restaurantesDemo: {
         title: "Demonstração para Restaurantes | Nova Web Studio",
@@ -1243,9 +1299,9 @@ export const dict: Record<Locale, Dict> = {
           "See projects and concepts created by Nova Web Studio for different industries, focused on modern design, clarity and easy contact.",
       },
       restaurantes: {
-        title: "Restaurant Digital Solution | Nova Web Studio",
+        title: "Restaurant Management Software | Nova Web Studio",
         description:
-          "Website, digital menu, reservations and table QR Code ordering in one complete solution that streamlines restaurant operations.",
+          "Streamline your restaurant operations with table QR Code ordering, online reservations, floor management, and kitchen display. Explore the solution and try the live demo.",
       },
       restaurantesDemo: {
         title: "Interactive Restaurant Demo | Nova Web Studio",
@@ -1936,9 +1992,9 @@ export const dict: Record<Locale, Dict> = {
           "Projekte und Konzepte von Nova Web Studio für verschiedene Branchen – modernes Design, Klarheit und einfache Kontaktaufnahme.",
       },
       restaurantes: {
-        title: "Digitale Restaurantlösung | Nova Web Studio",
+        title: "Gastronomie & Restaurant-Management-Software | Nova Web Studio",
         description:
-          "Website, digitale Speisekarte, QR-Code-Bestellungen und Reservierungen in einer Plattform, die den Service vereinfacht.",
+          "Optimieren Sie Ihre Gastronomie mit QR-Code-Bestellungen am Tisch, Online-Reservierungen, Tisch- und Küchenverwaltung. Entdecken Sie die Lösung und testen Sie die Live-Demo.",
       },
       restaurantesDemo: {
         title: "Interaktive Restaurant-Demo | Nova Web Studio",
@@ -2632,9 +2688,9 @@ export const dict: Record<Locale, Dict> = {
           "Découvrez les projets et concepts réalisés par Nova Web Studio pour différents secteurs : design moderne, clarté et contact facile.",
       },
       restaurantes: {
-        title: "Solution Digitale pour Restaurants | Nova Web Studio",
+        title: "Logiciel de Gestion pour Restaurants | Nova Web Studio",
         description:
-          "Site web, menu digital, commandes par QR Code à table et réservations en une plateforme tout-en-un qui simplifie le service.",
+          "Simplifiez la gestion de votre restaurant avec les commandes par QR Code, réservations en ligne, gestion de salle et de cuisine. Découvrez la solution et essayez la démo.",
       },
       restaurantesDemo: {
         title: "Démo Interactive pour Restaurants | Nova Web Studio",
@@ -3327,9 +3383,9 @@ export const dict: Record<Locale, Dict> = {
           "Proyectos y conceptos desarrollados por Nova Web Studio para distintos sectores, con diseño moderno, claridad y contacto sencillo.",
       },
       restaurantes: {
-        title: "Solución Digital para Restaurantes | Nova Web Studio",
+        title: "Software de Gestión para Restaurantes | Nova Web Studio",
         description:
-          "Sitio web, menú digital, reservas y pedidos por código QR en mesa. Una plataforma integral que simplifica el servicio.",
+          "Simplifica la gestión de tu restaurante con pedidos por código QR, reservas online, gestión de mesas y cocina. Conoce la solución y prueba la demostración en directo.",
       },
       restaurantesDemo: {
         title: "Demostración Interactiva para Restaurantes | Nova Web Studio",
