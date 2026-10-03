@@ -3,15 +3,21 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 import {
+  dict,
   ORCAMENTO_VALUES,
   TIPO_VALUES,
   type Locale,
 } from "@/lib/i18n";
 
-// Rate limiting in-memory map (IP -> timestamps array)
+// Rate limiting in-memory maps
 const ipSubmissions = new Map<string, number[]>();
+const emailConfirmations = new Map<string, number[]>();
+
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_SUBMISSIONS_PER_WINDOW = 5;
+
+const EMAIL_COOLDOWN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_CONFIRMATIONS_PER_EMAIL = 2; // Max 2 client confirmation emails per address per 15 min
 
 function isRateLimited(ip: string): boolean {
   if (!ip || ip === "desconhecido") return false;
@@ -24,6 +30,20 @@ function isRateLimited(ip: string): boolean {
   }
   timestamps.push(now);
   ipSubmissions.set(ip, timestamps);
+  return false;
+}
+
+function isEmailConfirmationLimited(email: string): boolean {
+  const normalizedEmail = email.trim().toLowerCase();
+  const now = Date.now();
+  const timestamps = (emailConfirmations.get(normalizedEmail) ?? []).filter(
+    (t) => now - t < EMAIL_COOLDOWN_WINDOW_MS,
+  );
+  if (timestamps.length >= MAX_CONFIRMATIONS_PER_EMAIL) {
+    return true;
+  }
+  timestamps.push(now);
+  emailConfirmations.set(normalizedEmail, timestamps);
   return false;
 }
 
@@ -80,6 +100,10 @@ export const contactFormSchema = z.object({
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
+
+/* ========================================================================= */
+/* 1. NOTIFICAÇÃO ADMINISTRATIVA (Target: geral@novawebstudio.pt)             */
+/* ========================================================================= */
 
 export function buildContactNotificationHtml(data: {
   id: string;
@@ -334,7 +358,7 @@ async function dispatchNotificationEmail(payload: {
   const toEmail = process.env.NOTIFICATION_EMAIL_TO || "geral@novawebstudio.pt";
   const fromEmail =
     process.env.NOTIFICATION_EMAIL_FROM ||
-    "Nova Web Studio <notificacoes@novawebstudio.pt>";
+    "Nova Web Studio <notificacoes@notify.novawebstudio.pt>";
 
   if (!apiKey) {
     console.warn(
@@ -370,7 +394,7 @@ async function dispatchNotificationEmail(payload: {
     if (!response.ok) {
       const errorText = await response.text();
       console.error(
-        `[Notificações] Falha ao enviar email via Resend (${response.status}):`,
+        `[Notificações] Falha ao enviar notificação interna via Resend (${response.status}):`,
         errorText,
       );
       return { ok: false, error: `Resend API HTTP ${response.status}` };
@@ -378,11 +402,11 @@ async function dispatchNotificationEmail(payload: {
 
     const resData = (await response.json()) as { id?: string };
     console.log(
-      `[Notificações] Email enviado com sucesso para ${toEmail}. Resend ID: ${resData.id ?? "ok"}`,
+      `[Notificações] Notificação interna enviada com sucesso para ${toEmail}. Resend ID: ${resData.id ?? "ok"}`,
     );
     return { ok: true };
   } catch (err) {
-    console.error("[Notificações] Exceção no envio de email:", err);
+    console.error("[Notificações] Exceção no envio da notificação interna:", err);
     return {
       ok: false,
       error: err instanceof Error ? err.message : "Network error",
@@ -390,9 +414,508 @@ async function dispatchNotificationEmail(payload: {
   }
 }
 
+/* ========================================================================= */
+/* 2. CONFIRMAÇÃO PARA O CLIENTE (Target: payload.email)                     */
+/* ========================================================================= */
+
+export const CLIENT_CONFIRMATION_I18N = {
+  pt: {
+    subject: "Recebemos o seu pedido — Nova Web Studio",
+    headerBadge: "Confirmação de Pedido",
+    greeting: (nome: string) => `Olá, ${nome}.`,
+    thankYou:
+      "Obrigado pelo seu contacto com a Nova Web Studio. Registámos com sucesso o seu pedido de orçamento.",
+    nextStep:
+      "A nossa equipa irá analisar as informações que nos enviou e entrar em contacto consigo dentro de 24 horas úteis para apresentar os próximos passos e esclarecer qualquer dúvida.",
+    summaryTitle: "Resumo do seu pedido",
+    labels: {
+      nome: "Nome",
+      empresa: "Empresa",
+      email: "E-mail",
+      telefone: "Telefone",
+      tipoProjeto: "Tipo de projeto",
+      orcamento: "Orçamento previsto",
+      websiteAtual: "Website atual",
+      prazo: "Prazo pretendido",
+      reuniao: "Reunião inicial",
+      reuniaoSim: "Sim, solicitou agendamento",
+      reuniaoNao: "Não solicitada",
+      mensagem: "Mensagem enviada",
+      naoIndicado: "Não indicada",
+      nenhum: "Nenhum",
+    },
+    replyNotice:
+      "Caso pretenda acrescentar alguma informação, enviar ficheiros ou referências, basta responder diretamente a este e-mail.",
+    signoff: "Com os melhores cumprimentos,",
+    team: "Equipa Nova Web Studio",
+    footerText: "Nova Web Studio · Cascais, Lisboa, Portugal",
+  },
+  en: {
+    subject: "We received your request — Nova Web Studio",
+    headerBadge: "Request Confirmation",
+    greeting: (nome: string) => `Hello, ${nome}.`,
+    thankYou:
+      "Thank you for reaching out to Nova Web Studio. We have successfully received your quote request.",
+    nextStep:
+      "Our team will review your project details and get back to you within 24 business hours to discuss next steps and answer any questions.",
+    summaryTitle: "Summary of your request",
+    labels: {
+      nome: "Name",
+      empresa: "Company",
+      email: "Email",
+      telefone: "Phone",
+      tipoProjeto: "Project type",
+      orcamento: "Expected budget",
+      websiteAtual: "Current website",
+      prazo: "Preferred timeline",
+      reuniao: "Introductory meeting",
+      reuniaoSim: "Yes, meeting requested",
+      reuniaoNao: "Not requested",
+      mensagem: "Sent message",
+      naoIndicado: "Not specified",
+      nenhum: "None",
+    },
+    replyNotice:
+      "If you wish to add further details, share files or references, simply reply directly to this email.",
+    signoff: "Best regards,",
+    team: "Nova Web Studio Team",
+    footerText: "Nova Web Studio · Cascais, Lisbon, Portugal",
+  },
+  de: {
+    subject: "Wir haben Ihre Anfrage erhalten — Nova Web Studio",
+    headerBadge: "Anfragebestätigung",
+    greeting: (nome: string) => `Hallo ${nome},`,
+    thankYou:
+      "Vielen Dank für Ihre Kontaktaufnahme mit Nova Web Studio. Wir haben Ihre Angebotsanfrage erfolgreich erhalten.",
+    nextStep:
+      "Unser Team prüft Ihre Angaben und wird sich innerhalb von 24 Werktagsstunden bei Ihnen melden, um die nächsten Schritte zu besprechen.",
+    summaryTitle: "Zusammenfassung Ihrer Anfrage",
+    labels: {
+      nome: "Name",
+      empresa: "Unternehmen",
+      email: "E-Mail",
+      telefone: "Telefon",
+      tipoProjeto: "Projektart",
+      orcamento: "Geplantes Budget",
+      websiteAtual: "Aktuelle Website",
+      prazo: "Gewünschter Zeitraum",
+      reuniao: "Erstgespräch",
+      reuniaoSim: "Ja, Gespräch gewünscht",
+      reuniaoNao: "Nicht gewünscht",
+      mensagem: "Gesendete Nachricht",
+      naoIndicado: "Nicht angegeben",
+      nenhum: "Keine",
+    },
+    replyNotice:
+      "Falls Sie zusätzliche Informationen, Dateien oder Beispiele ergänzen möchten, antworten Sie einfach direkt auf diese E-Mail.",
+    signoff: "Mit freundlichen Grüßen,",
+    team: "Ihr Team von Nova Web Studio",
+    footerText: "Nova Web Studio · Cascais, Lissabon, Portugal",
+  },
+  fr: {
+    subject: "Nous avons bien reçu votre demande — Nova Web Studio",
+    headerBadge: "Confirmation de demande",
+    greeting: (nome: string) => `Bonjour ${nome},`,
+    thankYou:
+      "Merci d'avoir contacté Nova Web Studio. Nous confirmons la bonne réception de votre demande de devis.",
+    nextStep:
+      "Notre équipe va étudier votre projet et vous recontacter sous 24 heures ouvrables pour vous présenter les prochaines étapes.",
+    summaryTitle: "Récapitulatif de votre demande",
+    labels: {
+      nome: "Nom",
+      empresa: "Entreprise",
+      email: "E-mail",
+      telefone: "Téléphone",
+      tipoProjeto: "Type de projet",
+      orcamento: "Budget prévu",
+      websiteAtual: "Site actuel",
+      prazo: "Délai souhaité",
+      reuniao: "Rendez-vous de présentation",
+      reuniaoSim: "Oui, rendez-vous demandé",
+      reuniaoNao: "Non demandé",
+      mensagem: "Message envoyé",
+      naoIndicado: "Non spécifié",
+      nenhum: "Aucun",
+    },
+    replyNotice:
+      "Si vous souhaitez ajouter des détails, nous transmettre des documents ou des exemples, vous pouvez répondre directement à cet e-mail.",
+    signoff: "Cordialement,",
+    team: "L'équipe Nova Web Studio",
+    footerText: "Nova Web Studio · Cascais, Lisbonne, Portugal",
+  },
+  es: {
+    subject: "Hemos recibido tu solicitud — Nova Web Studio",
+    headerBadge: "Confirmación de Solicitud",
+    greeting: (nome: string) => `Hola, ${nome}.`,
+    thankYou:
+      "Gracias por contactar con Nova Web Studio. Hemos registrado tu solicitud de presupuesto con éxito.",
+    nextStep:
+      "Nuestro equipo revisará los detalles de tu proyecto y se pondrá en contacto contigo en un plazo de 24 horas laborables para orientarte sobre los siguientes pasos.",
+    summaryTitle: "Resumen de tu solicitud",
+    labels: {
+      nome: "Nombre",
+      empresa: "Empresa",
+      email: "Email",
+      telefone: "Teléfono",
+      tipoProjeto: "Tipo de proyecto",
+      orcamento: "Presupuesto previsto",
+      websiteAtual: "Web actual",
+      prazo: "Plazo deseado",
+      reuniao: "Reunión de presentación",
+      reuniaoSim: "Sí, reunión solicitada",
+      reuniaoNao: "No solicitada",
+      mensagem: "Mensaje enviado",
+      naoIndicado: "No especificada",
+      nenhum: "Ninguno",
+    },
+    replyNotice:
+      "Si deseas añadir más información, compartir archivos o referencias, solo tienes que responder directamente a este correo.",
+    signoff: "Un cordial saludo,",
+    team: "Equipo de Nova Web Studio",
+    footerText: "Nova Web Studio · Cascais, Lisboa, Portugal",
+  },
+};
+
+export function buildClientConfirmationHtml(data: {
+  nome: string;
+  empresa?: string | null;
+  email: string;
+  telefone?: string | null;
+  tipoIndex: number;
+  orcamentoIndex: number;
+  websiteAtual?: string | null;
+  prazoTexto?: string | null;
+  mensagemOriginal?: string | null;
+  querReuniao: boolean;
+  locale: Locale;
+  createdAt: string;
+}): string {
+  const i18n = CLIENT_CONFIRMATION_I18N[data.locale] ?? CLIENT_CONFIRMATION_I18N.pt;
+  const safeNome = escapeHtml(data.nome);
+  const safeEmpresa = escapeHtml(data.empresa) || `<em>${escapeHtml(i18n.labels.naoIndicado)}</em>`;
+  const safeEmail = escapeHtml(data.email);
+  const safeTelefone = data.telefone
+    ? `<span style="color:#ffffff;">${escapeHtml(data.telefone)}</span>`
+    : `<em>${escapeHtml(i18n.labels.naoIndicado)}</em>`;
+
+  const tipoLabel =
+    dict[data.locale]?.contact?.tipos?.[data.tipoIndex] ??
+    TIPO_VALUES[data.tipoIndex] ??
+    TIPO_VALUES[0];
+  const safeTipo = escapeHtml(tipoLabel);
+
+  const orcamentoLabel =
+    dict[data.locale]?.contact?.orcamentos?.[data.orcamentoIndex] ??
+    ORCAMENTO_VALUES[data.orcamentoIndex] ??
+    ORCAMENTO_VALUES[0];
+  const safeOrcamento = escapeHtml(orcamentoLabel);
+
+  const safeWebsiteUrl = sanitizeUrl(data.websiteAtual);
+  const safeWebsite = safeWebsiteUrl
+    ? `<a href="${safeWebsiteUrl}" target="_blank" rel="noopener noreferrer" style="color:#2dd4bf;text-decoration:underline;">${escapeHtml(data.websiteAtual)}</a>`
+    : `<em>${escapeHtml(i18n.labels.nenhum)}</em>`;
+
+  const safePrazo = escapeHtml(data.prazoTexto) || `<em>${escapeHtml(i18n.labels.naoIndicado)}</em>`;
+  const safeMensagem = escapeHtml(data.mensagemOriginal);
+
+  return `<!DOCTYPE html>
+<html lang="${data.locale}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(i18n.subject)}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#07101c;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;line-height:1.6;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#07101c;padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;background-color:#0e1927;border:1px solid #1f2e42;border-radius:16px;overflow:hidden;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="padding:32px 32px 24px 32px;border-bottom:1px solid #1f2e42;background:linear-gradient(135deg,rgba(45,212,191,0.12) 0%,rgba(14,25,39,0) 100%);">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <span style="display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#2dd4bf;margin-bottom:8px;">
+                      NOVA WEB STUDIO
+                    </span>
+                    <h1 style="margin:0;font-size:22px;font-weight:700;color:#ffffff;line-height:1.2;">
+                      ${escapeHtml(i18n.headerBadge)}
+                    </h1>
+                  </td>
+                  <td align="right" style="vertical-align:top;">
+                    <span style="display:inline-block;padding:4px 10px;background-color:#162638;border:1px solid #2a3e56;border-radius:20px;font-size:11px;color:#94a3b8;white-space:nowrap;">
+                      ${escapeHtml(data.createdAt)}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- GREETING & CONFIRMATION MESSAGE -->
+          <tr>
+            <td style="padding:28px 32px 16px 32px;">
+              <div style="font-size:16px;font-weight:600;color:#ffffff;margin-bottom:12px;">
+                ${escapeHtml(i18n.greeting(data.nome))}
+              </div>
+              <p style="margin:0 0 12px 0;font-size:14px;color:#cbd5e1;line-height:1.6;">
+                ${escapeHtml(i18n.thankYou)}
+              </p>
+              <p style="margin:0;font-size:14px;color:#cbd5e1;line-height:1.6;">
+                ${escapeHtml(i18n.nextStep)}
+              </p>
+            </td>
+          </tr>
+
+          <!-- SUMMARY SECTION -->
+          <tr>
+            <td style="padding:12px 32px 20px 32px;">
+              <h2 style="margin:0 0 12px 0;font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">
+                ${escapeHtml(i18n.summaryTitle)}
+              </h2>
+              <table width="100%" cellpadding="8" cellspacing="0" border="0" style="background-color:#0b1522;border:1px solid #1a2a3e;border-radius:10px;font-size:13px;">
+                <tr style="border-bottom:1px solid #152232;">
+                  <td width="38%" style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.tipoProjeto)}:</td>
+                  <td style="color:#ffffff;font-weight:600;border-bottom:1px solid #152232;">${safeTipo}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #152232;">
+                  <td style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.orcamento)}:</td>
+                  <td style="color:#ffffff;border-bottom:1px solid #152232;">${safeOrcamento}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #152232;">
+                  <td style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.email)}:</td>
+                  <td style="color:#ffffff;border-bottom:1px solid #152232;">${safeEmail}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #152232;">
+                  <td style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.telefone)}:</td>
+                  <td style="color:#ffffff;border-bottom:1px solid #152232;">${safeTelefone}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #152232;">
+                  <td style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.empresa)}:</td>
+                  <td style="color:#ffffff;border-bottom:1px solid #152232;">${safeEmpresa}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #152232;">
+                  <td style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.websiteAtual)}:</td>
+                  <td style="color:#ffffff;border-bottom:1px solid #152232;">${safeWebsite}</td>
+                </tr>
+                <tr style="border-bottom:1px solid #152232;">
+                  <td style="color:#94a3b8;font-weight:500;border-bottom:1px solid #152232;">${escapeHtml(i18n.labels.prazo)}:</td>
+                  <td style="color:#ffffff;border-bottom:1px solid #152232;">${safePrazo}</td>
+                </tr>
+                <tr>
+                  <td style="color:#94a3b8;font-weight:500;">${escapeHtml(i18n.labels.reuniao)}:</td>
+                  <td style="color:#ffffff;">
+                    ${
+                      data.querReuniao
+                        ? `<span style="color:#34d399;font-weight:600;">✓ ${escapeHtml(i18n.labels.reuniaoSim)}</span>`
+                        : `<span style="color:#94a3b8;">${escapeHtml(i18n.labels.reuniaoNao)}</span>`
+                    }
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- CLIENT MESSAGE -->
+          ${
+            data.mensagemOriginal
+              ? `<tr>
+            <td style="padding:4px 32px 20px 32px;">
+              <h2 style="margin:0 0 10px 0;font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">
+                ${escapeHtml(i18n.labels.mensagem)}
+              </h2>
+              <div style="background-color:#07101c;border-left:3px solid #2dd4bf;border-radius:8px;padding:16px 20px;font-size:13px;color:#e2e8f0;white-space:pre-wrap;line-height:1.6;font-family:inherit;">
+                ${safeMensagem}
+              </div>
+            </td>
+          </tr>`
+              : ""
+          }
+
+          <!-- REPLY INSTRUCTIONS & SIGNOFF -->
+          <tr>
+            <td style="padding:12px 32px 28px 32px;">
+              <div style="background-color:#101d2d;border:1px solid #1f3248;border-radius:10px;padding:16px 20px;font-size:13px;color:#94a3b8;line-height:1.6;margin-bottom:20px;">
+                💡 ${escapeHtml(i18n.replyNotice)}
+              </div>
+              <div style="font-size:13px;color:#cbd5e1;line-height:1.5;">
+                <div>${escapeHtml(i18n.signoff)}</div>
+                <div style="font-weight:700;color:#2dd4bf;margin-top:2px;">${escapeHtml(i18n.team)}</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="padding:20px 32px;border-top:1px solid #1f2e42;background-color:#0a1320;font-size:11px;color:#64748b;text-align:center;">
+              <div>${escapeHtml(i18n.footerText)}</div>
+              <div style="margin-top:4px;">
+                <a href="https://www.novawebstudio.pt" target="_blank" rel="noopener noreferrer" style="color:#94a3b8;text-decoration:none;">https://www.novawebstudio.pt</a>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+export function buildClientConfirmationPlainText(data: {
+  nome: string;
+  empresa?: string | null;
+  email: string;
+  telefone?: string | null;
+  tipoIndex: number;
+  orcamentoIndex: number;
+  websiteAtual?: string | null;
+  prazoTexto?: string | null;
+  mensagemOriginal?: string | null;
+  querReuniao: boolean;
+  locale: Locale;
+  createdAt: string;
+}): string {
+  const i18n = CLIENT_CONFIRMATION_I18N[data.locale] ?? CLIENT_CONFIRMATION_I18N.pt;
+  const tipoLabel =
+    dict[data.locale]?.contact?.tipos?.[data.tipoIndex] ??
+    TIPO_VALUES[data.tipoIndex] ??
+    TIPO_VALUES[0];
+  const orcamentoLabel =
+    dict[data.locale]?.contact?.orcamentos?.[data.orcamentoIndex] ??
+    ORCAMENTO_VALUES[data.orcamentoIndex] ??
+    ORCAMENTO_VALUES[0];
+
+  return `${i18n.subject}
+Data: ${data.createdAt}
+
+${i18n.greeting(data.nome)}
+
+${i18n.thankYou}
+${i18n.nextStep}
+
+==================================================
+${i18n.summaryTitle.toUpperCase()}
+==================================================
+${i18n.labels.tipoProjeto}: ${tipoLabel}
+${i18n.labels.orcamento}: ${orcamentoLabel}
+${i18n.labels.email}: ${data.email}
+${i18n.labels.telefone}: ${data.telefone || i18n.labels.naoIndicado}
+${i18n.labels.empresa}: ${data.empresa || i18n.labels.naoIndicado}
+${i18n.labels.websiteAtual}: ${data.websiteAtual || i18n.labels.nenhum}
+${i18n.labels.prazo}: ${data.prazoTexto || i18n.labels.naoIndicado}
+${i18n.labels.reuniao}: ${data.querReuniao ? i18n.labels.reuniaoSim : i18n.labels.reuniaoNao}
+
+${
+  data.mensagemOriginal
+    ? `==================================================\n${i18n.labels.mensagem.toUpperCase()}\n==================================================\n${data.mensagemOriginal}\n`
+    : ""
+}
+==================================================
+${i18n.replyNotice}
+
+${i18n.signoff}
+${i18n.team}
+https://www.novawebstudio.pt
+`;
+}
+
+async function dispatchClientConfirmationEmail(payload: {
+  nome: string;
+  empresa?: string | null;
+  email: string;
+  telefone?: string | null;
+  tipoIndex: number;
+  orcamentoIndex: number;
+  websiteAtual?: string | null;
+  prazoTexto?: string | null;
+  mensagemOriginal?: string | null;
+  querReuniao: boolean;
+  locale: Locale;
+  createdAt: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const fromEmail =
+    process.env.NOTIFICATION_EMAIL_FROM ||
+    "Nova Web Studio <notificacoes@notify.novawebstudio.pt>";
+  const replyToEmail = "geral@novawebstudio.pt";
+
+  if (!apiKey) {
+    console.warn(
+      `[Notificações] RESEND_API_KEY não está configurada no servidor. Confirmação para o cliente ${payload.email} não enviada.`,
+    );
+    return {
+      ok: false,
+      error: "RESEND_API_KEY not configured",
+    };
+  }
+
+  // Anti-abuse check: Cooldown per recipient address to prevent email bombing
+  if (isEmailConfirmationLimited(payload.email)) {
+    console.warn(
+      `[Anti-Abuse] Limite de confirmações para o email ${payload.email} atingido (máx 2 por 15 min). Confirmação ao cliente suprimida.`,
+    );
+    return {
+      ok: true,
+      error: "Rate limited for recipient address",
+    };
+  }
+
+  const i18n = CLIENT_CONFIRMATION_I18N[payload.locale] ?? CLIENT_CONFIRMATION_I18N.pt;
+  const subject = i18n.subject;
+  const html = buildClientConfirmationHtml(payload);
+  const text = buildClientConfirmationPlainText(payload);
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [payload.email],
+        reply_to: replyToEmail,
+        subject,
+        html,
+        text,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(
+        `[Notificações] Falha ao enviar confirmação ao cliente via Resend (${response.status}):`,
+        errorText,
+      );
+      return { ok: false, error: `Resend API HTTP ${response.status}` };
+    }
+
+    const resData = (await response.json()) as { id?: string };
+    console.log(
+      `[Notificações] Email de confirmação enviado com sucesso para ${payload.email}. Resend ID: ${resData.id ?? "ok"}`,
+    );
+    return { ok: true };
+  } catch (err) {
+    console.error("[Notificações] Exceção no envio da confirmação ao cliente:", err);
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Network error",
+    };
+  }
+}
+
+/* ========================================================================= */
+/* 3. SERVER FUNCTION PRINCIPAL (Submissão do Formulário)                    */
+/* ========================================================================= */
+
 /**
  * Server function to securely validate, persist contact request in Supabase,
- * and dispatch email notification to geral@novawebstudio.pt.
+ * dispatch team notification to geral@novawebstudio.pt and client confirmation email.
  */
 export const submeterPedidoContacto = createServerFn({ method: "POST" })
   .validator((data: unknown) => contactFormSchema.parse(data))
@@ -489,26 +1012,45 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       timeZone: "Europe/Lisbon",
     }).format(now);
 
-    // 7. Dispatch Notification Email (Fail-safe: does not fail the lead if email dispatch fails)
+    // 7. Dispatch Emails Independently (Fail-safe: does not fail the lead if email dispatch fails)
     try {
-      await dispatchNotificationEmail({
-        id: leadId,
-        nome: data.nome,
-        empresa: data.empresa,
-        email: data.email,
-        telefone: data.telefone,
-        tipoProjeto,
-        orcamento,
-        websiteAtual: data.websiteAtual,
-        prazoTexto: data.prazoTexto,
-        mensagemOriginal: data.mensagemOriginal,
-        querReuniao: data.querReuniao,
-        locale: data.locale,
-        createdAt: createdAtFormatted,
-      });
+      await Promise.allSettled([
+        // A. Notificação interna para geral@novawebstudio.pt
+        dispatchNotificationEmail({
+          id: leadId,
+          nome: data.nome,
+          empresa: data.empresa,
+          email: data.email,
+          telefone: data.telefone,
+          tipoProjeto,
+          orcamento,
+          websiteAtual: data.websiteAtual,
+          prazoTexto: data.prazoTexto,
+          mensagemOriginal: data.mensagemOriginal,
+          querReuniao: data.querReuniao,
+          locale: data.locale,
+          createdAt: createdAtFormatted,
+        }),
+
+        // B. Confirmação para o cliente (data.email)
+        dispatchClientConfirmationEmail({
+          nome: data.nome,
+          empresa: data.empresa,
+          email: data.email,
+          telefone: data.telefone,
+          tipoIndex: data.tipoIndex,
+          orcamentoIndex: data.orcamentoIndex,
+          websiteAtual: data.websiteAtual,
+          prazoTexto: data.prazoTexto,
+          mensagemOriginal: data.mensagemOriginal,
+          querReuniao: data.querReuniao,
+          locale: data.locale,
+          createdAt: createdAtFormatted,
+        }),
+      ]);
     } catch (emailErr) {
       console.error(
-        `[Notificações] Erro não-bloqueante no envio de notificação para pedido ${leadId}:`,
+        `[Notificações] Erro não-bloqueante no processamento dos emails para pedido ${leadId}:`,
         emailErr,
       );
     }
