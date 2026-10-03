@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import { CookieConsent } from "@/components/site/CookieConsent";
@@ -7,10 +7,8 @@ import {
   LOCALE_STORAGE_KEY,
 } from "@/components/site/LanguageSwitcher";
 import {
-  detectBrowserLocale,
   dict,
   HTML_LANG,
-  LOCALES,
   PATHS,
   type Locale,
   type PageKey,
@@ -27,61 +25,15 @@ export function SiteChrome({
 }) {
   const t = dict[locale];
   const paths = PATHS[locale];
-  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.lang = HTML_LANG[locale];
-  }, [locale]);
-
-  useEffect(() => {
-    // Nas páginas de Restaurantes (comercial e demo), manter estritamente a rota solicitada e evitar redirecionamento automático por idioma do navegador (preserva SEO e canonical)
-    if (page === "restaurantes" || page === "restaurantesDemo") {
-      try {
-        localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-      } catch {
-        // ignore
-      }
-      return;
-    }
-
-    let guardado: string | null = null;
-
     try {
-      guardado = localStorage.getItem(LOCALE_STORAGE_KEY);
-    } catch {
-      guardado = null;
-    }
-
-    if (locale !== "pt" || guardado) {
-      if (guardado !== locale && locale !== "pt") {
-        try {
-          localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-        } catch {
-          // ignore
-        }
-      }
-
-      return;
-    }
-
-    const detetado = detectBrowserLocale();
-
-    try {
-      localStorage.setItem(LOCALE_STORAGE_KEY, detetado);
+      localStorage.setItem(LOCALE_STORAGE_KEY, locale);
     } catch {
       // ignore
     }
-
-    if (
-      detetado !== "pt" &&
-      (LOCALES as readonly string[]).includes(detetado)
-    ) {
-      navigate({
-        to: PATHS[detetado][page],
-        replace: true,
-      });
-    }
-  }, [locale, page, navigate]);
+  }, [locale]);
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
