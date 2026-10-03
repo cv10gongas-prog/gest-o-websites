@@ -29,12 +29,10 @@ import { toast } from "sonner";
 
 import { Chip } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
-import { supabase } from "@/integrations/supabase/client";
+import { submeterPedidoContacto } from "@/lib/contact.functions";
 import {
   dict,
-  ORCAMENTO_VALUES,
   PATHS,
-  TIPO_VALUES,
   type Locale,
 } from "@/lib/i18n";
 
@@ -582,6 +580,8 @@ export function ContactPage({
   const [sent, setSent] =
     useState(false);
 
+  const [honeypot, setHoneypot] = useState("");
+
   const [form, setForm] = useState({
     nome: "",
     empresa: "",
@@ -642,94 +642,49 @@ export function ContactPage({
 
     setSending(true);
 
-    const tipoIndex =
-      Number(form.tipoIndex);
-
-    const orcamentoIndex =
-      Number(form.orcamentoIndex);
-
-    const websiteAtual =
-      normalizeWebsite(
-        form.websiteAtual,
-      );
-
+    const tipoIndex = Number(form.tipoIndex);
+    const orcamentoIndex = Number(form.orcamentoIndex);
+    const websiteAtual = normalizeWebsite(form.websiteAtual);
     const prazoIndex =
-      form.prazoIndex === ""
-        ? null
-        : Number(form.prazoIndex);
-
+      form.prazoIndex === "" ? null : Number(form.prazoIndex);
     const prazoDesejado =
       prazoIndex !== null
-        ? extra.deadlineOptions[
-            prazoIndex
-          ] ?? null
+        ? extra.deadlineOptions[prazoIndex] ?? null
         : null;
+    const mensagemOriginal = form.mensagem.trim();
 
-    const mensagemOriginal =
-      form.mensagem.trim();
-
-    const detalhesAdicionais = [
-      websiteAtual
-        ? `${extra.messageWebsiteLabel}: ${websiteAtual}`
-        : null,
-
-      prazoDesejado
-        ? `${extra.messageDeadlineLabel}: ${prazoDesejado}`
-        : null,
-
-      "Origem: Website público",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const mensagemFinal = [
-      mensagemOriginal || null,
-      detalhesAdicionais,
-    ]
-      .filter(Boolean)
-      .join("\n\n");
-
-    const { error } = await supabase
-      .from("website_requests")
-      .insert({
-        nome,
-
-        empresa:
-          form.empresa.trim() || null,
-
-        email,
-
-        telefone:
-          form.telefone.trim() || null,
-
-        tipo_projeto:
-          TIPO_VALUES[tipoIndex] ??
-          TIPO_VALUES[0],
-
-        orcamento:
-          ORCAMENTO_VALUES[
-            orcamentoIndex
-          ] ?? ORCAMENTO_VALUES[0],
-
-        mensagem: mensagemFinal,
-
-        quer_reuniao:
-          form.querReuniao,
+    try {
+      const res = await submeterPedidoContacto({
+        data: {
+          nome,
+          empresa: form.empresa.trim() || null,
+          email,
+          telefone: form.telefone.trim() || null,
+          tipoIndex,
+          orcamentoIndex,
+          websiteAtual: websiteAtual || null,
+          prazoTexto: prazoDesejado || null,
+          mensagemOriginal: mensagemOriginal || null,
+          querReuniao: form.querReuniao,
+          locale,
+          honeypot: honeypot || undefined,
+        },
       });
 
-    setSending(false);
+      if (!res?.ok) {
+        toast.error(t.errorSend);
+        setSending(false);
+        return;
+      }
 
-    if (error) {
-      console.error(error);
-
+      toast.success(t.success);
+      setSent(true);
+    } catch (err) {
+      console.error("[ContactPage] Erro ao submeter pedido:", err);
       toast.error(t.errorSend);
-
-      return;
+    } finally {
+      setSending(false);
     }
-
-    toast.success(t.success);
-
-    setSent(true);
   }
 
   const tipoOptions = t.tipos.map(
@@ -919,6 +874,30 @@ export function ContactPage({
                   onSubmit={submit}
                   className="p-6 sm:p-8 lg:p-9"
                 >
+                  {/* Anti-spam Honeypot Field */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "-9999px",
+                      opacity: 0,
+                      height: 0,
+                      width: 0,
+                      overflow: "hidden",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <label htmlFor="website_url_hp">Não preencha este campo se for humano</label>
+                    <input
+                      id="website_url_hp"
+                      type="text"
+                      name="website_url_hp"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
+
                   {/* HEADER */}
                   <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-end sm:justify-between">
                     <div>
