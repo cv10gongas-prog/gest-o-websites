@@ -9,43 +9,20 @@ import {
   type Locale,
 } from "@/lib/i18n";
 
-// Rate limiting in-memory maps
-const ipSubmissions = new Map<string, number[]>();
-const emailConfirmations = new Map<string, number[]>();
-
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const MAX_SUBMISSIONS_PER_WINDOW = 5;
-
-const EMAIL_COOLDOWN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const MAX_CONFIRMATIONS_PER_EMAIL = 2; // Max 2 client confirmation emails per address per 15 min
-
-function isRateLimited(ip: string): boolean {
-  if (!ip || ip === "desconhecido") return false;
-  const now = Date.now();
-  const timestamps = (ipSubmissions.get(ip) ?? []).filter(
-    (t) => now - t < RATE_LIMIT_WINDOW_MS,
-  );
-  if (timestamps.length >= MAX_SUBMISSIONS_PER_WINDOW) {
-    return true;
-  }
-  timestamps.push(now);
-  ipSubmissions.set(ip, timestamps);
-  return false;
+async function sha256(value: string): Promise<string> {
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
-function isEmailConfirmationLimited(email: string): boolean {
-  const normalizedEmail = email.trim().toLowerCase();
-  const now = Date.now();
-  const timestamps = (emailConfirmations.get(normalizedEmail) ?? []).filter(
-    (t) => now - t < EMAIL_COOLDOWN_WINDOW_MS,
-  );
-  if (timestamps.length >= MAX_CONFIRMATIONS_PER_EMAIL) {
-    return true;
-  }
-  timestamps.push(now);
-  emailConfirmations.set(normalizedEmail, timestamps);
-  return false;
-}
+type ContactGuardResult = {
+  allowed: boolean;
+  duplicate: boolean;
+  ip_limited: boolean;
+  email_limited: boolean;
+};
 
 function escapeHtml(str: string | null | undefined): string {
   if (!str) return "";
@@ -69,11 +46,22 @@ function sanitizeUrl(url: string | null | undefined): string | null {
 
 function getClientIp(request: Request | undefined): string {
   if (!request) return "desconhecido";
+  // 1. Trusted Vercel Edge header (injected by Vercel edge infrastructure)
+  const vercelForwarded = request.headers.get("x-vercel-forwarded-for");
+  if (vercelForwarded) {
+    return vercelForwarded.split(",")[0]?.trim() || "desconhecido";
+  }
+  // 2. Real IP header from edge / proxy
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp.trim();
+  }
+  // 3. Standard forwarded-for header (first IP in list)
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     return forwarded.split(",")[0]?.trim() || "desconhecido";
   }
-  return request.headers.get("x-real-ip") ?? "desconhecido";
+  return "desconhecido";
 }
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -853,17 +841,6 @@ async function dispatchClientConfirmationEmail(payload: {
     };
   }
 
-  // Anti-abuse check: Cooldown per recipient address to prevent email bombing
-  if (isEmailConfirmationLimited(payload.email)) {
-    console.warn(
-      `[Anti-Abuse] Limite de confirmações para o email ${payload.email} atingido (máx 2 por 15 min). Confirmação ao cliente suprimida.`,
-    );
-    return {
-      ok: true,
-      error: "Rate limited for recipient address",
-    };
-  }
-
   const i18n = CLIENT_CONFIRMATION_I18N[payload.locale] ?? CLIENT_CONFIRMATION_I18N.pt;
   const subject = i18n.subject;
   const html = buildClientConfirmationHtml(payload);
@@ -926,21 +903,13 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       return { ok: true, id: "discarded" };
     }
 
-    // 2. IP Rate Limiting
-    const request = getRequest();
-    const clientIp = getClientIp(request);
-    if (isRateLimited(clientIp)) {
-      console.warn(`[Anti-Spam] Limite de submissões excedido para o IP ${clientIp}.`);
-      throw new Error("Demasiadas tentativas de envio. Por favor aguarde alguns minutos.");
-    }
-
-    // 3. Resolve canonical values
+    // 2. Resolve canonical values
     const tipoProjeto =
       TIPO_VALUES[data.tipoIndex] ?? TIPO_VALUES[0];
     const orcamento =
       ORCAMENTO_VALUES[data.orcamentoIndex] ?? ORCAMENTO_VALUES[0];
 
-    // 4. Build CRM internal composite message
+    // 3. Build CRM internal composite message
     const detalhesLinhas = [
       data.websiteAtual
         ? `Website atual: ${data.websiteAtual}`
@@ -960,83 +929,133 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       .filter(Boolean)
       .join("\n\n");
 
-    // 5. Persist to Supabase Database (Guaranteed lead retention)
+    // 4. Persistent, atomic rate limiting + dedupe + lead insertion
+    const request = getRequest();
+    const clientIp = getClientIp(request);
+    const normalizedEmail = data.email.trim().toLowerCase();
+    const submissionFingerprint = JSON.stringify({
+      ip: clientIp,
+      email: normalizedEmail,
+      nome: data.nome.trim(),
+      empresa: data.empresa?.trim() ?? "",
+      telefone: data.telefone?.trim() ?? "",
+      tipoIndex: data.tipoIndex,
+      orcamentoIndex: data.orcamentoIndex,
+      websiteAtual: data.websiteAtual?.trim() ?? "",
+      prazoTexto: data.prazoTexto?.trim() ?? "",
+      mensagemOriginal: data.mensagemOriginal?.trim() ?? "",
+      querReuniao: data.querReuniao,
+      locale: data.locale,
+    });
+
+    const [ipHash, emailHash, dedupeKey] = await Promise.all([
+      sha256(`contact-ip:${clientIp}`),
+      sha256(`contact-email:${normalizedEmail}`),
+      sha256(`contact-payload:${submissionFingerprint}`),
+    ]);
+
     const leadId = crypto.randomUUID();
     const now = new Date();
     const nowIso = now.toISOString();
 
-    const insertPayload = {
-      id: leadId,
-      nome: data.nome,
-      empresa: data.empresa || null,
-      email: data.email,
-      telefone: data.telefone || null,
-      tipo_projeto: tipoProjeto,
-      orcamento: orcamento,
-      mensagem: mensagemComposta || null,
-      quer_reuniao: data.querReuniao,
-      created_at: nowIso,
-    };
-
+    let guardResult: ContactGuardResult | null = null;
     let dbError: unknown = null;
 
+    const submissionSecret =
+      process.env.CONTACT_FORM_SECRET ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      "";
+
     try {
+      const rpcArgs = {
+        p_secret: submissionSecret,
+        p_request_id: leadId,
+        p_dedupe_key: dedupeKey,
+        p_ip_hash: ipHash,
+        p_email_hash: emailHash,
+        p_nome: data.nome,
+        p_empresa: data.empresa || null,
+        p_email: normalizedEmail,
+        p_telefone: data.telefone || null,
+        p_tipo_projeto: tipoProjeto,
+        p_orcamento: orcamento,
+        p_mensagem: mensagemComposta || null,
+        p_quer_reuniao: data.querReuniao,
+        p_created_at: nowIso,
+      };
+
       if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_URL) {
         const { supabaseAdmin } = await import(
           "@/integrations/supabase/client.server"
         );
-        const res = await supabaseAdmin
-          .from("website_requests")
-          .insert(insertPayload);
+        const res = await supabaseAdmin.rpc(
+          "submit_guarded_contact_request",
+          rpcArgs,
+        );
+        guardResult = res.data?.[0] ?? null;
         dbError = res.error;
       } else {
         const { supabase } = await import("@/integrations/supabase/client");
-        const res = await supabase
-          .from("website_requests")
-          .insert(insertPayload);
+        const res = await supabase.rpc(
+          "submit_guarded_contact_request",
+          rpcArgs,
+        );
+        guardResult = res.data?.[0] ?? null;
         dbError = res.error;
       }
-    } catch (insertException) {
-      dbError = insertException;
+    } catch (guardException) {
+      dbError = guardException;
     }
 
-    if (dbError) {
-      console.error("[Contacto] Erro ao gravar pedido na base de dados:", dbError);
+    if (dbError || !guardResult) {
+      console.error("[Contacto] Erro no controlo persistente da submissão:", dbError);
       throw new Error("Não foi possível registar o pedido na base de dados. Tente novamente.");
     }
 
-    // 6. Format timestamp in Portuguese standard
+    if (guardResult.duplicate) {
+      console.info("[Contacto] Retry duplicado suprimido pela proteção persistente.");
+      return { ok: true, id: "duplicate" };
+    }
+
+    if (guardResult.ip_limited || !guardResult.allowed) {
+      console.warn(`[Anti-Spam] Limite persistente de submissões atingido para ${ipHash}.`);
+      throw new Error("Demasiadas tentativas de envio. Por favor aguarde alguns minutos.");
+    }
+
+    // 5. Format timestamp in Portuguese standard
     const createdAtFormatted = new Intl.DateTimeFormat("pt-PT", {
       dateStyle: "short",
       timeStyle: "short",
       timeZone: "Europe/Lisbon",
     }).format(now);
 
-    // 7. Dispatch Emails Independently (Fail-safe: does not fail the lead if email dispatch fails)
-    try {
-      await Promise.allSettled([
-        // A. Notificação interna para geral@novawebstudio.pt
-        dispatchNotificationEmail({
-          id: leadId,
-          nome: data.nome,
-          empresa: data.empresa,
-          email: data.email,
-          telefone: data.telefone,
-          tipoProjeto,
-          orcamento,
-          websiteAtual: data.websiteAtual,
-          prazoTexto: data.prazoTexto,
-          mensagemOriginal: data.mensagemOriginal,
-          querReuniao: data.querReuniao,
-          locale: data.locale,
-          createdAt: createdAtFormatted,
-        }),
+    // 6. Dispatch Emails Independently (Fail-safe: does not fail the lead if email dispatch fails)
+    const emailTasks: Promise<{ ok: boolean; error?: string }>[] = [
+      // A. Exactly one internal notification for each accepted lead.
+      dispatchNotificationEmail({
+        id: leadId,
+        nome: data.nome,
+        empresa: data.empresa,
+        email: data.email,
+        telefone: data.telefone,
+        tipoProjeto,
+        orcamento,
+        websiteAtual: data.websiteAtual,
+        prazoTexto: data.prazoTexto,
+        mensagemOriginal: data.mensagemOriginal,
+        querReuniao: data.querReuniao,
+        locale: data.locale,
+        createdAt: createdAtFormatted,
+      }),
+    ];
 
-        // B. Confirmação para o cliente (data.email)
+    if (!guardResult.email_limited) {
+      // B. At most one client confirmation for this accepted lead.
+      emailTasks.push(
         dispatchClientConfirmationEmail({
           nome: data.nome,
           empresa: data.empresa,
-          email: data.email,
+          email: normalizedEmail,
           telefone: data.telefone,
           tipoIndex: data.tipoIndex,
           orcamentoIndex: data.orcamentoIndex,
@@ -1047,13 +1066,22 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
           locale: data.locale,
           createdAt: createdAtFormatted,
         }),
-      ]);
-    } catch (emailErr) {
-      console.error(
-        `[Notificações] Erro não-bloqueante no processamento dos emails para pedido ${leadId}:`,
-        emailErr,
+      );
+    } else {
+      console.warn(
+        `[Anti-Abuse] Confirmação externa suprimida pelo limite persistente do destinatário ${emailHash}.`,
       );
     }
+
+    const emailResults = await Promise.allSettled(emailTasks);
+    emailResults.forEach((result, index) => {
+      if (result.status === "rejected") {
+        console.error(
+          `[Notificações] Envio ${index === 0 ? "administrativo" : "do cliente"} falhou para pedido ${leadId}:`,
+          result.reason,
+        );
+      }
+    });
 
     return { ok: true, id: leadId };
   });

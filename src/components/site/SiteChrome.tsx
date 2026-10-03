@@ -62,7 +62,7 @@ export function SiteChrome({
             </span>
           </Link>
 
-          <nav className="flex shrink-0 items-center gap-1 text-sm">
+          <nav className="flex shrink-0 items-center gap-1.5 text-sm">
             <span className="hidden items-center gap-1 sm:flex">
               <Link
                 to={paths.home}
@@ -118,43 +118,69 @@ export function SiteChrome({
               </Link>
             </span>
 
-            <div className="hidden sm:block">
-              <LanguageSwitcher locale={locale} page={page} />
-            </div>
+            <LanguageSwitcher locale={locale} page={page} />
 
             <Link
               to={paths.contact}
-              className="ml-0 inline-flex h-9 items-center whitespace-nowrap rounded-xl bg-primary px-3 text-xs font-medium text-primary-foreground transition hover:opacity-90 sm:ml-1 sm:px-4 sm:text-sm"
+              className="inline-flex h-8 items-center whitespace-nowrap rounded-xl bg-primary px-2.5 text-xs font-medium text-primary-foreground transition hover:opacity-90 sm:h-9 sm:px-4 sm:text-sm"
             >
               {t.nav.cta}
             </Link>
           </nav>
         </div>
 
-        <div className="flex items-center justify-between gap-3 overflow-x-auto border-t border-border/40 px-4 py-2 sm:hidden">
-          <nav className="flex items-center gap-1 text-xs">
+        <div className="border-t border-border/40 px-2 py-1.5 sm:hidden">
+          <nav className="grid grid-cols-4 gap-1 text-center">
             <Link
               to={paths.home}
               activeOptions={{ exact: true }}
-              className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+              activeProps={{
+                className: "bg-secondary/80 text-foreground font-medium",
+              }}
+              inactiveProps={{
+                className: "text-muted-foreground",
+              }}
+              className="flex items-center justify-center rounded-lg px-1 py-1.5 text-[11.5px] leading-tight transition hover:bg-accent hover:text-foreground"
             >
-              {t.nav.home}
+              <span className="truncate">{t.nav.home}</span>
             </Link>
             <Link
               to={paths.restaurantes}
-              className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+              activeProps={{
+                className: "bg-secondary/80 text-foreground font-medium",
+              }}
+              inactiveProps={{
+                className: "text-muted-foreground",
+              }}
+              className="flex items-center justify-center rounded-lg px-1 py-1.5 text-[11.5px] leading-tight transition hover:bg-accent hover:text-foreground"
             >
-              {t.nav.restaurantes}
+              <span className="truncate">{t.nav.restaurantes}</span>
             </Link>
             <Link
               to={paths.portfolio}
-              className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+              activeProps={{
+                className: "bg-secondary/80 text-foreground font-medium",
+              }}
+              inactiveProps={{
+                className: "text-muted-foreground",
+              }}
+              className="flex items-center justify-center rounded-lg px-1 py-1.5 text-[11.5px] leading-tight transition hover:bg-accent hover:text-foreground"
             >
-              {t.nav.portfolio}
+              <span className="truncate">{t.nav.portfolio}</span>
+            </Link>
+            <Link
+              to={paths.contact}
+              activeProps={{
+                className: "bg-secondary/80 text-foreground font-medium",
+              }}
+              inactiveProps={{
+                className: "text-muted-foreground",
+              }}
+              className="flex items-center justify-center rounded-lg px-1 py-1.5 text-[11.5px] leading-tight transition hover:bg-accent hover:text-foreground"
+            >
+              <span className="truncate">{t.nav.contact}</span>
             </Link>
           </nav>
-
-          <LanguageSwitcher locale={locale} page={page} />
         </div>
       </header>
 

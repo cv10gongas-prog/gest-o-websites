@@ -120,6 +120,54 @@ export type Database = {
           },
         ]
       }
+      contact_form_config: {
+        Row: {
+          created_at: string
+          key: string
+          updated_at: string
+          value_hash: string
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          updated_at?: string
+          value_hash: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          updated_at?: string
+          value_hash?: string
+        }
+        Relationships: []
+      }
+      contact_submission_guards: {
+        Row: {
+          confirmation_allowed: boolean
+          created_at: string
+          dedupe_key: string
+          email_hash: string
+          id: string
+          ip_hash: string
+        }
+        Insert: {
+          confirmation_allowed?: boolean
+          created_at?: string
+          dedupe_key: string
+          email_hash: string
+          id?: string
+          ip_hash: string
+        }
+        Update: {
+          confirmation_allowed?: boolean
+          created_at?: string
+          dedupe_key?: string
+          email_hash?: string
+          id?: string
+          ip_hash?: string
+        }
+        Relationships: []
+      }
       businesses: {
         Row: {
           categoria: string | null
@@ -661,6 +709,31 @@ export type Database = {
         Returns: boolean
       }
       is_team_member: { Args: { _user_id: string }; Returns: boolean }
+      submit_guarded_contact_request: {
+        Args: {
+          p_secret: string
+          p_request_id: string
+          p_dedupe_key: string
+          p_ip_hash: string
+          p_email_hash: string
+          p_nome: string
+          p_empresa: string | null
+          p_email: string
+          p_telefone: string | null
+          p_tipo_projeto: string
+          p_orcamento: string
+          p_mensagem: string | null
+          p_quer_reuniao: boolean
+          p_created_at: string
+        }
+        Returns: {
+          allowed: boolean
+          duplicate: boolean
+          ip_limited: boolean
+          email_limited: boolean
+          request_id: string | null
+        }[]
+      }
     }
     Enums: {
       app_role: "administrador" | "colaborador"
