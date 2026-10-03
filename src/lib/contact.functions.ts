@@ -438,7 +438,23 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       .join("\n\n");
 
     // 5. Persist to Supabase Database (Guaranteed lead retention)
-    let record: { id: string; created_at: string } | null = null;
+    const leadId = crypto.randomUUID();
+    const now = new Date();
+    const nowIso = now.toISOString();
+
+    const insertPayload = {
+      id: leadId,
+      nome: data.nome,
+      empresa: data.empresa || null,
+      email: data.email,
+      telefone: data.telefone || null,
+      tipo_projeto: tipoProjeto,
+      orcamento: orcamento,
+      mensagem: mensagemComposta || null,
+      quer_reuniao: data.querReuniao,
+      created_at: nowIso,
+    };
+
     let dbError: unknown = null;
 
     try {
@@ -448,44 +464,20 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
         );
         const res = await supabaseAdmin
           .from("website_requests")
-          .insert({
-            nome: data.nome,
-            empresa: data.empresa || null,
-            email: data.email,
-            telefone: data.telefone || null,
-            tipo_projeto: tipoProjeto,
-            orcamento: orcamento,
-            mensagem: mensagemComposta || null,
-            quer_reuniao: data.querReuniao,
-          })
-          .select("id, created_at")
-          .single();
-        record = res.data;
+          .insert(insertPayload);
         dbError = res.error;
       } else {
         const { supabase } = await import("@/integrations/supabase/client");
         const res = await supabase
           .from("website_requests")
-          .insert({
-            nome: data.nome,
-            empresa: data.empresa || null,
-            email: data.email,
-            telefone: data.telefone || null,
-            tipo_projeto: tipoProjeto,
-            orcamento: orcamento,
-            mensagem: mensagemComposta || null,
-            quer_reuniao: data.querReuniao,
-          })
-          .select("id, created_at")
-          .single();
-        record = res.data;
+          .insert(insertPayload);
         dbError = res.error;
       }
     } catch (insertException) {
       dbError = insertException;
     }
 
-    if (dbError || !record) {
+    if (dbError) {
       console.error("[Contacto] Erro ao gravar pedido na base de dados:", dbError);
       throw new Error("Não foi possível registar o pedido na base de dados. Tente novamente.");
     }
@@ -495,12 +487,12 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       dateStyle: "short",
       timeStyle: "short",
       timeZone: "Europe/Lisbon",
-    }).format(new Date(record.created_at));
+    }).format(now);
 
     // 7. Dispatch Notification Email (Fail-safe: does not fail the lead if email dispatch fails)
     try {
       await dispatchNotificationEmail({
-        id: record.id,
+        id: leadId,
         nome: data.nome,
         empresa: data.empresa,
         email: data.email,
@@ -516,10 +508,10 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       });
     } catch (emailErr) {
       console.error(
-        `[Notificações] Erro não-bloqueante no envio de notificação para pedido ${record.id}:`,
+        `[Notificações] Erro não-bloqueante no envio de notificação para pedido ${leadId}:`,
         emailErr,
       );
     }
 
-    return { ok: true, id: record.id };
+    return { ok: true, id: leadId };
   });
