@@ -143,6 +143,13 @@ const EXTRA: Record<
     restaurantFeature1: string;
     restaurantFeature2: string;
     restaurantFeature3: string;
+    mockupLive: string;
+    mockupQrTitle: string;
+    mockupQrDesc: string;
+    mockupQrStatus: string;
+    mockupBookingsTitle: string;
+    mockupBookingsDesc: string;
+    mockupBookingsStatus: string;
 
     whyBadge: string;
     whyTitle: string;
@@ -221,14 +228,21 @@ const EXTRA: Record<
 
     restaurantSection: "Solução Digital",
     restaurantBadge: "Setor da Restauração",
-    restaurantTitle: "Uma solução completa para restaurantes.",
+    restaurantTitle: "Software de gestão e menu digital para restaurantes",
     restaurantText:
-      "Do website aos pedidos por QR Code, reunimos as ferramentas essenciais para simplificar o funcionamento do teu restaurante.",
+      "Do website aos pedidos por QR Code e reservas online: reunimos as ferramentas essenciais para modernizar o serviço do teu restaurante.",
     restaurantCtaPage: "Conhecer solução",
     restaurantCtaDemo: "Ver demonstração",
-    restaurantFeature1: "Website institucional & menu digital atualizável",
-    restaurantFeature2: "Pedidos e chamadas por QR Code por mesa",
-    restaurantFeature3: "Reservas online e acompanhamento em direto",
+    restaurantFeature1: "Website próprio & menu digital para restaurantes",
+    restaurantFeature2: "Pedidos por QR Code e chamada de empregado à mesa",
+    restaurantFeature3: "Reservas online para restaurantes e gestão de mesas",
+    mockupLive: "Mesa 04 · Live",
+    mockupQrTitle: "QR Code Pedidos",
+    mockupQrDesc: "Menu digital direto à mesa",
+    mockupQrStatus: "Ativo",
+    mockupBookingsTitle: "Reservas Integradas",
+    mockupBookingsDesc: "Online & por telefone",
+    mockupBookingsStatus: "Sincronizado",
 
     whyBadge: "Porquê Nova Web Studio",
     whyTitle: "Um processo mais próximo, simples e profissional",
@@ -328,14 +342,21 @@ const EXTRA: Record<
 
     restaurantSection: "Digital Solution",
     restaurantBadge: "Restaurant Industry",
-    restaurantTitle: "A complete solution for restaurants.",
+    restaurantTitle: "Restaurant management software & digital menu",
     restaurantText:
-      "From custom websites to table QR Code ordering, we bring together the essential tools to streamline your restaurant operations.",
+      "From custom websites to table QR code ordering and online reservations: an integrated system built to streamline your restaurant operations.",
     restaurantCtaPage: "Explore solution",
     restaurantCtaDemo: "View live demo",
-    restaurantFeature1: "Custom website & live editable digital menu",
-    restaurantFeature2: "Table QR Code ordering & waiter call",
-    restaurantFeature3: "Online reservations & live dashboard",
+    restaurantFeature1: "Custom website & live digital menu for restaurants",
+    restaurantFeature2: "Table QR code ordering & waiter call on smartphone",
+    restaurantFeature3: "Online restaurant reservations & floor management",
+    mockupLive: "Table 04 · Live",
+    mockupQrTitle: "QR Code Ordering",
+    mockupQrDesc: "Digital menu straight to table",
+    mockupQrStatus: "Active",
+    mockupBookingsTitle: "Integrated Bookings",
+    mockupBookingsDesc: "Online & phone calls",
+    mockupBookingsStatus: "Synced",
 
     whyBadge: "Why Nova Web Studio",
     whyTitle: "A closer, simpler and more professional process",
@@ -436,14 +457,21 @@ const EXTRA: Record<
 
     restaurantSection: "Digitale Lösung",
     restaurantBadge: "Gastronomiebranche",
-    restaurantTitle: "Eine Komplettlösung für Restaurants.",
+    restaurantTitle: "Restaurant-Management-Software & digitale Speisekarte",
     restaurantText:
-      "Von der eigenen Website bis zu QR-Code-Bestellungen am Tisch vereinen wir alle wichtigen Werkzeuge für einen reibungslosen Ablauf.",
+      "Von der Website über QR-Code-Bestellungen am Tisch bis hin zur Tischverwaltung und Reservierungen: Alles in einem System für die Gastronomie.",
     restaurantCtaPage: "Lösung entdecken",
     restaurantCtaDemo: "Live-Demo ansehen",
-    restaurantFeature1: "Website & editierbare digitale Speisekarte",
-    restaurantFeature2: "QR-Code-Bestellungen & Service-Ruf pro Tisch",
-    restaurantFeature3: "Online-Reservierungen & Live-Bestellpanel",
+    restaurantFeature1: "Eigene Website & digitale Speisekarte Restaurant",
+    restaurantFeature2: "QR-Code-Bestellungen am Tisch & Service-Ruf",
+    restaurantFeature3: "Online-Tischreservierung & Raumplan in Echtzeit",
+    mockupLive: "Tisch 04 · Live",
+    mockupQrTitle: "QR-Code-Bestellung",
+    mockupQrDesc: "Digitale Speisekarte am Tisch",
+    mockupQrStatus: "Aktiv",
+    mockupBookingsTitle: "Tischreservierungen",
+    mockupBookingsDesc: "Online & per Telefon",
+    mockupBookingsStatus: "Synchron",
 
     whyBadge: "Warum Nova Web Studio",
     whyTitle:
@@ -545,14 +573,21 @@ const EXTRA: Record<
 
     restaurantSection: "Solution Digitale",
     restaurantBadge: "Restauration",
-    restaurantTitle: "Une solution complète pour restaurants.",
+    restaurantTitle: "Logiciel de gestion et menu digital pour restaurants",
     restaurantText:
-      "Du site web aux commandes par QR Code à table, nous réunissons les outils essentiels pour simplifier le service de votre restaurant.",
+      "Du site web dédié aux commandes par QR Code à table et réservations en ligne : une solution complète pour la restauration.",
     restaurantCtaPage: "Découvrir la solution",
     restaurantCtaDemo: "Voir la démo",
-    restaurantFeature1: "Site web sur mesure & menu digital modifiable",
-    restaurantFeature2: "Commandes & appel serveur par QR Code par table",
-    restaurantFeature3: "Réservations en ligne & gestion des commandes",
+    restaurantFeature1: "Site internet sur mesure & menu digital pour restaurant",
+    restaurantFeature2: "Commandes par QR Code à table & appel serveur",
+    restaurantFeature3: "Réservations en ligne restaurant & gestion des tables",
+    mockupLive: "Table 04 · En direct",
+    mockupQrTitle: "Commande QR Code",
+    mockupQrDesc: "Menu digital directement à table",
+    mockupQrStatus: "Actif",
+    mockupBookingsTitle: "Réservations Unifiées",
+    mockupBookingsDesc: "En ligne & téléphone",
+    mockupBookingsStatus: "Synchronisé",
 
     whyBadge: "Pourquoi Nova Web Studio",
     whyTitle: "Un processus plus proche, simple et professionnel",
@@ -651,14 +686,21 @@ const EXTRA: Record<
 
     restaurantSection: "Solución Digital",
     restaurantBadge: "Sector de Restauración",
-    restaurantTitle: "Una solución completa para restaurantes.",
+    restaurantTitle: "Software de gestión y carta digital para restaurantes",
     restaurantText:
-      "Del sitio web a los pedidos por código QR, reunimos las herramientas esenciales para simplificar el funcionamiento de tu restaurante.",
+      "Del sitio web a los pedidos por código QR en mesa y reservas online: una solución completa para tu restaurante.",
     restaurantCtaPage: "Conocer solución",
     restaurantCtaDemo: "Ver demostración",
-    restaurantFeature1: "Sitio web & menú digital actualizable",
-    restaurantFeature2: "Pedidos y aviso a camarero por código QR en mesa",
-    restaurantFeature3: "Reservas online y panel de control en directo",
+    restaurantFeature1: "Página web propia & carta digital para restaurantes",
+    restaurantFeature2: "Pedidos por código QR en mesa & llamada a camarero",
+    restaurantFeature3: "Reservas online para restaurantes & gestión de mesas",
+    mockupLive: "Mesa 04 · En directo",
+    mockupQrTitle: "Pedidos por QR Code",
+    mockupQrDesc: "Carta digital directa a la mesa",
+    mockupQrStatus: "Activo",
+    mockupBookingsTitle: "Reservas Integradas",
+    mockupBookingsDesc: "Online & por teléfono",
+    mockupBookingsStatus: "Sincronizado",
 
     whyBadge: "Por qué Nova Web Studio",
     whyTitle: "Un proceso más cercano, sencillo y profesional",
@@ -1322,7 +1364,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                         <span className="text-xs font-semibold">NOVA Restaurante</span>
                       </div>
                       <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[9px] font-bold text-primary">
-                        Mesa 04 · Live
+                        {extra.mockupLive}
                       </span>
                     </div>
 
@@ -1331,12 +1373,12 @@ export function HomePage({ locale }: { locale: Locale }) {
                         <div className="flex items-center gap-2">
                           <QrCode className="size-4 text-primary shrink-0" />
                           <div>
-                            <p className="font-medium text-[11px]">QR Code Pedidos</p>
-                            <p className="text-[9px] text-muted-foreground">Menu digital direto à mesa</p>
+                            <p className="font-medium text-[11px]">{extra.mockupQrTitle}</p>
+                            <p className="text-[9px] text-muted-foreground">{extra.mockupQrDesc}</p>
                           </div>
                         </div>
                         <span className="rounded-md bg-emerald-500/15 px-2 py-0.5 text-[9px] font-medium text-emerald-400">
-                          Ativo
+                          {extra.mockupQrStatus}
                         </span>
                       </div>
 
@@ -1344,12 +1386,12 @@ export function HomePage({ locale }: { locale: Locale }) {
                         <div className="flex items-center gap-2">
                           <CalendarCheck className="size-4 text-primary shrink-0" />
                           <div>
-                            <p className="font-medium text-[11px]">Reservas Integradas</p>
-                            <p className="text-[9px] text-muted-foreground">Online & por telefone</p>
+                            <p className="font-medium text-[11px]">{extra.mockupBookingsTitle}</p>
+                            <p className="text-[9px] text-muted-foreground">{extra.mockupBookingsDesc}</p>
                           </div>
                         </div>
                         <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[9px] font-medium text-primary">
-                          Sincronizado
+                          {extra.mockupBookingsStatus}
                         </span>
                       </div>
                     </div>

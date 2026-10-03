@@ -144,12 +144,6 @@ export function buildHead(locale: Locale, page: PageKey) {
             name: "Nova Web Studio",
             url: SITE_URL,
             logo: `${SITE_URL}/logo.png`,
-            address: {
-              "@type": "PostalAddress",
-              addressLocality: "Cascais",
-              addressRegion: "Lisboa",
-              addressCountry: "PT",
-            },
           },
         },
         {
@@ -601,7 +595,7 @@ export const dict: Record<Locale, Dict> = {
       home: {
         title: "Criação de Sites em Cascais | Nova Web Studio",
         description:
-          "Criação e modernização de websites em Cascais, Oeiras, Sintra e Lisboa. Sites profissionais, rápidos e preparados para gerar mais contactos para o seu negócio.",
+          "Criação de sites em Cascais, Oeiras e Lisboa. Desenvolvimento de websites profissionais para empresas, criação de lojas online e web design para atrair mais clientes.",
       },
       portfolio: {
         title: "Portefólio de Websites | Nova Web Studio",
@@ -611,7 +605,7 @@ export const dict: Record<Locale, Dict> = {
       restaurantes: {
         title: "Software de Gestão para Restaurantes | Nova Web Studio",
         description:
-          "Simplifique a gestão do seu restaurante com pedidos por QR Code, reservas online, gestão de mesas e cozinha. Conheça a solução e experimente a demonstração.",
+          "Software de gestão para restaurantes com pedidos por QR Code, menu digital, gestão de mesas e reservas online. Conheça a solução e experimente a demonstração.",
       },
       restaurantesDemo: {
         title: "Demonstração para Restaurantes | Nova Web Studio",
@@ -636,9 +630,9 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Web Design em Cascais",
-      h1: "Criação de sites profissionais para negócios locais",
-      lead: "Criamos e modernizamos websites para empresas e negócios em Cascais, Oeiras, Sintra e Lisboa, com foco numa imagem profissional, utilização simples e mais oportunidades de contacto.",
+      chip: "Web Designer & Criação de Sites em Cascais",
+      h1: "Criação de sites profissionais e websites para empresas",
+      lead: "Criamos e modernizamos websites para empresas em Cascais, Oeiras, Sintra e Lisboa. Foco em desenvolvimento de websites modernos, lojas online e geração de contactos.",
       ctaProposal: "Pedir proposta",
       ctaPortfolio: "Ver portefólio",
       badgeArea: "Cascais, Oeiras, Sintra e Lisboa",
@@ -658,39 +652,40 @@ export const dict: Record<Locale, Dict> = {
         {
           titulo: "Criação de websites",
           texto:
-            "Criamos sites profissionais de raiz, adaptados ao seu negócio e preparados para gerar contactos.",
+            "Criamos sites profissionais de raiz, adaptados ao seu negócio e preparados para gerar contactos e vendas.",
         },
         {
-          titulo: "Redesign e modernização",
+          titulo: "Redesign e desenvolvimento web",
           texto:
-            "Atualizamos websites antigos, melhorando o design, organização, velocidade e experiência em telemóvel.",
+            "Modernizamos websites antigos, melhorando o web design, velocidade e experiência no telemóvel.",
         },
         {
-          titulo: "SEO e acompanhamento",
+          titulo: "SEO e otimização contínua",
           texto:
-            "Preparamos o website para motores de pesquisa e acompanhamos a sua presença digital ao longo do tempo.",
+            "Preparamos o seu website para ser encontrado no Google pelos termos certos e acompanhamos os resultados.",
         },
       ],
       typesTitle: "Tipos de websites",
       types: [
         {
-          titulo: "Site institucional",
+          titulo: "Websites para empresas",
           texto:
-            "Apresente a empresa, serviços e contactos com uma imagem profissional.",
+            "Apresente a sua empresa, serviços e equipa com um website profissional e credível.",
         },
         {
-          titulo: "Loja online",
+          titulo: "Criação de lojas online",
           texto:
-            "Venda produtos através de uma loja simples, moderna e adaptada ao seu negócio.",
+            "Venda produtos na internet através de uma loja online moderna, segura e adaptada ao seu negócio.",
         },
         {
-          titulo: "Landing page",
+          titulo: "Landing pages de conversão",
           texto:
-            "Uma página focada em apresentar um serviço e gerar pedidos de contacto.",
+            "Uma página focada num serviço específico para maximizar pedidos de orçamento e contactos.",
         },
         {
-          titulo: "Aplicação web",
-          texto: "Soluções digitais e áreas reservadas desenvolvidas à medida.",
+          titulo: "Desenvolvimento de websites e portais",
+          texto:
+            "Aplicações web e soluções digitais sob medida com áreas reservadas e funcionalidades avançadas.",
         },
       ],
       processTitle: "Como trabalhamos",
@@ -779,17 +774,17 @@ export const dict: Record<Locale, Dict> = {
       ctaButton: "Pedir orçamento",
     },
     restaurantes: {
-      heroChip: "Solução Digital para Restaurantes",
+      heroChip: "Software de Gestão para Restaurantes",
       heroTagline: "Nova Web Studio · Setor da Restauração",
-      heroTitle: "O teu restaurante. Tudo num só lugar.",
+      heroTitle: "Software de gestão para restaurantes. Tudo num só lugar.",
       heroSubtitle:
-        "Website, menu digital, reservas e pedidos por QR Code numa solução que simplifica o serviço.",
+        "Website próprio, menu digital para restaurantes, gestão de mesas, reservas online e pedidos por QR Code que simplificam o serviço da sala à cozinha.",
       heroCtaDemo: "Experimentar demonstração",
       heroCtaProposal: "Pedir proposta",
       heroBadges: [
-        "Pedidos organizados por mesa",
-        "Menu digital sempre atualizado",
-        "Configuração personalizada",
+        "Pedidos por QR Code na mesa",
+        "Menu digital para restaurantes",
+        "Gestão de mesas e reservas online",
       ],
       heroMockup: {
         live: "Em direto",
@@ -1006,44 +1001,44 @@ export const dict: Record<Locale, Dict> = {
       featuresCta: "Ver tudo na demonstração",
       featureList: [
         {
-          title: "Website personalizado",
+          title: "Website próprio para restaurantes",
           text:
-            "Uma presença online profissional com a identidade, fotografias, localização, horários e contactos do teu restaurante.",
+            "Uma presença online profissional com a identidade, ementa, fotografias, localização, horários e contactos do teu restaurante.",
         },
         {
-          title: "Menu digital editável",
+          title: "Menu digital para restaurantes atualizável em direto",
           text:
             "Atualiza pratos, descrições, preços e disponibilidade em tempo real, sem necessidade de reimprimir cartas.",
         },
         {
-          title: "Pedidos por QR Code por mesa",
+          title: "Pedidos por QR Code na mesa",
           text:
-            "Cada mesa tem o seu código QR dedicado. Os clientes consultam o menu e enviam pedidos diretamente do telemóvel.",
+            "Cada mesa tem o seu código QR dedicado. Os clientes consultam o cardápio e enviam pedidos diretamente do telemóvel sem filas.",
         },
         {
-          title: "Reservas online e telefónicas",
+          title: "Reservas online para restaurantes e marcação telefónica",
           text:
-            "Recebe reservas feitas pelo website e regista manualmente reservas recebidas por telefone num único calendário.",
+            "Recebe reservas feitas pelo website e regista manualmente marcações recebidas por telefone num único calendário central.",
         },
         {
-          title: "Painel de gestão de pedidos",
+          title: "Programa para restaurantes e ecrã de cozinha (KDS)",
           text:
-            "A equipa visualiza os novos pedidos em tempo real, organizados por mesa e hora de chegada.",
+            "Gestão ágil de comandas com fluxo visual Kanban da preparação à entrega dos pratos.",
         },
         {
-          title: "Atualização de estados dos pedidos",
+          title: "Gestão de mesas e sala em tempo real",
           text:
-            "Acompanhamento claro de cada pedido: recebido, em preparação, entregue ou concluído.",
+            "Planta interativa da sala e esplanada com estados visuais: livres, ocupadas, com alerta ou a pedir conta.",
         },
         {
-          title: "Chamar empregado e pedir conta",
+          title: "Chamada de empregado e pedido de conta no telemóvel",
           text:
             "O cliente pode solicitar a presença do empregado ou a conta diretamente a partir do ecrã do seu telemóvel.",
         },
         {
-          title: "Gestão de mesas e disponibilidade",
+          title: "Relatórios e controlo operacional do turno",
           text:
-            "Configura a disposição das mesas, controla a capacidade e ajusta a disponibilidade de pratos em segundos.",
+            "Acompanhamento de faturação acumulada, ritmo de serviço e ocupação média da sala.",
         },
       ],
       processChip: "Processo",
@@ -1289,9 +1284,9 @@ export const dict: Record<Locale, Dict> = {
   en: {
     meta: {
       home: {
-        title: "Website Design in Cascais | Nova Web Studio",
+        title: "Web Design in Cascais & Websites | Nova Web Studio",
         description:
-          "Website creation and redesign in Cascais, Oeiras, Sintra and Lisbon. Professional, fast websites built to bring more enquiries to your business.",
+          "Professional web design in Cascais, Oeiras and Lisbon. Custom website creation, business websites and online stores built to grow your local presence and leads.",
       },
       portfolio: {
         title: "Website Portfolio | Nova Web Studio",
@@ -1301,7 +1296,7 @@ export const dict: Record<Locale, Dict> = {
       restaurantes: {
         title: "Restaurant Management Software | Nova Web Studio",
         description:
-          "Streamline your restaurant operations with table QR Code ordering, online reservations, floor management, and kitchen display. Explore the solution and try the live demo.",
+          "Modern restaurant management software with table QR code ordering, live digital menus, table management, and online reservations. Explore the live interactive demo.",
       },
       restaurantesDemo: {
         title: "Interactive Restaurant Demo | Nova Web Studio",
@@ -1326,9 +1321,9 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Web design in Cascais",
-      h1: "Professional websites for local businesses",
-      lead: "We build and modernise websites for companies and businesses in Cascais, Oeiras, Sintra and Lisbon, focused on a professional image, simple use and more contact opportunities.",
+      chip: "Web Designer & Website Creation in Cascais",
+      h1: "Professional web design and custom business websites",
+      lead: "We build and modernise websites for businesses across Cascais, Oeiras, Sintra and Lisbon, delivering high-performance design, mobile clarity, and steady enquiries.",
       ctaProposal: "Request a proposal",
       ctaPortfolio: "View portfolio",
       badgeArea: "Cascais, Oeiras, Sintra and Lisbon",
@@ -1346,40 +1341,41 @@ export const dict: Record<Locale, Dict> = {
       servicesTitle: "What we do",
       services: [
         {
-          titulo: "Website creation",
+          titulo: "Custom website creation",
           texto:
             "We build professional websites from scratch, tailored to your business and designed to generate enquiries.",
         },
         {
-          titulo: "Redesign and modernisation",
+          titulo: "Redesign & web development",
           texto:
-            "We update older websites, improving design, structure, speed and the mobile experience.",
+            "We update older websites, improving design, technical structure, speed, and the mobile experience.",
         },
         {
-          titulo: "SEO and ongoing support",
+          titulo: "SEO & ongoing support",
           texto:
-            "We prepare your website for search engines and support your digital presence over time.",
+            "We optimise your website for search engines and support your digital presence over time.",
         },
       ],
       typesTitle: "Types of websites",
       types: [
         {
-          titulo: "Business website",
+          titulo: "Business websites",
           texto:
-            "Present your company, services and contact details with a professional image.",
+            "Present your company, services and contact details with a strong, professional image.",
         },
         {
-          titulo: "Online store",
+          titulo: "Ecommerce & online stores",
           texto:
-            "Sell products through a simple, modern store adapted to your business.",
+            "Sell products through a modern, secure and intuitive online store built for conversion.",
         },
         {
-          titulo: "Landing page",
-          texto: "A single page focused on one service and generating enquiries.",
+          titulo: "High-converting landing pages",
+          texto:
+            "A focused page designed to present a specific service and maximize quote requests.",
         },
         {
-          titulo: "Web application",
-          texto: "Custom digital solutions and private client areas.",
+          titulo: "Custom web applications",
+          texto: "Tailored web development, client portals and bespoke digital solutions.",
         },
       ],
       processTitle: "How we work",
@@ -1468,17 +1464,17 @@ export const dict: Record<Locale, Dict> = {
       ctaButton: "Request a quote",
     },
     restaurantes: {
-      heroChip: "Digital Solution for Restaurants",
-      heroTagline: "Nova Web Studio · Restaurant Industry",
-      heroTitle: "Your restaurant. Everything in one place.",
+      heroChip: "Restaurant Management Software",
+      heroTagline: "Nova Web Studio · Hospitality Solutions",
+      heroTitle: "Modern restaurant management software. All in one place.",
       heroSubtitle:
-        "Website, digital menu, table QR Code ordering and reservations in a single platform that simplifies service.",
+        "Custom website, interactive digital menu, table management, online restaurant reservations, and table QR code ordering built for speed.",
       heroCtaDemo: "Try live demo",
       heroCtaProposal: "Request a quote",
       heroBadges: [
-        "Orders organised by table",
-        "Live updated digital menu",
-        "Custom setup & onboarding",
+        "Table QR code ordering",
+        "Live digital menu for restaurants",
+        "Table management & online reservations",
       ],
       heroMockup: {
         live: "Live",
@@ -1695,44 +1691,44 @@ export const dict: Record<Locale, Dict> = {
       featuresCta: "See everything in live demo",
       featureList: [
         {
-          title: "Custom restaurant website",
+          title: "Custom restaurant website & online presence",
           text:
-            "A professional online presence with your branding, photography, location, opening hours and direct contacts.",
+            "A professional branded online presence showcasing your menu, atmosphere, location and opening hours.",
         },
         {
-          title: "Editable digital menu",
+          title: "Digital menu for restaurants with instant updates",
           text:
-            "Update dishes, descriptions, prices and availability instantly without ever reprinting paper menus.",
+            "Update dishes, descriptions, prices and sold-out items in real time without reprinting physical menus.",
         },
         {
-          title: "Table QR Code ordering",
+          title: "Table QR code ordering",
           text:
-            "Every table gets a dedicated QR code. Guests browse the menu and send orders straight from their smartphone.",
+            "Each table gets a dedicated QR code. Guests scan, browse the menu, and place orders straight from their phones.",
         },
         {
-          title: "Online & phone reservations",
+          title: "Online restaurant reservations & phone bookings",
           text:
-            "Receive online bookings directly from the website and log phone reservations in one unified calendar.",
+            "Accept online booking requests from your website and log phone reservations in one central schedule.",
         },
         {
-          title: "Live order management panel",
+          title: "Restaurant management system & kitchen display (KDS)",
           text:
-            "Kitchen and counter staff view incoming orders in real time, organised by table and time received.",
+            "Agile order tracking with a visual Kanban workflow from food prep to table delivery.",
         },
         {
-          title: "Order status updates",
+          title: "Real-time table & dining room management",
           text:
-            "Clear tracking for every ticket: received, in preparation, served and completed.",
+            "Interactive floor plan showing live table statuses: available, dining, calling staff, or requesting the bill.",
         },
         {
-          title: "Call waiter & request bill",
+          title: "Call waiter & bill request on smartphone",
           text:
-            "Guests can request waiter assistance or ask for their bill directly on their phone screen.",
+            "Guests can request waiter assistance or ask for their bill directly through their mobile browser.",
         },
         {
-          title: "Table & availability management",
+          title: "Shift reports & operational oversight",
           text:
-            "Configure table layouts, manage seating capacity and adjust dish availability in seconds.",
+            "Monitor cumulative revenue, service pace, and average table occupancy across each shift.",
         },
       ],
       processChip: "Process",
@@ -1982,9 +1978,9 @@ export const dict: Record<Locale, Dict> = {
   de: {
     meta: {
       home: {
-        title: "Webdesign in Cascais | Nova Web Studio",
+        title: "Webdesign in Cascais & Webseiten | Nova Web Studio",
         description:
-          "Erstellung und Modernisierung von Websites in Cascais, Oeiras, Sintra und Lissabon. Professionelle, schnelle Websites für mehr Anfragen.",
+          "Professionelles Webdesign in Cascais, Oeiras und Lissabon. Website-Erstellung, Onlineshops und Websites für Unternehmen zur Steigerung von Anfragen und Kunden.",
       },
       portfolio: {
         title: "Website-Portfolio | Nova Web Studio",
@@ -1992,9 +1988,9 @@ export const dict: Record<Locale, Dict> = {
           "Projekte und Konzepte von Nova Web Studio für verschiedene Branchen – modernes Design, Klarheit und einfache Kontaktaufnahme.",
       },
       restaurantes: {
-        title: "Gastronomie & Restaurant-Management-Software | Nova Web Studio",
+        title: "Restaurant-Management-Software | Nova Web Studio",
         description:
-          "Optimieren Sie Ihre Gastronomie mit QR-Code-Bestellungen am Tisch, Online-Reservierungen, Tisch- und Küchenverwaltung. Entdecken Sie die Lösung und testen Sie die Live-Demo.",
+          "All-in-One Gastronomie- und Restaurant-Management-Software mit QR-Code-Bestellungen am Tisch, digitaler Speisekarte, Tischverwaltung und Online-Reservierungen.",
       },
       restaurantesDemo: {
         title: "Interaktive Restaurant-Demo | Nova Web Studio",
@@ -2019,9 +2015,9 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Webdesign in Cascais",
-      h1: "Professionelle Websites für lokale Unternehmen",
-      lead: "Wir erstellen und modernisieren Websites für Unternehmen in Cascais, Oeiras, Sintra und Lissabon – mit Fokus auf professionellem Auftritt, einfacher Bedienung und mehr Kontaktmöglichkeiten.",
+      chip: "Webdesigner & Website-Erstellung in Cascais",
+      h1: "Professionelles Webdesign und Websites für Unternehmen",
+      lead: "Wir erstellen und modernisieren Websites für Betriebe in Cascais, Oeiras, Sintra und Lissabon – optimiert für mobile Nutzung, schnelle Ladezeiten und mehr Kundenanfragen.",
       ctaProposal: "Angebot anfragen",
       ctaPortfolio: "Portfolio ansehen",
       badgeArea: "Cascais, Oeiras, Sintra und Lissabon",
@@ -2039,41 +2035,41 @@ export const dict: Record<Locale, Dict> = {
       servicesTitle: "Was wir tun",
       services: [
         {
-          titulo: "Website-Erstellung",
+          titulo: "Professionelle Website-Erstellung",
           texto:
-            "Wir erstellen professionelle Websites von Grund auf, passend zu Ihrem Unternehmen und auf Anfragen ausgerichtet.",
+            "Wir erstellen professionelle Websites von Grund auf, passgenau für Ihr Unternehmen und auf Kundenanfragen ausgerichtet.",
         },
         {
-          titulo: "Redesign und Modernisierung",
+          titulo: "Redesign & Webentwicklung",
           texto:
-            "Wir aktualisieren ältere Websites und verbessern Design, Struktur, Geschwindigkeit und mobile Nutzung.",
+            "Wir modernisieren bestehende Websites und verbessern Design, technische Struktur, Geschwindigkeit und mobile Nutzung.",
         },
         {
-          titulo: "SEO und Betreuung",
+          titulo: "Suchmaschinenoptimierung (SEO)",
           texto:
-            "Wir bereiten die Website für Suchmaschinen vor und begleiten Ihre digitale Präsenz langfristig.",
+            "Wir bereiten Ihren Webauftritt gezielt für Google vor und begleiten Ihre digitale Präsenz nachhaltig.",
         },
       ],
       typesTitle: "Arten von Websites",
       types: [
         {
-          titulo: "Unternehmenswebsite",
+          titulo: "Websites für Unternehmen",
           texto:
-            "Präsentieren Sie Firma, Leistungen und Kontakt mit professionellem Auftritt.",
+            "Präsentieren Sie Firma, Leistungen und Team mit einem professionellen, überzeugenden Auftritt.",
         },
         {
-          titulo: "Onlineshop",
+          titulo: "Onlineshop Erstellung",
           texto:
-            "Verkaufen Sie Produkte über einen einfachen, modernen Shop für Ihr Unternehmen.",
+            "Verkaufen Sie Produkte über einen modernen, sicheren und benutzerfreundlichen Onlineshop.",
         },
         {
-          titulo: "Landingpage",
+          titulo: "Conversion-Landingpages",
           texto:
-            "Eine Seite, die eine Leistung vorstellt und Anfragen generiert.",
+            "Zielgerichtete Einzelseiten zur Bewerbung bestimmter Leistungen und Maximierung von Anfragen.",
         },
         {
-          titulo: "Webanwendung",
-          texto: "Individuelle digitale Lösungen und geschützte Bereiche.",
+          titulo: "Individuelle Webanwendungen",
+          texto: "Maßgeschneiderte Webentwicklung, Kundenportale und passgenaue digitale Tools.",
         },
       ],
       processTitle: "So arbeiten wir",
@@ -2163,17 +2159,17 @@ export const dict: Record<Locale, Dict> = {
       ctaButton: "Kostenvoranschlag anfragen",
     },
     restaurantes: {
-      heroChip: "Digitale Restaurantlösung",
-      heroTagline: "Nova Web Studio · Gastronomiebranche",
-      heroTitle: "Ihr Restaurant. Alles an einem Ort.",
+      heroChip: "Restaurant-Management-Software",
+      heroTagline: "Nova Web Studio · Gastronomie & Restaurants",
+      heroTitle: "Restaurant-Management-Software für die moderne Gastronomie.",
       heroSubtitle:
-        "Website, digitale Speisekarte, QR-Code-Bestellungen und Reservierungen in einer Plattform, die den Service vereinfacht.",
+        "Eigene Website, digitale Speisekarte, QR-Code-Bestellungen am Tisch, Tischverwaltung und Online-Reservierungen in einer Lösung.",
       heroCtaDemo: "Live-Demo testen",
       heroCtaProposal: "Angebot anfragen",
       heroBadges: [
-        "Bestellungen nach Tischen geordnet",
-        "Immer aktuelle Speisekarte",
-        "Individuelle Einrichtung",
+        "QR-Code-Bestellungen am Tisch",
+        "Digitale Speisekarte für Restaurants",
+        "Tischverwaltung & Online-Reservierungen",
       ],
       heroMockup: {
         live: "Live",
@@ -2390,44 +2386,44 @@ export const dict: Record<Locale, Dict> = {
       featuresCta: "Alles in der Demo ansehen",
       featureList: [
         {
-          title: "Individuelle Restaurant-Website",
+          title: "Eigene Website & Webpräsenz für Restaurants",
           text:
-            "Ein professioneller Webauftritt mit Ihrem Logo, Fotos, Öffnungszeiten, Standort und Kontaktmöglichkeiten.",
+            "Ein professioneller Webauftritt mit Logo, Speisekarte, Fotos, Öffnungszeiten, Standort und Kontaktmöglichkeiten.",
         },
         {
-          title: "Digitale & flexible Speisekarte",
+          title: "Digitale Speisekarte für Restaurants in Echtzeit",
           text:
-            "Gerichte, Preise, Beschreibungen und Verfügbarkeiten in Echtzeit aktualisieren – ganz ohne Nachdruck.",
+            "Gerichte, Preise, Beschreibungen und Verfügbarkeiten in Echtzeit aktualisieren – ganz ohne Nachdruck von Papierkarten.",
         },
         {
-          title: "QR-Code-Bestellungen pro Tisch",
+          title: "QR-Code-Bestellungen am Tisch",
           text:
-            "Jeder Tisch hat einen eigenen QR-Code. Gäste wählen Gerichte und bestellen direkt per Smartphone.",
+            "Jeder Tisch hat einen eigenen QR-Code. Gäste wählen Gerichte und bestellen direkt per Smartphone ohne Wartezeiten.",
         },
         {
-          title: "Online- & Telefonreservierungen",
+          title: "Online-Tischreservierung & Telefonannahme",
           text:
-            "Reservierungen über die Website annehmen und telefonische Anfragen im zentralen Kalender erfassen.",
+            "Reservierungen über die Website annehmen und telefonische Anfragen in einem zentralen Kalender übersichtlich erfassen.",
         },
         {
-          title: "Übersichtliches Bestellpanel",
+          title: "Gastronomie-Kassensystem & Küchenmonitor (KDS)",
           text:
-            "Das Team sieht alle eingehenden Bestellungen in Echtzeit, geordnet nach Tisch und Eingangszeit.",
+            "Übersichtlicher Kanban-Workflow für die Küche vom Bestelleingang bis zur Ausgabe an den Gast.",
         },
         {
-          title: "Status-Aktualisierungen",
+          title: "Tischverwaltung & Raumplan in Echtzeit",
           text:
-            "Jede Bestellung transparent verfolgen: eingegangen, in Zubereitung, serviert und abgeschlossen.",
+            "Interaktiver Tischplan für Innenbereich und Terrasse mit Farbanzeige: frei, belegt oder Rechnung erbeten.",
         },
         {
-          title: "Service rufen & Rechnung anfordern",
+          title: "Service rufen & Rechnung per Smartphone",
           text:
             "Gäste können direkt über das Handy nach der Bedienung fragen oder um die Rechnung bitten.",
         },
         {
-          title: "Tisch- und Verfügbarkeitsverwaltung",
+          title: "Schichtberichte & Betriebsübersicht",
           text:
-            "Tischpläne anpassen, Kapazitäten steuern und Gerichte mit wenigen Klicks aktivieren oder pausieren.",
+            "Echtzeit-Überblick über Schichtumsatz, Durchlaufzeiten und durchschnittliche Tischauslastung.",
         },
       ],
       processChip: "Ablauf",
@@ -2678,9 +2674,9 @@ export const dict: Record<Locale, Dict> = {
   fr: {
     meta: {
       home: {
-        title: "Création de Sites à Cascais | Nova Web Studio",
+        title: "Création de Sites Web à Cascais | Nova Web Studio",
         description:
-          "Création et modernisation de sites web à Cascais, Oeiras, Sintra et Lisbonne. Des sites professionnels et rapides pour générer plus de contacts.",
+          "Création de sites internet et web design à Cascais, Oeiras et Lisbonne. Sites pour entreprises, refonte et boutiques en ligne conçus pour générer des contacts.",
       },
       portfolio: {
         title: "Portfolio de Sites Web | Nova Web Studio",
@@ -2688,9 +2684,9 @@ export const dict: Record<Locale, Dict> = {
           "Découvrez les projets et concepts réalisés par Nova Web Studio pour différents secteurs : design moderne, clarté et contact facile.",
       },
       restaurantes: {
-        title: "Logiciel de Gestion pour Restaurants | Nova Web Studio",
+        title: "Logiciel de Gestion pour Restaurant | Nova Web Studio",
         description:
-          "Simplifiez la gestion de votre restaurant avec les commandes par QR Code, réservations en ligne, gestion de salle et de cuisine. Découvrez la solution et essayez la démo.",
+          "Logiciel complet de gestion pour restaurant : commande par QR Code à table, menu digital, gestion des tables et réservations en ligne. Testez la démo en direct.",
       },
       restaurantesDemo: {
         title: "Démo Interactive pour Restaurants | Nova Web Studio",
@@ -2715,9 +2711,9 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Web design à Cascais",
-      h1: "Des sites professionnels pour les entreprises locales",
-      lead: "Nous créons et modernisons des sites web pour les entreprises de Cascais, Oeiras, Sintra et Lisbonne, avec une image professionnelle, une utilisation simple et plus d'opportunités de contact.",
+      chip: "Web Designer & Création de Sites à Cascais",
+      h1: "Création de sites internet et web design pour entreprises",
+      lead: "Création et refonte de sites web professionnels à Cascais, Oeiras, Sintra et Lisbonne. Design moderne, performance mobile et génération de contacts qualifiés.",
       ctaProposal: "Demander une proposition",
       ctaPortfolio: "Voir le portfolio",
       badgeArea: "Cascais, Oeiras, Sintra et Lisbonne",
@@ -2735,41 +2731,41 @@ export const dict: Record<Locale, Dict> = {
       servicesTitle: "Ce que nous faisons",
       services: [
         {
-          titulo: "Création de sites web",
+          titulo: "Création de sites internet",
           texto:
-            "Nous créons des sites professionnels sur mesure, adaptés à votre activité et pensés pour générer des contacts.",
+            "Nous concevons des sites web professionnels sur mesure, pensés pour valoriser votre entreprise et attirer des prospects.",
         },
         {
-          titulo: "Refonte et modernisation",
+          titulo: "Refonte & développement web",
           texto:
-            "Nous actualisons les sites anciens en améliorant le design, l'organisation, la vitesse et l'expérience mobile.",
+            "Modernisation de sites existants : design actualisé, architecture technique optimisée, rapidité et fluidité mobile.",
         },
         {
-          titulo: "SEO et accompagnement",
+          titulo: "Référencement naturel (SEO)",
           texto:
-            "Nous préparons le site pour les moteurs de recherche et accompagnons votre présence digitale dans la durée.",
+            "Optimisation de votre site pour les moteurs de recherche et accompagnement régulier de votre visibilité.",
         },
       ],
       typesTitle: "Types de sites web",
       types: [
         {
-          titulo: "Site vitrine",
+          titulo: "Sites pour entreprises",
           texto:
-            "Présentez votre entreprise, vos services et vos contacts avec une image professionnelle.",
+            "Présentation soignée et institutionnelle de votre entreprise, vos prestations et vos coordonnées.",
         },
         {
-          titulo: "Boutique en ligne",
+          titulo: "Création de boutiques en ligne",
           texto:
-            "Vendez vos produits via une boutique simple, moderne et adaptée à votre activité.",
+            "Vendez vos produits sur internet avec un site e-commerce moderne, sécurisé et pensé pour convertir.",
         },
         {
-          titulo: "Landing page",
+          titulo: "Landing pages de conversion",
           texto:
-            "Une page centrée sur un service et sur la génération de demandes.",
+            "Pages ciblées sur une offre spécifique pour maximiser les demandes de devis et prises de contact.",
         },
         {
-          titulo: "Application web",
-          texto: "Solutions digitales et espaces réservés développés sur mesure.",
+          titulo: "Applications web sur mesure",
+          texto: "Développement web personnalisé, espaces clients réservés et plateformes digitales.",
         },
       ],
       processTitle: "Notre méthode",
@@ -2859,17 +2855,17 @@ export const dict: Record<Locale, Dict> = {
       ctaButton: "Demander un devis",
     },
     restaurantes: {
-      heroChip: "Solution Digitale pour Restaurants",
-      heroTagline: "Nova Web Studio · Secteur de la Restauration",
-      heroTitle: "Votre restaurant. Tout au même endroit.",
+      heroChip: "Logiciel de Gestion pour Restaurant",
+      heroTagline: "Nova Web Studio · Solutions Restauration",
+      heroTitle: "Le logiciel de gestion pour restaurant complet et intuitif.",
       heroSubtitle:
-        "Site web, menu digital, réservations et commandes par QR Code dans une solution qui simplifie le service.",
+        "Site web dédié, menu digital pour restaurant, gestion des tables, réservations en ligne et commandes par QR Code à table.",
       heroCtaDemo: "Tester la démo",
       heroCtaProposal: "Demander un devis",
       heroBadges: [
-        "Commandes organisées par table",
-        "Menu digital toujours à jour",
-        "Configuration personnalisée",
+        "Commande par QR Code à table",
+        "Menu digital pour restaurant",
+        "Gestion des tables & réservations",
       ],
       heroMockup: {
         live: "En direct",
@@ -3086,44 +3082,44 @@ export const dict: Record<Locale, Dict> = {
       featuresCta: "Tout voir dans la démo",
       featureList: [
         {
-          title: "Site web personnalisé",
+          title: "Site internet personnalisé pour restaurant",
           text:
-            "Une présence en ligne professionnelle avec votre identité, photos, horaires et coordonnées.",
+            "Une présence en ligne professionnelle avec identité visuelle, carte, photos, horaires et localisation.",
         },
         {
-          title: "Menu digital modifiable",
+          title: "Menu digital pour restaurant modifiable en direct",
           text:
-            "Mettez à jour vos plats, tarifs et disponibilités en temps réel sans réimprimer vos cartes.",
+            "Mettez à jour vos plats, tarifs et ruptures en temps réel sans réimprimer vos cartes papier.",
         },
         {
-          title: "Commandes par QR Code par table",
+          title: "Commande par QR Code à table",
           text:
-            "Chaque table dispose de son QR Code. Les clients consultent le menu et commandent depuis leur smartphone.",
+            "Chaque table dispose d'un QR code dédié. Les clients consultent le menu et commandent directement depuis leur smartphone.",
         },
         {
-          title: "Réservations en ligne et téléphoniques",
+          title: "Réservations en ligne restaurant et téléphone",
           text:
-            "Recevez les réservations web et saisissez les réservations par téléphone sur un planning unique.",
+            "Recevez les réservations web et saisissez les demandes téléphoniques sur un calendrier unifié.",
         },
         {
-          title: "Panneau de gestion des commandes",
+          title: "Système de gestion restaurant & écran cuisine (KDS)",
           text:
-            "L'équipe visualise les commandes entrantes en direct, classées par table et heure d'arrivée.",
+            "Suivi visuel des bons de commande sous forme de tableau Kanban, de la préparation au service en salle.",
         },
         {
-          title: "Suivi des statuts des commandes",
+          title: "Gestion des tables et de la salle en direct",
           text:
-            "Visibilité claire sur chaque commande : reçue, en préparation, servie ou terminée.",
+            "Plan de salle interactif avec statuts colorés : tables libres, occupées, en attente ou demande d'addition.",
         },
         {
-          title: "Appel serveur et demande d'addition",
+          title: "Appel serveur & demande d'addition sur smartphone",
           text:
-            "Le client peut demander l'aide d'un serveur ou réclamer l'addition directement sur son écran.",
+            "Les clients peuvent solliciter un serveur ou demander l'addition directement via leur navigateur.",
         },
         {
-          title: "Gestion des tables et disponibilités",
+          title: "Rapports de service & suivi d'activité",
           text:
-            "Configurez la disposition de la salle, gérez la capacité et ajustez les disponibilités en quelques clics.",
+            "Consultez le chiffre d'affaires cumulé, le rythme du service et le taux d'occupation moyen des tables.",
         },
       ],
       processChip: "Processus",
@@ -3373,9 +3369,9 @@ export const dict: Record<Locale, Dict> = {
   es: {
     meta: {
       home: {
-        title: "Diseño Web en Cascais | Nova Web Studio",
+        title: "Diseño Web en Cascais & Páginas | Nova Web Studio",
         description:
-          "Creación y modernización de sitios web en Cascais, Oeiras, Sintra y Lisboa. Webs profesionales y rápidas para conseguir más contactos.",
+          "Creación de páginas web y diseño web en Cascais, Oeiras y Lisboa. Sitios web para empresas, tiendas online y rediseño profesional para captar más clientes.",
       },
       portfolio: {
         title: "Portafolio de Sitios Web | Nova Web Studio",
@@ -3385,7 +3381,7 @@ export const dict: Record<Locale, Dict> = {
       restaurantes: {
         title: "Software de Gestión para Restaurantes | Nova Web Studio",
         description:
-          "Simplifica la gestión de tu restaurante con pedidos por código QR, reservas online, gestión de mesas y cocina. Conoce la solución y prueba la demostración en directo.",
+          "Software de gestión para restaurantes con pedidos por código QR, carta digital interactiva, gestión de mesas y reservas online. Prueba la demo en directo.",
       },
       restaurantesDemo: {
         title: "Demostración Interactiva para Restaurantes | Nova Web Studio",
@@ -3410,9 +3406,9 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Diseño web en Cascais",
-      h1: "Webs profesionales para negocios locales",
-      lead: "Creamos y modernizamos sitios web para empresas y negocios en Cascais, Oeiras, Sintra y Lisboa, con una imagen profesional, uso sencillo y más oportunidades de contacto.",
+      chip: "Diseñador Web & Creación de Páginas en Cascais",
+      h1: "Diseño web profesional y creación de páginas para empresas",
+      lead: "Creamos y modernizamos páginas web para empresas en Cascais, Oeiras, Sintra y Lisboa. Diseño moderno, adaptado a móviles y optimizado para captar clientes.",
       ctaProposal: "Pedir propuesta",
       ctaPortfolio: "Ver portafolio",
       badgeArea: "Cascais, Oeiras, Sintra y Lisboa",
@@ -3430,41 +3426,41 @@ export const dict: Record<Locale, Dict> = {
       servicesTitle: "Qué hacemos",
       services: [
         {
-          titulo: "Creación de webs",
+          titulo: "Creación de sitios web",
           texto:
-            "Creamos webs profesionales desde cero, adaptadas a tu negocio y preparadas para generar contactos.",
+            "Desarrollamos páginas web profesionales desde cero, adaptadas a tu negocio y preparadas para captar contactos.",
         },
         {
-          titulo: "Rediseño y modernización",
+          titulo: "Rediseño y desarrollo web",
           texto:
-            "Actualizamos webs antiguas mejorando el diseño, la organización, la velocidad y la experiencia móvil.",
+            "Actualizamos webs antiguas mejorando su diseño, estructura técnica, velocidad y usabilidad móvil.",
         },
         {
-          titulo: "SEO y acompañamiento",
+          titulo: "Posicionamiento SEO local",
           texto:
-            "Preparamos la web para los buscadores y acompañamos tu presencia digital a lo largo del tiempo.",
+            "Preparamos tu sitio web para buscadores y acompañamos tu presencia digital de forma continua.",
         },
       ],
       typesTitle: "Tipos de webs",
       types: [
         {
-          titulo: "Web corporativa",
+          titulo: "Páginas web para empresas",
           texto:
-            "Presenta la empresa, los servicios y los contactos con una imagen profesional.",
+            "Presenta tu empresa, servicios y equipo con una imagen sólida, profesional y de confianza.",
         },
         {
-          titulo: "Tienda online",
+          titulo: "Creación de tiendas online",
           texto:
-            "Vende productos con una tienda sencilla, moderna y adaptada a tu negocio.",
+            "Vende productos por internet mediante una tienda online moderna, segura y optimizada para compras.",
         },
         {
-          titulo: "Landing page",
+          titulo: "Landing pages de conversión",
           texto:
-            "Una página centrada en presentar un servicio y generar solicitudes.",
+            "Páginas enfocadas en un servicio específico para maximizar solicitudes de presupuesto.",
         },
         {
-          titulo: "Aplicación web",
-          texto: "Soluciones digitales y áreas privadas desarrolladas a medida.",
+          titulo: "Aplicaciones web a medida",
+          texto: "Desarrollo web a medida, áreas de clientes y herramientas digitales personalizadas.",
         },
       ],
       processTitle: "Cómo trabajamos",
@@ -3552,17 +3548,17 @@ export const dict: Record<Locale, Dict> = {
       ctaButton: "Pedir presupuesto",
     },
     restaurantes: {
-      heroChip: "Solución Digital para Restaurantes",
+      heroChip: "Software de Gestión para Restaurantes",
       heroTagline: "Nova Web Studio · Sector de Restauración",
-      heroTitle: "Tu restaurante. Todo en un solo lugar.",
+      heroTitle: "Software de gestión para restaurantes. Todo en un solo lugar.",
       heroSubtitle:
-        "Sitio web, menú digital, reservas y pedidos por código QR en una solución que simplifica el servicio.",
+        "Página web propia, carta digital interactiva, gestión de mesas, reservas online y pedidos por código QR en mesa.",
       heroCtaDemo: "Probar demostración",
       heroCtaProposal: "Pedir propuesta",
       heroBadges: [
-        "Comandas organizadas por mesa",
-        "Menú digital siempre actualizado",
-        "Configuración personalizada",
+        "Pedidos por código QR en mesa",
+        "Carta digital para restaurantes",
+        "Gestión de mesas y reservas online",
       ],
       heroMockup: {
         live: "En directo",
@@ -3779,44 +3775,44 @@ export const dict: Record<Locale, Dict> = {
       featuresCta: "Ver todo en la demo",
       featureList: [
         {
-          title: "Sitio web personalizado",
+          title: "Página web para restaurantes y presencia digital",
           text:
-            "Presencia online profesional con tu imagen de marca, fotos, horarios, ubicación y datos de contacto.",
+            "Una presencia web profesional con identidad, carta, fotografías, horarios y mapa de ubicación.",
         },
         {
-          title: "Menú digital editable",
+          title: "Carta digital para restaurantes actualizable en directo",
           text:
-            "Actualiza platos, descripciones, precios y disponibilidad en tiempo real sin tener que reimprimir cartas.",
+            "Actualiza platos, precios y productos agotados en tiempo real sin reimprimir cartas de papel.",
         },
         {
           title: "Pedidos por código QR en mesa",
           text:
-            "Cada mesa tiene su propio código QR. Los clientes exploran la carta y envían pedidos directamente desde el móvil.",
+            "Cada mesa cuenta con su código QR. Los comensales consultan la carta y piden directamente desde el móvil sin esperas.",
         },
         {
-          title: "Reservas online y telefónicas",
+          title: "Reservas online para restaurantes y teléfono",
           text:
-            "Gestiona reservas recibidas por la web y anota llamadas telefónicas en un calendario centralizado.",
+            "Recibe reservas desde la web y anota llamadas telefónicas en un único calendario centralizado.",
         },
         {
-          title: "Panel de control de comandas",
+          title: "Programa para restaurantes y pantalla de cocina (KDS)",
           text:
-            "El equipo visualiza los nuevos pedidos en tiempo real, clasificados por mesa y hora de entrada.",
+            "Gestión ágil de comandas con panel Kanban desde la preparación hasta el servicio en mesa.",
         },
         {
-          title: "Actualización de estados del pedido",
+          title: "Gestión de mesas y sala en tiempo real",
           text:
-            "Seguimiento claro de cada comanda: recibida, en preparación, servida y completada.",
+            "Plano interactivo con estados visuales por color: libres, ocupadas, con alerta o solicitando la cuenta.",
         },
         {
-          title: "Llamar al camarero y pedir cuenta",
+          title: "Llamada a camarero y cuenta desde el móvil",
           text:
-            "El cliente puede avisar al personal o solicitar la cuenta directamente desde la pantalla de su teléfono.",
+            "El cliente puede solicitar asistencia o pedir la factura cómodamente desde el navegador de su teléfono.",
         },
         {
-          title: "Gestión de mesas y disponibilidad",
+          title: "Informes de servicio y control de turno",
           text:
-            "Organiza la distribución de sala, controla el aforo y activa o desactiva platos en segundos.",
+            "Seguimiento de facturación de la sesión, ritmo del servicio y nivel medio de ocupación de sala.",
         },
       ],
       processChip: "Proceso",
