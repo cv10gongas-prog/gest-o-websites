@@ -27,8 +27,14 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
-
 function createSupabaseClient() {
+  const demoMode = import.meta.env['VITE_DEMO_MODE'] === 'true';
+
+  // Modo Demo: devolve um cliente totalmente bloqueado e não lê sequer URLs/chaves de produção
+  if (demoMode) {
+    return createDemoBlockedClientInternal();
+  }
+
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
   const SUPABASE_URL = import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'];
@@ -56,6 +62,42 @@ function createSupabaseClient() {
   });
 }
 
+// Separate internal helper avoids recursive type inference
+function createDemoBlockedClientInternal(): any {
+  const blocked = () => {
+    throw new Error('[DEMO ISOLADO] Operação Supabase bloqueada.');
+  };
+  const queryProxy: any = new Proxy(function () {}, {
+    get: (_t, prop) => {
+      if (prop === 'then') {
+        return (resolve: (value: unknown) => void) =>
+          resolve({ data: null, error: { message: '[DEMO] Supabase bloqueado' } });
+      }
+      return queryProxy;
+    },
+    apply: () => queryProxy,
+  });
+  return new Proxy({}, {
+    get: (_target, prop) => {
+      if (prop === 'auth') {
+        return {
+          getSession: async () => ({ data: { session: null }, error: null }),
+          getUser: async () => ({ data: { user: null }, error: null }),
+          onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+          signOut: async () => ({ error: null }),
+          signInWithPassword: blocked,
+          setSession: blocked,
+        };
+      }
+      if (prop === 'from' || prop === 'rpc') return () => queryProxy;
+      if (prop === 'channel') return () => ({ on() { return this; }, subscribe() { return this; } });
+      if (prop === 'removeChannel') return async () => ({ error: null });
+      if (prop === 'storage') return { from: () => ({ upload: blocked, createSignedUrl: blocked }) };
+      return blocked;
+    },
+  });
+}
+
 let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
 
 // Import the supabase client like this:
@@ -66,4 +108,3 @@ export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>,
     return Reflect.get(_supabase, prop, receiver);
   },
 });
-

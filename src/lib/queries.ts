@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { alterarFuncao, removerMembro } from "@/lib/equipa.functions";
+import { isDemoMode, demoStore } from "@/lib/demo-mode";
 import type {
   AppRole,
   Business,
@@ -51,6 +52,17 @@ export function useProfiles() {
   return useQuery({
     queryKey: ["profiles"],
     queryFn: async (): Promise<Profile[]> => {
+      if (isDemoMode()) {
+        return demoStore.staff.map((s) => ({
+          id: s.user_id,
+          nome: s.profiles.nome,
+          email: s.profiles.email,
+          foto_url: s.profiles.foto_url,
+          telefone: "912 000 000",
+          created_at: s.criado_em,
+          updated_at: s.criado_em,
+        }));
+      }
       const { data, error } = await supabase.from("profiles").select("*").order("nome");
       if (error) throw error;
       return data ?? [];
@@ -62,6 +74,9 @@ export function useRoles() {
   return useQuery({
     queryKey: ["roles"],
     queryFn: async () => {
+      if (isDemoMode()) {
+        return [{ user_id: "demo-admin-id", role: "administrador" as AppRole }];
+      }
       const { data, error } = await supabase.from("user_roles").select("user_id, role");
       if (error) throw error;
       return data ?? [];
@@ -75,6 +90,9 @@ export function useBusinesses() {
   return useQuery({
     queryKey: ["businesses"],
     queryFn: async (): Promise<Business[]> => {
+      if (isDemoMode()) {
+        return demoStore.businesses;
+      }
       const { data, error } = await supabase
         .from("businesses")
         .select("*")
@@ -90,6 +108,9 @@ export function useBusiness(id: string | undefined) {
     queryKey: ["business", id],
     enabled: !!id,
     queryFn: async (): Promise<Business | null> => {
+      if (isDemoMode()) {
+        return demoStore.businesses.find((b) => b.id === id) ?? null;
+      }
       const { data, error } = await supabase.from("businesses").select("*").eq("id", id!).maybeSingle();
       if (error) throw error;
       return data;
@@ -101,6 +122,9 @@ export function useCriarNegocio() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (valores: Partial<Business> & { nome: string }) => {
+      if (isDemoMode()) {
+        return demoStore.createBusiness(valores);
+      }
       const uid = await utilizadorActual();
       const { data, error } = await supabase
         .from("businesses")
@@ -142,6 +166,9 @@ export function useActualizarNegocio() {
       valores: Partial<Business>;
       descricao?: string;
     }) => {
+      if (isDemoMode()) {
+        return demoStore.updateBusiness(id, valores);
+      }
       const patch = { ...valores };
       if (valores.website !== undefined) patch.website_dominio = dominio(valores.website);
       const { data, error } = await supabase
@@ -172,6 +199,10 @@ export function useApagarNegocio() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
+      if (isDemoMode()) {
+        demoStore.deleteBusiness(id);
+        return;
+      }
       const { error } = await supabase.from("businesses").delete().eq("id", id);
       if (error) throw error;
     },
@@ -277,6 +308,9 @@ export function useTasks() {
   return useQuery({
     queryKey: ["tasks"],
     queryFn: async (): Promise<Task[]> => {
+      if (isDemoMode()) {
+        return demoStore.tasks;
+      }
       const { data, error } = await supabase
         .from("tasks")
         .select("*")
@@ -465,6 +499,9 @@ export function useWebsiteRequests() {
   return useQuery({
     queryKey: ["website_requests"],
     queryFn: async (): Promise<WebsiteRequest[]> => {
+      if (isDemoMode()) {
+        return demoStore.websiteRequests;
+      }
       const { data, error } = await supabase
         .from("website_requests")
         .select("*")
