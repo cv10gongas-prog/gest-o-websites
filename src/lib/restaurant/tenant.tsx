@@ -79,15 +79,19 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     retry: 1,
   });
 
+  // A função central lida pelo Workspace autoriza APENAS o simulador local.
+  // Os restaurantes reais continuam a depender da lista devolvida pelo servidor.
+  const canUseLocalTestRestaurant =
+    isDemoMode() || authData?.isAdmin === true || (!aCarregar && isUserAdmin);
+
   const restaurantes: RestaurantTenant[] = useMemo(() => {
-    if (authData?.restaurantes && authData.restaurantes.length > 0) {
-      return authData.restaurantes as RestaurantTenant[];
-    }
-    if (isDemoMode() || authData?.isAdmin === true) {
-      return [defaultTestRestaurant];
-    }
-    return [];
-  }, [authData]);
+    const reaisAutorizados = (authData?.restaurantes ?? []).filter(
+      (r) => r.id !== "demo-restaurante",
+    );
+    return canUseLocalTestRestaurant
+      ? [defaultTestRestaurant, ...reaisAutorizados]
+      : reaisAutorizados;
+  }, [authData, canUseLocalTestRestaurant]);
 
   const [activeRestaurantId, setActiveRestaurantId] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -109,6 +113,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   }, [restaurantes, activeRestaurantId]);
 
   const setRestaurantAndStore = (id: string) => {
+    setSimulatedRole(null);
     setActiveRestaurantId(id);
     if (typeof window !== "undefined") {
       localStorage.setItem("nws_active_restaurant", id);
@@ -117,18 +122,25 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     qc.invalidateQueries({ queryKey: ["restaurant_permissions", id] });
   };
 
+  const testeLocalAutorizado =
+    activeRestaurantId === "demo-restaurante" && canUseLocalTestRestaurant;
+
   const { data: permData, isLoading: loadingPerms } = useQuery({
     queryKey: ["restaurant_permissions", activeRestaurantId],
     queryFn: async () =>
-      isDemoMode()
+      testeLocalAutorizado
         ? Promise.resolve({
             permitido: true,
-            restaurantId: activeRestaurantId,
+            restaurantId: "demo-restaurante",
             role: "administrador" as const,
             isAdminNWS: true,
           })
         : obterPermissoesAtivas({ data: { restaurantId: activeRestaurantId } }),
-    enabled: !!activeRestaurantId && !!restaurantes.length && !loadingRestaurantes,
+    enabled:
+      !aCarregar &&
+      !loadingRestaurantes &&
+      !!activeRestaurantId &&
+      restaurantes.some((r) => r.id === activeRestaurantId),
     staleTime: 60_000,
     retry: 1,
   });
@@ -137,13 +149,16 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     return restaurantes.find((r) => r.id === activeRestaurantId) ?? restaurantes[0] ?? null;
   }, [restaurantes, activeRestaurantId]);
 
-  // Só dados autenticados e validados no servidor concedem permissões administrativas.
+  // Um administrador confirmado pelo cliente central só ganha acesso ao TESTE LOCAL.
+  // Para qualquer restaurante real, exige-se autorização verificada pelo servidor.
   const isAdminNWS =
-    authData?.isAdmin === true ||
-    permData?.isAdminNWS === true ||
-    (activeRestaurantId === "demo-restaurante" && isDemoMode());
+    testeLocalAutorizado ||
+    (activeRestaurantId !== "demo-restaurante" &&
+      (authData?.isAdmin === true ||
+        (permData?.permitido === true && permData.isAdminNWS === true)));
   const rawRole = isAdminNWS ? "administrador" : permData?.permitido ? permData.role : "sala";
-  const currentRole = simulatedRole ?? rawRole;
+  const currentRole =
+    activeRestaurantId === "demo-restaurante" ? (simulatedRole ?? rawRole) : rawRole;
 
   const permissions = useMemo(() => {
     const isOwnerOrManager =

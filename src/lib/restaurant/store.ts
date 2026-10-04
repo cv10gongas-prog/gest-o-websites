@@ -199,7 +199,8 @@ export function useRealtime(
   const tk = tables.join(",");
 
   useEffect(() => {
-    if (isDemoMode() || !isRestaurantDatabaseConfigured()) return;
+    if (isDemoMode() || _restaurantId === "demo-restaurante" || !isRestaurantDatabaseConfigured())
+      return;
     if (!tk) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const refresh = () => {
@@ -227,7 +228,7 @@ export function useRealtime(
       window.removeEventListener("focus", onFocus);
       void restaurantCloud.removeChannel(ch);
     };
-  }, [k, tk, qc]);
+  }, [k, tk, qc, _restaurantId]);
 }
 
 export const ADMIN_TABLES: TableName[] = [
@@ -275,7 +276,8 @@ export function useAdmin() {
 }
 
 function isLocalOperation(restaurantId: string): boolean {
-  return isDemoMode() || !isRestaurantDatabaseConfigured() || restaurantId === "demo-restaurante";
+  // A ausência de BD real nunca converte restaurantes reais em dados fictícios.
+  return isDemoMode() || restaurantId === "demo-restaurante";
 }
 
 /**
