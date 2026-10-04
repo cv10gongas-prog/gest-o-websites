@@ -1,182 +1,241 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import {
-  Activity,
-  ArrowRight,
-  CheckCircle2,
-  Clock3,
-  Flame,
-  Layers,
-  ShieldCheck,
-  Sparkles,
   Trophy,
-  Users,
+  Activity,
+  FileSpreadsheet,
+  Plus,
+  RotateCcw,
+  Sparkles,
+  Layers,
+  Shield,
+  Clock3,
 } from "lucide-react";
-import { PanelHeader, RestaurantCard } from "@/components/restaurant/RestaurantBits";
+import { toast } from "sonner";
+import { useMatch, matchStore } from "@/lib/match/store";
+import { MatchLiveCenter } from "@/components/match/MatchLiveCenter";
+import { MatchReport } from "@/components/match/MatchReport";
+import { NewMatchModal } from "@/components/match/NewMatchModal";
+import { MODALITY_CONFIGS, type MatchModality } from "@/lib/match/types";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/produtos/match")({
   head: () => ({
     meta: [
-      { title: "NWS Match — Futebol & Futsal — Nova Web Studio" },
+      { title: "NWS Match — Futebol (11, 9, 7) & Futsal — Nova Web Studio" },
       {
         name: "description",
         content:
-          "Plataforma desportiva avançada para Futebol (11, 7, 9) e Futsal: cronómetro, minutos em campo, golos, faltas e relatórios estatísticos.",
+          "Plataforma desportiva profissional para controlo de jogos em direto, cronómetros, estatísticas e relatórios técnicos.",
       },
       { name: "robots", content: "noindex" },
     ],
   }),
-  component: ProdutosMatch,
+  component: MatchApp,
 });
 
-function ProdutosMatch() {
+type TabMatch = "live" | "relatorio" | "regras";
+
+function MatchApp() {
+  const match = useMatch();
+  const [tab, setTab] = useState<TabMatch>("live");
+  const [modalNovoJogo, setModalNovoJogo] = useState(false);
+
+  const config = MODALITY_CONFIGS[match.modality];
+
   return (
-    <div className="space-y-8 max-w-[1300px]">
-      {/* CABEÇALHO */}
-      <PanelHeader
-        title="NWS Match"
-        subtitle="Plataforma de alta performance para análise desportiva, controlo de jogos em direto e estatísticas de Futebol e Futsal."
-        action={
-          <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-            <Clock3 className="size-3.5" />
-            <span>Fase de Arquitetura & Modelação</span>
-          </span>
-        }
-      />
-
-      {/* MODALIDADES SUPORTADAS */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2">
-          <Trophy className="size-4 text-emerald-400" />
-          <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
-            Modalidades Regulamentares Suportadas
-          </h2>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {/* MODALIDADE 1: FUTSAL */}
-          <div className="rounded-3xl border border-emerald-500/30 bg-surface/50 p-6 backdrop-blur-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="grid size-10 place-items-center rounded-2xl bg-emerald-500/10 text-emerald-400 font-bold">
-                5v5
-              </span>
-              <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-400">
-                Futsal
-              </span>
-            </div>
-            <h3 className="text-base font-bold text-foreground">Futsal Oficial</h3>
-            <ul className="text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-              <li>
-                • <strong>Tempo Útil:</strong> 2 partes de 20 minutos com paragem de cronómetro.
-              </li>
-              <li>
-                • <strong>Substituições:</strong> Volantes e ilimitadas sem paragem de jogo.
-              </li>
-              <li>
-                • <strong>Faltas Acumuladas:</strong> Tiro livre direto de 10m a partir da 6ª falta.
-              </li>
-              <li>
-                • <strong>Cartões:</strong> 2 min em inferioridade numérica ou até sofrer golo.
-              </li>
-            </ul>
+    <div className="space-y-6 max-w-[1550px] mx-auto">
+      {/* CABEÇALHO DA APLICAÇÃO NWS MATCH */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/70 pb-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
+            <Trophy className="size-4" />
+            <span>NWS Match • Plataforma Desportiva</span>
+            <span className="text-muted-foreground/50">•</span>
+            <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+              {config.name}
+            </span>
           </div>
-
-          {/* MODALIDADE 2: FUTEBOL 11 */}
-          <div className="rounded-3xl border border-primary/30 bg-surface/50 p-6 backdrop-blur-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="grid size-10 place-items-center rounded-2xl bg-primary/10 text-primary font-bold">
-                11v11
-              </span>
-              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase text-primary">
-                Futebol 11
-              </span>
-            </div>
-            <h3 className="text-base font-bold text-foreground">Futebol de 11</h3>
-            <ul className="text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-              <li>
-                • <strong>Duração:</strong> 2 partes de 45 minutos (tempo corrido com descontos).
-              </li>
-              <li>
-                • <strong>Substituições:</strong> 5 substituições em 3 paragens (ou regulamento
-                específico).
-              </li>
-              <li>
-                • <strong>Métricas:</strong> Golos, remates à baliza, foras de jogo, cartões e
-                faltas.
-              </li>
-              <li>
-                • <strong>Minutos em Campo:</strong> Registo automático por titular e suplente
-                utilizado.
-              </li>
-            </ul>
-          </div>
-
-          {/* MODALIDADE 3: FUTEBOL DE FORMAÇÃO (7 / 9) */}
-          <div className="rounded-3xl border border-info/30 bg-surface/50 p-6 backdrop-blur-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="grid size-10 place-items-center rounded-2xl bg-info/10 text-info font-bold">
-                7 / 9
-              </span>
-              <span className="rounded-md bg-info/10 px-2 py-0.5 text-[10px] font-bold uppercase text-info">
-                Formação
-              </span>
-            </div>
-            <h3 className="text-base font-bold text-foreground">Futebol 7 & Futebol 9</h3>
-            <ul className="text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-              <li>
-                • <strong>Escalões Jovens:</strong> Petizes, Traquinas, Benjamins, Infantis,
-                Iniciados.
-              </li>
-              <li>
-                • <strong>Durações Adaptadas:</strong> 2x 25 min, 2x 30 min ou 2x 35 min
-                configuráveis.
-              </li>
-              <li>
-                • <strong>Substituições Livres:</strong> Apoio a regras de rotação de todos os
-                atletas.
-              </li>
-              <li>
-                • <strong>Relatórios de Evolução:</strong> Minutos jogados e indicadores formativos.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* FUNCIONALIDADES EM DESENVOLVIMENTO */}
-      <section className="grid gap-6 md:grid-cols-3">
-        <div className="rounded-3xl border border-border/70 bg-surface/50 p-6 backdrop-blur-md space-y-3">
-          <div className="grid size-10 place-items-center rounded-2xl bg-primary/10 text-primary">
-            <Users className="size-5" />
-          </div>
-          <h3 className="text-sm font-bold text-foreground">Clubes, Equipas & Plantéis</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Gestão de escalões, números de camisola, posições, fichas individuais de atletas e
-            histórico de épocas desportivas.
+          <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+            {match.title}
+          </h1>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {match.competition} • {match.location}
           </p>
         </div>
 
-        <div className="rounded-3xl border border-border/70 bg-surface/50 p-6 backdrop-blur-md space-y-3">
-          <div className="grid size-10 place-items-center rounded-2xl bg-warning/10 text-warning">
-            <Activity className="size-5" />
-          </div>
-          <h3 className="text-sm font-bold text-foreground">Live Match Engine</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Interface para tablet/portátil durante os jogos: cronómetro com 1 clique, substituições
-            rápidas, remates, golos e faltas em tempo real.
-          </p>
-        </div>
+        {/* AÇÕES DE CABEÇALHO */}
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              if (confirm("Deseja repor os dados do jogo de demonstração?")) {
+                matchStore.resetMatch();
+                toast.info("Jogo reposto para o estado inicial de demonstração.");
+              }
+            }}
+            className="flex items-center gap-1.5 rounded-xl border border-border/70 bg-surface/60 px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-surface-strong hover:text-foreground transition"
+            title="Repor Jogo de Demonstração"
+          >
+            <RotateCcw className="size-3.5" />
+            <span className="hidden sm:inline">Repor Jogo</span>
+          </button>
 
-        <div className="rounded-3xl border border-border/70 bg-surface/50 p-6 backdrop-blur-md space-y-3">
-          <div className="grid size-10 place-items-center rounded-2xl bg-info/10 text-info">
-            <Layers className="size-5" />
-          </div>
-          <h3 className="text-sm font-bold text-foreground">Relatórios & Estatísticas</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Relatórios completos por jogo com cronologia minuto a minuto, minutos jogados por atleta
-            e mapas de eficácia para treinadores.
-          </p>
+          <button
+            type="button"
+            onClick={() => setModalNovoJogo(true)}
+            className="flex items-center gap-1.5 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600 active:scale-95"
+          >
+            <Plus className="size-4" />
+            <span>Novo Jogo (4 Modalidades)</span>
+          </button>
         </div>
-      </section>
+      </div>
+
+      {/* SEPARADORES DE NAVEGAÇÃO DO MATCH */}
+      <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-border/70 bg-surface/50 p-1.5 backdrop-blur-md">
+        <button
+          type="button"
+          onClick={() => setTab("live")}
+          className={cn(
+            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
+            tab === "live"
+              ? "bg-emerald-500 text-white shadow-sm"
+              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+          )}
+        >
+          <Activity className="size-3.5" />
+          <span>1. Painel em Direto & Cronómetro</span>
+          {match.isRunning && <span className="size-2 rounded-full bg-white animate-ping" />}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setTab("relatorio")}
+          className={cn(
+            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
+            tab === "relatorio"
+              ? "bg-emerald-500 text-white shadow-sm"
+              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+          )}
+        >
+          <FileSpreadsheet className="size-3.5" />
+          <span>2. Relatório Técnico & Estatísticas</span>
+          {match.events.length > 0 && (
+            <span className="rounded-full bg-surface-strong px-1.5 py-0.2 text-[9px] text-muted-foreground">
+              {match.events.length}
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setTab("regras")}
+          className={cn(
+            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
+            tab === "regras"
+              ? "bg-emerald-500 text-white shadow-sm"
+              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+          )}
+        >
+          <Layers className="size-3.5" />
+          <span>3. Modalidades & Regras Oficiais</span>
+        </button>
+      </div>
+
+      {/* ============================================================ */}
+      {/* CONTEÚDO DOS SEPARADORES                                     */}
+      {/* ============================================================ */}
+
+      {/* 1. PAINEL EM DIRETO */}
+      {tab === "live" && <MatchLiveCenter match={match} />}
+
+      {/* 2. RELATÓRIO E ESTATÍSTICAS */}
+      {tab === "relatorio" && <MatchReport match={match} />}
+
+      {/* 3. REGRAS E MODALIDADES */}
+      {tab === "regras" && (
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-emerald-500/30 bg-surface/50 p-6 backdrop-blur-md">
+            <h2 className="text-base font-bold text-foreground">
+              Configurações Regulamentares das 4 Modalidades
+            </h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              O NWS Match adapta o cronómetro, as faltas acumuladas e os controlos táticos à
+              modalidade selecionada.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {(Object.keys(MODALITY_CONFIGS) as MatchModality[]).map((key) => {
+              const cfg = MODALITY_CONFIGS[key];
+              const isAtiva = match.modality === key;
+
+              return (
+                <div
+                  key={key}
+                  className={cn(
+                    "rounded-3xl border p-6 backdrop-blur-md space-y-3 transition",
+                    isAtiva
+                      ? "border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-500/10"
+                      : "border-border/70 bg-surface/40",
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="grid size-10 place-items-center rounded-2xl bg-emerald-500/20 font-mono text-sm font-bold text-emerald-400">
+                      {cfg.playersOnPitch}v{cfg.playersOnPitch}
+                    </span>
+                    {isAtiva && (
+                      <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-bold text-white uppercase">
+                        Em Jogo
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="text-base font-bold text-foreground">{cfg.name}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{cfg.description}</p>
+
+                  <div className="pt-3 border-t border-border/40 space-y-1.5 text-[11px] text-muted-foreground">
+                    <div>
+                      • <strong>Duração:</strong> {cfg.totalPeriods} partes de{" "}
+                      {cfg.defaultPeriodMinutes} min
+                    </div>
+                    <div>
+                      • <strong>Titulares:</strong> {cfg.playersOnPitch} atletas
+                    </div>
+                    <div>
+                      • <strong>Faltas Acumuladas:</strong>{" "}
+                      {cfg.hasAccumulatedFouls ? "Sim (Livre 10m à 6ª)" : "Não"}
+                    </div>
+                    <div>
+                      • <strong>Substituições:</strong>{" "}
+                      {cfg.rollingSubstitutions
+                        ? "Volantes / Ilimitadas"
+                        : "Por paragem regulamentar"}
+                    </div>
+                  </div>
+
+                  {!isAtiva && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        matchStore.resetMatch(key);
+                        toast.success(`Modalidade alterada para ${cfg.name}`);
+                      }}
+                      className="mt-2 w-full rounded-xl border border-emerald-500/30 bg-surface/80 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition"
+                    >
+                      Trocar para {cfg.name}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL NOVO JOGO */}
+      <NewMatchModal aberto={modalNovoJogo} onFechar={() => setModalNovoJogo(false)} />
     </div>
   );
 }

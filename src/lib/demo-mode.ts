@@ -499,6 +499,70 @@ class DemoStore {
     );
   }
 
+  simulateCustomerOrder(tableNum?: number): Order {
+    const tableNumber =
+      tableNum ??
+      (this.tables.length > 0
+        ? this.tables[Math.floor(Math.random() * this.tables.length)].number
+        : 1);
+    const tableId =
+      this.tables.find((t) => t.number === tableNumber)?.id ?? `demo-t-${tableNumber}`;
+    const prods = this.products.length > 0 ? this.products : sampleProducts;
+
+    const chosen = [
+      prods[Math.floor(Math.random() * prods.length)],
+      prods[Math.floor(Math.random() * prods.length)],
+    ];
+
+    const orderNumber = 1000 + this.orders.length + 1;
+    const items = chosen.map((p) => ({
+      productId: p.id,
+      name: p.name,
+      price: p.price,
+      qty: Math.floor(Math.random() * 2) + 1,
+    }));
+
+    const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+    const newOrder: Order = {
+      id: `demo-o-${Date.now()}`,
+      code: orderNumber,
+      tableId,
+      tableNumber,
+      note: "Pedido simulado via QR Code [DEMO]",
+      total,
+      status: "recebido",
+      closed: false,
+      createdAt: Date.now(),
+      items,
+    };
+
+    this.orders = [newOrder, ...this.orders];
+    return newOrder;
+  }
+
+  simulateTableRequest(type: "empregado" | "conta" = "empregado", tableNum?: number): TableRequest {
+    const tableNumber =
+      tableNum ??
+      (this.tables.length > 0
+        ? this.tables[Math.floor(Math.random() * this.tables.length)].number
+        : 1);
+    const tableId =
+      this.tables.find((t) => t.number === tableNumber)?.id ?? `demo-t-${tableNumber}`;
+
+    const newReq: TableRequest = {
+      id: `demo-req-${Date.now()}`,
+      tableId,
+      tableNumber,
+      type,
+      createdAt: Date.now(),
+      resolved: false,
+    };
+
+    this.requests = [newReq, ...this.requests];
+    return newReq;
+  }
+
   saveTable(t: { id?: string; number: number; seats: number; active: boolean }) {
     if (t.id) {
       this.tables = this.tables.map((table) =>

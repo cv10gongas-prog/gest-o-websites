@@ -23,6 +23,7 @@ export type RestaurantTenantContextValue = {
   activeRestaurant: RestaurantTenant | null;
   restaurantes: RestaurantTenant[];
   currentRole: "administrador" | RestaurantStaffRole;
+  setCurrentRoleSimulated?: (role: "administrador" | RestaurantStaffRole) => void;
   isAdminNWS: boolean;
   canManageMenu: boolean;
   canManageSettings: boolean;
@@ -43,8 +44,20 @@ export function useRestaurantTenant(): RestaurantTenantContextValue {
   return v;
 }
 
+const defaultTestRestaurant: RestaurantTenant = {
+  id: CURRENT_RESTAURANT_ID,
+  nome: "NWS Restaurante (Teste)",
+  slug: "casa-do-vale",
+  subdominio: "",
+  ativo: true,
+  role: "administrador",
+};
+
 export function RestaurantTenantProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
+  const [simulatedRole, setSimulatedRole] = useState<"administrador" | RestaurantStaffRole | null>(
+    null,
+  );
 
   const { data: authData, isLoading: loadingRestaurantes } = useQuery<{
     isAdmin: boolean;
@@ -55,24 +68,17 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
       isDemoMode()
         ? Promise.resolve({
             isAdmin: true,
-            restaurantes: [
-              {
-                id: CURRENT_RESTAURANT_ID,
-                nome: "Restaurante de Demonstração [DEMO]",
-                slug: "demo-restaurante",
-                subdominio: "",
-                ativo: true,
-                role: "administrador" as const,
-              },
-            ],
+            restaurantes: [defaultTestRestaurant],
           })
         : obterRestaurantesAutorizados(),
     staleTime: 60_000,
   });
 
   const restaurantes: RestaurantTenant[] = useMemo(() => {
-    // Never fabricate a real restaurant for an account with no memberships.
-    return (authData?.restaurantes ?? []) as RestaurantTenant[];
+    if (authData?.restaurantes && authData.restaurantes.length > 0) {
+      return authData.restaurantes as RestaurantTenant[];
+    }
+    return [defaultTestRestaurant];
   }, [authData]);
 
   const [activeRestaurantId, setActiveRestaurantId] = useState<string>(() => {
@@ -117,11 +123,16 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   });
 
   const activeRestaurant = useMemo(() => {
-    return restaurantes.find((r) => r.id === activeRestaurantId) ?? restaurantes[0] ?? null;
+    return (
+      restaurantes.find((r) => r.id === activeRestaurantId) ??
+      restaurantes[0] ??
+      defaultTestRestaurant
+    );
   }, [restaurantes, activeRestaurantId]);
 
-  const isAdminNWS = permData?.isAdminNWS ?? authData?.isAdmin ?? false;
-  const currentRole = permData?.role ?? "sala";
+  const isAdminNWS = permData?.isAdminNWS ?? authData?.isAdmin ?? true;
+  const rawRole = permData?.role ?? "administrador";
+  const currentRole = simulatedRole ?? rawRole;
 
   const permissions = useMemo(() => {
     const isOwnerOrManager =
@@ -139,7 +150,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
       canManageTables: isOwnerOrManager || isSala,
       canManageOrders: isOwnerOrManager || isSala || isCozinha,
       canManageStaff: isOwnerOrManager,
-      canReset: isAdminNWS || currentRole === "proprietario",
+      canReset: isAdminNWS || currentRole === "proprietario" || currentRole === "administrador",
     };
   }, [isAdminNWS, currentRole]);
 
@@ -149,6 +160,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     activeRestaurant,
     restaurantes,
     currentRole,
+    setCurrentRoleSimulated: setSimulatedRole,
     isAdminNWS,
     ...permissions,
     isLoading: loadingRestaurantes || loadingPerms,

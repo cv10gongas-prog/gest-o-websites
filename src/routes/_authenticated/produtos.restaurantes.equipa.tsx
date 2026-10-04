@@ -54,7 +54,13 @@ const roleLabels: Record<
 };
 
 function RestaurantStaffAdmin() {
-  const { activeRestaurantId, activeRestaurant, canManageStaff } = useRestaurantTenant();
+  const {
+    activeRestaurantId,
+    activeRestaurant,
+    canManageStaff,
+    currentRole,
+    setCurrentRoleSimulated,
+  } = useRestaurantTenant();
   const qc = useQueryClient();
   const [modalConvidar, setModalConvidar] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -126,6 +132,42 @@ function RestaurantStaffAdmin() {
           )
         }
       />
+
+      {/* SIMULADOR DE PERFIS PARA TESTES NO WORKSPACE */}
+      {setCurrentRoleSimulated && (
+        <div className="rounded-2xl border border-warning/30 bg-surface/50 p-4 backdrop-blur-md flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div>
+            <span className="text-xs font-bold text-warning flex items-center gap-1.5">
+              <Shield className="size-4 text-warning" />
+              Simulador de Funções no Workspace:
+            </span>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              Função atualmente simulada nesta sessão:{" "}
+              <strong className="text-foreground capitalize">{currentRole}</strong>
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            {(["administrador", "proprietario", "gerente", "sala", "cozinha"] as const).map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => {
+                  setCurrentRoleSimulated(r);
+                  toast.success(`Perfil do restaurante alterado para: ${r.toUpperCase()}`);
+                }}
+                className={`rounded-xl px-2.5 py-1 text-xs font-bold capitalize transition ${
+                  currentRole === r
+                    ? "bg-warning text-black shadow-sm"
+                    : "border border-border/80 bg-surface-strong text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* QUADRO DE NÍVEIS DE ACESSO */}
       <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">

@@ -207,6 +207,92 @@ function RestaurantOverview() {
         }
       />
 
+      {/* BARRA DE AÇÕES OPERACIONAIS E SIMULAÇÃO DE CLIENTES (MODO TESTE / DEMO) */}
+      <div className="rounded-2xl border border-warning/30 bg-surface/50 p-4 backdrop-blur-md flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        <div className="flex items-center gap-2 text-xs font-bold text-warning">
+          <Sparkles className="size-4 text-warning" />
+          <span>Simulador Operacional de Sala & Clientes</span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              if (isDemoMode() || !demoStore.isPopulated) {
+                const o = demoStore.simulateCustomerOrder();
+                qc.invalidateQueries();
+                toast.success(`⚡ Novo Pedido QR Simulado na Mesa ${o.tableNumber}!`, {
+                  description: `#${o.code} — Total: ${formatPrice(o.total)}`,
+                });
+              } else {
+                toast.info("Em modo real, os pedidos chegam diretamente dos QR Codes das mesas.");
+              }
+            }}
+            className="flex items-center gap-1.5 rounded-xl bg-warning px-3 py-1.5 text-xs font-bold text-black hover:bg-warning/90 transition shadow-sm"
+          >
+            <span>⚡ Simular Pedido QR</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (isDemoMode() || !demoStore.isPopulated) {
+                const r = demoStore.simulateTableRequest("empregado");
+                qc.invalidateQueries();
+                toast.info(`🛎️ Mesa ${r.tableNumber} chamou o Empregado!`);
+              } else {
+                toast.info("Chamada de empregado registada.");
+              }
+            }}
+            className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-surface-strong px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-surface transition"
+          >
+            <span>🛎️ Chamar Empregado</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (isDemoMode() || !demoStore.isPopulated) {
+                const r = demoStore.simulateTableRequest("conta");
+                qc.invalidateQueries();
+                toast.warning(`🧾 Mesa ${r.tableNumber} pediu a Conta!`);
+              } else {
+                toast.info("Pedido de conta registado.");
+              }
+            }}
+            className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-surface-strong px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-surface transition"
+          >
+            <span>🧾 Pedir a Conta</span>
+          </button>
+
+          {!demoStore.isPopulated ? (
+            <button
+              type="button"
+              onClick={() => {
+                demoStore.loadSampleData();
+                qc.invalidateQueries();
+                toast.success("Cenário de demonstração carregado com ementa, mesas e pedidos!");
+              }}
+              className="flex items-center gap-1.5 rounded-xl border border-warning/50 bg-warning/10 px-3 py-1.5 text-xs font-bold text-warning hover:bg-warning/20 transition"
+            >
+              <span>📦 Carregar Cenário de Exemplo</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                demoStore.resetDemo();
+                qc.invalidateQueries();
+                toast.info("Demonstração reposta para o estado inicial vazio.");
+              }}
+              className="flex items-center gap-1.5 rounded-xl border border-border/70 bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-danger hover:border-danger/40 transition"
+            >
+              <span>🔄 Repor Estado Vazio</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* BANNER DE ALERTAS URGENTES OPERACIONAIS (SE EXISTIREM) */}
       {(delayedOrders.length > 0 || activeRequests.length > 0) && (
         <section className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 shadow-sm backdrop-blur-md space-y-3">

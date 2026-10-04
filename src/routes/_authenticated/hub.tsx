@@ -44,6 +44,9 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { adminQuery } from "@/lib/restaurant/store";
+import { isRestaurantDatabaseConfigured } from "@/lib/restaurant/cloud";
+import { isDemoMode } from "@/lib/demo-mode";
+import { useMatch } from "@/lib/match/store";
 import { todayISO } from "@/lib/restaurant/demo-data";
 import { cn } from "@/lib/utils";
 
@@ -69,6 +72,7 @@ function WorkspaceHub() {
   const { data: pedidos = [] } = useWebsiteRequests();
   const { data: perfis = [] } = useProfiles();
   const { data: chamadas = [] } = useInteractions();
+  const match = useMatch();
 
   // Tentativas anómalas de login recentes para o card de administração
   const { data: tentativas = [] } = useQuery({
@@ -116,6 +120,12 @@ function WorkspaceHub() {
       reservasHoje,
     };
   }, [restData]);
+
+  const restBadge = isDemoMode()
+    ? { label: "Modo Demonstração", tone: "text-warning bg-warning/15" }
+    : isRestaurantDatabaseConfigured()
+      ? { label: "Operação em Direto", tone: "text-success bg-success/15" }
+      : { label: "Configuração Pendente", tone: "text-amber-400 bg-amber-400/15" };
 
   const hojeIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -307,8 +317,13 @@ function WorkspaceHub() {
                 </div>
               </div>
 
-              <span className="rounded-full bg-warning/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-warning">
-                Operação em Direto
+              <span
+                className={cn(
+                  "rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
+                  restBadge.tone,
+                )}
+              >
+                {restBadge.label}
               </span>
             </div>
 
@@ -374,31 +389,55 @@ function WorkspaceHub() {
                     NWS Match
                   </h2>
                   <p className="text-xs text-muted-foreground font-medium">
-                    Estatísticas Desportivas de Futsal
+                    Futebol (11, 9, 7) & Futsal Oficial
                   </p>
                 </div>
               </div>
 
               <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
-                <Clock3 className="size-3" />
-                Em Planeamento
+                <Flame className="size-3 text-emerald-400" />
+                {match.isRunning ? "Em Jogo (Live)" : "Live Engine Ativo"}
               </span>
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground leading-relaxed">
-              Futura plataforma desportiva: gestão de clubes, equipas, atletas, golos, faltas,
-              minutos jogados e relatórios analíticos de jogo.
+              Plataforma de alta performance para controlo de jogos em direto, cronómetros
+              regulamentares, faltas acumuladas e relatórios estatísticos.
             </p>
 
-            {/* Resumo de Estado */}
-            <div className="mt-6 rounded-2xl border border-border/50 bg-surface/60 p-3 flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Fase de Arquitetura:</span>
-              <span className="font-semibold text-emerald-400">Roadmap & Modelagem</span>
+            {/* Resumo com Dados Reais da Partida Ativa */}
+            <div className="mt-6 grid grid-cols-3 gap-2.5 rounded-2xl border border-border/50 bg-surface/60 p-3">
+              <div>
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Partida Ativa
+                </span>
+                <p className="text-xs font-bold font-mono text-foreground mt-0.5 truncate">
+                  {match.homeTeam.shortName} vs {match.awayTeam.shortName}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Resultado
+                </span>
+                <p className="text-base font-bold font-mono text-emerald-400 mt-0.5">
+                  {match.homeScore} - {match.awayScore}
+                </p>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Acontecimentos
+                </span>
+                <p className="text-base font-bold font-mono text-foreground mt-0.5">
+                  {match.events.length}
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="mt-6 pt-4 border-t border-border/40 flex items-center justify-between text-xs font-bold text-emerald-400">
-            <span>Ver Especificações do Match</span>
+            <span>Abrir Painel em Direto do Match</span>
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </div>
         </Link>
