@@ -250,17 +250,14 @@ export const adminQuery = (restaurantId: string = RID) =>
   queryOptions({
     queryKey: ["restaurant_admin", restaurantId],
     queryFn: async (): Promise<AdminData> => {
-      if (isDemoMode() || !isRestaurantDatabaseConfigured()) {
+      // Apenas o espaço de testes explícito (demo-restaurante) ou o modo DEMO usam o demoStore local
+      if (restaurantId === "demo-restaurante" || isDemoMode()) {
         return demoStore.getAdminData(restaurantId);
       }
-      try {
-        return await obterDadosAdminRestaurante({
-          data: { restaurantId },
-        });
-      } catch (e) {
-        console.error("[adminQuery] Erro ao carregar dados do restaurante:", e);
-        return demoStore.getAdminData(restaurantId);
-      }
+      // Para qualquer restaurante real, invoca a Server Function protegida e não mascara erros reais
+      return await obterDadosAdminRestaurante({
+        data: { restaurantId },
+      });
     },
     retry: 1,
     staleTime: 30_000,

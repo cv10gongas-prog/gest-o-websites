@@ -49,7 +49,9 @@ export async function validarAcessoRestaurante(
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (roleData?.role === "administrador") {
+  const isAdmin = roleData?.role === "administrador";
+
+  if (isAdmin) {
     return {
       permitido: true,
       role: "administrador",
@@ -58,17 +60,14 @@ export async function validarAcessoRestaurante(
     };
   }
 
-  // 2. No restaurante de testes do Workspace, utilizadores autenticados têm acesso operacional completo
-  if (restaurantId === "casa-do-vale" || restaurantId === "nws-test-restaurant") {
-    return {
-      permitido: true,
-      role: "proprietario",
-      isAdminNWS: false,
-      restaurantId,
-    };
+  // 2. O identificador demo-restaurante é exclusivo do espaço de testes local (exige conta de administrador)
+  if (restaurantId === "demo-restaurante" || restaurantId === "nws-test-restaurant") {
+    throw new Error(
+      "Acesso Negado: O simulador de testes é reservado a administradores verificados.",
+    );
   }
 
-  // 3. Verificar afiliação de funcionário no restaurante para outros estabelecimentos
+  // 3. Verificar afiliação de funcionário no restaurante para estabelecimentos reais
   try {
     const { data: memberData } = await supabase
       .from("restaurant_memberships")
@@ -994,16 +993,16 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
 
       const isAdmin = roleData?.role === "administrador";
 
-      const testRestaurant = {
-        id: "casa-do-vale",
-        nome: "NWS Restaurante (Espaço de Testes)",
-        slug: "casa-do-vale",
-        subdominio: "",
-        role: "proprietario" as const,
-        ativo: true,
-      };
-
       if (isAdmin) {
+        let realRestaurants: Array<{
+          id: string;
+          nome: string;
+          slug: string;
+          subdominio: string;
+          role: "administrador";
+          ativo: boolean;
+        }> = [];
+
         try {
           const { data: allRestaurants } = await context.supabase
             .from("crm_restaurants")
@@ -1011,21 +1010,35 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
             .order("nome");
 
           if (allRestaurants && allRestaurants.length > 0) {
-            return {
-              isAdmin: true,
-              restaurantes: allRestaurants,
-            };
+            realRestaurants = allRestaurants.map((r) => ({
+              id: r.id,
+              nome: r.nome,
+              slug: r.slug,
+              subdominio: r.subdominio ?? "",
+              role: "administrador" as const,
+              ativo: r.ativo ?? true,
+            }));
           }
         } catch {
           // crm_restaurants opcional
         }
 
+        const testSpace = {
+          id: "demo-restaurante",
+          nome: "NWS Restaurante (Espaço de Testes Local)",
+          slug: "demo-restaurante",
+          subdominio: "",
+          role: "administrador" as const,
+          ativo: true,
+        };
+
         return {
           isAdmin: true,
-          restaurantes: [testRestaurant],
+          restaurantes: [testSpace, ...realRestaurants],
         };
       }
 
+      // Utilizadores não administradores só recebem restaurantes onde têm afiliação ativa
       try {
         const { data: memberships } = await context.supabase
           .from("restaurant_memberships")
@@ -1054,22 +1067,13 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
 
       return {
         isAdmin: false,
-        restaurantes: [testRestaurant],
+        restaurantes: [],
       };
     } catch (e) {
       console.error("[obterRestaurantesAutorizados] Erro:", e);
       return {
         isAdmin: false,
-        restaurantes: [
-          {
-            id: "casa-do-vale",
-            nome: "NWS Restaurante (Espaço de Testes)",
-            slug: "casa-do-vale",
-            subdominio: "",
-            role: "proprietario" as const,
-            ativo: true,
-          },
-        ],
+        restaurantes: [],
       };
     }
   });
@@ -1088,19 +1092,12 @@ export const obterPermissoesAtivas = createServerFn({ method: "POST" })
       );
       return access;
     } catch (e) {
-      const { data: roleData } = await context.supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", context.userId)
-        .maybeSingle();
-
-      const isAdmin = roleData?.role === "administrador";
-
       return {
-        permitido: true,
-        role: (isAdmin ? "administrador" : "proprietario") as RestaurantStaffRole,
-        isAdminNWS: isAdmin,
+        permitido: false,
+        role: "sala" as RestaurantStaffRole,
+        isAdminNWS: false,
         restaurantId: data.restaurantId,
+        erro: (e as Error).message || "Acesso negado.",
       };
     }
   });

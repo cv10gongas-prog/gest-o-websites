@@ -46,12 +46,12 @@ export function useRestaurantTenant(): RestaurantTenantContextValue {
 }
 
 const defaultTestRestaurant: RestaurantTenant = {
-  id: CURRENT_RESTAURANT_ID,
-  nome: "NWS Restaurante (Espaço de Testes)",
-  slug: "casa-do-vale",
+  id: "demo-restaurante",
+  nome: "NWS Restaurante (Espaço de Testes Local)",
+  slug: "demo-restaurante",
   subdominio: "",
   ativo: true,
-  role: "proprietario",
+  role: "administrador",
 };
 
 export function RestaurantTenantProvider({ children }: { children: ReactNode }) {
@@ -60,6 +60,8 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   const [simulatedRole, setSimulatedRole] = useState<"administrador" | RestaurantStaffRole | null>(
     null,
   );
+
+  const isUserAdmin = isAdminUser || funcao === "administrador";
 
   const { data: authData, isLoading: loadingRestaurantes } = useQuery<{
     isAdmin: boolean;
@@ -81,23 +83,28 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     if (authData?.restaurantes && authData.restaurantes.length > 0) {
       return authData.restaurantes as RestaurantTenant[];
     }
-    return [defaultTestRestaurant];
-  }, [authData]);
+    if (isDemoMode() || isUserAdmin) {
+      return [defaultTestRestaurant];
+    }
+    return [];
+  }, [authData, isUserAdmin]);
 
   const [activeRestaurantId, setActiveRestaurantId] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("nws_active_restaurant");
       if (saved) return saved;
     }
-    return CURRENT_RESTAURANT_ID;
+    return isUserAdmin ? "demo-restaurante" : CURRENT_RESTAURANT_ID;
   });
 
   // Atualizar quando os restaurantes autorizados forem carregados
   useEffect(() => {
     if (restaurantes.length > 0 && !restaurantes.some((r) => r.id === activeRestaurantId)) {
-      const fallback = restaurantes[0]?.id ?? CURRENT_RESTAURANT_ID;
-      setActiveRestaurantId(fallback);
-      localStorage.setItem("nws_active_restaurant", fallback);
+      const fallback = restaurantes[0]?.id ?? "";
+      if (fallback) {
+        setActiveRestaurantId(fallback);
+        localStorage.setItem("nws_active_restaurant", fallback);
+      }
     }
   }, [restaurantes, activeRestaurantId]);
 
@@ -127,14 +134,10 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   });
 
   const activeRestaurant = useMemo(() => {
-    return (
-      restaurantes.find((r) => r.id === activeRestaurantId) ??
-      restaurantes[0] ??
-      defaultTestRestaurant
-    );
+    return restaurantes.find((r) => r.id === activeRestaurantId) ?? restaurantes[0] ?? null;
   }, [restaurantes, activeRestaurantId]);
 
-  const isAdminNWS = permData?.isAdminNWS ?? (isAdminUser || funcao === "administrador");
+  const isAdminNWS = permData?.isAdminNWS ?? isUserAdmin;
   const rawRole = permData?.role ?? (isAdminNWS ? "administrador" : "sala");
   const currentRole = simulatedRole ?? rawRole;
 
