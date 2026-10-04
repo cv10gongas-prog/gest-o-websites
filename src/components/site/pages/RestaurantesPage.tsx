@@ -181,7 +181,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
 
             <Reveal delay={290}>
               <div className="mt-8 flex flex-wrap gap-3">
-
                 <Link
                   to={paths.contact}
                   search={{ tipo: "restaurantes" }}
@@ -943,7 +942,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-border/50 flex flex-col sm:flex-row gap-3">
-
                   <Link
                     to={paths.contact}
                     search={{ tipo: "restaurantes" }}
