@@ -20,7 +20,10 @@ export const Route = createFileRoute("/_authenticated/emails")({
   head: () => ({
     meta: [
       { title: "Modelos de email — Nova Web CRM" },
-      { name: "description", content: "Modelos de email prontos a personalizar para cada projeto." },
+      {
+        name: "description",
+        content: "Modelos de email prontos a personalizar para cada projeto.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -52,7 +55,7 @@ function Emails() {
       setAssunto(modelo.assunto);
       setCorpo(modelo.corpo);
     }
-  }, [modelo?.id]);
+  }, [modelo]);
 
   const variaveis = {
     nome_negocio: negocio?.nome ?? "{{nome_negocio}}",
@@ -105,7 +108,11 @@ function Emails() {
                 </select>
               </Campo>
               <Campo label="Nome do modelo">
-                <input className={inputClass} value={nome} onChange={(e) => setNome(e.target.value)} />
+                <input
+                  className={inputClass}
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
               </Campo>
               <Campo label="Assunto">
                 <input
@@ -160,7 +167,9 @@ function Emails() {
             </Campo>
 
             <div className="mt-4 rounded-xl border border-border/60 bg-secondary/25 p-4">
-              <p className="text-[10px] uppercase tracking-[.15em] text-muted-foreground">Assunto</p>
+              <p className="text-[10px] uppercase tracking-[.15em] text-muted-foreground">
+                Assunto
+              </p>
               <p className="mt-1 text-sm font-medium">{assuntoFinal}</p>
               <hr className="my-3 border-border/60" />
               <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">

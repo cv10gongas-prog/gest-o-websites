@@ -23,9 +23,7 @@ import {
 import type { Settings } from "@/lib/restaurant/demo-data";
 import { adminActions, uploadImage, useAdmin } from "@/lib/restaurant/store";
 
-export const Route = createFileRoute(
-  "/_authenticated/produtos/restaurantes/definicoes",
-)({
+export const Route = createFileRoute("/_authenticated/produtos/restaurantes/definicoes")({
   component: RestaurantSettingsPage,
 });
 
@@ -69,9 +67,7 @@ function RestaurantSettingsPage() {
     try {
       const url = await uploadImage(restaurantId, file, 320);
       setLogo(url);
-      toast.success(
-        "Logótipo carregado com sucesso. Guarde as alterações para aplicar.",
-      );
+      toast.success("Logótipo carregado com sucesso. Guarde as alterações para aplicar.");
     } catch (e) {
       toast.error(`Erro ao carregar logótipo: ${(e as Error).message}`);
     }
@@ -136,10 +132,7 @@ function RestaurantSettingsPage() {
   }
 
   return (
-    <form
-      onSubmit={submitSettings}
-      className="space-y-6 max-w-[900px]"
-    >
+    <form onSubmit={submitSettings} className="space-y-6 max-w-[900px]">
       {/* CABEÇALHO */}
       <PanelHeader
         title="Configurações do Restaurante"
@@ -199,9 +192,7 @@ function RestaurantSettingsPage() {
         <div className="grid gap-4 sm:grid-cols-2 pt-2 border-t border-border/30">
           {/* Upload de Logótipo */}
           <div className="space-y-1.5">
-            <span className="block text-xs font-semibold text-foreground">
-              Logótipo
-            </span>
+            <span className="block text-xs font-semibold text-foreground">Logótipo</span>
             <div className="flex items-center gap-3">
               {logo ? (
                 <img
@@ -256,9 +247,7 @@ function RestaurantSettingsPage() {
                 className="size-10 cursor-pointer rounded-xl border border-border bg-surface p-1"
                 aria-label="Cor principal"
               />
-              <span className="font-mono text-xs font-bold text-foreground">
-                {color}
-              </span>
+              <span className="font-mono text-xs font-bold text-foreground">{color}</span>
             </div>
           </div>
         </div>
@@ -306,10 +295,7 @@ function RestaurantSettingsPage() {
           />
         </Field>
 
-        <Field
-          label="Horário Semanal"
-          hint="Escreva uma linha por cada período de funcionamento."
-        >
+        <Field label="Horário Semanal" hint="Escreva uma linha por cada período de funcionamento.">
           <textarea
             name="hours"
             rows={4}
@@ -336,9 +322,7 @@ function RestaurantSettingsPage() {
               className="flex items-center justify-between py-3 cursor-pointer first:pt-0 last:pb-0"
             >
               <div className="space-y-0.5 pr-4">
-                <span className="text-xs font-bold text-foreground block">
-                  {label}
-                </span>
+                <span className="text-xs font-bold text-foreground block">{label}</span>
                 <span className="text-[11px] text-muted-foreground block leading-relaxed">
                   {desc}
                 </span>
@@ -350,9 +334,7 @@ function RestaurantSettingsPage() {
                 </span>
                 <Switch
                   checked={features[key]}
-                  onCheckedChange={(v) =>
-                    setFeatures((prev) => ({ ...prev, [key]: v }))
-                  }
+                  onCheckedChange={(v) => setFeatures((prev) => ({ ...prev, [key]: v }))}
                 />
               </div>
             </label>

@@ -1,6 +1,7 @@
 // Server-side Supabase client for NWS Restaurantes
 // Utilizado exclusivamente nas Server Functions protegidas e rotas de servidor.
 // NUNCA importar este ficheiro em componentes de frontend ou bundles de cliente.
+// O restaurante possui base de dados dedicada e autónoma, sem fallbacks para o Supabase Central do Workspace.
 
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
@@ -19,6 +20,7 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
       new Headers(init.headers).forEach((value, key) => headers.set(key, value));
     }
 
+    // New Supabase API keys are opaque strings, not bearer JWTs.
     if (
       isNewSupabaseApiKey(supabaseKey) &&
       headers.get("Authorization") === `Bearer ${supabaseKey}`
@@ -33,6 +35,13 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 let _restaurantAdminClient: ReturnType<typeof createRestaurantServerClient> | undefined;
 
+export function isRestaurantServerConfigured(): boolean {
+  if (process.env["DEMO_MODE"] === "true" || process.env["VITE_DEMO_MODE"] === "true") return false;
+  return Boolean(
+    process.env["RESTAURANT_SUPABASE_URL"] && process.env["RESTAURANT_SUPABASE_SERVICE_ROLE_KEY"],
+  );
+}
+
 function createRestaurantServerClient() {
   if (process.env["DEMO_MODE"] === "true" || process.env["VITE_DEMO_MODE"] === "true") {
     throw new Error("[DEMO ISOLADO] O acesso administrativo à base de dados está desativado.");
@@ -40,11 +49,12 @@ function createRestaurantServerClient() {
 
   const RESTAURANT_URL = process.env["RESTAURANT_SUPABASE_URL"];
 
-  // Chave de serviço privada (exclusiva de servidor, NUNCA com prefixo VITE_)
+  // Chave de serviço privada dedicada do Restaurante (exclusiva de servidor, NUNCA com prefixo VITE_)
   const RESTAURANT_SERVICE_KEY = process.env["RESTAURANT_SUPABASE_SERVICE_ROLE_KEY"];
+
   if (!RESTAURANT_URL || !RESTAURANT_SERVICE_KEY) {
     throw new Error(
-      "[NWS] RESTAURANT_SUPABASE_URL e RESTAURANT_SUPABASE_SERVICE_ROLE_KEY são obrigatórias no servidor.",
+      "[NWS Restaurantes] A base de dados dedicada do restaurante não está configurada (RESTAURANT_SUPABASE_URL e RESTAURANT_SUPABASE_SERVICE_ROLE_KEY em falta no servidor).",
     );
   }
 

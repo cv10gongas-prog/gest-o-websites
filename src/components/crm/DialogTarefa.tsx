@@ -71,7 +71,11 @@ export function DialogTarefa({
           <button className={btnSecundario} onClick={onFechar}>
             Cancelar
           </button>
-          <button className={btnPrimario} onClick={submeter} disabled={!titulo.trim() || guardar.isPending}>
+          <button
+            className={btnPrimario}
+            onClick={submeter}
+            disabled={!titulo.trim() || guardar.isPending}
+          >
             <Save className="size-4" /> Guardar tarefa
           </button>
         </>
@@ -79,10 +83,18 @@ export function DialogTarefa({
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Campo label="Título" className="sm:col-span-2">
-          <input className={inputClass} value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+          <input
+            className={inputClass}
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+          />
         </Campo>
         <Campo label="Tipo">
-          <select className={selectClass} value={tipo} onChange={(e) => setTipo(e.target.value as TaskType)}>
+          <select
+            className={selectClass}
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value as TaskType)}
+          >
             {TIPOS_TAREFA.map((t) => (
               <option key={t.value} value={t.value}>
                 {t.label}
@@ -112,7 +124,11 @@ export function DialogTarefa({
           />
         </Campo>
         <Campo label="Responsável">
-          <select className={selectClass} value={responsavel} onChange={(e) => setResponsavel(e.target.value)}>
+          <select
+            className={selectClass}
+            value={responsavel}
+            onChange={(e) => setResponsavel(e.target.value)}
+          >
             <option value="">—</option>
             {perfis.map((p) => (
               <option key={p.id} value={p.id}>
@@ -122,7 +138,11 @@ export function DialogTarefa({
           </select>
         </Campo>
         <Campo label="Projeto de site associado" className="sm:col-span-2">
-          <select className={selectClass} value={businessId} onChange={(e) => setBusinessId(e.target.value)}>
+          <select
+            className={selectClass}
+            value={businessId}
+            onChange={(e) => setBusinessId(e.target.value)}
+          >
             <option value="">Sem projeto</option>
             {negocios.map((n) => (
               <option key={n.id} value={n.id}>
@@ -132,7 +152,11 @@ export function DialogTarefa({
           </select>
         </Campo>
         <Campo label="Notas" className="sm:col-span-2">
-          <textarea className={textareaClass} value={notas} onChange={(e) => setNotas(e.target.value)} />
+          <textarea
+            className={textareaClass}
+            value={notas}
+            onChange={(e) => setNotas(e.target.value)}
+          />
         </Campo>
       </div>
     </Modal>

@@ -241,15 +241,21 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                     {/* Top Stats */}
                     <div className="grid grid-cols-3 gap-2">
                       <div className="rounded-xl border border-border/60 bg-background/70 p-2.5">
-                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t.heroMockup.activeTables}</p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">
+                          {t.heroMockup.activeTables}
+                        </p>
                         <p className="mt-1 text-base font-semibold">8 / 12</p>
                       </div>
                       <div className="rounded-xl border border-border/60 bg-background/70 p-2.5">
-                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t.heroMockup.todayOrders}</p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">
+                          {t.heroMockup.todayOrders}
+                        </p>
                         <p className="mt-1 text-base font-semibold text-primary">34</p>
                       </div>
                       <div className="rounded-xl border border-border/60 bg-background/70 p-2.5">
-                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t.heroMockup.bookings}</p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">
+                          {t.heroMockup.bookings}
+                        </p>
                         <p className="mt-1 text-base font-semibold">{t.heroMockup.bookingsValue}</p>
                       </div>
                     </div>
@@ -268,7 +274,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                           </span>
                           <div>
                             <p className="font-medium text-[11px]">{t.heroMockup.item1Name}</p>
-                            <p className="text-[9px] text-muted-foreground">{t.heroMockup.item1Desc}</p>
+                            <p className="text-[9px] text-muted-foreground">
+                              {t.heroMockup.item1Desc}
+                            </p>
                           </div>
                         </div>
                         <span className="rounded-md bg-amber-500/15 px-2 py-0.5 text-[9px] font-medium text-amber-400">
@@ -283,7 +291,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                           </span>
                           <div>
                             <p className="font-medium text-[11px]">{t.heroMockup.item2Name}</p>
-                            <p className="text-[9px] text-muted-foreground">{t.heroMockup.item2Desc}</p>
+                            <p className="text-[9px] text-muted-foreground">
+                              {t.heroMockup.item2Desc}
+                            </p>
                           </div>
                         </div>
                         <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[9px] font-medium text-primary">
@@ -322,10 +332,16 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                       <div className="rounded-lg border border-border/50 bg-card/60 p-2">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[10px] font-medium leading-tight">{t.heroMockup.dishName}</p>
-                            <p className="text-[8px] text-muted-foreground">{t.heroMockup.dishDesc}</p>
+                            <p className="text-[10px] font-medium leading-tight">
+                              {t.heroMockup.dishName}
+                            </p>
+                            <p className="text-[8px] text-muted-foreground">
+                              {t.heroMockup.dishDesc}
+                            </p>
                           </div>
-                          <span className="text-[10px] font-semibold text-primary">{t.heroMockup.dishPrice}</span>
+                          <span className="text-[10px] font-semibold text-primary">
+                            {t.heroMockup.dishPrice}
+                          </span>
                         </div>
                         <div className="mt-1.5 flex justify-end">
                           <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[8px] font-medium text-primary">
@@ -365,9 +381,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
               <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
                 {t.modulesTitle}
               </h2>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                {t.modulesLead}
-              </p>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">{t.modulesLead}</p>
             </div>
 
             <Link
@@ -383,34 +397,27 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
         {/* 6 Tabs Navigation Bar */}
         <Reveal delay={80}>
           <div className="mt-8 flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {(
-              [
-                "overview",
-                "bookings",
-                "tables",
-                "kitchen",
-                "menu",
-                "guest",
-              ] as ModuleKey[]
-            ).map((key) => {
-              const Icon = MODULE_ICONS[key];
-              const isSelected = activeModule === key;
+            {(["overview", "bookings", "tables", "kitchen", "menu", "guest"] as ModuleKey[]).map(
+              (key) => {
+                const Icon = MODULE_ICONS[key];
+                const isSelected = activeModule === key;
 
-              return (
-                <button
-                  key={key}
-                  onClick={() => setActiveModule(key)}
-                  className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-xs font-medium transition ${
-                    isSelected
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                      : "border border-border/70 bg-card/40 text-muted-foreground hover:border-primary/30 hover:bg-card hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="size-4" />
-                  <span>{t.moduleTabs[key]}</span>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setActiveModule(key)}
+                    className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-xs font-medium transition ${
+                      isSelected
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                        : "border border-border/70 bg-card/40 text-muted-foreground hover:border-primary/30 hover:bg-card hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="size-4" />
+                    <span>{t.moduleTabs[key]}</span>
+                  </button>
+                );
+              },
+            )}
           </div>
         </Reveal>
 
@@ -451,7 +458,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <p className="text-[10px] uppercase font-bold tracking-wider text-primary">
                           {t.modulesShowcase.overview.shiftTitle}
                         </p>
-                        <h4 className="text-sm font-semibold">{t.modulesShowcase.overview.shiftStatus}</h4>
+                        <h4 className="text-sm font-semibold">
+                          {t.modulesShowcase.overview.shiftStatus}
+                        </h4>
                       </div>
                       <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">
                         <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -461,19 +470,27 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                       <div className="rounded-xl border border-border/60 bg-card/60 p-3">
-                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">{t.modulesShowcase.overview.revenueLabel}</p>
+                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">
+                          {t.modulesShowcase.overview.revenueLabel}
+                        </p>
                         <p className="mt-1 text-base font-bold text-emerald-400">432,50 €</p>
                       </div>
                       <div className="rounded-xl border border-border/60 bg-card/60 p-3">
-                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">{t.modulesShowcase.overview.tablesLabel}</p>
+                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">
+                          {t.modulesShowcase.overview.tablesLabel}
+                        </p>
                         <p className="mt-1 text-base font-bold text-foreground">7 / 12</p>
                       </div>
                       <div className="rounded-xl border border-border/60 bg-card/60 p-3">
-                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">{t.modulesShowcase.overview.ordersLabel}</p>
+                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">
+                          {t.modulesShowcase.overview.ordersLabel}
+                        </p>
                         <p className="mt-1 text-base font-bold text-primary">4</p>
                       </div>
                       <div className="rounded-xl border border-border/60 bg-card/60 p-3">
-                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">{t.modulesShowcase.overview.bookingsLabel}</p>
+                        <p className="text-[9px] uppercase font-semibold text-muted-foreground">
+                          {t.modulesShowcase.overview.bookingsLabel}
+                        </p>
                         <p className="mt-1 text-base font-bold text-foreground">6</p>
                       </div>
                     </div>
@@ -485,7 +502,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                           <ActivityDot />
                           {t.modulesShowcase.overview.liveFeedTitle}
                         </span>
-                        <span className="text-[9px] text-muted-foreground">{t.modulesShowcase.overview.liveFeedTime}</span>
+                        <span className="text-[9px] text-muted-foreground">
+                          {t.modulesShowcase.overview.liveFeedTime}
+                        </span>
                       </div>
 
                       <div className="space-y-2 text-xs">
@@ -496,7 +515,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                             </span>
                             <span className="text-[11px]">{t.modulesShowcase.overview.event1}</span>
                           </div>
-                          <span className="text-[9px] text-muted-foreground">{t.modulesShowcase.overview.event1Time}</span>
+                          <span className="text-[9px] text-muted-foreground">
+                            {t.modulesShowcase.overview.event1Time}
+                          </span>
                         </div>
 
                         <div className="flex items-center justify-between rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-2.5">
@@ -506,7 +527,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                             </span>
                             <span className="text-[11px]">{t.modulesShowcase.overview.event2}</span>
                           </div>
-                          <span className="text-[9px] text-muted-foreground">{t.modulesShowcase.overview.event2Time}</span>
+                          <span className="text-[9px] text-muted-foreground">
+                            {t.modulesShowcase.overview.event2Time}
+                          </span>
                         </div>
 
                         <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/60 p-2.5">
@@ -516,7 +539,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                             </span>
                             <span className="text-[11px]">{t.modulesShowcase.overview.event3}</span>
                           </div>
-                          <span className="text-[9px] text-muted-foreground">{t.modulesShowcase.overview.event3Time}</span>
+                          <span className="text-[9px] text-muted-foreground">
+                            {t.modulesShowcase.overview.event3Time}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -531,7 +556,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <p className="text-[10px] uppercase font-bold tracking-wider text-primary">
                           {t.modulesShowcase.bookings.scheduleTitle}
                         </p>
-                        <h4 className="text-sm font-semibold">{t.modulesShowcase.bookings.scheduleDate}</h4>
+                        <h4 className="text-sm font-semibold">
+                          {t.modulesShowcase.bookings.scheduleDate}
+                        </h4>
                       </div>
                       <span className="rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
                         {t.modulesShowcase.bookings.confirmedBadge}
@@ -552,7 +579,8 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                               <p className="font-semibold text-foreground text-xs">{b.name}</p>
                               <p className="text-[10px] text-muted-foreground flex items-center gap-2">
                                 <span className="flex items-center gap-1">
-                                  <Users className="size-3" /> {b.pax} {t.modulesShowcase.bookings.paxLabel}
+                                  <Users className="size-3" /> {b.pax}{" "}
+                                  {t.modulesShowcase.bookings.paxLabel}
                                 </span>
                                 <span>·</span>
                                 <span className="text-primary font-medium">{b.table}</span>
@@ -585,7 +613,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <p className="text-[10px] uppercase font-bold tracking-wider text-primary">
                           {t.modulesShowcase.tables.floorTitle}
                         </p>
-                        <h4 className="text-sm font-semibold">{t.modulesShowcase.tables.monitoredBadge}</h4>
+                        <h4 className="text-sm font-semibold">
+                          {t.modulesShowcase.tables.monitoredBadge}
+                        </h4>
                       </div>
                       <div className="flex gap-1.5 text-[9px]">
                         <span className="rounded bg-emerald-500/15 text-emerald-400 px-2 py-0.5 font-semibold">
@@ -623,12 +653,12 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                             mockSelectedTable === tbl.id
                               ? "ring-2 ring-primary border-primary bg-primary/10"
                               : tbl.status === "occupied"
-                              ? "border-primary/40 bg-primary/[0.06]"
-                              : tbl.status === "bill"
-                              ? "border-amber-400/40 bg-amber-400/[0.06]"
-                              : tbl.status === "reserved"
-                              ? "border-purple-400/30 bg-purple-400/[0.04]"
-                              : "border-border/60 bg-card/40 hover:border-primary/30"
+                                ? "border-primary/40 bg-primary/[0.06]"
+                                : tbl.status === "bill"
+                                  ? "border-amber-400/40 bg-amber-400/[0.06]"
+                                  : tbl.status === "reserved"
+                                    ? "border-purple-400/30 bg-purple-400/[0.04]"
+                                    : "border-border/60 bg-card/40 hover:border-primary/30"
                           }`}
                         >
                           <div className="flex items-center justify-between w-full">
@@ -642,19 +672,19 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                                 tbl.status === "occupied"
                                   ? "text-primary"
                                   : tbl.status === "bill"
-                                  ? "text-amber-400"
-                                  : tbl.status === "reserved"
-                                  ? "text-purple-400"
-                                  : "text-emerald-400"
+                                    ? "text-amber-400"
+                                    : tbl.status === "reserved"
+                                      ? "text-purple-400"
+                                      : "text-emerald-400"
                               }`}
                             >
                               {tbl.status === "occupied"
                                 ? `${tbl.total.toFixed(2)} €`
                                 : tbl.status === "bill"
-                                ? t.modulesShowcase.tables.statusBill
-                                : tbl.status === "reserved"
-                                ? t.modulesShowcase.tables.statusReserved
-                                : t.modulesShowcase.tables.statusFree}
+                                  ? t.modulesShowcase.tables.statusBill
+                                  : tbl.status === "reserved"
+                                    ? t.modulesShowcase.tables.statusReserved
+                                    : t.modulesShowcase.tables.statusFree}
                             </span>
                           </div>
                         </button>
@@ -671,7 +701,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <p className="text-[10px] uppercase font-bold tracking-wider text-primary">
                           {t.modulesShowcase.kitchen.kdsTitle}
                         </p>
-                        <h4 className="text-sm font-semibold">{t.modulesShowcase.kitchen.kdsSubtitle}</h4>
+                        <h4 className="text-sm font-semibold">
+                          {t.modulesShowcase.kitchen.kdsSubtitle}
+                        </h4>
                       </div>
                       <span className="text-xs font-bold text-primary">
                         {t.modulesShowcase.kitchen.activeCountBadge}
@@ -682,7 +714,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                       {/* Ticket 1: New */}
                       <div className="rounded-xl border border-primary/30 bg-primary/[0.04] p-3 space-y-2">
                         <div className="flex items-center justify-between border-b border-border/40 pb-2">
-                          <span className="font-bold text-xs text-foreground">{t.modulesShowcase.kitchen.ticket1Table}</span>
+                          <span className="font-bold text-xs text-foreground">
+                            {t.modulesShowcase.kitchen.ticket1Table}
+                          </span>
                           <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary">
                             {t.modulesShowcase.kitchen.colNew}
                           </span>
@@ -691,7 +725,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                           {t.modulesShowcase.kitchen.ticket1Items.map((it, idx) => (
                             <p key={idx}>{it}</p>
                           ))}
-                          <p className="text-[9.5px] italic text-amber-400">{t.modulesShowcase.kitchen.ticket1Obs}</p>
+                          <p className="text-[9.5px] italic text-amber-400">
+                            {t.modulesShowcase.kitchen.ticket1Obs}
+                          </p>
                         </div>
                         <div className="pt-2 border-t border-border/40 flex justify-between items-center text-xs">
                           <span className="font-bold text-primary">20,00 €</span>
@@ -704,7 +740,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                       {/* Ticket 2: In Prep */}
                       <div className="rounded-xl border border-amber-400/30 bg-card/60 p-3 space-y-2">
                         <div className="flex items-center justify-between border-b border-border/40 pb-2">
-                          <span className="font-bold text-xs text-foreground">{t.modulesShowcase.kitchen.ticket2Table}</span>
+                          <span className="font-bold text-xs text-foreground">
+                            {t.modulesShowcase.kitchen.ticket2Table}
+                          </span>
                           <span className="rounded bg-amber-400/20 px-1.5 py-0.5 text-[9px] font-bold text-amber-400">
                             {t.modulesShowcase.kitchen.ticket2Status}
                           </span>
@@ -733,17 +771,41 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <p className="text-[10px] uppercase font-bold tracking-wider text-primary">
                           {t.modulesShowcase.menu.menuTitle}
                         </p>
-                        <h4 className="text-sm font-semibold">{t.modulesShowcase.menu.menuSubtitle}</h4>
+                        <h4 className="text-sm font-semibold">
+                          {t.modulesShowcase.menu.menuSubtitle}
+                        </h4>
                       </div>
-                      <span className="text-[10px] text-muted-foreground">{t.modulesShowcase.menu.testHint}</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {t.modulesShowcase.menu.testHint}
+                      </span>
                     </div>
 
                     <div className="space-y-2 text-xs">
                       {[
-                        { id: "item-1", name: "Pão & Azeitonas Marinadas", cat: t.modulesShowcase.menu.catStarters, price: 3.5 },
-                        { id: "item-2", name: "Bacalhau com Broa da Casa", cat: t.modulesShowcase.menu.catMains, price: 16.5 },
-                        { id: "item-3", name: "Bife da Vazia com Batata", cat: t.modulesShowcase.menu.catMains, price: 18.0 },
-                        { id: "item-4", name: "Mousse de Chocolate 70%", cat: t.modulesShowcase.menu.catDesserts, price: 4.5 },
+                        {
+                          id: "item-1",
+                          name: "Pão & Azeitonas Marinadas",
+                          cat: t.modulesShowcase.menu.catStarters,
+                          price: 3.5,
+                        },
+                        {
+                          id: "item-2",
+                          name: "Bacalhau com Broa da Casa",
+                          cat: t.modulesShowcase.menu.catMains,
+                          price: 16.5,
+                        },
+                        {
+                          id: "item-3",
+                          name: "Bife da Vazia com Batata",
+                          cat: t.modulesShowcase.menu.catMains,
+                          price: 18.0,
+                        },
+                        {
+                          id: "item-4",
+                          name: "Mousse de Chocolate 70%",
+                          cat: t.modulesShowcase.menu.catDesserts,
+                          price: 4.5,
+                        },
                       ].map((item) => {
                         const isSoldOut = mockSoldOutIds.includes(item.id);
 
@@ -776,7 +838,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                                   : "bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25"
                               }`}
                             >
-                              {isSoldOut ? t.modulesShowcase.menu.toggleSoldOut : t.modulesShowcase.menu.toggleAvailable}
+                              {isSoldOut
+                                ? t.modulesShowcase.menu.toggleSoldOut
+                                : t.modulesShowcase.menu.toggleAvailable}
                             </button>
                           </div>
                         );
@@ -813,14 +877,22 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <div className="rounded-xl border border-border/60 bg-card/60 p-2.5 space-y-2">
                           <div className="flex justify-between items-start">
                             <div>
-                              <p className="text-[11px] font-semibold">{t.modulesShowcase.guest.dishName}</p>
-                              <p className="text-[9px] text-muted-foreground">{t.modulesShowcase.guest.dishDesc}</p>
+                              <p className="text-[11px] font-semibold">
+                                {t.modulesShowcase.guest.dishName}
+                              </p>
+                              <p className="text-[9px] text-muted-foreground">
+                                {t.modulesShowcase.guest.dishDesc}
+                              </p>
                             </div>
-                            <span className="text-[11px] font-bold text-primary">{t.modulesShowcase.guest.dishPrice}</span>
+                            <span className="text-[11px] font-bold text-primary">
+                              {t.modulesShowcase.guest.dishPrice}
+                            </span>
                           </div>
 
                           <div className="flex items-center justify-between pt-1 border-t border-border/40">
-                            <span className="text-[8.5px] uppercase text-muted-foreground font-semibold">{t.modulesShowcase.guest.dishCategory}</span>
+                            <span className="text-[8.5px] uppercase text-muted-foreground font-semibold">
+                              {t.modulesShowcase.guest.dishCategory}
+                            </span>
                             <div className="flex items-center gap-1.5 bg-secondary/80 rounded px-1.5 py-0.5">
                               <button
                                 onClick={() => setMockGuestCartCount((c) => Math.max(0, c - 1))}
@@ -828,7 +900,9 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                               >
                                 -
                               </button>
-                              <span className="text-[10px] font-bold px-1">{mockGuestCartCount}</span>
+                              <span className="text-[10px] font-bold px-1">
+                                {mockGuestCartCount}
+                              </span>
                               <button
                                 onClick={() => setMockGuestCartCount((c) => c + 1)}
                                 className="size-3.5 grid place-items-center rounded bg-background text-[10px]"
@@ -843,7 +917,8 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                         <div className="pt-1">
                           <div className="rounded-xl bg-primary py-2 text-center text-xs font-semibold text-primary-foreground flex items-center justify-center gap-1.5">
                             <ShoppingBag className="size-3.5" />
-                            {t.modulesShowcase.guest.sendOrderBtn} ({mockGuestCartCount} {t.modulesShowcase.guest.itemsCountLabel})
+                            {t.modulesShowcase.guest.sendOrderBtn} ({mockGuestCartCount}{" "}
+                            {t.modulesShowcase.guest.itemsCountLabel})
                           </div>
                         </div>
                       </div>
@@ -872,7 +947,10 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                   {/* 3 Key Feature Highlights */}
                   <div className="mt-6 space-y-2.5">
                     {t.modulesData[activeModule].highlights.map((bullet, idx) => (
-                      <div key={idx} className="flex items-start gap-2.5 text-xs text-muted-foreground">
+                      <div
+                        key={idx}
+                        className="flex items-start gap-2.5 text-xs text-muted-foreground"
+                      >
                         <CheckCircle2 className="size-4 shrink-0 text-primary mt-0.5" />
                         <span className="leading-snug">{bullet}</span>
                       </div>
@@ -914,18 +992,14 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
               {t.problemTitle}
             </h2>
 
-            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
-              {t.problemLead}
-            </p>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">{t.problemLead}</p>
 
             <div className="mt-8 rounded-2xl border border-primary/20 bg-primary/[0.04] p-5">
               <div className="flex items-center gap-2 text-xs font-semibold text-primary">
                 <Sparkles className="size-4" />
                 {t.problemNoTechTitle}
               </div>
-              <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                {t.problemNoTechText}
-              </p>
+              <p className="mt-2 text-xs leading-6 text-muted-foreground">{t.problemNoTechText}</p>
             </div>
           </Reveal>
 
@@ -943,9 +1017,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
 
                     <h3 className="mt-4 text-sm font-semibold">{problem.title}</h3>
 
-                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                      {problem.text}
-                    </p>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">{problem.text}</p>
                   </article>
                 </Reveal>
               );
@@ -963,9 +1035,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
               <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
                 {t.featuresTitle}
               </h2>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                {t.featuresLead}
-              </p>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">{t.featuresLead}</p>
             </div>
 
             <Link
@@ -1008,9 +1078,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
 
                     <h3 className="mt-4 text-sm font-semibold">{feat.title}</h3>
 
-                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                      {feat.text}
-                    </p>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">{feat.text}</p>
                   </div>
                 </article>
               </Reveal>
@@ -1027,9 +1095,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
             <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
               {t.howWorksTitle}
             </h2>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              {t.howWorksLead}
-            </p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">{t.howWorksLead}</p>
           </div>
         </Reveal>
 
@@ -1045,14 +1111,10 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
                       <StepIcon className="size-4" />
                     </span>
-                    <span className="text-2xl font-bold text-primary/15">
-                      0{idx + 1}
-                    </span>
+                    <span className="text-2xl font-bold text-primary/15">0{idx + 1}</span>
                   </div>
 
-                  <p className="mt-4 text-xs font-medium leading-relaxed">
-                    {step}
-                  </p>
+                  <p className="mt-4 text-xs font-medium leading-relaxed">{step}</p>
                 </div>
               </Reveal>
             );
@@ -1092,9 +1154,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
               {t.customTitle}
             </h2>
 
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">
-              {t.customLead}
-            </p>
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">{t.customLead}</p>
 
             <div className="mt-6 flex flex-col gap-2.5 text-xs text-muted-foreground">
               {t.customBadges.map((badge, bIdx) => (
@@ -1116,9 +1176,7 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                   <div className="orbit-panel h-full p-5">
                     <Icon className="size-5 text-primary" />
                     <h3 className="mt-3 text-sm font-semibold">{prof.title}</h3>
-                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                      {prof.desc}
-                    </p>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">{prof.desc}</p>
                   </div>
                 </Reveal>
               );

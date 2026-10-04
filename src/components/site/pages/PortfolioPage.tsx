@@ -115,11 +115,7 @@ const EXTRA_TEXT: Record<
     conceptNote:
       "Os projetos abaixo são conceitos demonstrativos criados para explorar diferentes setores, estilos e necessidades.",
 
-    conceptLabels: [
-      "Serviços locais",
-      "Alojamento turístico",
-      "Negócio artesanal",
-    ],
+    conceptLabels: ["Serviços locais", "Alojamento turístico", "Negócio artesanal"],
 
     approachTitle: "Mais do que mudar cores e fontes",
 
@@ -129,23 +125,19 @@ const EXTRA_TEXT: Record<
     approach: [
       {
         title: "Estratégia",
-        text:
-          "Organizamos a informação para que o visitante perceba rapidamente o negócio e saiba o que fazer a seguir.",
+        text: "Organizamos a informação para que o visitante perceba rapidamente o negócio e saiba o que fazer a seguir.",
       },
       {
         title: "Design",
-        text:
-          "Criamos uma identidade visual coerente, moderna e adequada ao posicionamento de cada projeto.",
+        text: "Criamos uma identidade visual coerente, moderna e adequada ao posicionamento de cada projeto.",
       },
       {
         title: "Performance",
-        text:
-          "Os websites são preparados para carregar rapidamente e funcionar corretamente em diferentes dispositivos.",
+        text: "Os websites são preparados para carregar rapidamente e funcionar corretamente em diferentes dispositivos.",
       },
       {
         title: "Conversão",
-        text:
-          "Botões, contactos e conteúdos são posicionados para facilitar pedidos de informação e orçamento.",
+        text: "Botões, contactos e conteúdos são posicionados para facilitar pedidos de informação e orçamento.",
       },
     ],
 
@@ -202,11 +194,7 @@ const EXTRA_TEXT: Record<
     conceptNote:
       "The projects below are demonstration concepts created to explore different industries, styles and needs.",
 
-    conceptLabels: [
-      "Local services",
-      "Holiday accommodation",
-      "Craft business",
-    ],
+    conceptLabels: ["Local services", "Holiday accommodation", "Craft business"],
 
     approachTitle: "More than changing colours and fonts",
 
@@ -216,28 +204,23 @@ const EXTRA_TEXT: Record<
     approach: [
       {
         title: "Strategy",
-        text:
-          "We organise information so visitors quickly understand the business and know what to do next.",
+        text: "We organise information so visitors quickly understand the business and know what to do next.",
       },
       {
         title: "Design",
-        text:
-          "We create a coherent, modern visual identity suited to each project's positioning.",
+        text: "We create a coherent, modern visual identity suited to each project's positioning.",
       },
       {
         title: "Performance",
-        text:
-          "Websites are prepared to load quickly and work correctly across different devices.",
+        text: "Websites are prepared to load quickly and work correctly across different devices.",
       },
       {
         title: "Conversion",
-        text:
-          "Calls to action, contact details and content are positioned to make enquiries easier.",
+        text: "Calls to action, contact details and content are positioned to make enquiries easier.",
       },
     ],
 
-    finalBadge:
-      "Does your business deserve a stronger online presence?",
+    finalBadge: "Does your business deserve a stronger online presence?",
   },
 
   de: {
@@ -269,8 +252,7 @@ const EXTRA_TEXT: Record<
     radioBadge: "Reales Projekt",
     radioPartner: "Partner von Nova Web Studio",
 
-    radioText:
-      "Projekt zur Stärkung der digitalen Präsenz von Rádio AlcabidecheFM.",
+    radioText: "Projekt zur Stärkung der digitalen Präsenz von Rádio AlcabidecheFM.",
 
     radioType: "Radio-Website",
     radioObjective: "Digitale Präsenz stärken",
@@ -286,18 +268,12 @@ const EXTRA_TEXT: Record<
     radioVisit: "Projekt ansehen",
 
     conceptsBadge: "Visuelle Exploration",
-    conceptNote:
-      "Demonstrationskonzepte für verschiedene Branchen und Anforderungen.",
+    conceptNote: "Demonstrationskonzepte für verschiedene Branchen und Anforderungen.",
 
-    conceptLabels: [
-      "Lokale Dienstleistungen",
-      "Ferienunterkunft",
-      "Handwerksbetrieb",
-    ],
+    conceptLabels: ["Lokale Dienstleistungen", "Ferienunterkunft", "Handwerksbetrieb"],
 
     approachTitle: "Mehr als nur Farben und Schriftarten",
-    approachLead:
-      "Jedes Projekt wird an das Unternehmen und seine Ziele angepasst.",
+    approachLead: "Jedes Projekt wird an das Unternehmen und seine Ziele angepasst.",
 
     approach: [
       {
@@ -318,8 +294,7 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge:
-      "Verdient Ihr Unternehmen einen besseren Online-Auftritt?",
+    finalBadge: "Verdient Ihr Unternehmen einen besseren Online-Auftritt?",
   },
 
   fr: {
@@ -327,8 +302,7 @@ const EXTRA_TEXT: Record<
     selectedWork: "Projet à la une",
     secondWork: "Autre projet réel",
 
-    selectedLead:
-      "Des projets développés autour de la clarté et de l'expérience utilisateur.",
+    selectedLead: "Des projets développés autour de la clarté et de l'expérience utilisateur.",
 
     projectType: "Type",
     projectTypeValue: "Site institutionnel",
@@ -351,8 +325,7 @@ const EXTRA_TEXT: Record<
     radioBadge: "Projet réel",
     radioPartner: "Partenaire Nova Web Studio",
 
-    radioText:
-      "Projet développé pour renforcer la présence digitale de Rádio AlcabidecheFM.",
+    radioText: "Projet développé pour renforcer la présence digitale de Rádio AlcabidecheFM.",
 
     radioType: "Site radio",
     radioObjective: "Renforcer la présence digitale",
@@ -368,18 +341,12 @@ const EXTRA_TEXT: Record<
     radioVisit: "Voir le projet",
 
     conceptsBadge: "Exploration visuelle",
-    conceptNote:
-      "Concepts démonstratifs créés pour différents secteurs.",
+    conceptNote: "Concepts démonstratifs créés pour différents secteurs.",
 
-    conceptLabels: [
-      "Services locaux",
-      "Hébergement touristique",
-      "Entreprise artisanale",
-    ],
+    conceptLabels: ["Services locaux", "Hébergement touristique", "Entreprise artisanale"],
 
     approachTitle: "Bien plus que changer des couleurs",
-    approachLead:
-      "Chaque projet est pensé selon l'activité et ses objectifs.",
+    approachLead: "Chaque projet est pensé selon l'activité et ses objectifs.",
 
     approach: [
       {
@@ -400,8 +367,7 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge:
-      "Votre entreprise mérite une meilleure présence en ligne ?",
+    finalBadge: "Votre entreprise mérite une meilleure présence en ligne ?",
   },
 
   es: {
@@ -409,8 +375,7 @@ const EXTRA_TEXT: Record<
     selectedWork: "Proyecto destacado",
     secondWork: "Otro proyecto real",
 
-    selectedLead:
-      "Proyectos desarrollados con foco en claridad y experiencia de usuario.",
+    selectedLead: "Proyectos desarrollados con foco en claridad y experiencia de usuario.",
 
     projectType: "Tipo",
     projectTypeValue: "Web corporativa",
@@ -433,8 +398,7 @@ const EXTRA_TEXT: Record<
     radioBadge: "Proyecto real",
     radioPartner: "Socio Nova Web Studio",
 
-    radioText:
-      "Proyecto desarrollado para reforzar la presencia digital de Rádio AlcabidecheFM.",
+    radioText: "Proyecto desarrollado para reforzar la presencia digital de Rádio AlcabidecheFM.",
 
     radioType: "Web para radio",
     radioObjective: "Reforzar la presencia digital",
@@ -450,18 +414,12 @@ const EXTRA_TEXT: Record<
     radioVisit: "Ver proyecto",
 
     conceptsBadge: "Exploración visual",
-    conceptNote:
-      "Conceptos demostrativos creados para distintos sectores.",
+    conceptNote: "Conceptos demostrativos creados para distintos sectores.",
 
-    conceptLabels: [
-      "Servicios locales",
-      "Alojamiento turístico",
-      "Negocio artesanal",
-    ],
+    conceptLabels: ["Servicios locales", "Alojamiento turístico", "Negocio artesanal"],
 
     approachTitle: "Mucho más que cambiar colores",
-    approachLead:
-      "Cada proyecto se plantea según el negocio y sus objetivos.",
+    approachLead: "Cada proyecto se plantea según el negocio y sus objetivos.",
 
     approach: [
       {
@@ -482,8 +440,7 @@ const EXTRA_TEXT: Record<
       },
     ],
 
-    finalBadge:
-      "¿Tu negocio merece una mejor presencia online?",
+    finalBadge: "¿Tu negocio merece una mejor presencia online?",
   },
 };
 
@@ -518,16 +475,11 @@ function MiniBrowser({
             {eyebrow}
           </span>
 
-          <h3 className="mt-3 text-xl font-semibold leading-tight tracking-tight">
-            {headline}
-          </h3>
+          <h3 className="mt-3 text-xl font-semibold leading-tight tracking-tight">{headline}</h3>
 
           <div className="mt-5 space-y-2">
             {lines.map((line) => (
-              <div
-                key={line}
-                className="flex items-center gap-2 text-[9px] text-muted-foreground"
-              >
+              <div key={line} className="flex items-center gap-2 text-[9px] text-muted-foreground">
                 <CheckCircle2 className="size-3 text-primary" />
                 {line}
               </div>
@@ -641,13 +593,9 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                       Grupo Musical e Desportivo
                     </span>
 
-                    <h3 className="mt-2 text-lg font-semibold sm:text-xl">
-                      31 de Janeiro
-                    </h3>
+                    <h3 className="mt-2 text-lg font-semibold sm:text-xl">31 de Janeiro</h3>
 
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Manique de Baixo
-                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">Manique de Baixo</p>
                   </div>
                 </div>
 
@@ -695,46 +643,30 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 </p>
               </div>
 
-              <p className="mt-5 text-sm leading-7 text-muted-foreground">
-                {t.featuredDesc}
-              </p>
+              <p className="mt-5 text-sm leading-7 text-muted-foreground">{t.featuredDesc}</p>
 
               <div className="mt-7 grid gap-3">
                 <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {extra.projectType}
-                  </span>
+                  <span className="text-muted-foreground">{extra.projectType}</span>
 
-                  <span className="font-medium">
-                    {extra.projectTypeValue}
-                  </span>
+                  <span className="font-medium">{extra.projectTypeValue}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {extra.objective}
-                  </span>
+                  <span className="text-muted-foreground">{extra.objective}</span>
 
-                  <span className="font-medium">
-                    {extra.objectiveValue}
-                  </span>
+                  <span className="font-medium">{extra.objectiveValue}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-1 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {extra.delivery}
-                  </span>
+                  <span className="text-muted-foreground">{extra.delivery}</span>
 
-                  <span className="font-medium">
-                    {extra.deliveryValue}
-                  </span>
+                  <span className="font-medium">{extra.deliveryValue}</span>
                 </div>
               </div>
 
               <div className="mt-8">
-                <p className="text-xs font-semibold">
-                  {extra.workTitle}
-                </p>
+                <p className="text-xs font-semibold">{extra.workTitle}</p>
 
                 <div className="mt-3 space-y-2">
                   {extra.workItems.map((item) => (
@@ -816,10 +748,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                     </h3>
 
                     <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
-                      {[
-                        14, 28, 20, 38, 24,
-                        46, 30, 18, 34, 22,
-                      ].map((height, idx) => (
+                      {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map((height, idx) => (
                         <span
                           key={idx}
                           className="nws-portfolio-wave w-1.5 rounded-full bg-primary/80"
@@ -853,46 +782,30 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 Rádio AlcabidecheFM
               </h2>
 
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                {extra.radioText}
-              </p>
+              <p className="mt-4 text-sm leading-7 text-muted-foreground">{extra.radioText}</p>
 
               <div className="mt-7 grid gap-3">
                 <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {extra.projectType}
-                  </span>
+                  <span className="text-muted-foreground">{extra.projectType}</span>
 
-                  <span className="font-medium">
-                    {extra.radioType}
-                  </span>
+                  <span className="font-medium">{extra.radioType}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {extra.objective}
-                  </span>
+                  <span className="text-muted-foreground">{extra.objective}</span>
 
-                  <span className="font-medium">
-                    {extra.radioObjective}
-                  </span>
+                  <span className="font-medium">{extra.radioObjective}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-1 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {extra.delivery}
-                  </span>
+                  <span className="text-muted-foreground">{extra.delivery}</span>
 
-                  <span className="font-medium">
-                    {extra.radioDelivery}
-                  </span>
+                  <span className="font-medium">{extra.radioDelivery}</span>
                 </div>
               </div>
 
               <div className="mt-8">
-                <p className="text-xs font-semibold">
-                  {extra.workTitle}
-                </p>
+                <p className="text-xs font-semibold">{extra.workTitle}</p>
 
                 <div className="mt-3 space-y-2">
                   {extra.radioItems.map((item) => (
@@ -934,9 +847,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               {t.othersTitle}
             </h2>
 
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              {extra.conceptNote}
-            </p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">{extra.conceptNote}</p>
           </div>
 
           <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
@@ -973,9 +884,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                     </span>
                   </div>
 
-                  <h3 className="mt-5 text-base font-semibold leading-snug">
-                    {project.titulo}
-                  </h3>
+                  <h3 className="mt-5 text-base font-semibold leading-snug">{project.titulo}</h3>
 
                   <p className="mt-2 text-xs leading-6 text-muted-foreground">
                     {project.descricao}
@@ -998,9 +907,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       <section className="mt-20">
         <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <Chip tone="primary">
-              Nova Web Studio
-            </Chip>
+            <Chip tone="primary">Nova Web Studio</Chip>
 
             <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
               {extra.approachTitle}
@@ -1013,14 +920,10 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.approach.map((item, idx) => {
-              const Icon =
-                approachIcons[idx] ?? BadgeCheck;
+              const Icon = approachIcons[idx] ?? BadgeCheck;
 
               return (
-                <article
-                  key={item.title}
-                  className="orbit-panel orbit-panel-hover p-5"
-                >
+                <article key={item.title} className="orbit-panel orbit-panel-hover p-5">
                   <div className="flex items-center justify-between">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
@@ -1031,13 +934,9 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                     </span>
                   </div>
 
-                  <h3 className="mt-4 text-sm font-semibold">
-                    {item.title}
-                  </h3>
+                  <h3 className="mt-4 text-sm font-semibold">{item.title}</h3>
 
-                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                    {item.text}
-                  </p>
+                  <p className="mt-2 text-xs leading-6 text-muted-foreground">{item.text}</p>
                 </article>
               );
             })}
@@ -1060,9 +959,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 {t.ctaTitle}
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-                {t.ctaText}
-              </p>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">{t.ctaText}</p>
             </div>
 
             <Link

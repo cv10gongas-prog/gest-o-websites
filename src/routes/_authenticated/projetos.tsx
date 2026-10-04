@@ -13,7 +13,10 @@ export const Route = createFileRoute("/_authenticated/projetos")({
   head: () => ({
     meta: [
       { title: "Portefólio — Nova Web CRM" },
-      { name: "description", content: "Projetos importados do GitHub e mostrados no site público." },
+      {
+        name: "description",
+        content: "Projetos importados do GitHub e mostrados no site público.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -90,8 +93,16 @@ function Projetos() {
             value={utilizador}
             onChange={(e) => setUtilizador(e.target.value)}
           />
-          <button className={btnPrimario} onClick={importar} disabled={aImportar || !utilizador.trim()}>
-            {aImportar ? <Loader2 className="size-4 animate-spin" /> : <Github className="size-4" />}
+          <button
+            className={btnPrimario}
+            onClick={importar}
+            disabled={aImportar || !utilizador.trim()}
+          >
+            {aImportar ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Github className="size-4" />
+            )}
             Importar
           </button>
         </div>
@@ -103,7 +114,10 @@ function Projetos() {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {projetos.map((p) => (
-              <article key={p.id} className="rounded-xl border border-border/60 bg-secondary/25 p-4">
+              <article
+                key={p.id}
+                className="rounded-xl border border-border/60 bg-secondary/25 p-4"
+              >
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="text-sm font-medium">{p.nome}</h3>
                   {p.destaque && <Chip tone="primary">destaque</Chip>}

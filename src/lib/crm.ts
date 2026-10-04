@@ -76,25 +76,39 @@ export const RESULTADOS: {
   estado?: BusinessStatus;
 }[] = [
   { value: "nao_atendeu", label: "Não atendeu", tone: "muted", estado: "tentativa_contacto" },
-  { value: "numero_nao_atribuido", label: "Número não atribuído", tone: "muted", estado: "arquivado" },
+  {
+    value: "numero_nao_atribuido",
+    label: "Número não atribuído",
+    tone: "muted",
+    estado: "arquivado",
+  },
   { value: "numero_errado", label: "Número errado", tone: "muted", estado: "tentativa_contacto" },
   { value: "nao_quis", label: "Não quis", tone: "danger", estado: "nao_interessado" },
   { value: "interessado", label: "Interessado", tone: "success", estado: "interessado" },
   { value: "pediu_email", label: "Pediu email", tone: "info", estado: "email_por_enviar" },
-  { value: "pediu_portefolio", label: "Pediu portefólio", tone: "info", estado: "email_por_enviar" },
+  {
+    value: "pediu_portefolio",
+    label: "Pediu portefólio",
+    tone: "info",
+    estado: "email_por_enviar",
+  },
   { value: "pediu_orcamento", label: "Pediu orçamento", tone: "info", estado: "em_negociacao" },
   { value: "pediu_reuniao", label: "Pediu reunião online", tone: "info", estado: "reuniao" },
   { value: "voltar_a_ligar", label: "Voltar a ligar", tone: "warning", estado: "seguimento" },
   { value: "ferias", label: "Está de férias", tone: "warning", estado: "seguimento" },
-  { value: "falar_superiores", label: "Vai falar com os superiores", tone: "warning", estado: "aguardar_resposta" },
+  {
+    value: "falar_superiores",
+    label: "Vai falar com os superiores",
+    tone: "warning",
+    estado: "aguardar_resposta",
+  },
   { value: "ja_contactado", label: "Já tinha sido contactado", tone: "muted", estado: "arquivado" },
   { value: "email_enviado", label: "Email enviado", tone: "info", estado: "email_enviado" },
   { value: "negocio_fechado", label: "Negócio fechado", tone: "success", estado: "aceite" },
   { value: "arquivado", label: "Arquivado", tone: "muted", estado: "arquivado" },
 ];
 
-export const resultadoInfo = (r: CallOutcome | null) =>
-  RESULTADOS.find((x) => x.value === r);
+export const resultadoInfo = (r: CallOutcome | null) => RESULTADOS.find((x) => x.value === r);
 
 export const TIPOS_TAREFA: { value: TaskType; label: string }[] = [
   { value: "ligar", label: "Ligar" },
@@ -124,7 +138,11 @@ export function dominio(website?: string | null) {
     const url = website.startsWith("http") ? website : `https://${website}`;
     return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
   } catch {
-    return website.replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0]!.toLowerCase();
+    return website
+      .replace(/^https?:\/\//, "")
+      .replace(/^www\./, "")
+      .split("/")[0]!
+      .toLowerCase();
   }
 }
 
@@ -214,9 +232,6 @@ export function encontrarDuplicados(
   });
 }
 
-export function preencherModelo(
-  texto: string,
-  dados: Record<string, string | null | undefined>,
-) {
+export function preencherModelo(texto: string, dados: Record<string, string | null | undefined>) {
   return texto.replace(/{{\s*(\w+)\s*}}/g, (_, chave: string) => dados[chave] ?? `{{${chave}}}`);
 }

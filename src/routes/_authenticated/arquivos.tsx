@@ -22,7 +22,8 @@ export const Route = createFileRoute("/_authenticated/arquivos")({
       { title: "Arquivos de projetos — Nova Web CRM" },
       {
         name: "description",
-        content: "Arquivos .rar com os projetos atualizados de cada negócio, até 300 MB por ficheiro.",
+        content:
+          "Arquivos .rar com os projetos atualizados de cada negócio, até 300 MB por ficheiro.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -99,7 +100,11 @@ function Arquivos() {
 
       <Panel className="mt-6" title="Carregar arquivo">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <select className={selectClass} value={negocio} onChange={(e) => setNegocio(e.target.value)}>
+          <select
+            className={selectClass}
+            value={negocio}
+            onChange={(e) => setNegocio(e.target.value)}
+          >
             <option value="">Escolher negócio…</option>
             {negocios.map((n) => (
               <option key={n.id} value={n.id}>
@@ -142,7 +147,11 @@ function Arquivos() {
         className="mt-5"
         title="Arquivos guardados"
         actions={
-          <select className={selectClass} value={filtro} onChange={(e) => setFiltro(e.target.value)}>
+          <select
+            className={selectClass}
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          >
             <option value="">Todos os negócios</option>
             {negocios.map((n) => (
               <option key={n.id} value={n.id}>
@@ -172,17 +181,30 @@ function Arquivos() {
               </thead>
               <tbody>
                 {lista.map((f) => (
-                  <tr key={f.id} className="border-b border-border/40 transition hover:bg-accent/40">
+                  <tr
+                    key={f.id}
+                    className="border-b border-border/40 transition hover:bg-accent/40"
+                  >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2 font-medium">
                         <FileArchive className="size-4 text-muted-foreground" /> {f.nome}
                       </div>
-                      {f.notas && <div className="mt-0.5 text-[10px] text-muted-foreground">{f.notas}</div>}
+                      {f.notas && (
+                        <div className="mt-0.5 text-[10px] text-muted-foreground">{f.notas}</div>
+                      )}
                     </td>
-                    <td className="px-3 py-3.5 text-muted-foreground">{nomeNegocio(f.business_id)}</td>
-                    <td className="px-3 py-3.5">{f.versao ? <Chip tone="info">{f.versao}</Chip> : "—"}</td>
-                    <td className="px-3 py-3.5 text-muted-foreground">{tamanho(Number(f.tamanho))}</td>
-                    <td className="px-3 py-3.5 text-muted-foreground">{formatarData(f.created_at, true)}</td>
+                    <td className="px-3 py-3.5 text-muted-foreground">
+                      {nomeNegocio(f.business_id)}
+                    </td>
+                    <td className="px-3 py-3.5">
+                      {f.versao ? <Chip tone="info">{f.versao}</Chip> : "—"}
+                    </td>
+                    <td className="px-3 py-3.5 text-muted-foreground">
+                      {tamanho(Number(f.tamanho))}
+                    </td>
+                    <td className="px-3 py-3.5 text-muted-foreground">
+                      {formatarData(f.created_at, true)}
+                    </td>
                     <td className="px-4 py-3.5">
                       <div className="flex justify-end gap-2">
                         <button className={btnPequeno} onClick={() => descarregar(f)}>

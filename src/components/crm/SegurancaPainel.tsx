@@ -176,8 +176,7 @@ export function SegurancaPainel() {
 
     // Ordenar do mais antigo para o mais recente para calcular primeiras ocorrências
     const ordenados = [...eventosAtividadeSeguranca].sort(
-      (a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
     );
 
     const estados = new Map<string, EstadoAcesso>();
@@ -274,8 +273,7 @@ export function SegurancaPainel() {
     }
 
     return lista.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
   }, [eventosAtividadeSeguranca, tentativasFalhadas, periodo, historicoPorUtilizador]);
 
@@ -359,9 +357,7 @@ export function SegurancaPainel() {
       if (ev.seguranca.ip) reg.ipsUtilizados.add(ev.seguranca.ip);
     }
 
-    return Array.from(mapa.values()).sort(
-      (a, b) => b.falhas - a.falhas || b.sucessos - a.sucessos,
-    );
+    return Array.from(mapa.values()).sort((a, b) => b.falhas - a.falhas || b.sucessos - a.sucessos);
   }, [todosEventos]);
 
   // Estatísticas Rápidas
@@ -369,9 +365,7 @@ export function SegurancaPainel() {
     const loginsAutorizados = todosEventos.filter((e) => e.tipo === "login").length;
     const logouts = todosEventos.filter((e) => e.tipo === "logout").length;
     const falhas = todosEventos.filter((e) => e.tipo === "falha").length;
-    const ipsUnicos = new Set(
-      todosEventos.map((e) => e.seguranca.ip).filter(Boolean),
-    ).size;
+    const ipsUnicos = new Set(todosEventos.map((e) => e.seguranca.ip).filter(Boolean)).size;
     const ipsSobAtaque = agrupamentoIPs.filter((ip) => ip.falhas >= 3).length;
 
     return {
@@ -392,12 +386,7 @@ export function SegurancaPainel() {
       const ip = ev.seguranca.ip?.toLowerCase() ?? "";
       const cidade = ev.seguranca.cidade?.toLowerCase() ?? "";
       const pais = ev.seguranca.pais?.toLowerCase() ?? "";
-      return (
-        email.includes(t) ||
-        ip.includes(t) ||
-        cidade.includes(t) ||
-        pais.includes(t)
-      );
+      return email.includes(t) || ip.includes(t) || cidade.includes(t) || pais.includes(t);
     });
   }, [todosEventos, filtroTexto]);
 
@@ -467,7 +456,8 @@ export function SegurancaPainel() {
               <span className="font-bold text-foreground">
                 {metricas.ipsSobAtaque} endereço(s) IP
               </span>{" "}
-              com 3 ou mais tentativas falhadas no período selecionado. O sistema protegeu as contas administrativas rejeitando credenciais não autorizadas.
+              com 3 ou mais tentativas falhadas no período selecionado. O sistema protegeu as contas
+              administrativas rejeitando credenciais não autorizadas.
             </p>
           </div>
         </div>
@@ -489,9 +479,7 @@ export function SegurancaPainel() {
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Tentativas Rejeitadas
           </span>
-          <p className="text-2xl font-bold font-mono text-danger mt-1">
-            {metricas.falhas}
-          </p>
+          <p className="text-2xl font-bold font-mono text-danger mt-1">{metricas.falhas}</p>
           <p className="text-[10px] text-muted-foreground mt-0.5">Falhas de autenticação</p>
         </div>
 
@@ -499,9 +487,7 @@ export function SegurancaPainel() {
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Logouts Efetuados
           </span>
-          <p className="text-2xl font-bold font-mono text-foreground mt-1">
-            {metricas.logouts}
-          </p>
+          <p className="text-2xl font-bold font-mono text-foreground mt-1">{metricas.logouts}</p>
           <p className="text-[10px] text-muted-foreground mt-0.5">Encerramentos de sessão</p>
         </div>
 
@@ -509,9 +495,7 @@ export function SegurancaPainel() {
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Endereços IP Únicos
           </span>
-          <p className="text-2xl font-bold font-mono text-info mt-1">
-            {metricas.ipsUnicos}
-          </p>
+          <p className="text-2xl font-bold font-mono text-info mt-1">{metricas.ipsUnicos}</p>
           <p className="text-[10px] text-muted-foreground mt-0.5">Redes de acesso</p>
         </div>
 
@@ -519,9 +503,7 @@ export function SegurancaPainel() {
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             IPs Suspeitos
           </span>
-          <p className="text-2xl font-bold font-mono text-warning mt-1">
-            {metricas.ipsSobAtaque}
-          </p>
+          <p className="text-2xl font-bold font-mono text-warning mt-1">{metricas.ipsSobAtaque}</p>
           <p className="text-[10px] text-muted-foreground mt-0.5">≥ 3 falhas registadas</p>
         </div>
       </div>
@@ -670,10 +652,13 @@ export function SegurancaPainel() {
                             <span className="font-mono">{ev.seguranca.ip ?? "IP oculto"}</span>
                             <span>•</span>
                             <span>
-                              {flag} {ev.seguranca.cidade ? `${ev.seguranca.cidade}, ` : ""}{ev.seguranca.pais ?? "Global"}
+                              {flag} {ev.seguranca.cidade ? `${ev.seguranca.cidade}, ` : ""}
+                              {ev.seguranca.pais ?? "Global"}
                             </span>
                             <span>•</span>
-                            <span>{disp.nome} ({browser})</span>
+                            <span>
+                              {disp.nome} ({browser})
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -730,14 +715,19 @@ export function SegurancaPainel() {
                         )}
                       </div>
                       <div className="text-[10px] text-muted-foreground mt-0.5">
-                        {flag} {reg.cidade ? `${reg.cidade}, ` : ""}{reg.pais ?? "Desconhecido"}
+                        {flag} {reg.cidade ? `${reg.cidade}, ` : ""}
+                        {reg.pais ?? "Desconhecido"}
                       </div>
                     </td>
 
                     <td className="px-4 py-3.5 font-mono">{reg.totalTentativas}</td>
 
                     <td className="px-4 py-3.5 font-mono">
-                      <span className={cn(reg.falhas > 0 ? "text-danger font-bold" : "text-muted-foreground")}>
+                      <span
+                        className={cn(
+                          reg.falhas > 0 ? "text-danger font-bold" : "text-muted-foreground",
+                        )}
+                      >
                         {reg.falhas}
                       </span>
                     </td>
@@ -786,12 +776,18 @@ export function SegurancaPainel() {
                 <tr key={e.email} className="transition hover:bg-surface-strong/60">
                   <td className="px-6 py-3.5 font-semibold text-foreground">{e.email}</td>
                   <td className="px-4 py-3.5 font-mono">
-                    <span className={cn(e.falhas > 0 ? "text-danger font-bold" : "text-muted-foreground")}>
+                    <span
+                      className={cn(
+                        e.falhas > 0 ? "text-danger font-bold" : "text-muted-foreground",
+                      )}
+                    >
                       {e.falhas}
                     </span>
                   </td>
                   <td className="px-4 py-3.5 font-mono text-success font-bold">{e.sucessos}</td>
-                  <td className="px-4 py-3.5 font-mono text-muted-foreground">{e.ipsUtilizados.size} IP(s)</td>
+                  <td className="px-4 py-3.5 font-mono text-muted-foreground">
+                    {e.ipsUtilizados.size} IP(s)
+                  </td>
                   <td className="px-4 py-3.5 font-mono text-[10px] text-muted-foreground">
                     {formatarData(e.ultimoAcesso, true)}
                   </td>
@@ -812,13 +808,19 @@ export function SegurancaPainel() {
             </h2>
             <div className="space-y-3 text-xs text-muted-foreground leading-relaxed">
               <p>
-                <strong className="text-foreground">1. Autenticação Supabase Auth:</strong> As credenciais e palavras-passe são processadas diretamente pelos endpoints encriptados do Supabase, sem nunca passarem em texto claro por servidores intermédios.
+                <strong className="text-foreground">1. Autenticação Supabase Auth:</strong> As
+                credenciais e palavras-passe são processadas diretamente pelos endpoints encriptados
+                do Supabase, sem nunca passarem em texto claro por servidores intermédios.
               </p>
               <p>
-                <strong className="text-foreground">2. Proteção de Formulários Públicos:</strong> Submissões de contacto do website utilizam locks atómicos com hash SHA256 e honeypots anti-bot (`contact_submission_guards`).
+                <strong className="text-foreground">2. Proteção de Formulários Públicos:</strong>{" "}
+                Submissões de contacto do website utilizam locks atómicos com hash SHA256 e
+                honeypots anti-bot (`contact_submission_guards`).
               </p>
               <p>
-                <strong className="text-foreground">3. Limitações de Bloqueio em Frontend:</strong> Bloquear um IP apenas numa tabela da aplicação protege contra ações internas, mas não impede pacotes de rede ao nível da firewall de borda (Vercel / Cloudflare).
+                <strong className="text-foreground">3. Limitações de Bloqueio em Frontend:</strong>{" "}
+                Bloquear um IP apenas numa tabela da aplicação protege contra ações internas, mas
+                não impede pacotes de rede ao nível da firewall de borda (Vercel / Cloudflare).
               </p>
             </div>
           </div>
@@ -830,13 +832,16 @@ export function SegurancaPainel() {
             </h2>
             <div className="space-y-3 text-xs text-muted-foreground leading-relaxed">
               <p>
-                • As palavras-passe rejeitadas <strong>nunca</strong> são armazenadas ou mostradas nos relatórios de auditoria.
+                • As palavras-passe rejeitadas <strong>nunca</strong> são armazenadas ou mostradas
+                nos relatórios de auditoria.
               </p>
               <p>
-                • O ecrã de login não revela a visitantes externos se determinado email de administrador existe ou não na base de dados.
+                • O ecrã de login não revela a visitantes externos se determinado email de
+                administrador existe ou não na base de dados.
               </p>
               <p>
-                • Os registos de auditoria são confidenciais e acessíveis exclusivamente a utilizadores autenticados com o papel de <strong>Administrador</strong>.
+                • Os registos de auditoria são confidenciais e acessíveis exclusivamente a
+                utilizadores autenticados com o papel de <strong>Administrador</strong>.
               </p>
             </div>
           </div>
@@ -849,7 +854,8 @@ export function SegurancaPainel() {
           <div className="w-full max-w-md rounded-3xl border border-border/70 bg-popover p-6 shadow-2xl space-y-4">
             <h3 className="text-base font-bold text-foreground">Sinalizar Endereço IP</h3>
             <p className="text-xs text-muted-foreground">
-              O IP <span className="font-mono font-bold text-primary">{ipBloqueadoManual}</span> foi sinalizado para monitorização de anomalias no sistema de auditoria.
+              O IP <span className="font-mono font-bold text-primary">{ipBloqueadoManual}</span> foi
+              sinalizado para monitorização de anomalias no sistema de auditoria.
             </p>
             <div className="flex justify-end gap-2 pt-2">
               <button

@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { ESTADOS, type BusinessStatus, type Tone } from "@/lib/crm";
 
@@ -250,7 +258,6 @@ export function PreferenciasProvider({ children }: { children: ReactNode }) {
       /* ignora */
     }
   }, []);
-
 
   const guardar = useCallback((parcial: Partial<Preferencias>) => {
     setPrefs((anterior) => {

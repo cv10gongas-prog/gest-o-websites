@@ -118,7 +118,40 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
     const rid = data.restaurantId;
     const access = await validarAcessoRestaurante(context.supabase, context.userId, rid, "ver");
 
-    const { getRestaurantServerClient } = await import("./client.server");
+    const { isRestaurantServerConfigured, getRestaurantServerClient } =
+      await import("./client.server");
+
+    if (!isRestaurantServerConfigured()) {
+      return {
+        restaurantId: rid,
+        slug: rid,
+        settings: {
+          name: "NWS Restaurantes (Configuração Pendente)",
+          tagline: "Aguardando configuração das variáveis dedicadas do restaurante",
+          introduction:
+            "As variáveis RESTAURANT_SUPABASE_* não se encontram configuradas no servidor.",
+          logo: "",
+          primaryColor: "#5b6e4a",
+          phone: "",
+          email: "",
+          address: "",
+          hours: [],
+          features: {
+            qrOrders: false,
+            callWaiter: false,
+            requestBill: false,
+            reservations: false,
+          },
+        },
+        categories: [],
+        products: [],
+        tables: [],
+        orders: [],
+        requests: [],
+        reservations: [],
+      };
+    }
+
     const restClient = getRestaurantServerClient();
 
     const since = new Date(Date.now() - 30 * 86400000).toISOString();

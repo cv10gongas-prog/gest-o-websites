@@ -65,10 +65,18 @@ function ProdutosMatch() {
             </div>
             <h3 className="text-base font-bold text-foreground">Futsal Oficial</h3>
             <ul className="text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-              <li>• <strong>Tempo Útil:</strong> 2 partes de 20 minutos com paragem de cronómetro.</li>
-              <li>• <strong>Substituições:</strong> Volantes e ilimitadas sem paragem de jogo.</li>
-              <li>• <strong>Faltas Acumuladas:</strong> Tiro livre direto de 10m a partir da 6ª falta.</li>
-              <li>• <strong>Cartões:</strong> 2 min em inferioridade numérica ou até sofrer golo.</li>
+              <li>
+                • <strong>Tempo Útil:</strong> 2 partes de 20 minutos com paragem de cronómetro.
+              </li>
+              <li>
+                • <strong>Substituições:</strong> Volantes e ilimitadas sem paragem de jogo.
+              </li>
+              <li>
+                • <strong>Faltas Acumuladas:</strong> Tiro livre direto de 10m a partir da 6ª falta.
+              </li>
+              <li>
+                • <strong>Cartões:</strong> 2 min em inferioridade numérica ou até sofrer golo.
+              </li>
             </ul>
           </div>
 
@@ -84,10 +92,21 @@ function ProdutosMatch() {
             </div>
             <h3 className="text-base font-bold text-foreground">Futebol de 11</h3>
             <ul className="text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-              <li>• <strong>Duração:</strong> 2 partes de 45 minutos (tempo corrido com descontos).</li>
-              <li>• <strong>Substituições:</strong> 5 substituições em 3 paragens (ou regulamento específico).</li>
-              <li>• <strong>Métricas:</strong> Golos, remates à baliza, foras de jogo, cartões e faltas.</li>
-              <li>• <strong>Minutos em Campo:</strong> Registo automático por titular e suplente utilizado.</li>
+              <li>
+                • <strong>Duração:</strong> 2 partes de 45 minutos (tempo corrido com descontos).
+              </li>
+              <li>
+                • <strong>Substituições:</strong> 5 substituições em 3 paragens (ou regulamento
+                específico).
+              </li>
+              <li>
+                • <strong>Métricas:</strong> Golos, remates à baliza, foras de jogo, cartões e
+                faltas.
+              </li>
+              <li>
+                • <strong>Minutos em Campo:</strong> Registo automático por titular e suplente
+                utilizado.
+              </li>
             </ul>
           </div>
 
@@ -103,10 +122,21 @@ function ProdutosMatch() {
             </div>
             <h3 className="text-base font-bold text-foreground">Futebol 7 & Futebol 9</h3>
             <ul className="text-xs text-muted-foreground space-y-1.5 leading-relaxed">
-              <li>• <strong>Escalões Jovens:</strong> Petizes, Traquinas, Benjamins, Infantis, Iniciados.</li>
-              <li>• <strong>Durações Adaptadas:</strong> 2x 25 min, 2x 30 min ou 2x 35 min configuráveis.</li>
-              <li>• <strong>Substituições Livres:</strong> Apoio a regras de rotação de todos os atletas.</li>
-              <li>• <strong>Relatórios de Evolução:</strong> Minutos jogados e indicadores formativos.</li>
+              <li>
+                • <strong>Escalões Jovens:</strong> Petizes, Traquinas, Benjamins, Infantis,
+                Iniciados.
+              </li>
+              <li>
+                • <strong>Durações Adaptadas:</strong> 2x 25 min, 2x 30 min ou 2x 35 min
+                configuráveis.
+              </li>
+              <li>
+                • <strong>Substituições Livres:</strong> Apoio a regras de rotação de todos os
+                atletas.
+              </li>
+              <li>
+                • <strong>Relatórios de Evolução:</strong> Minutos jogados e indicadores formativos.
+              </li>
             </ul>
           </div>
         </div>
@@ -120,7 +150,8 @@ function ProdutosMatch() {
           </div>
           <h3 className="text-sm font-bold text-foreground">Clubes, Equipas & Plantéis</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Gestão de escalões, números de camisola, posições, fichas individuais de atletas e histórico de épocas desportivas.
+            Gestão de escalões, números de camisola, posições, fichas individuais de atletas e
+            histórico de épocas desportivas.
           </p>
         </div>
 
@@ -130,7 +161,8 @@ function ProdutosMatch() {
           </div>
           <h3 className="text-sm font-bold text-foreground">Live Match Engine</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Interface para tablet/portátil durante os jogos: cronómetro com 1 clique, substituições rápidas, remates, golos e faltas em tempo real.
+            Interface para tablet/portátil durante os jogos: cronómetro com 1 clique, substituições
+            rápidas, remates, golos e faltas em tempo real.
           </p>
         </div>
 
@@ -140,7 +172,8 @@ function ProdutosMatch() {
           </div>
           <h3 className="text-sm font-bold text-foreground">Relatórios & Estatísticas</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Relatórios completos por jogo com cronologia minuto a minuto, minutos jogados por atleta e mapas de eficácia para treinadores.
+            Relatórios completos por jogo com cronologia minuto a minuto, minutos jogados por atleta
+            e mapas de eficácia para treinadores.
           </p>
         </div>
       </section>

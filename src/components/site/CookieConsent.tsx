@@ -67,13 +67,11 @@ export function CookieConsent() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-[100] mx-auto max-w-xl rounded-2xl border border-border bg-background/95 p-5 shadow-2xl backdrop-blur-xl">
-      <p className="text-sm font-semibold">
-        Cookies e estatísticas
-      </p>
+      <p className="text-sm font-semibold">Cookies e estatísticas</p>
 
       <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-        Utilizamos o Google Analytics para perceber como o website é utilizado
-        e melhorar a experiência. Pode aceitar ou recusar esta recolha.
+        Utilizamos o Google Analytics para perceber como o website é utilizado e melhorar a
+        experiência. Pode aceitar ou recusar esta recolha.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-2">

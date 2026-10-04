@@ -111,7 +111,11 @@ export function useBusiness(id: string | undefined) {
       if (isDemoMode()) {
         return demoStore.businesses.find((b) => b.id === id) ?? null;
       }
-      const { data, error } = await supabase.from("businesses").select("*").eq("id", id!).maybeSingle();
+      const { data, error } = await supabase
+        .from("businesses")
+        .select("*")
+        .eq("id", id!)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -701,9 +705,11 @@ export function useApagarFicheiro() {
 }
 
 export async function urlDescarregarFicheiro(caminho: string) {
-  const { data, error } = await supabase.storage.from("projetos").createSignedUrl(caminho, 60 * 10, {
-    download: true,
-  });
+  const { data, error } = await supabase.storage
+    .from("projetos")
+    .createSignedUrl(caminho, 60 * 10, {
+      download: true,
+    });
   if (error) throw error;
   return data.signedUrl;
 }

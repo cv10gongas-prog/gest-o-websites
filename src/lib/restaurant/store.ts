@@ -15,7 +15,7 @@ import type {
 } from "./demo-data";
 import { todayISO } from "./demo-data";
 import { CURRENT_RESTAURANT_ID } from "./config";
-import { checkRestaurant, restaurantCloud } from "./cloud";
+import { checkRestaurant, isRestaurantDatabaseConfigured, restaurantCloud } from "./cloud";
 import { isDemoMode, demoStore } from "@/lib/demo-mode";
 import {
   obterDadosAdminRestaurante,
@@ -73,6 +73,34 @@ async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
       categories: d.categories,
       products: d.products,
       tables: d.tables,
+    };
+  }
+
+  if (!isRestaurantDatabaseConfigured()) {
+    return {
+      restaurantId,
+      slug: restaurantId,
+      settings: {
+        name: "Restaurante (Configuração Pendente)",
+        tagline: "Aguardando configuração das variáveis dedicadas do restaurante",
+        introduction:
+          "As variáveis VITE_RESTAURANT_SUPABASE_* não se encontram configuradas no ambiente.",
+        logo: "",
+        primaryColor: "#5b6e4a",
+        phone: "",
+        email: "",
+        address: "",
+        hours: [],
+        features: {
+          qrOrders: false,
+          callWaiter: false,
+          requestBill: false,
+          reservations: false,
+        },
+      },
+      categories: [],
+      products: [],
+      tables: [],
     };
   }
 
@@ -199,7 +227,7 @@ export function useRealtime(
   const tk = tables.join(",");
 
   useEffect(() => {
-    if (isDemoMode()) return;
+    if (isDemoMode() || !isRestaurantDatabaseConfigured()) return;
     if (!tk) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const refresh = () => {

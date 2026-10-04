@@ -165,7 +165,12 @@ function AppShellInner({ children }: { children: ReactNode }) {
   });
 
   const restCounts = useMemo(() => {
-    if (!restData)
+    if (
+      !restData ||
+      !Array.isArray(restData.orders) ||
+      !Array.isArray(restData.requests) ||
+      !Array.isArray(restData.reservations)
+    )
       return { pedidos: 0, pedidosNovos: 0, pedidosAbertos: 0, mesasAtencao: 0, reservasHoje: 0 };
     const pedidosNovos = restData.orders.filter((o) => !o.closed && o.status === "recebido").length;
     const pedidosAbertos = restData.orders.filter(

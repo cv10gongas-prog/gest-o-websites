@@ -45,7 +45,9 @@ export function NovaRestauranteLogo({
 
       <div className="leading-none min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className={`font-bold tracking-wider uppercase text-foreground ${titleSizes[size]}`}>
+          <span
+            className={`font-bold tracking-wider uppercase text-foreground ${titleSizes[size]}`}
+          >
             NOVA
           </span>
           <span className="rounded bg-primary/15 px-1 py-0.5 text-[7.5px] font-bold text-primary tracking-tight uppercase">

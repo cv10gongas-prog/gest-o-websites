@@ -72,7 +72,12 @@ function Pipeline() {
         </p>
       )}
 
-      <div className={cn("mt-6 grid grid-cols-1 gap-4 pb-4", GRELHA[prefs.colunasPipeline] ?? GRELHA[3])}>
+      <div
+        className={cn(
+          "mt-6 grid grid-cols-1 gap-4 pb-4",
+          GRELHA[prefs.colunasPipeline] ?? GRELHA[3],
+        )}
+      >
         {COLUNAS.map((coluna, indice) => {
           const cartoes = negocios.filter((n) => n.estado === coluna.value);
           const total = cartoes.reduce((t, n) => t + Number(n.valor_estimado ?? 0), 0);

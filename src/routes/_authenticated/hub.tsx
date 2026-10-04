@@ -31,13 +31,7 @@ import { useMemo } from "react";
 
 import { Avatar, Chip, Dot } from "@/components/crm/Bits";
 import { useUtilizador } from "@/hooks/useAuth";
-import {
-  dataExtenso,
-  euros,
-  formatarData,
-  formatarMoeda,
-  saudacao,
-} from "@/lib/crm";
+import { dataExtenso, euros, formatarData, formatarMoeda, saudacao } from "@/lib/crm";
 import {
   useActivity,
   useBusinesses,
@@ -95,7 +89,12 @@ function WorkspaceHub() {
   const { data: restData } = useQuery(adminQuery());
 
   const restStats = useMemo(() => {
-    if (!restData) {
+    if (
+      !restData ||
+      !Array.isArray(restData.orders) ||
+      !Array.isArray(restData.tables) ||
+      !Array.isArray(restData.reservations)
+    ) {
       return {
         nome: "NWS Restaurantes",
         pedidosAtivos: 0,
@@ -111,7 +110,7 @@ function WorkspaceHub() {
       (r) => r.date === todayISO() && r.status !== "cancelada",
     ).length;
     return {
-      nome: restData.settings.name || "NWS Restaurantes",
+      nome: restData.settings?.name || "NWS Restaurantes",
       pedidosAtivos,
       mesasAtivas,
       reservasHoje,
@@ -122,9 +121,7 @@ function WorkspaceHub() {
 
   // Dados reais para os cartões
   const crmStats = useMemo(() => {
-    const ativos = negocios.filter(
-      (n) => !["concluido", "arquivado"].includes(n.estado),
-    ).length;
+    const ativos = negocios.filter((n) => !["concluido", "arquivado"].includes(n.estado)).length;
 
     const valorPipeline = negocios
       .filter((n) => !["nao_interessado", "arquivado"].includes(n.estado))
@@ -133,10 +130,7 @@ function WorkspaceHub() {
     const pedidosPendentes = pedidos.filter((p) => !p.tratado).length;
 
     const tarefasUrgentes = tarefas.filter(
-      (t) =>
-        t.estado === "pendente" &&
-        t.data_hora &&
-        t.data_hora.slice(0, 10) <= hojeIso,
+      (t) => t.estado === "pendente" && t.data_hora && t.data_hora.slice(0, 10) <= hojeIso,
     ).length;
 
     return {
@@ -193,7 +187,8 @@ function WorkspaceHub() {
             </h1>
 
             <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-              Bem-vindo ao centro unificado da Nova Web Studio. Selecione a aplicação que pretende operar.
+              Bem-vindo ao centro unificado da Nova Web Studio. Selecione a aplicação que pretende
+              operar.
             </p>
           </div>
 
@@ -246,7 +241,8 @@ function WorkspaceHub() {
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground leading-relaxed">
-              Gestão de clientes, pipeline Kanban, tarefas, propostas, chamadas, contactos do website e arquivos de projetos.
+              Gestão de clientes, pipeline Kanban, tarefas, propostas, chamadas, contactos do
+              website e arquivos de projetos.
             </p>
 
             {/* Resumo com Dados Reais */}
@@ -317,7 +313,8 @@ function WorkspaceHub() {
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground leading-relaxed">
-              Plataforma dedicada de restauração: gestão de pedidos em tempo real, mapa de mesas com QR Codes, ementa digital, reservas e cozinha.
+              Plataforma dedicada de restauração: gestão de pedidos em tempo real, mapa de mesas com
+              QR Codes, ementa digital, reservas e cozinha.
             </p>
 
             {/* Resumo com Dados Reais da Base de Dados do Restaurante */}
@@ -389,7 +386,8 @@ function WorkspaceHub() {
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground leading-relaxed">
-              Futura plataforma desportiva: gestão de clubes, equipas, atletas, golos, faltas, minutos jogados e relatórios analíticos de jogo.
+              Futura plataforma desportiva: gestão de clubes, equipas, atletas, golos, faltas,
+              minutos jogados e relatórios analíticos de jogo.
             </p>
 
             {/* Resumo de Estado */}
@@ -436,7 +434,8 @@ function WorkspaceHub() {
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground leading-relaxed">
-              Gestão de colaboradores, perfis, auditoria forense de acessos, deteção de anomalias por IP, matriz RBAC e definições da plataforma.
+              Gestão de colaboradores, perfis, auditoria forense de acessos, deteção de anomalias
+              por IP, matriz RBAC e definições da plataforma.
             </p>
 
             {/* Resumo com Dados Reais */}
@@ -472,7 +471,8 @@ function WorkspaceHub() {
       {/* FOOTER DISCRETO DO WORKSPACE */}
       <footer className="pt-4 text-center text-xs text-muted-foreground">
         <p>
-          Nova Web Studio © 2026 • Command Center Workspace v2.0 • Infraestrutura de Alta Performance
+          Nova Web Studio © 2026 • Command Center Workspace v2.0 • Infraestrutura de Alta
+          Performance
         </p>
       </footer>
     </div>

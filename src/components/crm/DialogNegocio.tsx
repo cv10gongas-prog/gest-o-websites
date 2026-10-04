@@ -83,7 +83,9 @@ export function DialogNegocio({
 }) {
   const { prefs } = usePreferencias();
   const [v, setV] = useState<Valores>(() => inicial(negocio));
-  const [extras, setExtras] = useState<Record<string, string>>(() => lerCamposExtra(negocio?.notas));
+  const [extras, setExtras] = useState<Record<string, string>>(() =>
+    lerCamposExtra(negocio?.notas),
+  );
   const [chave, setChave] = useState(0);
   const { data: negocios = [] } = useBusinesses();
   const { data: perfis = [] } = useProfiles();
@@ -331,9 +333,7 @@ export function DialogNegocio({
           {preenchidos} de {campos.length} campos preenchidos
         </span>
         {faltam.length > 0 ? (
-          <span className="text-warning">
-            Falta: {faltam.map((c) => c.label).join(", ")}
-          </span>
+          <span className="text-warning">Falta: {faltam.map((c) => c.label).join(", ")}</span>
         ) : (
           <span className="text-success">Pronto a guardar</span>
         )}

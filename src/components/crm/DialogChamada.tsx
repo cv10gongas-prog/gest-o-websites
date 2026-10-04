@@ -10,12 +10,7 @@ import {
   selectClass,
   textareaClass,
 } from "@/components/crm/Modal";
-import {
-  RESULTADOS,
-  deInputDateTime,
-  type Business,
-  type CallOutcome,
-} from "@/lib/crm";
+import { RESULTADOS, deInputDateTime, type Business, type CallOutcome } from "@/lib/crm";
 import { useRegistarChamada } from "@/lib/queries";
 
 export function DialogChamada({
@@ -252,7 +247,11 @@ export function DialogChamada({
         )}
 
         <Campo label="Notas da chamada">
-          <textarea className={textareaClass} value={notas} onChange={(e) => setNotas(e.target.value)} />
+          <textarea
+            className={textareaClass}
+            value={notas}
+            onChange={(e) => setNotas(e.target.value)}
+          />
         </Campo>
       </div>
     </Modal>

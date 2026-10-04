@@ -152,7 +152,10 @@ export function CommandPalette({
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                    <span>{ROTULOS_ESTADO[negocio.estado as keyof typeof ROTULOS_ESTADO] ?? negocio.estado}</span>
+                    <span>
+                      {ROTULOS_ESTADO[negocio.estado as keyof typeof ROTULOS_ESTADO] ??
+                        negocio.estado}
+                    </span>
                     {negocio.localidade && <span>• {negocio.localidade}</span>}
                   </div>
                 </div>

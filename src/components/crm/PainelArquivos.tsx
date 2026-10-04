@@ -99,7 +99,11 @@ export function PainelArquivos({ businessId }: { businessId: string }) {
                     {f.versao ? ` · ${f.versao}` : ""} · {formatarData(f.created_at, true)}
                   </span>
                 </span>
-                <button className={btnPequeno} onClick={() => descarregar(f)} aria-label="Descarregar">
+                <button
+                  className={btnPequeno}
+                  onClick={() => descarregar(f)}
+                  aria-label="Descarregar"
+                >
                   <Download className="size-3.5" />
                 </button>
                 <button

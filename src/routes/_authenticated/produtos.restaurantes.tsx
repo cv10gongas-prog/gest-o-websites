@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { UtensilsCrossed, AlertTriangle, RefreshCw } from "lucide-react";
+import { UtensilsCrossed, AlertTriangle, RefreshCw, Database } from "lucide-react";
 import {
   ADMIN_TABLES,
   AdminContext,
@@ -10,6 +10,8 @@ import {
   adminQuery,
   useRealtime,
 } from "@/lib/restaurant/store";
+import { isRestaurantDatabaseConfigured } from "@/lib/restaurant/cloud";
+import { isDemoMode } from "@/lib/demo-mode";
 import { RestaurantTenantProvider, useRestaurantTenant } from "@/lib/restaurant/tenant";
 import { playNewOrderSound, playTableAlertSound } from "@/lib/restaurant/sound";
 
@@ -193,6 +195,25 @@ function RestaurantesLayoutInner() {
     <AdminContext.Provider value={{ data, restaurantId: activeRestaurantId }}>
       <RestaurantContext.Provider value={data}>
         <div className="space-y-6">
+          {!isDemoMode() && !isRestaurantDatabaseConfigured() && (
+            <div className="rounded-2xl border border-warning/40 bg-warning/10 p-4 text-xs text-warning backdrop-blur-md flex items-start gap-3">
+              <Database className="size-5 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-bold">
+                  Base de Dados Dedicada do Restaurante — Configuração Pendente
+                </p>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  O NWS Restaurantes opera com uma base de dados Supabase autónoma e isolada do CRM.
+                  Para sincronizar pedidos e mesas reais em produção, configure as variáveis{" "}
+                  <code className="font-mono text-warning">RESTAURANT_SUPABASE_URL</code> e{" "}
+                  <code className="font-mono text-warning">
+                    RESTAURANT_SUPABASE_SERVICE_ROLE_KEY
+                  </code>{" "}
+                  no servidor.
+                </p>
+              </div>
+            </div>
+          )}
           <Outlet />
         </div>
       </RestaurantContext.Provider>

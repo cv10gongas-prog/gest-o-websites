@@ -46,12 +46,7 @@ import {
   selectClass,
 } from "@/components/crm/Modal";
 import { useUtilizador } from "@/hooks/useAuth";
-import {
-  formatarData,
-  formatarHora,
-  formatarMoeda,
-  type AppRole,
-} from "@/lib/crm";
+import { formatarData, formatarHora, formatarMoeda, type AppRole } from "@/lib/crm";
 import {
   useActivity,
   useAlterarFuncao,
@@ -65,11 +60,7 @@ import {
   useRoles,
   useTasks,
 } from "@/lib/queries";
-import {
-  CARTOES_PAINEL,
-  rotuloFase,
-  usePreferencias,
-} from "@/lib/preferencias";
+import { CARTOES_PAINEL, rotuloFase, usePreferencias } from "@/lib/preferencias";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -87,13 +78,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminApp,
 });
 
-type TabAdmin =
-  | "visao_geral"
-  | "equipa"
-  | "analytics"
-  | "seguranca"
-  | "permissoes"
-  | "definicoes";
+type TabAdmin = "visao_geral" | "equipa" | "analytics" | "seguranca" | "permissoes" | "definicoes";
 
 const FUNCOES: { value: AppRole; label: string; descricao: string }[] = [
   {
@@ -159,10 +144,7 @@ function AdminApp() {
     const tarefasConcluidas = tarefasAtribuidas.filter((t) => t.estado === "concluida");
     const atividadesDoMembro = atividades.filter((a) => a.autor === mid);
 
-    const volumeTotal = negociosCriados.reduce(
-      (tot, n) => tot + Number(n.valor_estimado ?? 0),
-      0,
-    );
+    const volumeTotal = negociosCriados.reduce((tot, n) => tot + Number(n.valor_estimado ?? 0), 0);
 
     return {
       negociosCriados: negociosCriados.length,
@@ -310,9 +292,7 @@ function AdminApp() {
               <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1.5">
                 <Users className="size-3.5 text-info" /> Membros na Plataforma
               </span>
-              <p className="text-3xl font-bold font-mono text-foreground mt-2">
-                {perfis.length}
-              </p>
+              <p className="text-3xl font-bold font-mono text-foreground mt-2">{perfis.length}</p>
               <p className="text-[10px] text-muted-foreground mt-1">
                 {pendentesConvites.length} convite(s) pendente(s)
               </p>
@@ -322,9 +302,7 @@ function AdminApp() {
               <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1.5">
                 <CheckCircle2 className="size-3.5 text-success" /> Infraestrutura Supabase
               </span>
-              <p className="text-xl font-bold text-success mt-2">
-                Operacional
-              </p>
+              <p className="text-xl font-bold text-success mt-2">Operacional</p>
               <p className="text-[10px] text-muted-foreground mt-1">
                 PostgreSQL • Auth • Storage RLS
               </p>
@@ -349,9 +327,7 @@ function AdminApp() {
               <p className="text-3xl font-bold font-mono text-foreground mt-2">
                 {atividades.length}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                Total de logs de auditoria
-              </p>
+              <p className="text-[10px] text-muted-foreground mt-1">Total de logs de auditoria</p>
             </div>
           </div>
 
@@ -605,7 +581,8 @@ function AdminApp() {
               Matriz de Governança RBAC & Políticas RLS
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Todas as permissões são aplicadas a nível de base de dados (PostgreSQL RLS) e Server Functions.
+              Todas as permissões são aplicadas a nível de base de dados (PostgreSQL RLS) e Server
+              Functions.
             </p>
           </div>
 
@@ -718,11 +695,7 @@ function AdminApp() {
             <button className={btnSecundario} onClick={() => setModalConvidar(false)}>
               Cancelar
             </button>
-            <button
-              className={btnPrimario}
-              onClick={submeterConvite}
-              disabled={convidar.isPending}
-            >
+            <button className={btnPrimario} onClick={submeterConvite} disabled={convidar.isPending}>
               Enviar Convite
             </button>
           </>

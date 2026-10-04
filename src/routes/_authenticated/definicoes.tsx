@@ -60,12 +60,37 @@ export const Route = createFileRoute("/_authenticated/definicoes")({
 
 const TOPICOS = [
   { chave: "marca", label: "Marca", nota: "Nome da app e nomes do menu", icone: Tag },
-  { chave: "menu", label: "Menu lateral", nota: "O que aparece na barra lateral", icone: PanelsTopLeft },
-  { chave: "fases", label: "Fases do pipeline", nota: "Colunas do quadro e os seus nomes", icone: Columns3 },
-  { chave: "quadro", label: "Quadro", nota: "Grelha, cartões e espaçamento", icone: LayoutDashboard },
-  { chave: "formulario", label: "Formulário de projeto", nota: "Campos ao criar ou editar", icone: SlidersHorizontal },
+  {
+    chave: "menu",
+    label: "Menu lateral",
+    nota: "O que aparece na barra lateral",
+    icone: PanelsTopLeft,
+  },
+  {
+    chave: "fases",
+    label: "Fases do pipeline",
+    nota: "Colunas do quadro e os seus nomes",
+    icone: Columns3,
+  },
+  {
+    chave: "quadro",
+    label: "Quadro",
+    nota: "Grelha, cartões e espaçamento",
+    icone: LayoutDashboard,
+  },
+  {
+    chave: "formulario",
+    label: "Formulário de projeto",
+    nota: "Campos ao criar ou editar",
+    icone: SlidersHorizontal,
+  },
   { chave: "lista", label: "Lista de projetos", nota: "Colunas, ordem e paginação", icone: List },
-  { chave: "painel", label: "Painel de gestão", nota: "Blocos e métricas do painel", icone: LayoutDashboard },
+  {
+    chave: "painel",
+    label: "Painel de gestão",
+    nota: "Blocos e métricas do painel",
+    icone: LayoutDashboard,
+  },
   { chave: "formatos", label: "Moeda e datas", nota: "Como os valores são escritos", icone: Coins },
 ] as const;
 
@@ -316,7 +341,10 @@ function Definicoes() {
 
             {topico === "quadro" && (
               <>
-                <Bloco titulo="Colunas por linha" nota="Em ecrãs pequenos passa sempre a uma coluna.">
+                <Bloco
+                  titulo="Colunas por linha"
+                  nota="Em ecrãs pequenos passa sempre a uma coluna."
+                >
                   <Escolhas
                     valores={[1, 2, 3, 4, 5].map((n) => ({
                       valor: String(n),
@@ -364,9 +392,9 @@ function Definicoes() {
               <>
                 <p className="rounded-xl border border-border/60 bg-secondary/20 p-3 text-xs text-muted-foreground">
                   Estes são os campos da janela “Novo projeto de site”. Clica em <b>Editar</b> para
-                  mudar o nome, o texto de ajuda e a largura. Usa as setas para a ordem, <b>Obrig.</b>
-                  {" "}para tornar obrigatório e o interruptor para esconder. Podes ainda criar campos
-                  novos em qualquer grupo — os valores ficam guardados no projeto.
+                  mudar o nome, o texto de ajuda e a largura. Usa as setas para a ordem,{" "}
+                  <b>Obrig.</b> para tornar obrigatório e o interruptor para esconder. Podes ainda
+                  criar campos novos em qualquer grupo — os valores ficam guardados no projeto.
                 </p>
 
                 {GRUPOS_CAMPOS.map((g) => {
@@ -475,7 +503,9 @@ function Definicoes() {
                                     <input
                                       className={inputClass}
                                       value={
-                                        extra ? extra.label : (prefs.rotulosCamposNegocio[chave] ?? "")
+                                        extra
+                                          ? extra.label
+                                          : (prefs.rotulosCamposNegocio[chave] ?? "")
                                       }
                                       placeholder={base?.label ?? "Nome do campo"}
                                       onChange={(e) =>
@@ -493,7 +523,9 @@ function Definicoes() {
                                   <Etiqueta texto="Texto de ajuda (abaixo do campo)">
                                     <input
                                       className={inputClass}
-                                      value={extra ? extra.ajuda : (prefs.ajudasCampos[chave] ?? "")}
+                                      value={
+                                        extra ? extra.ajuda : (prefs.ajudasCampos[chave] ?? "")
+                                      }
                                       placeholder="Ex.: usa o nome que o cliente usa nas faturas"
                                       onChange={(e) =>
                                         extra
@@ -706,15 +738,7 @@ function Definicoes() {
   );
 }
 
-function Bloco({
-  titulo,
-  nota,
-  children,
-}: {
-  titulo: string;
-  nota?: string;
-  children: ReactNode;
-}) {
+function Bloco({ titulo, nota, children }: { titulo: string; nota?: string; children: ReactNode }) {
   return (
     <section className="rounded-2xl border border-border bg-card p-4">
       <h3 className="text-sm font-medium">{titulo}</h3>

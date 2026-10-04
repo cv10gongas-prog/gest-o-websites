@@ -21,11 +21,7 @@ import { useMemo, useState } from "react";
 import { Chip, Dot, Vazio } from "@/components/crm/Bits";
 import { DialogNegocio } from "@/components/crm/DialogNegocio";
 import { formatarData, type Business } from "@/lib/crm";
-import {
-  useActualizarPedido,
-  useApagarPedido,
-  useWebsiteRequests,
-} from "@/lib/queries";
+import { useActualizarPedido, useApagarPedido, useWebsiteRequests } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/pedidos")({
@@ -36,8 +32,7 @@ export const Route = createFileRoute("/_authenticated/pedidos")({
       },
       {
         name: "description",
-        content:
-          "Central de triagem de contactos e orçamentos submetidos pelo website público.",
+        content: "Central de triagem de contactos e orçamentos submetidos pelo website público.",
       },
       {
         name: "robots",
@@ -216,7 +211,10 @@ function Pedidos() {
               const detalhes = parseMensagem(p.mensagem);
 
               return (
-                <li key={p.id} className="p-5 sm:p-6 transition hover:bg-surface-strong/40 space-y-4">
+                <li
+                  key={p.id}
+                  className="p-5 sm:p-6 transition hover:bg-surface-strong/40 space-y-4"
+                >
                   {/* Topo do Pedido */}
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 space-y-1">

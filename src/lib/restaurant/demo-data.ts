@@ -39,15 +39,10 @@ const demoImages: Record<string, string> = {
 
 /** Converte o valor guardado na base de dados num URL utilizável no browser */
 export const resolveImage = (url: string) =>
-  url.startsWith("demo:") ? demoImages[url.slice(5)] ?? "" : url;
+  url.startsWith("demo:") ? (demoImages[url.slice(5)] ?? "") : url;
 
 export type OrderStatus = "recebido" | "preparacao" | "pronto" | "entregue";
-export type ReservationStatus =
-  | "pendente"
-  | "confirmada"
-  | "chegou"
-  | "concluida"
-  | "cancelada";
+export type ReservationStatus = "pendente" | "confirmada" | "chegou" | "concluida" | "cancelada";
 
 export type Category = { id: string; name: string; sortOrder: number };
 export type Product = {

@@ -1,18 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  Bell,
-  CalendarClock,
-  Globe,
-  ShieldAlert,
-  CheckCircle2,
-  ChevronRight,
-} from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Bell, CalendarClock, Globe, ShieldAlert, CheckCircle2, ChevronRight } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useTasks, useWebsiteRequests } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,8 +41,7 @@ export function NotificationCenter() {
     return pedidos.filter((p) => !p.tratado);
   }, [pedidos]);
 
-  const totalNotificacoes =
-    tarefasUrgentes.length + pedidosNaoTratados.length;
+  const totalNotificacoes = tarefasUrgentes.length + pedidosNaoTratados.length;
 
   return (
     <Popover open={aberto} onOpenChange={setAberto}>
@@ -152,7 +140,9 @@ export function NotificationCenter() {
                     onClick={() => setAberto(false)}
                     className="block rounded-lg border border-border/40 bg-surface/60 p-2 text-[11px] text-foreground transition hover:border-primary/40 hover:bg-surface-strong"
                   >
-                    <div className="font-medium truncate">{p.nome} ({p.empresa || "Particular"})</div>
+                    <div className="font-medium truncate">
+                      {p.nome} ({p.empresa || "Particular"})
+                    </div>
                     <div className="text-[10px] text-muted-foreground truncate mt-0.5">
                       {p.mensagem || "Sem mensagem"}
                     </div>
@@ -180,7 +170,9 @@ export function NotificationCenter() {
               </div>
               <div className="text-[11px] text-muted-foreground space-y-1">
                 <div className="flex items-center justify-between rounded-lg bg-surface/40 px-2.5 py-1.5 border border-border/30">
-                  <span className="truncate">Última tentativa ({tentativas[0].ip ?? "IP oculto"})</span>
+                  <span className="truncate">
+                    Última tentativa ({tentativas[0].ip ?? "IP oculto"})
+                  </span>
                   <span className="text-[10px] text-danger font-medium">Rejeitada</span>
                 </div>
               </div>

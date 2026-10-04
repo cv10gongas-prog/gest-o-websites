@@ -28,12 +28,7 @@ export const HTML_LANG: Record<Locale, string> = {
   es: "es",
 };
 
-export type PageKey =
-  | "home"
-  | "portfolio"
-  | "contact"
-  | "restaurantes"
-  | "restaurantesDemo";
+export type PageKey = "home" | "portfolio" | "contact" | "restaurantes" | "restaurantesDemo";
 
 export const PATHS = {
   pt: {
@@ -332,7 +327,13 @@ type Dict = {
         onlineBadge: string;
         phoneBadge: string;
         paxLabel: string;
-        list: { time: string; name: string; pax: number; table: string; type: "online" | "phone" }[];
+        list: {
+          time: string;
+          name: string;
+          pax: number;
+          table: string;
+          type: "online" | "phone";
+        }[];
       };
       tables: {
         floorTitle: string;
@@ -692,23 +693,19 @@ export const dict: Record<Locale, Dict> = {
       process: [
         {
           titulo: "Falamos sobre o negócio",
-          texto:
-            "Percebemos o que faz, o que precisa e quais são os objetivos do website.",
+          texto: "Percebemos o que faz, o que precisa e quais são os objetivos do website.",
         },
         {
           titulo: "Enviamos uma proposta",
-          texto:
-            "Recebe uma proposta clara com o trabalho, prazo e valor previstos.",
+          texto: "Recebe uma proposta clara com o trabalho, prazo e valor previstos.",
         },
         {
           titulo: "Criamos o website",
-          texto:
-            "Desenvolvemos o projeto e mostramos a evolução antes da publicação.",
+          texto: "Desenvolvemos o projeto e mostramos a evolução antes da publicação.",
         },
         {
           titulo: "Publicamos e acompanhamos",
-          texto:
-            "Colocamos o site online e ajudamos com os últimos ajustes necessários.",
+          texto: "Colocamos o site online e ajudamos com os últimos ajustes necessários.",
         },
       ],
       ctaTitle: "Precisa de criar ou modernizar o website do seu negócio?",
@@ -716,8 +713,7 @@ export const dict: Record<Locale, Dict> = {
         "Diga-nos o que precisa. Podemos analisar o website atual ou preparar uma solução de raiz adaptada ao seu negócio.",
       ctaButton: "Pedir orçamento",
       finalTitle: "Fale com a Nova Web Studio",
-      finalText:
-        "Criamos websites para negócios em Cascais, Oeiras, Sintra e Lisboa.",
+      finalText: "Criamos websites para negócios em Cascais, Oeiras, Sintra e Lisboa.",
       finalButton: "Contactar",
     },
     portfolio: {
@@ -732,8 +728,7 @@ export const dict: Record<Locale, Dict> = {
         "Website institucional desenvolvido para modernizar a presença digital da coletividade e facilitar o acesso às suas atividades, novidades e contactos.",
       visit: "Visitar website",
       othersTitle: "Outros conceitos",
-      othersLead:
-        "Explorações visuais criadas para demonstrar diferentes abordagens e setores.",
+      othersLead: "Explorações visuais criadas para demonstrar diferentes abordagens e setores.",
       concepts: [
         {
           titulo: "Website para serviços de piscinas",
@@ -972,23 +967,19 @@ export const dict: Record<Locale, Dict> = {
       problemList: [
         {
           title: "Reservas dispersas",
-          text:
-            "Chamadas perdidas, anotações em papel e mensagens em várias plataformas dificultam a organização das mesas.",
+          text: "Chamadas perdidas, anotações em papel e mensagens em várias plataformas dificultam a organização das mesas.",
         },
         {
           title: "Menus desatualizados",
-          text:
-            "Alterações de preços, pratos esgotados ou menus impressos desatualizados causam atrito no serviço.",
+          text: "Alterações de preços, pratos esgotados ou menus impressos desatualizados causam atrito no serviço.",
         },
         {
           title: "Pedidos difíceis de gerir",
-          text:
-            "Várias mesas a pedir em simultâneo com pedidos anotados à mão aumentam o risco de erros na cozinha.",
+          text: "Várias mesas a pedir em simultâneo com pedidos anotados à mão aumentam o risco de erros na cozinha.",
         },
         {
           title: "Serviço sobrecarregado",
-          text:
-            "Clientes à espera para fazer pedidos, chamar o empregado ou pedir a conta em momentos de maior movimento.",
+          text: "Clientes à espera para fazer pedidos, chamar o empregado ou pedir a conta em momentos de maior movimento.",
         },
       ],
       problemNoTechTitle: "Sem complicações técnicas",
@@ -1002,49 +993,40 @@ export const dict: Record<Locale, Dict> = {
       featureList: [
         {
           title: "Website próprio para restaurantes",
-          text:
-            "Uma presença online profissional com a identidade, ementa, fotografias, localização, horários e contactos do teu restaurante.",
+          text: "Uma presença online profissional com a identidade, ementa, fotografias, localização, horários e contactos do teu restaurante.",
         },
         {
           title: "Menu digital para restaurantes atualizável em direto",
-          text:
-            "Atualiza pratos, descrições, preços e disponibilidade em tempo real, sem necessidade de reimprimir cartas.",
+          text: "Atualiza pratos, descrições, preços e disponibilidade em tempo real, sem necessidade de reimprimir cartas.",
         },
         {
           title: "Pedidos por QR Code na mesa",
-          text:
-            "Cada mesa tem o seu código QR dedicado. Os clientes consultam o cardápio e enviam pedidos diretamente do telemóvel sem filas.",
+          text: "Cada mesa tem o seu código QR dedicado. Os clientes consultam o cardápio e enviam pedidos diretamente do telemóvel sem filas.",
         },
         {
           title: "Reservas online para restaurantes e marcação telefónica",
-          text:
-            "Recebe reservas feitas pelo website e regista manualmente marcações recebidas por telefone num único calendário central.",
+          text: "Recebe reservas feitas pelo website e regista manualmente marcações recebidas por telefone num único calendário central.",
         },
         {
           title: "Programa para restaurantes e ecrã de cozinha (KDS)",
-          text:
-            "Gestão ágil de comandas com fluxo visual Kanban da preparação à entrega dos pratos.",
+          text: "Gestão ágil de comandas com fluxo visual Kanban da preparação à entrega dos pratos.",
         },
         {
           title: "Gestão de mesas e sala em tempo real",
-          text:
-            "Planta interativa da sala e esplanada com estados visuais: livres, ocupadas, com alerta ou a pedir conta.",
+          text: "Planta interativa da sala e esplanada com estados visuais: livres, ocupadas, com alerta ou a pedir conta.",
         },
         {
           title: "Chamada de empregado e pedido de conta no telemóvel",
-          text:
-            "O cliente pode solicitar a presença do empregado ou a conta diretamente a partir do ecrã do seu telemóvel.",
+          text: "O cliente pode solicitar a presença do empregado ou a conta diretamente a partir do ecrã do seu telemóvel.",
         },
         {
           title: "Relatórios e controlo operacional do turno",
-          text:
-            "Acompanhamento de faturação acumulada, ritmo de serviço e ocupação média da sala.",
+          text: "Acompanhamento de faturação acumulada, ritmo de serviço e ocupação média da sala.",
         },
       ],
       processChip: "Processo",
       howWorksTitle: "Como funciona na prática",
-      howWorksLead:
-        "Um percurso simples e natural para o cliente e para a equipa.",
+      howWorksLead: "Um percurso simples e natural para o cliente e para a equipa.",
       howWorksFlow: [
         "Cliente lê o QR Code na mesa com o telemóvel",
         "Consulta o menu digital com fotos e preços atualizados",
@@ -1098,8 +1080,7 @@ export const dict: Record<Locale, Dict> = {
     restaurantesDemo: {
       chip: "Demonstração Interativa",
       title: "Experimenta a nossa solução para restaurantes",
-      subtitle:
-        "Descobre como funciona o sistema na perspetiva dos teus clientes e da tua equipa.",
+      subtitle: "Descobre como funciona o sistema na perspetiva dos teus clientes e da tua equipa.",
       notice: "Simulação comercial demonstrativa · Sem dados reais",
       reset: "Recomeçar demonstração",
       back: "Voltar à página comercial",
@@ -1187,8 +1168,7 @@ export const dict: Record<Locale, Dict> = {
         total: "Total",
         sendOrder: "Enviar pedido para a cozinha",
         orderSentTitle: "Pedido enviado com sucesso!",
-        orderSentSubtitle:
-          "O teu pedido foi recebido pelo restaurante e está a ser preparado.",
+        orderSentSubtitle: "O teu pedido foi recebido pelo restaurante e está a ser preparado.",
         callWaiter: "Chamar empregado",
         callWaiterSuccess: "Empregado chamado à mesa. Já vamos ter consigo!",
         requestBill: "Pedir a conta",
@@ -1224,8 +1204,7 @@ export const dict: Record<Locale, Dict> = {
       },
       bookings: {
         title: "Agenda de Reservas",
-        subtitle:
-          "Reservas feitas online e marcações telefónicas reunidas num único calendário.",
+        subtitle: "Reservas feitas online e marcações telefónicas reunidas num único calendário.",
         formTitle: "Registar Reserva",
         date: "Data",
         time: "Hora",
@@ -1382,23 +1361,19 @@ export const dict: Record<Locale, Dict> = {
       process: [
         {
           titulo: "We talk about your business",
-          texto:
-            "We understand what you do, what you need and the goals of the website.",
+          texto: "We understand what you do, what you need and the goals of the website.",
         },
         {
           titulo: "We send a proposal",
-          texto:
-            "You receive a clear proposal with the scope, timeline and price.",
+          texto: "You receive a clear proposal with the scope, timeline and price.",
         },
         {
           titulo: "We build the website",
-          texto:
-            "We develop the project and show you the progress before it goes live.",
+          texto: "We develop the project and show you the progress before it goes live.",
         },
         {
           titulo: "We publish and support",
-          texto:
-            "We put the site online and help with the final adjustments needed.",
+          texto: "We put the site online and help with the final adjustments needed.",
         },
       ],
       ctaTitle: "Need to create or modernise your business website?",
@@ -1406,8 +1381,7 @@ export const dict: Record<Locale, Dict> = {
         "Tell us what you need. We can review your current website or build a new solution tailored to your business.",
       ctaButton: "Request a quote",
       finalTitle: "Talk to Nova Web Studio",
-      finalText:
-        "We build websites for businesses in Cascais, Oeiras, Sintra and Lisbon.",
+      finalText: "We build websites for businesses in Cascais, Oeiras, Sintra and Lisbon.",
       finalButton: "Get in touch",
     },
     portfolio: {
@@ -1422,8 +1396,7 @@ export const dict: Record<Locale, Dict> = {
         "Institutional website built to modernise the association's digital presence and make its activities, news and contact details easy to find.",
       visit: "Visit website",
       othersTitle: "Other concepts",
-      othersLead:
-        "Visual explorations created to show different approaches and sectors.",
+      othersLead: "Visual explorations created to show different approaches and sectors.",
       concepts: [
         {
           titulo: "Website for pool services",
@@ -1439,8 +1412,7 @@ export const dict: Record<Locale, Dict> = {
         {
           titulo: "Website for holiday accommodation",
           etiqueta: "Concept",
-          descricao:
-            "A visual experience designed to showcase the space and encourage bookings.",
+          descricao: "A visual experience designed to showcase the space and encourage bookings.",
           preview: {
             eyebrow: "Holiday Rental",
             headline: "A special stay",
@@ -1450,8 +1422,7 @@ export const dict: Record<Locale, Dict> = {
         {
           titulo: "Website for a carpentry workshop",
           etiqueta: "Design concept",
-          descricao:
-            "An elegant portfolio to highlight work, materials and bespoke services.",
+          descricao: "An elegant portfolio to highlight work, materials and bespoke services.",
           preview: {
             eyebrow: "Carpentry",
             headline: "Made-to-measure work",
@@ -1625,7 +1596,10 @@ export const dict: Record<Locale, Dict> = {
           colNew: "New",
           colPrep: "In Prep (12 min)",
           ticket1Table: "Table 04 · ORD-708",
-          ticket1Items: ["1x Artisan Bread & Marinated Olives", "1x Roasted Codfish with Cornbread Crust"],
+          ticket1Items: [
+            "1x Artisan Bread & Marinated Olives",
+            "1x Roasted Codfish with Cornbread Crust",
+          ],
           ticket1Obs: "Note: «No onions in the codfish»",
           ticket1Action: "Start Prep →",
           ticket2Table: "Table 07 · ORD-102",
@@ -1662,23 +1636,19 @@ export const dict: Record<Locale, Dict> = {
       problemList: [
         {
           title: "Scattered reservations",
-          text:
-            "Missed calls, paper notes and messages across multiple apps make table management chaotic.",
+          text: "Missed calls, paper notes and messages across multiple apps make table management chaotic.",
         },
         {
           title: "Outdated menus",
-          text:
-            "Price adjustments, sold-out items or reprinted paper menus create unnecessary delays.",
+          text: "Price adjustments, sold-out items or reprinted paper menus create unnecessary delays.",
         },
         {
           title: "Order confusion",
-          text:
-            "Multiple tables ordering simultaneously on handwritten slips increases the chance of kitchen errors.",
+          text: "Multiple tables ordering simultaneously on handwritten slips increases the chance of kitchen errors.",
         },
         {
           title: "Overwhelmed staff",
-          text:
-            "Customers waiting to place orders, call a waiter or ask for the bill during peak rush hours.",
+          text: "Customers waiting to place orders, call a waiter or ask for the bill during peak rush hours.",
         },
       ],
       problemNoTechTitle: "No technical complexity",
@@ -1692,43 +1662,35 @@ export const dict: Record<Locale, Dict> = {
       featureList: [
         {
           title: "Custom restaurant website & online presence",
-          text:
-            "A professional branded online presence showcasing your menu, atmosphere, location and opening hours.",
+          text: "A professional branded online presence showcasing your menu, atmosphere, location and opening hours.",
         },
         {
           title: "Digital menu for restaurants with instant updates",
-          text:
-            "Update dishes, descriptions, prices and sold-out items in real time without reprinting physical menus.",
+          text: "Update dishes, descriptions, prices and sold-out items in real time without reprinting physical menus.",
         },
         {
           title: "Table QR code ordering",
-          text:
-            "Each table gets a dedicated QR code. Guests scan, browse the menu, and place orders straight from their phones.",
+          text: "Each table gets a dedicated QR code. Guests scan, browse the menu, and place orders straight from their phones.",
         },
         {
           title: "Online restaurant reservations & phone bookings",
-          text:
-            "Accept online booking requests from your website and log phone reservations in one central schedule.",
+          text: "Accept online booking requests from your website and log phone reservations in one central schedule.",
         },
         {
           title: "Restaurant management system & kitchen display (KDS)",
-          text:
-            "Agile order tracking with a visual Kanban workflow from food prep to table delivery.",
+          text: "Agile order tracking with a visual Kanban workflow from food prep to table delivery.",
         },
         {
           title: "Real-time table & dining room management",
-          text:
-            "Interactive floor plan showing live table statuses: available, dining, calling staff, or requesting the bill.",
+          text: "Interactive floor plan showing live table statuses: available, dining, calling staff, or requesting the bill.",
         },
         {
           title: "Call waiter & bill request on smartphone",
-          text:
-            "Guests can request waiter assistance or ask for their bill directly through their mobile browser.",
+          text: "Guests can request waiter assistance or ask for their bill directly through their mobile browser.",
         },
         {
           title: "Shift reports & operational oversight",
-          text:
-            "Monitor cumulative revenue, service pace, and average table occupancy across each shift.",
+          text: "Monitor cumulative revenue, service pace, and average table occupancy across each shift.",
         },
       ],
       processChip: "Process",
@@ -1787,8 +1749,7 @@ export const dict: Record<Locale, Dict> = {
     restaurantesDemo: {
       chip: "Interactive Demo",
       title: "Experience our restaurant solution",
-      subtitle:
-        "See how the system works from the perspective of your guests and your staff.",
+      subtitle: "See how the system works from the perspective of your guests and your staff.",
       notice: "Commercial interactive simulation · No real data",
       reset: "Reset demo",
       back: "Back to overview",
@@ -1876,8 +1837,7 @@ export const dict: Record<Locale, Dict> = {
         total: "Total",
         sendOrder: "Send order to kitchen",
         orderSentTitle: "Order sent successfully!",
-        orderSentSubtitle:
-          "Your order has been received by the kitchen and is being prepared.",
+        orderSentSubtitle: "Your order has been received by the kitchen and is being prepared.",
         callWaiter: "Call waiter",
         callWaiterSuccess: "Waiter called to table. Someone will be with you shortly!",
         requestBill: "Request bill",
@@ -1913,8 +1873,7 @@ export const dict: Record<Locale, Dict> = {
       },
       bookings: {
         title: "Reservation Schedule",
-        subtitle:
-          "Online bookings and phone reservations united in one real-time schedule.",
+        subtitle: "Online bookings and phone reservations united in one real-time schedule.",
         formTitle: "Book a Table",
         date: "Date",
         time: "Time",
@@ -1966,12 +1925,7 @@ export const dict: Record<Locale, Dict> = {
         "Redesign of an existing site",
         "Other",
       ],
-      orcamentos: [
-        "Up to €150",
-        "€150 – €250",
-        "€250 – €400",
-        "More than €400",
-      ],
+      orcamentos: ["Up to €150", "€150 – €250", "€250 – €400", "More than €400"],
     },
   },
 
@@ -2076,23 +2030,19 @@ export const dict: Record<Locale, Dict> = {
       process: [
         {
           titulo: "Wir sprechen über Ihr Unternehmen",
-          texto:
-            "Wir verstehen, was Sie tun, was Sie brauchen und welche Ziele die Website hat.",
+          texto: "Wir verstehen, was Sie tun, was Sie brauchen und welche Ziele die Website hat.",
         },
         {
           titulo: "Wir senden ein Angebot",
-          texto:
-            "Sie erhalten ein klares Angebot mit Umfang, Zeitplan und Preis.",
+          texto: "Sie erhalten ein klares Angebot mit Umfang, Zeitplan und Preis.",
         },
         {
           titulo: "Wir erstellen die Website",
-          texto:
-            "Wir entwickeln das Projekt und zeigen den Fortschritt vor der Veröffentlichung.",
+          texto: "Wir entwickeln das Projekt und zeigen den Fortschritt vor der Veröffentlichung.",
         },
         {
           titulo: "Wir veröffentlichen und begleiten",
-          texto:
-            "Wir bringen die Website online und helfen bei den letzten Anpassungen.",
+          texto: "Wir bringen die Website online und helfen bei den letzten Anpassungen.",
         },
       ],
       ctaTitle: "Möchten Sie Ihre Website erstellen oder modernisieren?",
@@ -2100,8 +2050,7 @@ export const dict: Record<Locale, Dict> = {
         "Sagen Sie uns, was Sie brauchen. Wir prüfen Ihre aktuelle Website oder entwickeln eine neue Lösung für Ihr Unternehmen.",
       ctaButton: "Kostenvoranschlag anfragen",
       finalTitle: "Sprechen Sie mit Nova Web Studio",
-      finalText:
-        "Wir erstellen Websites für Unternehmen in Cascais, Oeiras, Sintra und Lissabon.",
+      finalText: "Wir erstellen Websites für Unternehmen in Cascais, Oeiras, Sintra und Lissabon.",
       finalButton: "Kontaktieren",
     },
     portfolio: {
@@ -2116,8 +2065,7 @@ export const dict: Record<Locale, Dict> = {
         "Website zur Modernisierung der digitalen Präsenz des Vereins und für einen einfachen Zugang zu Aktivitäten, Neuigkeiten und Kontakten.",
       visit: "Website besuchen",
       othersTitle: "Weitere Konzepte",
-      othersLead:
-        "Visuelle Studien, die verschiedene Ansätze und Branchen zeigen.",
+      othersLead: "Visuelle Studien, die verschiedene Ansätze und Branchen zeigen.",
       concepts: [
         {
           titulo: "Website für Poolservice",
@@ -2133,8 +2081,7 @@ export const dict: Record<Locale, Dict> = {
         {
           titulo: "Website für Ferienunterkünfte",
           etiqueta: "Konzept",
-          descricao:
-            "Ein visuelles Erlebnis, das den Ort hervorhebt und Buchungen fördert.",
+          descricao: "Ein visuelles Erlebnis, das den Ort hervorhebt und Buchungen fördert.",
           preview: {
             eyebrow: "Ferienwohnung",
             headline: "Ein besonderer Aufenthalt",
@@ -2144,8 +2091,7 @@ export const dict: Record<Locale, Dict> = {
         {
           titulo: "Website für eine Tischlerei",
           etiqueta: "Designkonzept",
-          descricao:
-            "Ein elegantes Portfolio für Arbeiten, Materialien und Maßanfertigungen.",
+          descricao: "Ein elegantes Portfolio für Arbeiten, Materialien und Maßanfertigungen.",
           preview: {
             eyebrow: "Tischlerei",
             headline: "Maßarbeit nach Wunsch",
@@ -2154,8 +2100,7 @@ export const dict: Record<Locale, Dict> = {
         },
       ],
       ctaTitle: "Haben Sie ein Projekt im Kopf?",
-      ctaText:
-        "Sagen Sie uns, was Sie brauchen, und erhalten Sie ein unverbindliches Angebot.",
+      ctaText: "Sagen Sie uns, was Sie brauchen, und erhalten Sie ein unverbindliches Angebot.",
       ctaButton: "Kostenvoranschlag anfragen",
     },
     restaurantes: {
@@ -2357,23 +2302,19 @@ export const dict: Record<Locale, Dict> = {
       problemList: [
         {
           title: "Verstreute Reservierungen",
-          text:
-            "Verpasste Anrufe, Zettelwirtschaft und Nachrichten auf verschiedenen Kanälen erschweren die Tischorganisation.",
+          text: "Verpasste Anrufe, Zettelwirtschaft und Nachrichten auf verschiedenen Kanälen erschweren die Tischorganisation.",
         },
         {
           title: "Veraltete Karten",
-          text:
-            "Preisänderungen oder ausverkaufte Gerichte auf gedruckten Karten führen zu Missverständnissen.",
+          text: "Preisänderungen oder ausverkaufte Gerichte auf gedruckten Karten führen zu Missverständnissen.",
         },
         {
           title: "Bestellchaos",
-          text:
-            "Mehrere Tische bestellen gleichzeitig auf handschriftlichen Bons – das erhöht Fehlerquellen in der Küche.",
+          text: "Mehrere Tische bestellen gleichzeitig auf handschriftlichen Bons – das erhöht Fehlerquellen in der Küche.",
         },
         {
           title: "Überlastetes Personal",
-          text:
-            "Gäste warten bei Stoßzeiten darauf, zu bestellen, die Bedienung zu rufen oder zu bezahlen.",
+          text: "Gäste warten bei Stoßzeiten darauf, zu bestellen, die Bedienung zu rufen oder zu bezahlen.",
         },
       ],
       problemNoTechTitle: "Ohne technische Hürden",
@@ -2387,43 +2328,35 @@ export const dict: Record<Locale, Dict> = {
       featureList: [
         {
           title: "Eigene Website & Webpräsenz für Restaurants",
-          text:
-            "Ein professioneller Webauftritt mit Logo, Speisekarte, Fotos, Öffnungszeiten, Standort und Kontaktmöglichkeiten.",
+          text: "Ein professioneller Webauftritt mit Logo, Speisekarte, Fotos, Öffnungszeiten, Standort und Kontaktmöglichkeiten.",
         },
         {
           title: "Digitale Speisekarte für Restaurants in Echtzeit",
-          text:
-            "Gerichte, Preise, Beschreibungen und Verfügbarkeiten in Echtzeit aktualisieren – ganz ohne Nachdruck von Papierkarten.",
+          text: "Gerichte, Preise, Beschreibungen und Verfügbarkeiten in Echtzeit aktualisieren – ganz ohne Nachdruck von Papierkarten.",
         },
         {
           title: "QR-Code-Bestellungen am Tisch",
-          text:
-            "Jeder Tisch hat einen eigenen QR-Code. Gäste wählen Gerichte und bestellen direkt per Smartphone ohne Wartezeiten.",
+          text: "Jeder Tisch hat einen eigenen QR-Code. Gäste wählen Gerichte und bestellen direkt per Smartphone ohne Wartezeiten.",
         },
         {
           title: "Online-Tischreservierung & Telefonannahme",
-          text:
-            "Reservierungen über die Website annehmen und telefonische Anfragen in einem zentralen Kalender übersichtlich erfassen.",
+          text: "Reservierungen über die Website annehmen und telefonische Anfragen in einem zentralen Kalender übersichtlich erfassen.",
         },
         {
           title: "Gastronomie-Kassensystem & Küchenmonitor (KDS)",
-          text:
-            "Übersichtlicher Kanban-Workflow für die Küche vom Bestelleingang bis zur Ausgabe an den Gast.",
+          text: "Übersichtlicher Kanban-Workflow für die Küche vom Bestelleingang bis zur Ausgabe an den Gast.",
         },
         {
           title: "Tischverwaltung & Raumplan in Echtzeit",
-          text:
-            "Interaktiver Tischplan für Innenbereich und Terrasse mit Farbanzeige: frei, belegt oder Rechnung erbeten.",
+          text: "Interaktiver Tischplan für Innenbereich und Terrasse mit Farbanzeige: frei, belegt oder Rechnung erbeten.",
         },
         {
           title: "Service rufen & Rechnung per Smartphone",
-          text:
-            "Gäste können direkt über das Handy nach der Bedienung fragen oder um die Rechnung bitten.",
+          text: "Gäste können direkt über das Handy nach der Bedienung fragen oder um die Rechnung bitten.",
         },
         {
           title: "Schichtberichte & Betriebsübersicht",
-          text:
-            "Echtzeit-Überblick über Schichtumsatz, Durchlaufzeiten und durchschnittliche Tischauslastung.",
+          text: "Echtzeit-Überblick über Schichtumsatz, Durchlaufzeiten und durchschnittliche Tischauslastung.",
         },
       ],
       processChip: "Ablauf",
@@ -2482,8 +2415,7 @@ export const dict: Record<Locale, Dict> = {
     restaurantesDemo: {
       chip: "Interaktive Demo",
       title: "Erleben Sie unsere Restaurantlösung",
-      subtitle:
-        "Entdecken Sie, wie das System aus Sicht Ihrer Gäste und Ihres Teams funktioniert.",
+      subtitle: "Entdecken Sie, wie das System aus Sicht Ihrer Gäste und Ihres Teams funktioniert.",
       notice: "Kommerzielle Simulation · Keine echten Daten",
       reset: "Demo zurücksetzen",
       back: "Zurück zur Übersicht",
@@ -2571,8 +2503,7 @@ export const dict: Record<Locale, Dict> = {
         total: "Gesamt",
         sendOrder: "Bestellung an Küche senden",
         orderSentTitle: "Bestellung erfolgreich gesendet!",
-        orderSentSubtitle:
-          "Ihre Bestellung ist in der Küche eingegangen und wird zubereitet.",
+        orderSentSubtitle: "Ihre Bestellung ist in der Küche eingegangen und wird zubereitet.",
         callWaiter: "Service rufen",
         callWaiterSuccess: "Service gerufen. Eine Servicekraft kommt gleich zu Ihnen!",
         requestBill: "Rechnung anfordern",
@@ -2608,8 +2539,7 @@ export const dict: Record<Locale, Dict> = {
       },
       bookings: {
         title: "Reservierungsplan",
-        subtitle:
-          "Online- und Telefonreservierungen in einem zentralen Zeitplan vereint.",
+        subtitle: "Online- und Telefonreservierungen in einem zentralen Zeitplan vereint.",
         formTitle: "Tisch reservieren",
         date: "Datum",
         time: "Uhrzeit",
@@ -2650,8 +2580,7 @@ export const dict: Record<Locale, Dict> = {
       submitting: "Wird gesendet…",
       note: "Nach dem Absenden melden wir uns per E-Mail oder Telefon, um Ihr Projekt besser kennenzulernen.",
       errorRequired: "Bitte geben Sie Name und E-Mail an.",
-      errorSend:
-        "Die Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+      errorSend: "Die Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
       success: "Anfrage gesendet. Wir melden uns in Kürze.",
       tipos: [
         "Restaurantlösung",
@@ -2662,12 +2591,7 @@ export const dict: Record<Locale, Dict> = {
         "Redesign einer bestehenden Website",
         "Sonstiges",
       ],
-      orcamentos: [
-        "Bis 150 €",
-        "150 € – 250 €",
-        "250 € – 400 €",
-        "Mehr als 400 €",
-      ],
+      orcamentos: ["Bis 150 €", "150 € – 250 €", "250 € – 400 €", "Mehr als 400 €"],
     },
   },
 
@@ -2765,30 +2689,27 @@ export const dict: Record<Locale, Dict> = {
         },
         {
           titulo: "Applications web sur mesure",
-          texto: "Développement web personnalisé, espaces clients réservés et plateformes digitales.",
+          texto:
+            "Développement web personnalisé, espaces clients réservés et plateformes digitales.",
         },
       ],
       processTitle: "Notre méthode",
       process: [
         {
           titulo: "Nous parlons de votre activité",
-          texto:
-            "Nous comprenons ce que vous faites, vos besoins et les objectifs du site.",
+          texto: "Nous comprenons ce que vous faites, vos besoins et les objectifs du site.",
         },
         {
           titulo: "Nous envoyons une proposition",
-          texto:
-            "Vous recevez une proposition claire avec le périmètre, le délai et le prix.",
+          texto: "Vous recevez une proposition claire avec le périmètre, le délai et le prix.",
         },
         {
           titulo: "Nous créons le site",
-          texto:
-            "Nous développons le projet et montrons son évolution avant la mise en ligne.",
+          texto: "Nous développons le projet et montrons son évolution avant la mise en ligne.",
         },
         {
           titulo: "Nous publions et accompagnons",
-          texto:
-            "Nous mettons le site en ligne et aidons pour les derniers ajustements.",
+          texto: "Nous mettons le site en ligne et aidons pour les derniers ajustements.",
         },
       ],
       ctaTitle: "Besoin de créer ou moderniser le site de votre entreprise ?",
@@ -2812,8 +2733,7 @@ export const dict: Record<Locale, Dict> = {
         "Site institutionnel développé pour moderniser la présence digitale de l'association et faciliter l'accès à ses activités, actualités et contacts.",
       visit: "Visiter le site",
       othersTitle: "Autres concepts",
-      othersLead:
-        "Explorations visuelles créées pour illustrer différentes approches et secteurs.",
+      othersLead: "Explorations visuelles créées pour illustrer différentes approches et secteurs.",
       concepts: [
         {
           titulo: "Site pour services de piscines",
@@ -2850,8 +2770,7 @@ export const dict: Record<Locale, Dict> = {
         },
       ],
       ctaTitle: "Vous avez un projet en tête ?",
-      ctaText:
-        "Dites-nous ce dont vous avez besoin et recevez une proposition sans engagement.",
+      ctaText: "Dites-nous ce dont vous avez besoin et recevez une proposition sans engagement.",
       ctaButton: "Demander un devis",
     },
     restaurantes: {
@@ -3016,7 +2935,10 @@ export const dict: Record<Locale, Dict> = {
           colNew: "Reçue",
           colPrep: "En préparation (12 min)",
           ticket1Table: "Table 04 · BON-708",
-          ticket1Items: ["1x Pain artisanal & Olives marinées", "1x Morue au four avec croûte de maïs"],
+          ticket1Items: [
+            "1x Pain artisanal & Olives marinées",
+            "1x Morue au four avec croûte de maïs",
+          ],
           ticket1Obs: "Obs: «Sans oignons dans la morue»",
           ticket1Action: "Lancer préparation →",
           ticket2Table: "Table 07 · BON-102",
@@ -3053,23 +2975,19 @@ export const dict: Record<Locale, Dict> = {
       problemList: [
         {
           title: "Réservations dispersées",
-          text:
-            "Appels manqués, notes papier et messages éparpillés compliquent la gestion des tables.",
+          text: "Appels manqués, notes papier et messages éparpillés compliquent la gestion des tables.",
         },
         {
           title: "Menus dépassés",
-          text:
-            "Changements de prix ou plats épuisés sur cartes papier causent des pertes de temps.",
+          text: "Changements de prix ou plats épuisés sur cartes papier causent des pertes de temps.",
         },
         {
           title: "Commandes désorganisées",
-          text:
-            "Plusieurs tables commandant simultanément augmentent le risque d'erreur en cuisine.",
+          text: "Plusieurs tables commandant simultanément augmentent le risque d'erreur en cuisine.",
         },
         {
           title: "Équipe surchargée",
-          text:
-            "Clients en attente pour commander, appeler un serveur ou demander l'addition aux heures d'affluence.",
+          text: "Clients en attente pour commander, appeler un serveur ou demander l'addition aux heures d'affluence.",
         },
       ],
       problemNoTechTitle: "Sans complexité technique",
@@ -3083,43 +3001,35 @@ export const dict: Record<Locale, Dict> = {
       featureList: [
         {
           title: "Site internet personnalisé pour restaurant",
-          text:
-            "Une présence en ligne professionnelle avec identité visuelle, carte, photos, horaires et localisation.",
+          text: "Une présence en ligne professionnelle avec identité visuelle, carte, photos, horaires et localisation.",
         },
         {
           title: "Menu digital pour restaurant modifiable en direct",
-          text:
-            "Mettez à jour vos plats, tarifs et ruptures en temps réel sans réimprimer vos cartes papier.",
+          text: "Mettez à jour vos plats, tarifs et ruptures en temps réel sans réimprimer vos cartes papier.",
         },
         {
           title: "Commande par QR Code à table",
-          text:
-            "Chaque table dispose d'un QR code dédié. Les clients consultent le menu et commandent directement depuis leur smartphone.",
+          text: "Chaque table dispose d'un QR code dédié. Les clients consultent le menu et commandent directement depuis leur smartphone.",
         },
         {
           title: "Réservations en ligne restaurant et téléphone",
-          text:
-            "Recevez les réservations web et saisissez les demandes téléphoniques sur un calendrier unifié.",
+          text: "Recevez les réservations web et saisissez les demandes téléphoniques sur un calendrier unifié.",
         },
         {
           title: "Système de gestion restaurant & écran cuisine (KDS)",
-          text:
-            "Suivi visuel des bons de commande sous forme de tableau Kanban, de la préparation au service en salle.",
+          text: "Suivi visuel des bons de commande sous forme de tableau Kanban, de la préparation au service en salle.",
         },
         {
           title: "Gestion des tables et de la salle en direct",
-          text:
-            "Plan de salle interactif avec statuts colorés : tables libres, occupées, en attente ou demande d'addition.",
+          text: "Plan de salle interactif avec statuts colorés : tables libres, occupées, en attente ou demande d'addition.",
         },
         {
           title: "Appel serveur & demande d'addition sur smartphone",
-          text:
-            "Les clients peuvent solliciter un serveur ou demander l'addition directement via leur navigateur.",
+          text: "Les clients peuvent solliciter un serveur ou demander l'addition directement via leur navigateur.",
         },
         {
           title: "Rapports de service & suivi d'activité",
-          text:
-            "Consultez le chiffre d'affaires cumulé, le rythme du service et le taux d'occupation moyen des tables.",
+          text: "Consultez le chiffre d'affaires cumulé, le rythme du service et le taux d'occupation moyen des tables.",
         },
       ],
       processChip: "Processus",
@@ -3267,8 +3177,7 @@ export const dict: Record<Locale, Dict> = {
         total: "Total",
         sendOrder: "Envoyer la commande en cuisine",
         orderSentTitle: "Commande envoyée avec succès !",
-        orderSentSubtitle:
-          "Votre commande a été reçue en cuisine et est en cours de préparation.",
+        orderSentSubtitle: "Votre commande a été reçue en cuisine et est en cours de préparation.",
         callWaiter: "Appeler le serveur",
         callWaiterSuccess: "Serveur appelé à votre table. On arrive !",
         requestBill: "Demander l'addition",
@@ -3304,8 +3213,7 @@ export const dict: Record<Locale, Dict> = {
       },
       bookings: {
         title: "Planning des Réservations",
-        subtitle:
-          "Réservations en ligne et téléphoniques réunies dans un planning central.",
+        subtitle: "Réservations en ligne et téléphoniques réunies dans un planning central.",
         formTitle: "Réserver une Table",
         date: "Date",
         time: "Heure",
@@ -3357,12 +3265,7 @@ export const dict: Record<Locale, Dict> = {
         "Refonte d'un site existant",
         "Autre",
       ],
-      orcamentos: [
-        "Jusqu'à 150 €",
-        "150 € – 250 €",
-        "250 € – 400 €",
-        "Plus de 400 €",
-      ],
+      orcamentos: ["Jusqu'à 150 €", "150 € – 250 €", "250 € – 400 €", "Plus de 400 €"],
     },
   },
 
@@ -3460,15 +3363,15 @@ export const dict: Record<Locale, Dict> = {
         },
         {
           titulo: "Aplicaciones web a medida",
-          texto: "Desarrollo web a medida, áreas de clientes y herramientas digitales personalizadas.",
+          texto:
+            "Desarrollo web a medida, áreas de clientes y herramientas digitales personalizadas.",
         },
       ],
       processTitle: "Cómo trabajamos",
       process: [
         {
           titulo: "Hablamos sobre el negocio",
-          texto:
-            "Entendemos qué haces, qué necesitas y cuáles son los objetivos de la web.",
+          texto: "Entendemos qué haces, qué necesitas y cuáles son los objetivos de la web.",
         },
         {
           titulo: "Enviamos una propuesta",
@@ -3476,13 +3379,11 @@ export const dict: Record<Locale, Dict> = {
         },
         {
           titulo: "Creamos la web",
-          texto:
-            "Desarrollamos el proyecto y mostramos su evolución antes de publicarlo.",
+          texto: "Desarrollamos el proyecto y mostramos su evolución antes de publicarlo.",
         },
         {
           titulo: "Publicamos y acompañamos",
-          texto:
-            "Ponemos la web online y ayudamos con los últimos ajustes necesarios.",
+          texto: "Ponemos la web online y ayudamos con los últimos ajustes necesarios.",
         },
       ],
       ctaTitle: "¿Necesitas crear o modernizar la web de tu negocio?",
@@ -3490,8 +3391,7 @@ export const dict: Record<Locale, Dict> = {
         "Cuéntanos qué necesitas. Podemos analizar la web actual o preparar una solución desde cero adaptada a tu negocio.",
       ctaButton: "Pedir presupuesto",
       finalTitle: "Habla con Nova Web Studio",
-      finalText:
-        "Creamos webs para negocios en Cascais, Oeiras, Sintra y Lisboa.",
+      finalText: "Creamos webs para negocios en Cascais, Oeiras, Sintra y Lisboa.",
       finalButton: "Contactar",
     },
     portfolio: {
@@ -3506,8 +3406,7 @@ export const dict: Record<Locale, Dict> = {
         "Web institucional desarrollada para modernizar la presencia digital de la asociación y facilitar el acceso a sus actividades, novedades y contactos.",
       visit: "Visitar web",
       othersTitle: "Otros conceptos",
-      othersLead:
-        "Exploraciones visuales creadas para mostrar distintos enfoques y sectores.",
+      othersLead: "Exploraciones visuales creadas para mostrar distintos enfoques y sectores.",
       concepts: [
         {
           titulo: "Web para servicios de piscinas",
@@ -3746,23 +3645,19 @@ export const dict: Record<Locale, Dict> = {
       problemList: [
         {
           title: "Reservas dispersas",
-          text:
-            "Llamadas perdidas, notas en papel y mensajes por múltiples vías dificultan la gestión de las mesas.",
+          text: "Llamadas perdidas, notas en papel y mensajes por múltiples vías dificultan la gestión de las mesas.",
         },
         {
           title: "Menús desactualizados",
-          text:
-            "Cambios de precio o platos agotados en cartas impresas generan fricción con los comensales.",
+          text: "Cambios de precio o platos agotados en cartas impresas generan fricción con los comensales.",
         },
         {
           title: "Gestión de pedidos compleja",
-          text:
-            "Varias mesas pidiendo a la vez con notas a mano aumentan los errores en cocina.",
+          text: "Varias mesas pidiendo a la vez con notas a mano aumentan los errores en cocina.",
         },
         {
           title: "Servicio sobrecargado",
-          text:
-            "Clientes esperando para pedir, llamar al camarero o pedir la cuenta en momentos de alta afluencia.",
+          text: "Clientes esperando para pedir, llamar al camarero o pedir la cuenta en momentos de alta afluencia.",
         },
       ],
       problemNoTechTitle: "Sin complicaciones técnicas",
@@ -3776,43 +3671,35 @@ export const dict: Record<Locale, Dict> = {
       featureList: [
         {
           title: "Página web para restaurantes y presencia digital",
-          text:
-            "Una presencia web profesional con identidad, carta, fotografías, horarios y mapa de ubicación.",
+          text: "Una presencia web profesional con identidad, carta, fotografías, horarios y mapa de ubicación.",
         },
         {
           title: "Carta digital para restaurantes actualizable en directo",
-          text:
-            "Actualiza platos, precios y productos agotados en tiempo real sin reimprimir cartas de papel.",
+          text: "Actualiza platos, precios y productos agotados en tiempo real sin reimprimir cartas de papel.",
         },
         {
           title: "Pedidos por código QR en mesa",
-          text:
-            "Cada mesa cuenta con su código QR. Los comensales consultan la carta y piden directamente desde el móvil sin esperas.",
+          text: "Cada mesa cuenta con su código QR. Los comensales consultan la carta y piden directamente desde el móvil sin esperas.",
         },
         {
           title: "Reservas online para restaurantes y teléfono",
-          text:
-            "Recibe reservas desde la web y anota llamadas telefónicas en un único calendario centralizado.",
+          text: "Recibe reservas desde la web y anota llamadas telefónicas en un único calendario centralizado.",
         },
         {
           title: "Programa para restaurantes y pantalla de cocina (KDS)",
-          text:
-            "Gestión ágil de comandas con panel Kanban desde la preparación hasta el servicio en mesa.",
+          text: "Gestión ágil de comandas con panel Kanban desde la preparación hasta el servicio en mesa.",
         },
         {
           title: "Gestión de mesas y sala en tiempo real",
-          text:
-            "Plano interactivo con estados visuales por color: libres, ocupadas, con alerta o solicitando la cuenta.",
+          text: "Plano interactivo con estados visuales por color: libres, ocupadas, con alerta o solicitando la cuenta.",
         },
         {
           title: "Llamada a camarero y cuenta desde el móvil",
-          text:
-            "El cliente puede solicitar asistencia o pedir la factura cómodamente desde el navegador de su teléfono.",
+          text: "El cliente puede solicitar asistencia o pedir la factura cómodamente desde el navegador de su teléfono.",
         },
         {
           title: "Informes de servicio y control de turno",
-          text:
-            "Seguimiento de facturación de la sesión, ritmo del servicio y nivel medio de ocupación de sala.",
+          text: "Seguimiento de facturación de la sesión, ritmo del servicio y nivel medio de ocupación de sala.",
         },
       ],
       processChip: "Proceso",
@@ -3960,8 +3847,7 @@ export const dict: Record<Locale, Dict> = {
         total: "Total",
         sendOrder: "Enviar pedido a cocina",
         orderSentTitle: "¡Pedido enviado con éxito!",
-        orderSentSubtitle:
-          "Tu pedido ha sido recibido en cocina y se está preparando.",
+        orderSentSubtitle: "Tu pedido ha sido recibido en cocina y se está preparando.",
         callWaiter: "Llamar al camarero",
         callWaiterSuccess: "Camarero avisado. ¡Enseguida nos acercamos a la mesa!",
         requestBill: "Pedir la cuenta",
@@ -3997,8 +3883,7 @@ export const dict: Record<Locale, Dict> = {
       },
       bookings: {
         title: "Agenda de Reservas",
-        subtitle:
-          "Reservas recibidas por la web y anotadas por teléfono en un calendario central.",
+        subtitle: "Reservas recibidas por la web y anotadas por teléfono en un calendario central.",
         formTitle: "Registrar Reserva",
         date: "Fecha",
         time: "Hora",
@@ -4050,12 +3935,7 @@ export const dict: Record<Locale, Dict> = {
         "Rediseño de web existente",
         "Otro",
       ],
-      orcamentos: [
-        "Hasta 150 €",
-        "150 € – 250 €",
-        "250 € – 400 €",
-        "Más de 400 €",
-      ],
+      orcamentos: ["Hasta 150 €", "150 € – 250 €", "250 € – 400 €", "Más de 400 €"],
     },
   },
 };
@@ -4063,9 +3943,7 @@ export const dict: Record<Locale, Dict> = {
 export function detectBrowserLocale(): Locale {
   if (typeof navigator === "undefined") return "pt";
 
-  const langs = navigator.languages?.length
-    ? navigator.languages
-    : [navigator.language ?? "pt"];
+  const langs = navigator.languages?.length ? navigator.languages : [navigator.language ?? "pt"];
 
   for (const raw of langs) {
     const code = raw.slice(0, 2).toLowerCase();

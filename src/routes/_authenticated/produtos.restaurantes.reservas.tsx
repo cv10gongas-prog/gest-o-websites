@@ -14,12 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Field,
   PanelHeader,
@@ -34,11 +29,7 @@ import {
   type Reservation,
   type ReservationStatus,
 } from "@/lib/restaurant/demo-data";
-import {
-  adminActions,
-  reservationStatusLabel,
-  useAdmin,
-} from "@/lib/restaurant/store";
+import { adminActions, reservationStatusLabel, useAdmin } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/produtos/restaurantes/reservas")({
@@ -67,12 +58,16 @@ function RestaurantReservationsAdmin() {
     const payload = {
       name: String(f.get("name")).trim().slice(0, 100),
       phone: String(f.get("phone")).trim().slice(0, 30),
-      email: String(f.get("email") || "").trim().slice(0, 200),
+      email: String(f.get("email") || "")
+        .trim()
+        .slice(0, 200),
       date: String(f.get("date")),
       time: String(f.get("time")),
       guests: Number(f.get("guests")) || 2,
       tableNumber,
-      notes: String(f.get("notes") || "").trim().slice(0, 500),
+      notes: String(f.get("notes") || "")
+        .trim()
+        .slice(0, 500),
     };
 
     try {
@@ -139,9 +134,7 @@ function RestaurantReservationsAdmin() {
       {uniqueDates.length === 0 && (
         <RestaurantCard className="p-12 text-center text-muted-foreground">
           <CalendarDays className="size-10 mx-auto mb-2 opacity-40" />
-          <p className="text-sm font-semibold text-foreground">
-            Sem reservas agendadas.
-          </p>
+          <p className="text-sm font-semibold text-foreground">Sem reservas agendadas.</p>
           <p className="text-xs mt-1">
             As reservas online efetuadas no website e as reservas manuais surgirão aqui.
           </p>
@@ -176,9 +169,7 @@ function RestaurantReservationsAdmin() {
 
                     <div className="min-w-0 space-y-1">
                       <div className="flex items-center gap-2">
-                        <p className="font-bold text-sm text-foreground truncate">
-                          {r.name}
-                        </p>
+                        <p className="font-bold text-sm text-foreground truncate">{r.name}</p>
                         <ReservationBadge
                           status={r.status}
                           label={reservationStatusLabel[r.status]}
@@ -354,12 +345,7 @@ function RestaurantReservationsAdmin() {
                     defaultValue={editing.time ?? "20:00"}
                     className={fieldClass}
                   >
-                    {[
-                      ...new Set([
-                        ...reservationTimes,
-                        ...(editing.time ? [editing.time] : []),
-                      ]),
-                    ]
+                    {[...new Set([...reservationTimes, ...(editing.time ? [editing.time] : [])])]
                       .sort()
                       .map((t) => (
                         <option key={t} value={t} className="bg-surface">

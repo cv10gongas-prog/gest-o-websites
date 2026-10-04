@@ -39,12 +39,7 @@ import {
   selectClass,
 } from "@/components/crm/Modal";
 import { useUtilizador } from "@/hooks/useAuth";
-import {
-  formatarData,
-  formatarHora,
-  formatarMoeda,
-  type AppRole,
-} from "@/lib/crm";
+import { formatarData, formatarHora, formatarMoeda, type AppRole } from "@/lib/crm";
 import {
   useActivity,
   useAlterarFuncao,
@@ -74,12 +69,7 @@ export const Route = createFileRoute("/_authenticated/equipa")({
   component: Equipa,
 });
 
-type SeparadorEquipa =
-  | "membros"
-  | "perfil"
-  | "analytics"
-  | "permissoes"
-  | "seguranca";
+type SeparadorEquipa = "membros" | "perfil" | "analytics" | "permissoes" | "seguranca";
 
 const FUNCOES: { value: AppRole; label: string; descricao: string }[] = [
   {
@@ -166,10 +156,7 @@ function Equipa() {
     const taxaCumprimento =
       totalTarefas > 0 ? Math.round((totalConcluidas / totalTarefas) * 100) : 100;
 
-    const volumeTotal = negocios.reduce(
-      (tot, n) => tot + Number(n.valor_estimado ?? 0),
-      0,
-    );
+    const volumeTotal = negocios.reduce((tot, n) => tot + Number(n.valor_estimado ?? 0), 0);
 
     return {
       totalChamadas,
@@ -482,11 +469,7 @@ function Equipa() {
               {/* Header do Membro */}
               <div className="rounded-3xl border border-border/70 bg-surface/60 p-6 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <Avatar
-                    nome={membroAtivo.nome}
-                    url={membroAtivo.foto_url}
-                    size="size-16"
-                  />
+                  <Avatar nome={membroAtivo.nome} url={membroAtivo.foto_url} size="size-16" />
                   <div>
                     <h2 className="text-xl font-bold text-foreground">
                       {membroAtivo.nome ?? "Sem nome"}
@@ -494,11 +477,7 @@ function Equipa() {
                     <p className="text-xs text-muted-foreground">{membroAtivo.email}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <Chip
-                        tone={
-                          funcaoDe(membroAtivo.id) === "administrador"
-                            ? "primary"
-                            : "info"
-                        }
+                        tone={funcaoDe(membroAtivo.id) === "administrador" ? "primary" : "info"}
                       >
                         {funcaoDe(membroAtivo.id) === "administrador"
                           ? "Administrador"
@@ -591,9 +570,7 @@ function Equipa() {
       {tab === "analytics" && (
         <div className="space-y-6">
           <div className="rounded-3xl border border-border/70 bg-surface/50 p-6 backdrop-blur-md">
-            <h2 className="text-base font-bold text-foreground">
-              Métricas Operacionais da Equipa
-            </h2>
+            <h2 className="text-base font-bold text-foreground">Métricas Operacionais da Equipa</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
               Rendimento coletivo calculado exclusivamente a partir de dados reais do CRM.
             </p>
@@ -638,9 +615,7 @@ function Equipa() {
               <span className="text-[10px] uppercase font-bold text-info flex items-center gap-1.5">
                 <Users className="size-3.5" /> Membros em Operação
               </span>
-              <p className="text-3xl font-bold font-mono text-foreground mt-2">
-                {perfis.length}
-              </p>
+              <p className="text-3xl font-bold font-mono text-foreground mt-2">{perfis.length}</p>
               <p className="text-[10px] text-muted-foreground mt-1">Contas ativas</p>
             </div>
           </div>
@@ -655,7 +630,8 @@ function Equipa() {
               Matriz de Permissões (RBAC) & Segurança RLS
             </h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Todas as permissões são validadas a nível de base de dados (PostgreSQL RLS) e Server Functions.
+              Todas as permissões são validadas a nível de base de dados (PostgreSQL RLS) e Server
+              Functions.
             </p>
           </div>
 
@@ -784,11 +760,7 @@ function Equipa() {
             <button className={btnSecundario} onClick={() => setAberto(false)}>
               Cancelar
             </button>
-            <button
-              className={btnPrimario}
-              onClick={submeterConvite}
-              disabled={convidar.isPending}
-            >
+            <button className={btnPrimario} onClick={submeterConvite} disabled={convidar.isPending}>
               Enviar Convite
             </button>
           </>
@@ -846,8 +818,8 @@ function Equipa() {
         }
       >
         <p className="text-xs text-muted-foreground">
-          Confirmas a remoção de {alvo?.nome ?? alvo?.email ?? "este colaborador"}? Todos os
-          acessos serão revogados imediatamente.
+          Confirmas a remoção de {alvo?.nome ?? alvo?.email ?? "este colaborador"}? Todos os acessos
+          serão revogados imediatamente.
         </p>
       </Modal>
     </div>

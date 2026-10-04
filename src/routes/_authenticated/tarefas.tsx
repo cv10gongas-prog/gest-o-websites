@@ -83,8 +83,7 @@ function Tarefas() {
 
   const hojeIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
-  const negocioNome = (id: string | null) =>
-    negocios.find((n) => n.id === id)?.nome;
+  const negocioNome = (id: string | null) => negocios.find((n) => n.id === id)?.nome;
 
   const nomePor = (id: string | null) =>
     perfis.find((p) => p.id === id)?.nome ?? (id ? "Equipa" : "—");
@@ -93,9 +92,7 @@ function Tarefas() {
   const metricas = useMemo(() => {
     const pendentes = tarefas.filter((t) => t.estado === "pendente");
     const concluidas = tarefas.filter((t) => t.estado === "concluida");
-    const hoje = pendentes.filter(
-      (t) => t.data_hora && t.data_hora.slice(0, 10) === hojeIso,
-    );
+    const hoje = pendentes.filter((t) => t.data_hora && t.data_hora.slice(0, 10) === hojeIso);
     const atrasadas = pendentes.filter((t) => {
       if (t.data_hora && t.data_hora.slice(0, 10) < hojeIso) return true;
       return false;
@@ -171,8 +168,8 @@ function Tarefas() {
             Tarefas & Agenda
           </h1>
           <p className="mt-1 text-xs text-muted-foreground">
-            {metricas.pendentes} pendente(s) • {metricas.hoje} para hoje •{" "}
-            {metricas.atrasadas} em atraso
+            {metricas.pendentes} pendente(s) • {metricas.hoje} para hoje • {metricas.atrasadas} em
+            atraso
           </p>
         </div>
 
@@ -420,9 +417,7 @@ function Tarefas() {
                 <h3 className="font-bold text-foreground truncate">{t.titulo}</h3>
 
                 {t.business_id && negocioNome(t.business_id) && (
-                  <p className="text-[11px] text-primary truncate">
-                    {negocioNome(t.business_id)}
-                  </p>
+                  <p className="text-[11px] text-primary truncate">{negocioNome(t.business_id)}</p>
                 )}
 
                 <div className="pt-2 border-t border-border/30 flex justify-between items-center text-[10px] text-muted-foreground">

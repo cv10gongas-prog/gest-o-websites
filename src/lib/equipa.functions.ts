@@ -3,17 +3,24 @@ import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function garantirAdministrador(supabase: {
-  from: (t: string) => {
-    select: (c: string) => {
-      eq: (
-        c: string,
-        v: string,
-      ) => { maybeSingle: () => Promise<{ data: { role?: string } | null }> };
+async function garantirAdministrador(
+  supabase: {
+    from: (t: string) => {
+      select: (c: string) => {
+        eq: (
+          c: string,
+          v: string,
+        ) => { maybeSingle: () => Promise<{ data: { role?: string } | null }> };
+      };
     };
-  };
-}, userId: string) {
-  const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+  },
+  userId: string,
+) {
+  const { data } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .maybeSingle();
   if (data?.role !== "administrador") {
     throw new Error("Apenas administradores podem gerir a equipa.");
   }
@@ -21,7 +28,7 @@ async function garantirAdministrador(supabase: {
 
 export const removerMembro = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => z.object({ userId: z.string().uuid() }).parse(data))
+  .validator((data: unknown) => z.object({ userId: z.string().uuid() }).parse(data))
   .handler(async ({ data, context }) => {
     await garantirAdministrador(context.supabase as never, context.userId);
     if (data.userId === context.userId) {
@@ -49,7 +56,7 @@ export const removerMembro = createServerFn({ method: "POST" })
 
 export const alterarFuncao = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) =>
+  .validator((data: unknown) =>
     z
       .object({
         userId: z.string().uuid(),

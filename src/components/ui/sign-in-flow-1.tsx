@@ -1,35 +1,12 @@
-import {
-  Canvas,
-  useFrame,
-  useThree,
-} from "@react-three/fiber";
-import {
-  AnimatePresence,
-  motion,
-} from "framer-motion";
-import {
-  Eye,
-  EyeOff,
-  LockKeyhole,
-  LogIn,
-  Mail,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
-import {
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-} from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { AnimatePresence, motion } from "framer-motion";
+import { Eye, EyeOff, LockKeyhole, LogIn, Mail, ShieldCheck, Sparkles } from "lucide-react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import * as THREE from "three";
 
 type Uniforms = {
   [key: string]: {
-    value:
-      | number
-      | number[]
-      | number[][];
+    value: number | number[] | number[][];
     type: string;
   };
 };
@@ -39,10 +16,7 @@ type ShaderProps = {
 
   uniforms: {
     [key: string]: {
-      value:
-        | number
-        | number[]
-        | number[][];
+      value: number | number[] | number[][];
       type: string;
     };
   };
@@ -55,27 +29,15 @@ type SignInFlowProps = {
   password: string;
   loading?: boolean;
 
-  onEmailChange: (
-    value: string,
-  ) => void;
+  onEmailChange: (value: string) => void;
 
-  onPasswordChange: (
-    value: string,
-  ) => void;
+  onPasswordChange: (value: string) => void;
 
-  onSubmit: (
-    event: FormEvent<HTMLFormElement>,
-  ) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
-function cn(
-  ...classes: Array<
-    string | false | null | undefined
-  >
-) {
-  return classes
-    .filter(Boolean)
-    .join(" ");
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }
 
 function ShaderMaterial({
@@ -89,95 +51,65 @@ function ShaderMaterial({
 }) {
   const { size } = useThree();
 
-  const meshRef =
-    useRef<THREE.Mesh>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
 
-  const lastFrameRef =
-    useRef(0);
+  const lastFrameRef = useRef(0);
 
-  const preparedUniforms =
-    useMemo(() => {
-      const output: Record<
-        string,
-        {
-          value:
-            | number
-            | THREE.Vector2
-            | THREE.Vector3
-            | THREE.Vector3[]
-            | number[];
-        }
-      > = {};
-
-      for (const uniformName in uniforms) {
-        const uniform =
-          uniforms[uniformName];
-
-        switch (uniform.type) {
-          case "uniform1f":
-          case "uniform1i":
-          case "uniform1fv":
-            output[uniformName] = {
-              value:
-                uniform.value as
-                  | number
-                  | number[],
-            };
-            break;
-
-          case "uniform3fv":
-            output[uniformName] = {
-              value: (
-                uniform.value as number[][]
-              ).map(
-                (value) =>
-                  new THREE.Vector3().fromArray(
-                    value,
-                  ),
-              ),
-            };
-            break;
-
-          case "uniform2f":
-            output[uniformName] = {
-              value:
-                new THREE.Vector2().fromArray(
-                  uniform.value as number[],
-                ),
-            };
-            break;
-
-          case "uniform3f":
-            output[uniformName] = {
-              value:
-                new THREE.Vector3().fromArray(
-                  uniform.value as number[],
-                ),
-            };
-            break;
-
-          default:
-            break;
-        }
+  const preparedUniforms = useMemo(() => {
+    const output: Record<
+      string,
+      {
+        value: number | THREE.Vector2 | THREE.Vector3 | THREE.Vector3[] | number[];
       }
+    > = {};
 
-      output.u_time = {
-        value: 0,
-      };
+    for (const uniformName in uniforms) {
+      const uniform = uniforms[uniformName];
 
-      output.u_resolution = {
-        value: new THREE.Vector2(
-          size.width * 2,
-          size.height * 2,
-        ),
-      };
+      switch (uniform.type) {
+        case "uniform1f":
+        case "uniform1i":
+        case "uniform1fv":
+          output[uniformName] = {
+            value: uniform.value as number | number[],
+          };
+          break;
 
-      return output;
-    }, [
-      uniforms,
-      size.width,
-      size.height,
-    ]);
+        case "uniform3fv":
+          output[uniformName] = {
+            value: (uniform.value as number[][]).map((value) =>
+              new THREE.Vector3().fromArray(value),
+            ),
+          };
+          break;
+
+        case "uniform2f":
+          output[uniformName] = {
+            value: new THREE.Vector2().fromArray(uniform.value as number[]),
+          };
+          break;
+
+        case "uniform3f":
+          output[uniformName] = {
+            value: new THREE.Vector3().fromArray(uniform.value as number[]),
+          };
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    output.u_time = {
+      value: 0,
+    };
+
+    output.u_resolution = {
+      value: new THREE.Vector2(size.width * 2, size.height * 2),
+    };
+
+    return output;
+  }, [uniforms, size.width, size.height]);
 
   const material = useMemo(
     () =>
@@ -212,47 +144,32 @@ function ShaderMaterial({
 
         fragmentShader: source,
 
-        uniforms:
-          preparedUniforms as THREE.ShaderMaterialParameters["uniforms"],
+        uniforms: preparedUniforms as THREE.ShaderMaterialParameters["uniforms"],
 
-        glslVersion:
-          THREE.GLSL3,
+        glslVersion: THREE.GLSL3,
 
         transparent: true,
 
-        blending:
-          THREE.AdditiveBlending,
+        blending: THREE.AdditiveBlending,
 
         depthWrite: false,
       }),
-    [
-      preparedUniforms,
-      source,
-    ],
+    [preparedUniforms, source],
   );
 
   useFrame(({ clock }) => {
-    const now =
-      clock.getElapsedTime();
+    const now = clock.getElapsedTime();
 
-    const minFrameTime =
-      1 / maxFps;
+    const minFrameTime = 1 / maxFps;
 
-    if (
-      now -
-        lastFrameRef.current <
-      minFrameTime
-    ) {
+    if (now - lastFrameRef.current < minFrameTime) {
       return;
     }
 
     lastFrameRef.current = now;
 
-    if (
-      material.uniforms.u_time
-    ) {
-      material.uniforms.u_time.value =
-        now;
+    if (material.uniforms.u_time) {
+      material.uniforms.u_time.value = now;
     }
   });
 
@@ -260,19 +177,12 @@ function ShaderMaterial({
     <mesh ref={meshRef}>
       <planeGeometry args={[2, 2]} />
 
-      <primitive
-        object={material}
-        attach="material"
-      />
+      <primitive object={material} attach="material" />
     </mesh>
   );
 }
 
-function Shader({
-  source,
-  uniforms,
-  maxFps = 45,
-}: ShaderProps) {
+function Shader({ source, uniforms, maxFps = 45 }: ShaderProps) {
   return (
     <Canvas
       className="absolute inset-0 h-full w-full"
@@ -280,15 +190,10 @@ function Shader({
       gl={{
         alpha: true,
         antialias: false,
-        powerPreference:
-          "high-performance",
+        powerPreference: "high-performance",
       }}
     >
-      <ShaderMaterial
-        source={source}
-        uniforms={uniforms}
-        maxFps={maxFps}
-      />
+      <ShaderMaterial source={source} uniforms={uniforms} maxFps={maxFps} />
     </Canvas>
   );
 }
@@ -300,18 +205,7 @@ function DotMatrix({
     [75, 150, 255],
   ],
 
-  opacities = [
-    0.15,
-    0.2,
-    0.25,
-    0.3,
-    0.35,
-    0.4,
-    0.55,
-    0.65,
-    0.75,
-    0.9,
-  ],
+  opacities = [0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.55, 0.65, 0.75, 0.9],
 
   totalSize = 24,
   dotSize = 3,
@@ -321,80 +215,39 @@ function DotMatrix({
   totalSize?: number;
   dotSize?: number;
 }) {
-  const uniforms =
-    useMemo(() => {
-      let colorsArray = [
-        colors[0],
-        colors[0],
-        colors[0],
-        colors[0],
-        colors[0],
-        colors[0],
-      ];
+  const uniforms = useMemo(() => {
+    let colorsArray = [colors[0], colors[0], colors[0], colors[0], colors[0], colors[0]];
 
-      if (
-        colors.length === 2
-      ) {
-        colorsArray = [
-          colors[0],
-          colors[0],
-          colors[0],
-          colors[1],
-          colors[1],
-          colors[1],
-        ];
-      }
+    if (colors.length === 2) {
+      colorsArray = [colors[0], colors[0], colors[0], colors[1], colors[1], colors[1]];
+    }
 
-      if (
-        colors.length >= 3
-      ) {
-        colorsArray = [
-          colors[0],
-          colors[0],
-          colors[1],
-          colors[1],
-          colors[2],
-          colors[2],
-        ];
-      }
+    if (colors.length >= 3) {
+      colorsArray = [colors[0], colors[0], colors[1], colors[1], colors[2], colors[2]];
+    }
 
-      return {
-        u_colors: {
-          value:
-            colorsArray.map(
-              (color) => [
-                color[0] /
-                  255,
-                color[1] /
-                  255,
-                color[2] /
-                  255,
-              ],
-            ),
-          type: "uniform3fv",
-        },
+    return {
+      u_colors: {
+        value: colorsArray.map((color) => [color[0] / 255, color[1] / 255, color[2] / 255]),
+        type: "uniform3fv",
+      },
 
-        u_opacities: {
-          value: opacities,
-          type: "uniform1fv",
-        },
+      u_opacities: {
+        value: opacities,
+        type: "uniform1fv",
+      },
 
-        u_total_size: {
-          value: totalSize,
-          type: "uniform1f",
-        },
+      u_total_size: {
+        value: totalSize,
+        type: "uniform1f",
+      },
 
-        u_dot_size: {
-          value: dotSize,
-          type: "uniform1f",
-        },
-      };
-    }, [
-      colors,
-      opacities,
-      totalSize,
-      dotSize,
-    ]);
+      u_dot_size: {
+        value: dotSize,
+        type: "uniform1f",
+      },
+    };
+  }, [colors, opacities, totalSize, dotSize]);
 
   return (
     <Shader
@@ -622,10 +475,7 @@ export function SignInFlow({
   onPasswordChange,
   onSubmit,
 }: SignInFlowProps) {
-  const [
-    showPassword,
-    setShowPassword,
-  ] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#03080d] text-white">
@@ -637,8 +487,7 @@ export function SignInFlow({
           backgroundImage:
             "linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px)",
 
-          backgroundSize:
-            "52px 52px",
+          backgroundSize: "52px 52px",
         }}
       />
 
@@ -688,7 +537,6 @@ export function SignInFlow({
 
               <div className="mt-5 flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[.24em] text-cyan-300/80">
                 <Sparkles className="size-3.5" />
-
                 Área reservada
               </div>
 
@@ -714,9 +562,7 @@ export function SignInFlow({
                   </span>
 
                   <div>
-                    <p className="text-sm font-medium">
-                      Entrar no painel
-                    </p>
+                    <p className="text-sm font-medium">Entrar no painel</p>
 
                     <p className="mt-0.5 text-[11px] text-white/35">
                       Utilize as credenciais da sua conta.
@@ -724,27 +570,18 @@ export function SignInFlow({
                   </div>
                 </div>
 
-                <form
-                  onSubmit={onSubmit}
-                  className="mt-7 space-y-4"
-                >
+                <form onSubmit={onSubmit} className="mt-7 space-y-4">
                   {/* EMAIL */}
                   <div>
                     <label className="mb-2 flex items-center gap-2 text-[11px] font-medium text-white/45">
                       <Mail className="size-3.5 text-cyan-300/80" />
-
                       Email
                     </label>
 
                     <input
                       type="email"
                       value={email}
-                      onChange={(event) =>
-                        onEmailChange(
-                          event.target
-                            .value,
-                        )
-                      }
+                      onChange={(event) => onEmailChange(event.target.value)}
                       autoComplete="email"
                       required
                       placeholder="email@novawebstudio.pt"
@@ -756,27 +593,14 @@ export function SignInFlow({
                   <div>
                     <label className="mb-2 flex items-center gap-2 text-[11px] font-medium text-white/45">
                       <LockKeyhole className="size-3.5 text-cyan-300/80" />
-
                       Palavra-passe
                     </label>
 
                     <div className="relative">
                       <input
-                        type={
-                          showPassword
-                            ? "text"
-                            : "password"
-                        }
+                        type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={(
-                          event,
-                        ) =>
-                          onPasswordChange(
-                            event
-                              .target
-                              .value,
-                          )
-                        }
+                        onChange={(event) => onPasswordChange(event.target.value)}
                         autoComplete="current-password"
                         minLength={6}
                         required
@@ -785,24 +609,13 @@ export function SignInFlow({
 
                       <button
                         type="button"
-                        onClick={() =>
-                          setShowPassword(
-                            (current) =>
-                              !current,
-                          )
-                        }
+                        onClick={() => setShowPassword((current) => !current)}
                         aria-label={
-                          showPassword
-                            ? "Ocultar palavra-passe"
-                            : "Mostrar palavra-passe"
+                          showPassword ? "Ocultar palavra-passe" : "Mostrar palavra-passe"
                         }
                         className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-white/35 transition hover:bg-white/[0.05] hover:text-white/70"
                       >
-                        {showPassword ? (
-                          <EyeOff className="size-4" />
-                        ) : (
-                          <Eye className="size-4" />
-                        )}
+                        {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                       </button>
                     </div>
                   </div>
@@ -818,8 +631,7 @@ export function SignInFlow({
 
                       "shadow-lg shadow-cyan-300/10 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-300/20",
 
-                      loading &&
-                        "pointer-events-none opacity-60",
+                      loading && "pointer-events-none opacity-60",
                     )}
                   >
                     <span className="absolute inset-0 translate-x-[-120%] bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-[120%]" />
@@ -828,17 +640,13 @@ export function SignInFlow({
                       <>
                         <span className="relative size-4 animate-spin rounded-full border-2 border-[#031015]/25 border-t-[#031015]" />
 
-                        <span className="relative">
-                          A entrar…
-                        </span>
+                        <span className="relative">A entrar…</span>
                       </>
                     ) : (
                       <>
                         <LogIn className="relative size-4" />
 
-                        <span className="relative">
-                          Entrar no painel
-                        </span>
+                        <span className="relative">Entrar no painel</span>
 
                         <span className="relative transition-transform duration-300 group-hover:translate-x-1">
                           →
@@ -850,7 +658,6 @@ export function SignInFlow({
 
                 <div className="mt-6 flex items-center justify-center gap-2 text-[10px] text-white/25">
                   <ShieldCheck className="size-3.5" />
-
                   Acesso protegido
                 </div>
               </div>

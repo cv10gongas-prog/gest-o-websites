@@ -43,12 +43,7 @@ import {
   saudacao,
   type Business,
 } from "@/lib/crm";
-import {
-  CARTOES_PAINEL,
-  formatarValor,
-  rotuloFase,
-  usePreferencias,
-} from "@/lib/preferencias";
+import { CARTOES_PAINEL, formatarValor, rotuloFase, usePreferencias } from "@/lib/preferencias";
 import {
   useActivity,
   useBusinesses,
@@ -103,8 +98,7 @@ function PainelCRM() {
   const nomePor = (id: string | null) =>
     perfis.find((p) => p.id === id)?.nome ?? (id ? "Equipa" : "Sistema");
 
-  const nomeNegocio = (id: string | null) =>
-    negocios.find((n) => n.id === id)?.nome ?? null;
+  const nomeNegocio = (id: string | null) => negocios.find((n) => n.id === id)?.nome ?? null;
 
   // Métricas agregadas do CRM
   const metricas = useMemo(() => {
@@ -114,9 +108,7 @@ function PainelCRM() {
 
     const interessados = negocios.filter((n) => n.estado === "interessado").length;
 
-    const emailsPorEnviar = negocios.filter(
-      (n) => n.estado === "email_por_enviar",
-    ).length;
+    const emailsPorEnviar = negocios.filter((n) => n.estado === "email_por_enviar").length;
 
     const pedidosPendentes = pedidos.filter((p) => !p.tratado).length;
 
@@ -141,15 +133,11 @@ function PainelCRM() {
   // Ações Urgentes / Atenção Imediata
   const atencaoImediata = useMemo(() => {
     const tarefasVencidas = tarefas.filter(
-      (t) =>
-        t.estado === "pendente" &&
-        t.data_hora &&
-        t.data_hora.slice(0, 10) <= hojeIso,
+      (t) => t.estado === "pendente" && t.data_hora && t.data_hora.slice(0, 10) <= hojeIso,
     );
 
     const leadsParadas = negocios.filter((n) => {
-      if (["concluido", "arquivado", "nao_interessado"].includes(n.estado))
-        return false;
+      if (["concluido", "arquivado", "nao_interessado"].includes(n.estado)) return false;
       return n.estado === "seguimento" || n.estado === "email_por_enviar";
     });
 
@@ -159,10 +147,7 @@ function PainelCRM() {
       tarefasVencidas,
       leadsParadas,
       pedidosNovos,
-      total:
-        tarefasVencidas.length +
-        leadsParadas.length +
-        pedidosNovos.length,
+      total: tarefasVencidas.length + leadsParadas.length + pedidosNovos.length,
     };
   }, [tarefas, negocios, pedidos, hojeIso]);
 
@@ -177,9 +162,7 @@ function PainelCRM() {
     (a, b) => (b.probabilidade ?? 0) - (a.probabilidade ?? 0),
   )[0];
 
-  const negocioOportunidade = negocios.find(
-    (n) => n.id === melhorOportunidade?.business_id,
-  );
+  const negocioOportunidade = negocios.find((n) => n.id === melhorOportunidade?.business_id);
 
   const nomePrimeiro = perfil?.nome?.split(" ")[0] ?? "Utilizador";
 
@@ -278,9 +261,7 @@ function PainelCRM() {
             <span
               className={cn(
                 "rounded-full px-1.5 py-0.2 text-[9px] font-bold tabular-nums",
-                tab === "operacoes"
-                  ? "bg-black/30 text-white"
-                  : "bg-warning/20 text-warning",
+                tab === "operacoes" ? "bg-black/30 text-white" : "bg-warning/20 text-warning",
               )}
             >
               {atencaoImediata.total}
@@ -435,10 +416,7 @@ function PainelCRM() {
                         const prioridade = prioridadeInfo(n.prioridade);
 
                         return (
-                          <tr
-                            key={n.id}
-                            className="group transition hover:bg-surface-strong/60"
-                          >
+                          <tr key={n.id} className="group transition hover:bg-surface-strong/60">
                             <td className="px-6 py-3.5">
                               <Link
                                 to="/negocios/$id"
@@ -454,9 +432,7 @@ function PainelCRM() {
                             </td>
 
                             <td className="px-3 py-3.5">
-                              <Chip tone={estado.tone}>
-                                {rotuloFase(prefs, n.estado)}
-                              </Chip>
+                              <Chip tone={estado.tone}>{rotuloFase(prefs, n.estado)}</Chip>
                             </td>
 
                             <td className="px-3 py-3.5">
@@ -501,12 +477,8 @@ function PainelCRM() {
                 {pendentesTarefas.length === 0 ? (
                   <div className="p-6 text-center text-muted-foreground">
                     <CalendarCheck2 className="size-7 mx-auto mb-2 text-success/60" />
-                    <p className="text-xs font-medium text-foreground">
-                      Tudo tratado!
-                    </p>
-                    <p className="text-[10px] mt-0.5">
-                      Sem tarefas pendentes de momento.
-                    </p>
+                    <p className="text-xs font-medium text-foreground">Tudo tratado!</p>
+                    <p className="text-[10px] mt-0.5">Sem tarefas pendentes de momento.</p>
                   </div>
                 ) : (
                   <div className="p-3 space-y-2">
@@ -516,9 +488,7 @@ function PainelCRM() {
                         to="/tarefas"
                         className="block rounded-xl border border-border/40 bg-surface/60 p-2.5 text-xs transition hover:border-primary/40 hover:bg-surface-strong"
                       >
-                        <div className="font-semibold text-foreground truncate">
-                          {t.titulo}
-                        </div>
+                        <div className="font-semibold text-foreground truncate">{t.titulo}</div>
                         <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-1">
                           <span>{formatarData(t.data_hora, true)}</span>
                           <span className="capitalize">{t.tipo}</span>
@@ -697,12 +667,7 @@ function PainelCRM() {
       )}
 
       {/* Modal de Criação de Negócio */}
-      {novoNegocio && (
-        <DialogNegocio
-          aberto={novoNegocio}
-          onFechar={() => setNovoNegocio(false)}
-        />
-      )}
+      {novoNegocio && <DialogNegocio aberto={novoNegocio} onFechar={() => setNovoNegocio(false)} />}
     </div>
   );
 }

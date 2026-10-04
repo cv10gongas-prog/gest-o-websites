@@ -6,6 +6,7 @@ import { z } from "zod";
 import { SignInFlow } from "@/components/ui/sign-in-flow-1";
 import { supabase } from "@/integrations/supabase/client";
 import { obterContextoSeguranca } from "@/lib/security.functions";
+import { isDemoMode } from "@/lib/demo-mode";
 
 /** Lista de prefixos internos autorizados para redirecionamento pós-login */
 const ALLOWED_REDIRECT_PREFIXES = [
@@ -103,6 +104,14 @@ function AuthPage() {
   useEffect(() => {
     let active = true;
 
+    if (isDemoMode()) {
+      navigate({
+        to: safeRedirect as "/hub",
+        replace: true,
+      });
+      return;
+    }
+
     supabase.auth
       .getSession()
       .then(({ data }: { data: { session: import("@supabase/supabase-js").Session | null } }) => {
@@ -192,6 +201,17 @@ function AuthPage() {
 
   async function submeter(e: React.FormEvent) {
     e.preventDefault();
+
+    if (isDemoMode()) {
+      setACarregar(true);
+      toast.success("Sessão iniciada em modo de demonstração.");
+      navigate({
+        to: safeRedirect as "/hub",
+        replace: true,
+      });
+      setACarregar(false);
+      return;
+    }
 
     if (!email || !password) {
       toast.error("Preencha o email e a palavra-passe.");

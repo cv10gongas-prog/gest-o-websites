@@ -3,6 +3,7 @@ import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { supabase } from "./client";
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
@@ -31,15 +32,30 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
-export const requireSupabaseAuth = createMiddleware({ type: "function" }).server(
-  async ({ next }) => {
+export const requireSupabaseAuth = createMiddleware({ type: "function" })
+  .client(async ({ next }) => {
+    let token: string | undefined;
+    if (typeof window !== "undefined") {
+      try {
+        const { data } = await supabase.auth.getSession();
+        token = data.session?.access_token;
+      } catch {
+        token = undefined;
+      }
+    }
+    return next({
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+  })
+  .server(async ({ next }) => {
     // A Preview visual never accepts direct requests to protected Server Functions.
     if (process.env["DEMO_MODE"] === "true" || process.env["VITE_DEMO_MODE"] === "true") {
       throw new Error("Forbidden: Server Functions are disabled in the isolated demo.");
     }
 
-    const SUPABASE_URL = process.env["SUPABASE_URL"];
-    const SUPABASE_PUBLISHABLE_KEY = process.env["SUPABASE_PUBLISHABLE_KEY"];
+    const SUPABASE_URL = process.env["SUPABASE_URL"] || process.env["VITE_SUPABASE_URL"];
+    const SUPABASE_PUBLISHABLE_KEY =
+      process.env["SUPABASE_PUBLISHABLE_KEY"] || process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
 
     if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
       const missing = [
@@ -76,9 +92,9 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       throw new Error("Unauthorized: Invalid token");
     }
 
-    const supabase = createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+    const supabaseClient = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
       global: {
-        fetch: createSupabaseFetch(SUPABASE_PUBLISHABLE_KEY!),
+        fetch: createSupabaseFetch(SUPABASE_PUBLISHABLE_KEY),
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -90,7 +106,7 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       },
     });
 
-    const { data, error } = await supabase.auth.getClaims(token);
+    const { data, error } = await supabaseClient.auth.getClaims(token);
     if (error || !data?.claims) {
       throw new Error("Unauthorized: Invalid token");
     }
@@ -101,10 +117,9 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
 
     return next({
       context: {
-        supabase,
+        supabase: supabaseClient,
         userId: data.claims.sub,
         claims: data.claims,
       },
     });
-  },
-);
+  });

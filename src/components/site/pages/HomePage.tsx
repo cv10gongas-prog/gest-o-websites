@@ -24,20 +24,11 @@ import {
   WandSparkles,
   Zap,
 } from "lucide-react";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { Chip } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
-import {
-  dict,
-  PATHS,
-  type Locale,
-} from "@/lib/i18n";
+import { dict, PATHS, type Locale } from "@/lib/i18n";
 
 const SERVICE_ICONS = [LayoutTemplate, Gauge, LineChart];
 const TYPE_ICONS = [Sparkles, ShoppingBag, Smartphone, Rocket];
@@ -82,9 +73,7 @@ function Reveal({
     <div
       ref={ref}
       className={`transition-all duration-700 ease-out ${
-        visible
-          ? "translate-y-0 opacity-100"
-          : "translate-y-6 opacity-0"
+        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       } ${className}`}
       style={{
         transitionDelay: `${delay}ms`,
@@ -172,31 +161,26 @@ const EXTRA: Record<
     heroProofSmall: "Design, desenvolvimento e presença digital",
 
     problemBadge: "O problema",
-    problemTitle:
-      "O seu website pode estar a afastar clientes sem perceber",
+    problemTitle: "O seu website pode estar a afastar clientes sem perceber",
     problemLead:
       "Um site lento, confuso ou desatualizado transmite uma imagem pior do que o próprio negócio merece.",
 
     problems: [
       {
         title: "Visual desatualizado",
-        text:
-          "Um design antigo pode fazer um negócio parecer menos profissional ou menos credível.",
+        text: "Um design antigo pode fazer um negócio parecer menos profissional ou menos credível.",
       },
       {
         title: "Experiência fraca no telemóvel",
-        text:
-          "Se navegar for difícil num smartphone, muitos visitantes simplesmente desistem.",
+        text: "Se navegar for difícil num smartphone, muitos visitantes simplesmente desistem.",
       },
       {
         title: "Pouca clareza",
-        text:
-          "Quando serviços, informação ou contactos estão escondidos, o utilizador não sabe o que fazer.",
+        text: "Quando serviços, informação ou contactos estão escondidos, o utilizador não sabe o que fazer.",
       },
       {
         title: "Poucos pedidos",
-        text:
-          "Um website sem chamadas à ação claras pode receber visitas sem gerar contactos.",
+        text: "Um website sem chamadas à ação claras pode receber visitas sem gerar contactos.",
       },
     ],
 
@@ -252,32 +236,26 @@ const EXTRA: Record<
     whyItems: [
       {
         title: "Contacto direto",
-        text:
-          "Fala diretamente connosco durante o projeto, desde a primeira conversa até à publicação.",
+        text: "Fala diretamente connosco durante o projeto, desde a primeira conversa até à publicação.",
       },
       {
         title: "Pensado para o seu negócio",
-        text:
-          "A estrutura e o design são definidos de acordo com o objetivo real do website.",
+        text: "A estrutura e o design são definidos de acordo com o objetivo real do website.",
       },
       {
         title: "Rápido e responsivo",
-        text:
-          "Cada projeto é preparado para funcionar bem em telemóvel, tablet e computador.",
+        text: "Cada projeto é preparado para funcionar bem em telemóvel, tablet e computador.",
       },
       {
         title: "Preparado para crescer",
-        text:
-          "Criamos uma base sólida para futuras páginas, conteúdos, SEO e novas funcionalidades.",
+        text: "Criamos uma base sólida para futuras páginas, conteúdos, SEO e novas funcionalidades.",
       },
     ],
 
-    processLead:
-      "Da primeira conversa à publicação, cada etapa é simples e transparente.",
+    processLead: "Da primeira conversa à publicação, cada etapa é simples e transparente.",
 
     finalBadge: "O próximo website pode ser o seu",
-    finalSmall:
-      "Sem compromisso. Conte-nos o que pretende e analisamos consigo.",
+    finalSmall: "Sem compromisso. Conte-nos o que pretende e analisamos consigo.",
   },
 
   en: {
@@ -286,31 +264,26 @@ const EXTRA: Record<
     heroProofSmall: "Design, development and digital presence",
 
     problemBadge: "The problem",
-    problemTitle:
-      "Your website may be pushing clients away without you noticing",
+    problemTitle: "Your website may be pushing clients away without you noticing",
     problemLead:
       "A slow, confusing or outdated website can make a business look less professional than it really is.",
 
     problems: [
       {
         title: "Outdated design",
-        text:
-          "An old-fashioned website can make a business feel less credible or professional.",
+        text: "An old-fashioned website can make a business feel less credible or professional.",
       },
       {
         title: "Poor mobile experience",
-        text:
-          "If a website is hard to use on a phone, many visitors simply leave.",
+        text: "If a website is hard to use on a phone, many visitors simply leave.",
       },
       {
         title: "Lack of clarity",
-        text:
-          "When services, information or contact details are hard to find, users do not know what to do next.",
+        text: "When services, information or contact details are hard to find, users do not know what to do next.",
       },
       {
         title: "Too few enquiries",
-        text:
-          "A website without clear calls to action can get traffic without generating leads.",
+        text: "A website without clear calls to action can get traffic without generating leads.",
       },
     ],
 
@@ -360,72 +333,59 @@ const EXTRA: Record<
 
     whyBadge: "Why Nova Web Studio",
     whyTitle: "A closer, simpler and more professional process",
-    whyLead:
-      "No unnecessary complexity, no generic solutions and no disappearing after launch.",
+    whyLead: "No unnecessary complexity, no generic solutions and no disappearing after launch.",
 
     whyItems: [
       {
         title: "Direct communication",
-        text:
-          "You speak directly with us throughout the whole project.",
+        text: "You speak directly with us throughout the whole project.",
       },
       {
         title: "Built around your business",
-        text:
-          "Structure and design are shaped around the real purpose of the website.",
+        text: "Structure and design are shaped around the real purpose of the website.",
       },
       {
         title: "Fast and responsive",
-        text:
-          "Every project is prepared for phones, tablets and desktop devices.",
+        text: "Every project is prepared for phones, tablets and desktop devices.",
       },
       {
         title: "Ready to grow",
-        text:
-          "We create a solid base for future pages, content, SEO and new features.",
+        text: "We create a solid base for future pages, content, SEO and new features.",
       },
     ],
 
-    processLead:
-      "From the first conversation to launch, every step is simple and transparent.",
+    processLead: "From the first conversation to launch, every step is simple and transparent.",
 
     finalBadge: "Your next website could be this one",
-    finalSmall:
-      "No obligation. Tell us what you need and we will review it with you.",
+    finalSmall: "No obligation. Tell us what you need and we will review it with you.",
   },
 
   de: {
-    heroKicker:
-      "Moderne Websites für Unternehmen mit Wachstumspotenzial",
+    heroKicker: "Moderne Websites für Unternehmen mit Wachstumspotenzial",
     heroProof: "Reales Projekt von Nova Web Studio",
     heroProofSmall: "Design, Entwicklung und digitale Präsenz",
 
     problemBadge: "Das Problem",
-    problemTitle:
-      "Ihre Website kann Kunden abschrecken, ohne dass Sie es merken",
+    problemTitle: "Ihre Website kann Kunden abschrecken, ohne dass Sie es merken",
     problemLead:
       "Eine langsame, unübersichtliche oder veraltete Website kann ein Unternehmen schlechter darstellen, als es tatsächlich ist.",
 
     problems: [
       {
         title: "Veraltetes Design",
-        text:
-          "Ein altes Erscheinungsbild kann weniger professionell und vertrauenswürdig wirken.",
+        text: "Ein altes Erscheinungsbild kann weniger professionell und vertrauenswürdig wirken.",
       },
       {
         title: "Schwache mobile Nutzung",
-        text:
-          "Wenn eine Website auf dem Smartphone schwierig zu bedienen ist, verlassen viele Besucher sie.",
+        text: "Wenn eine Website auf dem Smartphone schwierig zu bedienen ist, verlassen viele Besucher sie.",
       },
       {
         title: "Unklare Struktur",
-        text:
-          "Wenn Leistungen und Kontaktinformationen schwer zu finden sind, wissen Nutzer nicht, was sie tun sollen.",
+        text: "Wenn Leistungen und Kontaktinformationen schwer zu finden sind, wissen Nutzer nicht, was sie tun sollen.",
       },
       {
         title: "Zu wenige Anfragen",
-        text:
-          "Ohne klare Handlungsaufforderungen können Besucher kommen, ohne Kontakt aufzunehmen.",
+        text: "Ohne klare Handlungsaufforderungen können Besucher kommen, ohne Kontakt aufzunehmen.",
       },
     ],
 
@@ -474,31 +434,26 @@ const EXTRA: Record<
     mockupBookingsStatus: "Synchron",
 
     whyBadge: "Warum Nova Web Studio",
-    whyTitle:
-      "Ein persönlicher, einfacher und professioneller Prozess",
+    whyTitle: "Ein persönlicher, einfacher und professioneller Prozess",
     whyLead:
       "Keine unnötige Komplexität, keine Standardlösung und kein Verschwinden nach dem Launch.",
 
     whyItems: [
       {
         title: "Direkter Kontakt",
-        text:
-          "Sie sprechen während des gesamten Projekts direkt mit uns.",
+        text: "Sie sprechen während des gesamten Projekts direkt mit uns.",
       },
       {
         title: "Für Ihr Unternehmen",
-        text:
-          "Struktur und Design richten sich nach dem tatsächlichen Ziel der Website.",
+        text: "Struktur und Design richten sich nach dem tatsächlichen Ziel der Website.",
       },
       {
         title: "Schnell und responsiv",
-        text:
-          "Jedes Projekt wird für Smartphone, Tablet und Desktop optimiert.",
+        text: "Jedes Projekt wird für Smartphone, Tablet und Desktop optimiert.",
       },
       {
         title: "Bereit für Wachstum",
-        text:
-          "Wir schaffen eine solide Basis für weitere Seiten, SEO und neue Funktionen.",
+        text: "Wir schaffen eine solide Basis für weitere Seiten, SEO und neue Funktionen.",
       },
     ],
 
@@ -510,43 +465,36 @@ const EXTRA: Record<
   },
 
   fr: {
-    heroKicker:
-      "Des sites modernes pour les entreprises qui veulent grandir",
+    heroKicker: "Des sites modernes pour les entreprises qui veulent grandir",
     heroProof: "Projet réel développé par Nova Web Studio",
     heroProofSmall: "Design, développement et présence digitale",
 
     problemBadge: "Le problème",
-    problemTitle:
-      "Votre site peut faire fuir des clients sans que vous le sachiez",
+    problemTitle: "Votre site peut faire fuir des clients sans que vous le sachiez",
     problemLead:
       "Un site lent, confus ou dépassé peut donner une image moins professionnelle que votre entreprise ne le mérite.",
 
     problems: [
       {
         title: "Design dépassé",
-        text:
-          "Une apparence vieillissante peut diminuer la crédibilité de l'entreprise.",
+        text: "Une apparence vieillissante peut diminuer la crédibilité de l'entreprise.",
       },
       {
         title: "Mauvaise expérience mobile",
-        text:
-          "Si le site est difficile à utiliser sur mobile, beaucoup de visiteurs quittent la page.",
+        text: "Si le site est difficile à utiliser sur mobile, beaucoup de visiteurs quittent la page.",
       },
       {
         title: "Manque de clarté",
-        text:
-          "Lorsque les services et contacts sont difficiles à trouver, l'utilisateur ne sait pas quoi faire.",
+        text: "Lorsque les services et contacts sont difficiles à trouver, l'utilisateur ne sait pas quoi faire.",
       },
       {
         title: "Peu de demandes",
-        text:
-          "Sans appels à l'action clairs, un site peut recevoir des visites sans générer de contacts.",
+        text: "Sans appels à l'action clairs, un site peut recevoir des visites sans générer de contacts.",
       },
     ],
 
     solutionBadge: "La solution",
-    solutionTitle:
-      "Nous transformons votre présence digitale en confiance",
+    solutionTitle: "Nous transformons votre présence digitale en confiance",
     solutionLead:
       "Nous créons des sites clairs, simples à utiliser et conçus pour faciliter le contact.",
 
@@ -597,23 +545,19 @@ const EXTRA: Record<
     whyItems: [
       {
         title: "Contact direct",
-        text:
-          "Vous échangez directement avec nous pendant tout le projet.",
+        text: "Vous échangez directement avec nous pendant tout le projet.",
       },
       {
         title: "Adapté à votre activité",
-        text:
-          "La structure et le design sont pensés selon l'objectif réel du site.",
+        text: "La structure et le design sont pensés selon l'objectif réel du site.",
       },
       {
         title: "Rapide et responsive",
-        text:
-          "Chaque projet est optimisé pour mobile, tablette et ordinateur.",
+        text: "Chaque projet est optimisé pour mobile, tablette et ordinateur.",
       },
       {
         title: "Prêt à évoluer",
-        text:
-          "Nous créons une base solide pour de nouvelles pages, le SEO et de futures fonctionnalités.",
+        text: "Nous créons une base solide pour de nouvelles pages, le SEO et de futures fonctionnalités.",
       },
     ],
 
@@ -630,31 +574,26 @@ const EXTRA: Record<
     heroProofSmall: "Diseño, desarrollo y presencia digital",
 
     problemBadge: "El problema",
-    problemTitle:
-      "Tu web puede estar alejando clientes sin que te des cuenta",
+    problemTitle: "Tu web puede estar alejando clientes sin que te des cuenta",
     problemLead:
       "Una web lenta, confusa o desactualizada puede transmitir una imagen peor de la que merece tu negocio.",
 
     problems: [
       {
         title: "Diseño desactualizado",
-        text:
-          "Una apariencia antigua puede hacer que un negocio parezca menos profesional.",
+        text: "Una apariencia antigua puede hacer que un negocio parezca menos profesional.",
       },
       {
         title: "Mala experiencia móvil",
-        text:
-          "Si navegar desde el móvil es difícil, muchos visitantes se van.",
+        text: "Si navegar desde el móvil es difícil, muchos visitantes se van.",
       },
       {
         title: "Poca claridad",
-        text:
-          "Si los servicios y contactos están escondidos, el usuario no sabe qué hacer.",
+        text: "Si los servicios y contactos están escondidos, el usuario no sabe qué hacer.",
       },
       {
         title: "Pocas solicitudes",
-        text:
-          "Sin llamadas a la acción claras, una web puede tener visitas sin generar contactos.",
+        text: "Sin llamadas a la acción claras, una web puede tener visitas sin generar contactos.",
       },
     ],
 
@@ -710,23 +649,19 @@ const EXTRA: Record<
     whyItems: [
       {
         title: "Contacto directo",
-        text:
-          "Hablas directamente con nosotros durante todo el proyecto.",
+        text: "Hablas directamente con nosotros durante todo el proyecto.",
       },
       {
         title: "Pensado para tu negocio",
-        text:
-          "La estructura y el diseño se definen según el objetivo real de la web.",
+        text: "La estructura y el diseño se definen según el objetivo real de la web.",
       },
       {
         title: "Rápido y responsive",
-        text:
-          "Cada proyecto está preparado para móvil, tablet y ordenador.",
+        text: "Cada proyecto está preparado para móvil, tablet y ordenador.",
       },
       {
         title: "Preparado para crecer",
-        text:
-          "Creamos una base sólida para futuras páginas, SEO y nuevas funciones.",
+        text: "Creamos una base sólida para futuras páginas, SEO y nuevas funciones.",
       },
     ],
 
@@ -902,9 +837,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                     />
 
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold">
-                        Nova Web Studio
-                      </p>
+                      <p className="truncate text-sm font-semibold">Nova Web Studio</p>
 
                       <p className="truncate text-[9px] uppercase tracking-[.18em] text-muted-foreground">
                         {nav.tagline}
@@ -955,13 +888,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                   <CheckCircle2 className="size-4 shrink-0 text-primary" />
 
                   <div>
-                    <p className="text-[10px] font-medium">
-                      {extra.heroProof}
-                    </p>
+                    <p className="text-[10px] font-medium">{extra.heroProof}</p>
 
-                    <p className="mt-0.5 text-[9px] text-muted-foreground">
-                      31janeiromanique.net
-                    </p>
+                    <p className="mt-0.5 text-[9px] text-muted-foreground">31janeiromanique.net</p>
                   </div>
                 </div>
               </div>
@@ -987,32 +916,20 @@ export function HomePage({ locale }: { locale: Locale }) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.problems.map((problem, idx) => {
-              const icons = [
-                WandSparkles,
-                MonitorSmartphone,
-                MessageSquareText,
-                Target,
-              ];
+              const icons = [WandSparkles, MonitorSmartphone, MessageSquareText, Target];
 
               const Icon = icons[idx] ?? Sparkles;
 
               return (
-                <Reveal
-                  key={problem.title}
-                  delay={idx * 90}
-                >
+                <Reveal key={problem.title} delay={idx * 90}>
                   <article className="orbit-panel orbit-panel-hover h-full p-5">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
-                    <h3 className="mt-4 text-sm font-semibold">
-                      {problem.title}
-                    </h3>
+                    <h3 className="mt-4 text-sm font-semibold">{problem.title}</h3>
 
-                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                      {problem.text}
-                    </p>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">{problem.text}</p>
                   </article>
                 </Reveal>
               );
@@ -1034,15 +951,12 @@ export function HomePage({ locale }: { locale: Locale }) {
                 {extra.solutionTitle}
               </h2>
 
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                {extra.solutionLead}
-              </p>
+              <p className="mt-4 text-sm leading-7 text-muted-foreground">{extra.solutionLead}</p>
             </div>
 
             <div className="relative mt-8 grid gap-4 md:grid-cols-3">
               {t.services.map((service, idx) => {
-                const Icon =
-                  SERVICE_ICONS[idx] ?? LayoutTemplate;
+                const Icon = SERVICE_ICONS[idx] ?? LayoutTemplate;
 
                 return (
                   <article
@@ -1053,13 +967,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                       <Icon className="size-4 text-primary" />
                     </span>
 
-                    <h3 className="mt-4 text-sm font-semibold">
-                      {service.titulo}
-                    </h3>
+                    <h3 className="mt-4 text-sm font-semibold">{service.titulo}</h3>
 
-                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                      {service.texto}
-                    </p>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">{service.texto}</p>
                   </article>
                 );
               })}
@@ -1108,13 +1018,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                         Grupo Musical e Desportivo
                       </p>
 
-                      <h3 className="mt-2 text-lg font-semibold sm:text-xl">
-                        31 de Janeiro
-                      </h3>
+                      <h3 className="mt-2 text-lg font-semibold sm:text-xl">31 de Janeiro</h3>
 
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Manique de Baixo
-                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">Manique de Baixo</p>
                     </div>
                   </div>
 
@@ -1150,16 +1056,10 @@ export function HomePage({ locale }: { locale: Locale }) {
                   </p>
                 </div>
 
-                <p className="mt-5 text-sm leading-7 text-muted-foreground">
-                  {extra.gmdText}
-                </p>
+                <p className="mt-5 text-sm leading-7 text-muted-foreground">{extra.gmdText}</p>
 
                 <div className="mt-7 space-y-3">
-                  {[
-                    extra.gmdFeature1,
-                    extra.gmdFeature2,
-                    extra.gmdFeature3,
-                  ].map((item) => (
+                  {[extra.gmdFeature1, extra.gmdFeature2, extra.gmdFeature3].map((item) => (
                     <div
                       key={item}
                       className="flex items-center gap-2 text-xs text-muted-foreground"
@@ -1245,10 +1145,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                       </h3>
 
                       <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
-                        {[
-                          14, 28, 20, 38, 24,
-                          46, 30, 18, 34, 22,
-                        ].map((height, idx) => (
+                        {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map((height, idx) => (
                           <span
                             key={idx}
                             className="nws-wave w-1.5 rounded-full bg-primary/80"
@@ -1270,20 +1167,14 @@ export function HomePage({ locale }: { locale: Locale }) {
                   Rádio · Alcabideche
                 </div>
 
-                <h3 className="mt-4 text-3xl font-semibold tracking-tight">
-                  Rádio AlcabidecheFM
-                </h3>
+                <h3 className="mt-4 text-3xl font-semibold tracking-tight">Rádio AlcabidecheFM</h3>
 
                 <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
                   {extra.radioText}
                 </p>
 
                 <div className="mt-7 space-y-3">
-                  {[
-                    extra.radioFeature1,
-                    extra.radioFeature2,
-                    extra.radioFeature3,
-                  ].map((item) => (
+                  {[extra.radioFeature1, extra.radioFeature2, extra.radioFeature3].map((item) => (
                     <div
                       key={item}
                       className="flex items-center gap-2 text-xs text-muted-foreground"
@@ -1333,9 +1224,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 </span>
               </Chip>
 
-              <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                {extra.restaurantText}
-              </p>
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">{extra.restaurantText}</p>
             </div>
 
             <Link
@@ -1387,7 +1276,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                           <CalendarCheck className="size-4 text-primary shrink-0" />
                           <div>
                             <p className="font-medium text-[11px]">{extra.mockupBookingsTitle}</p>
-                            <p className="text-[9px] text-muted-foreground">{extra.mockupBookingsDesc}</p>
+                            <p className="text-[9px] text-muted-foreground">
+                              {extra.mockupBookingsDesc}
+                            </p>
                           </div>
                         </div>
                         <span className="rounded-md bg-primary/15 px-2 py-0.5 text-[9px] font-medium text-primary">
@@ -1481,10 +1372,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             const Icon = TYPE_ICONS[idx] ?? Sparkles;
 
             return (
-              <Reveal
-                key={type.titulo}
-                delay={idx * 80}
-              >
+              <Reveal key={type.titulo} delay={idx * 80}>
                 <article className="orbit-panel orbit-panel-hover h-full p-5">
                   <div className="flex items-center justify-between">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
@@ -1496,13 +1384,9 @@ export function HomePage({ locale }: { locale: Locale }) {
                     </span>
                   </div>
 
-                  <h3 className="mt-5 text-sm font-semibold">
-                    {type.titulo}
-                  </h3>
+                  <h3 className="mt-5 text-sm font-semibold">{type.titulo}</h3>
 
-                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                    {type.texto}
-                  </p>
+                  <p className="mt-2 text-xs leading-6 text-muted-foreground">{type.texto}</p>
                 </article>
               </Reveal>
             );
@@ -1520,39 +1404,25 @@ export function HomePage({ locale }: { locale: Locale }) {
               {extra.whyTitle}
             </h2>
 
-            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
-              {extra.whyLead}
-            </p>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">{extra.whyLead}</p>
           </Reveal>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {extra.whyItems.map((item, idx) => {
-              const icons = [
-                MessageSquareText,
-                Target,
-                Zap,
-                ShieldCheck,
-              ];
+              const icons = [MessageSquareText, Target, Zap, ShieldCheck];
 
               const Icon = icons[idx] ?? BadgeCheck;
 
               return (
-                <Reveal
-                  key={item.title}
-                  delay={idx * 80}
-                >
+                <Reveal key={item.title} delay={idx * 80}>
                   <article className="orbit-panel orbit-panel-hover h-full p-5">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
-                    <h3 className="mt-4 text-sm font-semibold">
-                      {item.title}
-                    </h3>
+                    <h3 className="mt-4 text-sm font-semibold">{item.title}</h3>
 
-                    <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                      {item.text}
-                    </p>
+                    <p className="mt-2 text-xs leading-6 text-muted-foreground">{item.text}</p>
                   </article>
                 </Reveal>
               );
@@ -1571,9 +1441,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               {t.processTitle}
             </h2>
 
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              {extra.processLead}
-            </p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">{extra.processLead}</p>
           </div>
         </Reveal>
 
@@ -1582,28 +1450,19 @@ export function HomePage({ locale }: { locale: Locale }) {
             const Icon = STEP_ICONS[idx] ?? Target;
 
             return (
-              <Reveal
-                key={step.titulo}
-                delay={idx * 100}
-              >
+              <Reveal key={step.titulo} delay={idx * 100}>
                 <article className="h-full rounded-2xl border border-border/70 bg-card/40 p-5 transition hover:-translate-y-1">
                   <div className="flex items-center justify-between">
                     <span className="grid size-10 place-items-center rounded-xl bg-primary/10">
                       <Icon className="size-4 text-primary" />
                     </span>
 
-                    <span className="text-3xl font-semibold text-primary/15">
-                      0{idx + 1}
-                    </span>
+                    <span className="text-3xl font-semibold text-primary/15">0{idx + 1}</span>
                   </div>
 
-                  <h3 className="mt-5 text-sm font-semibold">
-                    {step.titulo}
-                  </h3>
+                  <h3 className="mt-5 text-sm font-semibold">{step.titulo}</h3>
 
-                  <p className="mt-2 text-xs leading-6 text-muted-foreground">
-                    {step.texto}
-                  </p>
+                  <p className="mt-2 text-xs leading-6 text-muted-foreground">{step.texto}</p>
                 </article>
               </Reveal>
             );
@@ -1631,9 +1490,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                   {t.ctaText}
                 </p>
 
-                <p className="mt-3 text-xs text-muted-foreground">
-                  {extra.finalSmall}
-                </p>
+                <p className="mt-3 text-xs text-muted-foreground">{extra.finalSmall}</p>
               </div>
 
               <Link

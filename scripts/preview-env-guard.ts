@@ -3,11 +3,11 @@
  * This is intentionally called from vite.config.ts, before the production/Preview bundle is built.
  * It does not validate the Supabase migrations or replace runtime permissions.
  */
-export function assertPreviewEnvironment(env = process.env) {
-  const demoClient = env.VITE_DEMO_MODE === "true";
-  const demoServer = env.DEMO_MODE === "true";
-  const previewFlag = env.VITE_DEPLOYMENT_ENV === "preview";
-  const vercelEnv = env.VERCEL_ENV;
+export function assertPreviewEnvironment(env: Record<string, string | undefined> = process.env) {
+  const demoClient = env["VITE_DEMO_MODE"] === "true";
+  const demoServer = env["DEMO_MODE"] === "true";
+  const previewFlag = env["VITE_DEPLOYMENT_ENV"] === "preview";
+  const vercelEnv = env["VERCEL_ENV"];
   const anyDemoFlag = demoClient || demoServer;
 
   // Never deploy an accidentally unconfigured Vercel Preview with production integrations.

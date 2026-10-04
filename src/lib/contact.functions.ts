@@ -2,12 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
-import {
-  dict,
-  ORCAMENTO_VALUES,
-  TIPO_VALUES,
-  type Locale,
-} from "@/lib/i18n";
+import { dict, ORCAMENTO_VALUES, TIPO_VALUES, type Locale } from "@/lib/i18n";
 
 async function sha256(value: string): Promise<string> {
   const bytes = new TextEncoder().encode(value);
@@ -38,9 +33,7 @@ function sanitizeUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   const trimmed = url.trim();
   if (!trimmed) return null;
-  const withProtocol = /^https?:\/\//i.test(trimmed)
-    ? trimmed
-    : `https://${trimmed}`;
+  const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
   return withProtocol.replace(/"/g, "&quot;");
 }
 
@@ -345,8 +338,7 @@ async function dispatchNotificationEmail(payload: {
   const apiKey = process.env.RESEND_API_KEY;
   const toEmail = process.env.NOTIFICATION_EMAIL_TO || "geral@novawebstudio.pt";
   const fromEmail =
-    process.env.NOTIFICATION_EMAIL_FROM ||
-    "Nova Web Studio <notificacoes@notify.novawebstudio.pt>";
+    process.env.NOTIFICATION_EMAIL_FROM || "Nova Web Studio <notificacoes@notify.novawebstudio.pt>";
 
   if (!apiKey) {
     console.warn(
@@ -603,7 +595,8 @@ export function buildClientConfirmationHtml(data: {
     ? `<a href="${safeWebsiteUrl}" target="_blank" rel="noopener noreferrer" style="color:#2dd4bf;text-decoration:underline;">${escapeHtml(data.websiteAtual)}</a>`
     : `<em>${escapeHtml(i18n.labels.nenhum)}</em>`;
 
-  const safePrazo = escapeHtml(data.prazoTexto) || `<em>${escapeHtml(i18n.labels.naoIndicado)}</em>`;
+  const safePrazo =
+    escapeHtml(data.prazoTexto) || `<em>${escapeHtml(i18n.labels.naoIndicado)}</em>`;
   const safeMensagem = escapeHtml(data.mensagemOriginal);
 
   return `<!DOCTYPE html>
@@ -827,8 +820,7 @@ async function dispatchClientConfirmationEmail(payload: {
 }): Promise<{ ok: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail =
-    process.env.NOTIFICATION_EMAIL_FROM ||
-    "Nova Web Studio <notificacoes@notify.novawebstudio.pt>";
+    process.env.NOTIFICATION_EMAIL_FROM || "Nova Web Studio <notificacoes@notify.novawebstudio.pt>";
   const replyToEmail = "geral@novawebstudio.pt";
 
   if (!apiKey) {
@@ -904,28 +896,19 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
     }
 
     // 2. Resolve canonical values
-    const tipoProjeto =
-      TIPO_VALUES[data.tipoIndex] ?? TIPO_VALUES[0];
-    const orcamento =
-      ORCAMENTO_VALUES[data.orcamentoIndex] ?? ORCAMENTO_VALUES[0];
+    const tipoProjeto = TIPO_VALUES[data.tipoIndex] ?? TIPO_VALUES[0];
+    const orcamento = ORCAMENTO_VALUES[data.orcamentoIndex] ?? ORCAMENTO_VALUES[0];
 
     // 3. Build CRM internal composite message
     const detalhesLinhas = [
-      data.websiteAtual
-        ? `Website atual: ${data.websiteAtual}`
-        : null,
-      data.prazoTexto
-        ? `Prazo desejado: ${data.prazoTexto}`
-        : null,
+      data.websiteAtual ? `Website atual: ${data.websiteAtual}` : null,
+      data.prazoTexto ? `Prazo desejado: ${data.prazoTexto}` : null,
       "Origem: Website público",
     ]
       .filter(Boolean)
       .join("\n");
 
-    const mensagemComposta = [
-      data.mensagemOriginal || null,
-      detalhesLinhas || null,
-    ]
+    const mensagemComposta = [data.mensagemOriginal || null, detalhesLinhas || null]
       .filter(Boolean)
       .join("\n\n");
 
@@ -962,9 +945,7 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
     let dbError: unknown = null;
 
     const submissionSecret =
-      process.env.CONTACT_FORM_SECRET ||
-      process.env.SUPABASE_SERVICE_ROLE_KEY ||
-      "";
+      process.env.CONTACT_FORM_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
     try {
       const rpcArgs = {
@@ -985,21 +966,13 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       };
 
       if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_URL) {
-        const { supabaseAdmin } = await import(
-          "@/integrations/supabase/client.server"
-        );
-        const res = await supabaseAdmin.rpc(
-          "submit_guarded_contact_request",
-          rpcArgs,
-        );
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const res = await supabaseAdmin.rpc("submit_guarded_contact_request", rpcArgs);
         guardResult = res.data?.[0] ?? null;
         dbError = res.error;
       } else {
         const { supabase } = await import("@/integrations/supabase/client");
-        const res = await supabase.rpc(
-          "submit_guarded_contact_request",
-          rpcArgs,
-        );
+        const res = await supabase.rpc("submit_guarded_contact_request", rpcArgs);
         guardResult = res.data?.[0] ?? null;
         dbError = res.error;
       }

@@ -103,13 +103,9 @@ function Negocios() {
     (n) => !ESTADOS_CONCLUIDOS.includes(n.estado) && n.estado !== "arquivado",
   ).length;
 
-  const totalPropostas = negocios.filter((n) =>
-    ESTADOS_PROPOSTAS.includes(n.estado),
-  ).length;
+  const totalPropostas = negocios.filter((n) => ESTADOS_PROPOSTAS.includes(n.estado)).length;
 
-  const totalConcluidos = negocios.filter((n) =>
-    ESTADOS_CONCLUIDOS.includes(n.estado),
-  ).length;
+  const totalConcluidos = negocios.filter((n) => ESTADOS_CONCLUIDOS.includes(n.estado)).length;
 
   const lista = useMemo(() => {
     const texto = q.trim().toLowerCase();
@@ -138,8 +134,7 @@ function Negocios() {
 
     r = [...r].sort((a, b) => {
       if (ordem === "nome") return a.nome.localeCompare(b.nome);
-      if (ordem === "valor")
-        return Number(b.valor_estimado ?? 0) - Number(a.valor_estimado ?? 0);
+      if (ordem === "valor") return Number(b.valor_estimado ?? 0) - Number(a.valor_estimado ?? 0);
       if (ordem === "prioridade") {
         const peso = { alta: 0, media: 1, baixa: 2 } as const;
         return peso[a.prioridade] - peso[b.prioridade];
@@ -301,10 +296,7 @@ function Negocios() {
                   const contactou = nomePor(n.contactado_por);
 
                   return (
-                    <tr
-                      key={n.id}
-                      className="group transition hover:bg-surface-strong/60"
-                    >
+                    <tr key={n.id} className="group transition hover:bg-surface-strong/60">
                       {/* Nome e Categoria */}
                       <td className="px-6 py-3.5">
                         <Link
@@ -339,9 +331,7 @@ function Negocios() {
 
                       {/* Fase do Negócio */}
                       <td className="px-3 py-3.5">
-                        <Chip tone={estado.tone}>
-                          {rotuloFase(prefs, n.estado)}
-                        </Chip>
+                        <Chip tone={estado.tone}>{rotuloFase(prefs, n.estado)}</Chip>
                       </td>
 
                       {/* Prioridade */}
@@ -393,13 +383,7 @@ function Negocios() {
 
       {/* Modais */}
       {novo && <DialogNegocio aberto onFechar={() => setNovo(false)} />}
-      {chamada && (
-        <DialogChamada
-          aberto
-          onFechar={() => setChamada(null)}
-          negocio={chamada}
-        />
-      )}
+      {chamada && <DialogChamada aberto onFechar={() => setChamada(null)} negocio={chamada} />}
     </div>
   );
 }

@@ -97,7 +97,8 @@ const INITIAL_MENU_ITEMS: DemoMenuItem[] = [
     name: "Bacalhau com Broa da Casa",
     price: 16.5,
     category: "mains",
-    description: "Lombo de bacalhau assado no forno com crosta de broa de milho e grelos salteados.",
+    description:
+      "Lombo de bacalhau assado no forno com crosta de broa de milho e grelos salteados.",
     available: true,
   },
   {
@@ -287,16 +288,17 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
   }
 
   function handleUpdateQuantity(itemId: string, delta: number) {
-    setCart((prev) =>
-      prev
-        .map((item) => {
-          if (item.id === itemId) {
-            const newQty = item.quantity + delta;
-            return newQty > 0 ? { ...item, quantity: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean) as DemoOrderItem[],
+    setCart(
+      (prev) =>
+        prev
+          .map((item) => {
+            if (item.id === itemId) {
+              const newQty = item.quantity + delta;
+              return newQty > 0 ? { ...item, quantity: newQty } : null;
+            }
+            return item;
+          })
+          .filter(Boolean) as DemoOrderItem[],
     );
   }
 
@@ -358,7 +360,7 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
 
   function handleToggleAvailability(itemId: string) {
     setMenuItems((prev) =>
-      prev.map((item) => (item.id === itemId ? { ...item, available: !item.available } : item))
+      prev.map((item) => (item.id === itemId ? { ...item, available: !item.available } : item)),
     );
     toast.success(t.toasts.availabilityUpdated);
   }
@@ -374,7 +376,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
       time: bookingForm.time,
       guests: Number(bookingForm.guests),
       type: bookingForm.type,
-      table: `Mesa ${Math.floor(1 + Math.random() * 12).toString().padStart(2, "0")}`,
+      table: `Mesa ${Math.floor(1 + Math.random() * 12)
+        .toString()
+        .padStart(2, "0")}`,
       status: "confirmed",
     };
 
@@ -430,14 +434,17 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
     if (activeOrder) return { ...table, computedStatus: "occupied", activeOrder };
 
     const isReserved = bookings.some((b) => b.table === table.name);
-    if (table.reservedBookingId || isReserved) return { ...table, computedStatus: "reserved", activeOrder: null };
+    if (table.reservedBookingId || isReserved)
+      return { ...table, computedStatus: "reserved", activeOrder: null };
 
     return { ...table, computedStatus: "free", activeOrder: null };
   });
 
   const shiftRevenue = orders.reduce((acc, o) => acc + o.total, 0);
   const activeOrdersCount = orders.filter((o) => o.status !== "delivered").length;
-  const activeTablesCount = computedTables.filter((t) => t.computedStatus === "occupied" || t.computedStatus === "bill").length;
+  const activeTablesCount = computedTables.filter(
+    (t) => t.computedStatus === "occupied" || t.computedStatus === "bill",
+  ).length;
 
   return (
     <SiteChrome locale={locale} page="restaurantesDemo">
@@ -460,9 +467,7 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
               {t.title}
             </h1>
 
-            <p className="mt-2 max-w-2xl text-xs text-muted-foreground sm:text-sm">
-              {t.subtitle}
-            </p>
+            <p className="mt-2 max-w-2xl text-xs text-muted-foreground sm:text-sm">{t.subtitle}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
@@ -520,57 +525,49 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
         {/* NAVIGATION TABS BAR (MOBILE & DESKTOP SINGLE VIEW) */}
         {!splitView && (
           <div className="mt-6 flex gap-2 overflow-x-auto pb-3 scrollbar-none border-b border-border/60">
-            {(
-              [
-                "overview",
-                "bookings",
-                "tables",
-                "kitchen",
-                "menu",
-                "guest",
-              ] as ModuleKey[]
-            ).map((key) => {
-              const icons: Record<ModuleKey, LucideIcon> = {
-                overview: LayoutDashboard,
-                bookings: CalendarDays,
-                tables: LayoutGrid,
-                kitchen: ChefHat,
-                menu: MenuSquare,
-                guest: Smartphone,
-              };
-              const Icon = icons[key];
-              const isSelected = activeTab === key;
-              const titleMap: Record<ModuleKey, string> = {
-                overview: t.tabOverview,
-                bookings: t.tabBookings,
-                tables: t.tabTables,
-                kitchen: t.tabKitchen,
-                menu: t.tabMenu,
-                guest: t.tabGuest,
-              };
+            {(["overview", "bookings", "tables", "kitchen", "menu", "guest"] as ModuleKey[]).map(
+              (key) => {
+                const icons: Record<ModuleKey, LucideIcon> = {
+                  overview: LayoutDashboard,
+                  bookings: CalendarDays,
+                  tables: LayoutGrid,
+                  kitchen: ChefHat,
+                  menu: MenuSquare,
+                  guest: Smartphone,
+                };
+                const Icon = icons[key];
+                const isSelected = activeTab === key;
+                const titleMap: Record<ModuleKey, string> = {
+                  overview: t.tabOverview,
+                  bookings: t.tabBookings,
+                  tables: t.tabTables,
+                  kitchen: t.tabKitchen,
+                  menu: t.tabMenu,
+                  guest: t.tabGuest,
+                };
 
-              return (
-                <button
-                  key={key}
-                  onClick={() => setActiveTab(key)}
-                  className={`flex items-center shrink-0 gap-2 rounded-xl px-4 py-2.5 text-xs font-medium transition ${
-                    isSelected
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                      : "border border-border/70 bg-card/40 text-muted-foreground hover:bg-card hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="size-4" />
-                  {titleMap[key]}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setActiveTab(key)}
+                    className={`flex items-center shrink-0 gap-2 rounded-xl px-4 py-2.5 text-xs font-medium transition ${
+                      isSelected
+                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                        : "border border-border/70 bg-card/40 text-muted-foreground hover:bg-card hover:text-foreground"
+                    }`}
+                  >
+                    <Icon className="size-4" />
+                    {titleMap[key]}
+                  </button>
+                );
+              },
+            )}
           </div>
         )}
       </div>
 
       {/* DEMO CONTENT AREA */}
       <div className={splitView ? "grid grid-cols-[380px_1fr] gap-8" : "w-full"}>
-
         {/* ========================================================================= */}
         {/* LEFT PANE (GUEST) OR CENTER PANE                                          */}
         {/* ========================================================================= */}
@@ -636,7 +633,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                         <div className="flex items-center gap-3">
                           <span
                             className={`grid size-7 place-items-center rounded-full text-xs font-bold ${
-                              ["new", "prep", "ready", "delivered"].includes(currentGuestOrder.status)
+                              ["new", "prep", "ready", "delivered"].includes(
+                                currentGuestOrder.status,
+                              )
                                 ? "bg-primary text-primary-foreground"
                                 : "bg-secondary text-muted-foreground"
                             }`}
@@ -645,7 +644,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                           </span>
                           <div>
                             <p className="text-xs font-medium">{t.guest.prepStep1}</p>
-                            <p className="text-[10px] text-muted-foreground">{t.guest.orderSentSubtitle}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t.guest.orderSentSubtitle}
+                            </p>
                           </div>
                         </div>
 
@@ -665,7 +666,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                           </span>
                           <div>
                             <p className="text-xs font-medium">{t.guest.prepStep2}</p>
-                            <p className="text-[10px] text-muted-foreground">{t.guest.prepStep2Desc}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t.guest.prepStep2Desc}
+                            </p>
                           </div>
                         </div>
 
@@ -677,27 +680,41 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                                 : "bg-secondary text-muted-foreground"
                             }`}
                           >
-                            {currentGuestOrder.status === "delivered" ? <Check className="size-4" /> : "3"}
+                            {currentGuestOrder.status === "delivered" ? (
+                              <Check className="size-4" />
+                            ) : (
+                              "3"
+                            )}
                           </span>
                           <div>
                             <p className="text-xs font-medium">{t.guest.prepStep3}</p>
-                            <p className="text-[10px] text-muted-foreground">{t.guest.prepStep3Desc}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t.guest.prepStep3Desc}
+                            </p>
                           </div>
                         </div>
                       </div>
 
                       {/* Order items summary */}
                       <div className="rounded-xl border border-border/50 bg-background/50 p-3 text-xs space-y-1.5">
-                        <p className="text-[10px] uppercase font-semibold text-muted-foreground">{t.guest.summaryTitle}</p>
+                        <p className="text-[10px] uppercase font-semibold text-muted-foreground">
+                          {t.guest.summaryTitle}
+                        </p>
                         {currentGuestOrder.items.map((i) => (
                           <div key={i.id} className="flex justify-between">
-                            <span>{i.quantity}x {i.name}</span>
-                            <span className="font-semibold">{(i.price * i.quantity).toFixed(2)} €</span>
+                            <span>
+                              {i.quantity}x {i.name}
+                            </span>
+                            <span className="font-semibold">
+                              {(i.price * i.quantity).toFixed(2)} €
+                            </span>
                           </div>
                         ))}
                         <div className="border-t border-border/40 pt-1.5 flex justify-between font-bold text-foreground">
                           <span>{t.guest.total}:</span>
-                          <span className="text-primary">{currentGuestOrder.total.toFixed(2)} €</span>
+                          <span className="text-primary">
+                            {currentGuestOrder.total.toFixed(2)} €
+                          </span>
                         </div>
                       </div>
 
@@ -714,25 +731,29 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                     <>
                       {/* Category Pills */}
                       <div className="flex gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
-                        {(["all", "starters", "mains", "drinks", "desserts"] as const).map((cat) => (
-                          <button
-                            key={cat}
-                            onClick={() => setCategoryFilter(cat)}
-                            className={`rounded-lg px-2.5 py-1 font-medium transition whitespace-nowrap ${
-                              categoryFilter === cat
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-secondary/70 text-muted-foreground hover:text-foreground"
-                            }`}
-                          >
-                            {t.guest.categories[cat]}
-                          </button>
-                        ))}
+                        {(["all", "starters", "mains", "drinks", "desserts"] as const).map(
+                          (cat) => (
+                            <button
+                              key={cat}
+                              onClick={() => setCategoryFilter(cat)}
+                              className={`rounded-lg px-2.5 py-1 font-medium transition whitespace-nowrap ${
+                                categoryFilter === cat
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-secondary/70 text-muted-foreground hover:text-foreground"
+                              }`}
+                            >
+                              {t.guest.categories[cat]}
+                            </button>
+                          ),
+                        )}
                       </div>
 
                       {/* Dishes List */}
                       <div className="space-y-2.5">
                         {menuItems
-                          .filter((item) => categoryFilter === "all" || item.category === categoryFilter)
+                          .filter(
+                            (item) => categoryFilter === "all" || item.category === categoryFilter,
+                          )
                           .map((item) => {
                             const inCart = cart.find((i) => i.id === item.id);
 
@@ -740,7 +761,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                               <div
                                 key={item.id}
                                 className={`rounded-xl border border-border/60 bg-card/40 p-3 transition ${
-                                  !item.available ? "opacity-60 grayscale-[0.5]" : "hover:border-primary/30"
+                                  !item.available
+                                    ? "opacity-60 grayscale-[0.5]"
+                                    : "hover:border-primary/30"
                                 }`}
                               >
                                 <div className="flex justify-between items-start gap-2">
@@ -761,7 +784,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                                   </span>
 
                                   {!item.available ? (
-                                    <span className="text-[10px] font-bold text-red-500">{t.guest.soldOut}</span>
+                                    <span className="text-[10px] font-bold text-red-500">
+                                      {t.guest.soldOut}
+                                    </span>
                                   ) : inCart ? (
                                     <div className="flex items-center gap-2 bg-secondary/80 rounded-lg p-1">
                                       <button
@@ -770,7 +795,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                                       >
                                         <Minus className="size-3" />
                                       </button>
-                                      <span className="text-xs font-bold px-1">{inCart.quantity}</span>
+                                      <span className="text-xs font-bold px-1">
+                                        {inCart.quantity}
+                                      </span>
                                       <button
                                         onClick={() => handleUpdateQuantity(item.id, 1)}
                                         className="grid size-5 place-items-center rounded bg-background text-muted-foreground hover:text-foreground"
@@ -819,7 +846,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-muted-foreground">
-                            {cartCount} {cartCount === 1 ? t.guest.itemSelectedSingular : t.guest.itemSelectedPlural}
+                            {cartCount}{" "}
+                            {cartCount === 1
+                              ? t.guest.itemSelectedSingular
+                              : t.guest.itemSelectedPlural}
                           </span>
                           <span className="text-sm font-bold text-primary">
                             {t.guest.total}: {cartSubtotal.toFixed(2)} €
@@ -850,19 +880,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
         {/* RIGHT PANE (MODULAR PRESENTATION OF THE OTHER 5 TABS)                     */}
         {/* ========================================================================= */}
         <div className="w-full space-y-6">
-
           {/* Sub-navigation inside right pane for Desktop Split View */}
           {splitView && (
             <div className="flex gap-2 overflow-x-auto pb-2 mb-6 border-b border-border/60 scrollbar-none">
-              {(
-                [
-                  "overview",
-                  "bookings",
-                  "tables",
-                  "kitchen",
-                  "menu",
-                ] as ModuleKey[]
-              ).map((key) => {
+              {(["overview", "bookings", "tables", "kitchen", "menu"] as ModuleKey[]).map((key) => {
                 const icons: Record<ModuleKey, LucideIcon> = {
                   overview: LayoutDashboard,
                   bookings: CalendarDays,
@@ -929,7 +950,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                     {t.overview.activeTables}
                   </p>
                   <p className="mt-2 text-2xl font-bold">
-                    {activeTablesCount} <span className="text-sm font-medium text-muted-foreground">/ {computedTables.length}</span>
+                    {activeTablesCount}{" "}
+                    <span className="text-sm font-medium text-muted-foreground">
+                      / {computedTables.length}
+                    </span>
                   </p>
                 </div>
 
@@ -955,7 +979,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                     <ActivityDot />
                     <h4 className="text-sm font-semibold">{t.overview.recentActivity}</h4>
                   </div>
-                  <span className="text-[10px] text-muted-foreground font-medium">{t.overview.realtimeBadge}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    {t.overview.realtimeBadge}
+                  </span>
                 </div>
 
                 <div className="space-y-2.5 text-xs">
@@ -968,7 +994,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                         <span className="rounded bg-primary/15 px-2 py-0.5 text-[10px] font-bold text-primary">
                           {ord.table}
                         </span>
-                        <span>{t.overview.orderPrefix} {ord.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}</span>
+                        <span>
+                          {t.overview.orderPrefix}{" "}
+                          {ord.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
+                        </span>
                       </div>
                       <span className="font-bold text-primary">{ord.total.toFixed(2)} €</span>
                     </div>
@@ -982,9 +1011,13 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                         <span className="rounded bg-secondary px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
                           {bk.time}
                         </span>
-                        <span>{t.overview.bookingPrefix} {bk.name} ({bk.guests} {t.overview.paxLabel})</span>
+                        <span>
+                          {t.overview.bookingPrefix} {bk.name} ({bk.guests} {t.overview.paxLabel})
+                        </span>
                       </div>
-                      <span className="text-[10px] text-muted-foreground font-medium">{bk.table}</span>
+                      <span className="text-[10px] text-muted-foreground font-medium">
+                        {bk.table}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -1011,7 +1044,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                               ? t.guest.callWaiterSuccess
                               : t.guest.requestBillSuccess}
                           </span>
-                          <span className="hidden sm:inline text-[10px] text-muted-foreground">({alert.time})</span>
+                          <span className="hidden sm:inline text-[10px] text-muted-foreground">
+                            ({alert.time})
+                          </span>
                         </div>
 
                         <button
@@ -1097,7 +1132,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                         </label>
                         <select
                           value={bookingForm.guests}
-                          onChange={(e) => setBookingForm({ ...bookingForm, guests: Number(e.target.value) })}
+                          onChange={(e) =>
+                            setBookingForm({ ...bookingForm, guests: Number(e.target.value) })
+                          }
                           className="w-full rounded-xl border border-border/70 bg-background/50 px-3 py-2 outline-none focus:border-primary/50"
                         >
                           {[1, 2, 3, 4, 5, 6, 8, 10, 12].map((num) => (
@@ -1115,7 +1152,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                         <select
                           value={bookingForm.type}
                           onChange={(e) =>
-                            setBookingForm({ ...bookingForm, type: e.target.value as "online" | "phone" })
+                            setBookingForm({
+                              ...bookingForm,
+                              type: e.target.value as "online" | "phone",
+                            })
                           }
                           className="w-full rounded-xl border border-border/70 bg-background/50 px-3 py-2 outline-none focus:border-primary/50"
                         >
@@ -1187,13 +1227,17 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                                 : "bg-amber-400/10 text-amber-400 border-amber-400/25"
                             }`}
                           >
-                            {booking.type === "online" ? t.bookings.typeOnline : t.bookings.typePhone}
+                            {booking.type === "online"
+                              ? t.bookings.typeOnline
+                              : t.bookings.typePhone}
                           </span>
                         </div>
                       </div>
                     ))}
                     {bookings.length === 0 && (
-                      <p className="text-xs text-muted-foreground pt-4 text-center">{t.bookings.noBookings}</p>
+                      <p className="text-xs text-muted-foreground pt-4 text-center">
+                        {t.bookings.noBookings}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -1248,19 +1292,20 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                               isSelected
                                 ? "ring-2 ring-primary border-primary bg-primary/10 shadow-lg shadow-primary/20 scale-105 z-10"
                                 : tbl.computedStatus === "occupied"
-                                ? "border-primary/40 bg-primary/[0.06] hover:bg-primary/10 hover:border-primary/60"
-                                : tbl.computedStatus === "bill"
-                                ? "border-amber-400/40 bg-amber-400/[0.06] hover:bg-amber-400/10 hover:border-amber-400/60"
-                                : tbl.computedStatus === "reserved"
-                                ? "border-purple-400/30 bg-purple-400/[0.04] hover:bg-purple-400/10"
-                                : "border-border/60 bg-card/40 hover:border-primary/30"
+                                  ? "border-primary/40 bg-primary/[0.06] hover:bg-primary/10 hover:border-primary/60"
+                                  : tbl.computedStatus === "bill"
+                                    ? "border-amber-400/40 bg-amber-400/[0.06] hover:bg-amber-400/10 hover:border-amber-400/60"
+                                    : tbl.computedStatus === "reserved"
+                                      ? "border-purple-400/30 bg-purple-400/[0.04] hover:bg-purple-400/10"
+                                      : "border-border/60 bg-card/40 hover:border-primary/30"
                             }`}
                           >
                             <div className="flex items-center justify-between w-full">
                               <span className="font-bold text-sm">{tbl.name.split(" ")[1]}</span>
                               <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                                 <Users className="size-2.5" />
-                                {tbl.pax}{t.tables.paxSuffix}
+                                {tbl.pax}
+                                {t.tables.paxSuffix}
                               </span>
                             </div>
 
@@ -1270,19 +1315,19 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                                   tbl.computedStatus === "occupied"
                                     ? "text-primary"
                                     : tbl.computedStatus === "bill"
-                                    ? "text-amber-400"
-                                    : tbl.computedStatus === "reserved"
-                                    ? "text-purple-400"
-                                    : "text-emerald-400"
+                                      ? "text-amber-400"
+                                      : tbl.computedStatus === "reserved"
+                                        ? "text-purple-400"
+                                        : "text-emerald-400"
                                 }`}
                               >
                                 {tbl.computedStatus === "occupied"
                                   ? `${tbl.activeOrder?.total.toFixed(2)} €`
                                   : tbl.computedStatus === "bill"
-                                  ? t.tables.statusBill
-                                  : tbl.computedStatus === "reserved"
-                                  ? t.tables.statusReserved
-                                  : t.tables.statusFree}
+                                    ? t.tables.statusBill
+                                    : tbl.computedStatus === "reserved"
+                                      ? t.tables.statusReserved
+                                      : t.tables.statusFree}
                               </span>
                             </div>
                           </button>
@@ -1306,10 +1351,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                             sel.computedStatus === "occupied"
                               ? "bg-primary/20 text-primary border border-primary/30"
                               : sel.computedStatus === "bill"
-                              ? "bg-amber-400/20 text-amber-400 border border-amber-400/30"
-                              : sel.computedStatus === "reserved"
-                              ? "bg-purple-400/20 text-purple-400 border border-purple-400/30"
-                              : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                ? "bg-amber-400/20 text-amber-400 border border-amber-400/30"
+                                : sel.computedStatus === "reserved"
+                                  ? "bg-purple-400/20 text-purple-400 border border-purple-400/30"
+                                  : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                           }`}
                         >
                           {sel.name.split(" ")[1]}
@@ -1321,20 +1366,36 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
 
                           {sel.activeOrder ? (
                             <div className="text-xs pt-1.5 space-y-1">
-                              <p className="text-muted-foreground tracking-wide font-medium">#{sel.activeOrder.id} · {t.tables.orderTotal}: <strong className="text-primary">{sel.activeOrder.total.toFixed(2)} €</strong></p>
+                              <p className="text-muted-foreground tracking-wide font-medium">
+                                #{sel.activeOrder.id} · {t.tables.orderTotal}:{" "}
+                                <strong className="text-primary">
+                                  {sel.activeOrder.total.toFixed(2)} €
+                                </strong>
+                              </p>
                               <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
                                 {sel.activeOrder.items.map((it) => (
-                                  <span key={it.id} className="text-[11px] text-muted-foreground">{it.quantity}x {it.name}</span>
+                                  <span key={it.id} className="text-[11px] text-muted-foreground">
+                                    {it.quantity}x {it.name}
+                                  </span>
                                 ))}
                               </div>
                             </div>
                           ) : sel.reservedBookingId ? (
-                             <div className="text-xs pt-1.5">
-                               <p className="text-purple-400 font-medium">{t.tables.scheduledBookingLabel} {bookings.find(b => b.id === sel.reservedBookingId)?.time}</p>
-                               <p className="text-muted-foreground mt-0.5">{bookings.find(b => b.id === sel.reservedBookingId)?.name} ({bookings.find(b => b.id === sel.reservedBookingId)?.guests} {t.tables.paxSuffix})</p>
-                             </div>
+                            <div className="text-xs pt-1.5">
+                              <p className="text-purple-400 font-medium">
+                                {t.tables.scheduledBookingLabel}{" "}
+                                {bookings.find((b) => b.id === sel.reservedBookingId)?.time}
+                              </p>
+                              <p className="text-muted-foreground mt-0.5">
+                                {bookings.find((b) => b.id === sel.reservedBookingId)?.name} (
+                                {bookings.find((b) => b.id === sel.reservedBookingId)?.guests}{" "}
+                                {t.tables.paxSuffix})
+                              </p>
+                            </div>
                           ) : (
-                            <p className="text-xs text-muted-foreground pt-1">{t.tables.noActiveOrder}</p>
+                            <p className="text-xs text-muted-foreground pt-1">
+                              {t.tables.noActiveOrder}
+                            </p>
                           )}
                         </div>
                       </>
@@ -1376,7 +1437,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
 
                   <div className="mt-3 space-y-3 flex-1">
                     {orders.filter((o) => o.status === "new").length === 0 ? (
-                      <p className="text-xs text-muted-foreground py-6 text-center">{t.panel.noOrders}</p>
+                      <p className="text-xs text-muted-foreground py-6 text-center">
+                        {t.panel.noOrders}
+                      </p>
                     ) : (
                       orders
                         .filter((o) => o.status === "new")
@@ -1386,15 +1449,26 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                             className="rounded-xl border border-primary/30 bg-primary/[0.04] p-3 space-y-2"
                           >
                             <div className="flex items-center justify-between">
-                              <span className="font-bold text-sm text-foreground">{order.table}</span>
-                              <span className="text-[10px] text-muted-foreground">{order.time}</span>
+                              <span className="font-bold text-sm text-foreground">
+                                {order.table}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {order.time}
+                              </span>
                             </div>
 
                             <div className="text-xs space-y-1">
                               {order.items.map((i) => (
-                                <div key={i.id} className="flex justify-between text-muted-foreground">
-                                  <span>{i.quantity}x {i.name}</span>
-                                  <span className="font-medium">{(i.price * i.quantity).toFixed(2)} €</span>
+                                <div
+                                  key={i.id}
+                                  className="flex justify-between text-muted-foreground"
+                                >
+                                  <span>
+                                    {i.quantity}x {i.name}
+                                  </span>
+                                  <span className="font-medium">
+                                    {(i.price * i.quantity).toFixed(2)} €
+                                  </span>
                                 </div>
                               ))}
                               {order.notes && (
@@ -1405,7 +1479,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                             </div>
 
                             <div className="border-t border-border/40 pt-2 flex items-center justify-between">
-                              <span className="text-xs font-bold text-primary">{order.total.toFixed(2)} €</span>
+                              <span className="text-xs font-bold text-primary">
+                                {order.total.toFixed(2)} €
+                              </span>
                               <button
                                 onClick={() => handleUpdateOrderStatus(order.id, "prep")}
                                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[10px] font-semibold text-primary-foreground hover:opacity-90 transition shadow-md shadow-primary/20"
@@ -1436,7 +1512,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
 
                   <div className="mt-3 space-y-3 flex-1">
                     {orders.filter((o) => o.status === "prep").length === 0 ? (
-                      <p className="text-xs text-muted-foreground py-6 text-center">{t.panel.noOrders}</p>
+                      <p className="text-xs text-muted-foreground py-6 text-center">
+                        {t.panel.noOrders}
+                      </p>
                     ) : (
                       orders
                         .filter((o) => o.status === "prep")
@@ -1446,14 +1524,20 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                             className="rounded-xl border border-amber-400/30 bg-card/60 p-3 space-y-2"
                           >
                             <div className="flex items-center justify-between">
-                              <span className="font-bold text-xs text-foreground">{order.table}</span>
-                              <span className="text-[10px] text-muted-foreground">{order.time}</span>
+                              <span className="font-bold text-xs text-foreground">
+                                {order.table}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {order.time}
+                              </span>
                             </div>
 
                             <div className="text-[11px] space-y-1 text-muted-foreground">
                               {order.items.map((i) => (
                                 <div key={i.id} className="flex justify-between">
-                                  <span>{i.quantity}x {i.name}</span>
+                                  <span>
+                                    {i.quantity}x {i.name}
+                                  </span>
                                 </div>
                               ))}
                             </div>
@@ -1489,7 +1573,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
 
                   <div className="mt-3 space-y-3 flex-1">
                     {orders.filter((o) => o.status === "ready").length === 0 ? (
-                      <p className="text-xs text-muted-foreground py-6 text-center">{t.panel.noOrders}</p>
+                      <p className="text-xs text-muted-foreground py-6 text-center">
+                        {t.panel.noOrders}
+                      </p>
                     ) : (
                       orders
                         .filter((o) => o.status === "ready")
@@ -1500,8 +1586,12 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                           >
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400" />
                             <div className="flex items-center justify-between">
-                              <span className="font-bold text-xs text-foreground pl-1.5">{order.table}</span>
-                              <span className="text-[10px] text-muted-foreground">{order.time}</span>
+                              <span className="font-bold text-xs text-foreground pl-1.5">
+                                {order.table}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {order.time}
+                              </span>
                             </div>
 
                             <div className="border-t border-border/40 pt-2 flex justify-end">
@@ -1571,7 +1661,10 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
               {/* Dishes Catalog List */}
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {menuItems
-                  .filter((item) => catalogCategoryFilter === "all" || item.category === catalogCategoryFilter)
+                  .filter(
+                    (item) =>
+                      catalogCategoryFilter === "all" || item.category === catalogCategoryFilter,
+                  )
                   .map((item) => {
                     return (
                       <div
@@ -1584,7 +1677,9 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                       >
                         <div>
                           <div className="flex justify-between items-start gap-2">
-                            <h5 className="font-semibold text-sm leading-tight text-foreground">{item.name}</h5>
+                            <h5 className="font-semibold text-sm leading-tight text-foreground">
+                              {item.name}
+                            </h5>
                             <span className="font-bold text-primary shrink-0">
                               {item.price.toFixed(2)} €
                             </span>
@@ -1617,7 +1712,6 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </SiteChrome>

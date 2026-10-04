@@ -2,33 +2,17 @@ import { Link } from "@tanstack/react-router";
 import { Check, ChevronDown, Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import {
-  LOCALES,
-  LOCALE_LABELS,
-  LOCALE_NAMES,
-  PATHS,
-  type Locale,
-  type PageKey,
-} from "@/lib/i18n";
+import { LOCALES, LOCALE_LABELS, LOCALE_NAMES, PATHS, type Locale, type PageKey } from "@/lib/i18n";
 
 export const LOCALE_STORAGE_KEY = "nws-locale";
 
-export function LanguageSwitcher({
-  locale,
-  page,
-}: {
-  locale: Locale;
-  page: PageKey;
-}) {
+export function LanguageSwitcher({ locale, page }: { locale: Locale; page: PageKey }) {
   const [aberto, setAberto] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function fecharAoClicarFora(event: MouseEvent | TouchEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setAberto(false);
       }
     }
@@ -65,11 +49,7 @@ export function LanguageSwitcher({
 
         <span>{LOCALE_LABELS[locale]}</span>
 
-        <ChevronDown
-          className={`size-3 transition-transform ${
-            aberto ? "rotate-180" : ""
-          }`}
-        />
+        <ChevronDown className={`size-3 transition-transform ${aberto ? "rotate-180" : ""}`} />
       </button>
 
       {aberto && (
@@ -81,16 +61,12 @@ export function LanguageSwitcher({
                   to={PATHS[l][page]}
                   onClick={() => guardarIdioma(l)}
                   className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-xs transition hover:bg-accent ${
-                    l === locale
-                      ? "bg-secondary/60 text-foreground"
-                      : "text-muted-foreground"
+                    l === locale ? "bg-secondary/60 text-foreground" : "text-muted-foreground"
                   }`}
                 >
                   <span>{LOCALE_NAMES[l]}</span>
 
-                  {l === locale && (
-                    <Check className="size-3.5 text-primary" />
-                  )}
+                  {l === locale && <Check className="size-3.5 text-primary" />}
                 </Link>
               </li>
             ))}

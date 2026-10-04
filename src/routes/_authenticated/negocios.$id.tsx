@@ -66,20 +66,17 @@ export const Route = createFileRoute("/_authenticated/negocios/$id")({
   head: () => ({
     meta: [
       { title: "Ficha do Cliente — Nova Web Studio" },
-      { name: "description", content: "Ficha 360º de cliente, propostas, tarefas, arquivos e histórico." },
+      {
+        name: "description",
+        content: "Ficha 360º de cliente, propostas, tarefas, arquivos e histórico.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
   component: FichaNegocio,
 });
 
-type SeparadorFicha =
-  | "geral"
-  | "chamadas"
-  | "propostas"
-  | "tarefas"
-  | "arquivos"
-  | "auditoria";
+type SeparadorFicha = "geral" | "chamadas" | "propostas" | "tarefas" | "arquivos" | "auditoria";
 
 function FichaNegocio() {
   const { id } = Route.useParams();
@@ -150,9 +147,7 @@ function FichaNegocio() {
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                   {negocio.nome}
                 </h1>
-                <Chip tone={estadoAtual.tone}>
-                  {rotuloFase(prefs, negocio.estado)}
-                </Chip>
+                <Chip tone={estadoAtual.tone}>{rotuloFase(prefs, negocio.estado)}</Chip>
                 <span className="flex items-center gap-1.5 rounded-full border border-border/60 bg-surface/80 px-2.5 py-0.5 text-xs text-muted-foreground">
                   <Dot tone={prioridadeAtual.tone} />
                   {prioridadeAtual.label}
@@ -336,9 +331,7 @@ function FichaNegocio() {
             <span
               className={cn(
                 "rounded-full px-1.5 py-0.2 text-[9px] font-bold",
-                tab === "propostas"
-                  ? "bg-black/25 text-white"
-                  : "bg-success/20 text-success",
+                tab === "propostas" ? "bg-black/25 text-white" : "bg-success/20 text-success",
               )}
             >
               {oportunidades.length}
@@ -362,9 +355,7 @@ function FichaNegocio() {
             <span
               className={cn(
                 "rounded-full px-1.5 py-0.2 text-[9px] font-bold",
-                tab === "tarefas"
-                  ? "bg-black/25 text-white"
-                  : "bg-warning/20 text-warning",
+                tab === "tarefas" ? "bg-black/25 text-white" : "bg-warning/20 text-warning",
               )}
             >
               {tarefasPendentes.length}
@@ -442,9 +433,7 @@ function FichaNegocio() {
 
               <div className="flex justify-between py-2.5">
                 <dt className="text-muted-foreground">Encontrado por</dt>
-                <dd className="font-semibold text-foreground">
-                  {nomePor(negocio.encontrado_por)}
-                </dd>
+                <dd className="font-semibold text-foreground">{nomePor(negocio.encontrado_por)}</dd>
               </div>
 
               <div className="flex justify-between py-2.5">
@@ -456,7 +445,9 @@ function FichaNegocio() {
 
               <div className="flex justify-between py-2.5">
                 <dt className="text-muted-foreground">Origem da Lead</dt>
-                <dd className="font-medium text-foreground">{negocio.origem ?? "Prospeção direta"}</dd>
+                <dd className="font-medium text-foreground">
+                  {negocio.origem ?? "Prospeção direta"}
+                </dd>
               </div>
             </dl>
           </div>
@@ -597,16 +588,22 @@ function FichaNegocio() {
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="rounded-xl border border-border/40 bg-surface/60 p-2.5">
-                      <span className="text-[10px] text-muted-foreground uppercase">Valor Previsto</span>
+                      <span className="text-[10px] text-muted-foreground uppercase">
+                        Valor Previsto
+                      </span>
                       <p className="font-mono font-bold text-sm text-foreground mt-0.5">
                         {euros(o.orcamento_previsto ?? o.preco_indicado)}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-border/40 bg-surface/60 p-2.5">
-                      <span className="text-[10px] text-muted-foreground uppercase">Próxima Conversa</span>
+                      <span className="text-[10px] text-muted-foreground uppercase">
+                        Próxima Conversa
+                      </span>
                       <p className="font-medium text-xs text-foreground mt-0.5">
-                        {o.data_proxima_conversa ? formatarData(o.data_proxima_conversa) : "Por agendar"}
+                        {o.data_proxima_conversa
+                          ? formatarData(o.data_proxima_conversa)
+                          : "Por agendar"}
                       </p>
                     </div>
                   </div>
@@ -656,7 +653,9 @@ function FichaNegocio() {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-foreground truncate">{t.titulo}</span>
                       <Chip
-                        tone={t.estado === "concluida" ? "success" : prioridadeInfo(t.prioridade).tone}
+                        tone={
+                          t.estado === "concluida" ? "success" : prioridadeInfo(t.prioridade).tone
+                        }
                       >
                         {t.estado === "concluida" ? "Concluída" : "Pendente"}
                       </Chip>
@@ -722,18 +721,10 @@ function FichaNegocio() {
       )}
 
       {/* MODAIS OPERACIONAIS */}
-      {editar && (
-        <DialogNegocio aberto onFechar={() => setEditar(false)} negocio={negocio} />
-      )}
-      {chamada && (
-        <DialogChamada aberto onFechar={() => setChamada(false)} negocio={negocio} />
-      )}
+      {editar && <DialogNegocio aberto onFechar={() => setEditar(false)} negocio={negocio} />}
+      {chamada && <DialogChamada aberto onFechar={() => setChamada(false)} negocio={negocio} />}
       {tarefa && (
-        <DialogTarefa
-          aberto
-          onFechar={() => setTarefa(false)}
-          businessIdInicial={negocio.id}
-        />
+        <DialogTarefa aberto onFechar={() => setTarefa(false)} businessIdInicial={negocio.id} />
       )}
     </div>
   );
