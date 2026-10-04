@@ -46,17 +46,9 @@ import { DialogNegocio } from "@/components/crm/DialogNegocio";
 import { DialogTarefa } from "@/components/crm/DialogTarefa";
 import { supabase } from "@/integrations/supabase/client";
 import { useUtilizador } from "@/hooks/useAuth";
-import {
-  PreferenciasProvider,
-  rotuloSeccao,
-  usePreferencias,
-} from "@/lib/preferencias";
+import { PreferenciasProvider, rotuloSeccao, usePreferencias } from "@/lib/preferencias";
 import { obterContextoSeguranca } from "@/lib/security.functions";
-import {
-  useBusinesses,
-  useTasks,
-  useWebsiteRequests,
-} from "@/lib/queries";
+import { useBusinesses, useTasks, useWebsiteRequests } from "@/lib/queries";
 import { adminQuery } from "@/lib/restaurant/store";
 import { todayISO } from "@/lib/restaurant/demo-data";
 import { isDemoMode, demoStore } from "@/lib/demo-mode";
@@ -173,10 +165,9 @@ function AppShellInner({ children }: { children: ReactNode }) {
   });
 
   const restCounts = useMemo(() => {
-    if (!restData) return { pedidos: 0, pedidosNovos: 0, pedidosAbertos: 0, mesasAtencao: 0, reservasHoje: 0 };
-    const pedidosNovos = restData.orders.filter(
-      (o) => !o.closed && o.status === "recebido",
-    ).length;
+    if (!restData)
+      return { pedidos: 0, pedidosNovos: 0, pedidosAbertos: 0, mesasAtencao: 0, reservasHoje: 0 };
+    const pedidosNovos = restData.orders.filter((o) => !o.closed && o.status === "recebido").length;
     const pedidosAbertos = restData.orders.filter(
       (o) => !o.closed && o.status !== "entregue",
     ).length;
@@ -193,9 +184,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
       tarefas: tarefas.filter((t) => t.estado === "pendente").length,
       pedidos: pedidos.filter((p) => !p.tratado).length,
       prioridade: negocios.filter(
-        (n) =>
-          n.prioridade === "alta" &&
-          !["concluido", "arquivado"].includes(n.estado),
+        (n) => n.prioridade === "alta" && !["concluido", "arquivado"].includes(n.estado),
       ).length,
       emails: negocios.filter((n) => n.estado === "email_por_enviar").length,
       seguimentos: negocios.filter((n) => n.estado === "seguimento").length,
@@ -506,20 +495,22 @@ function AppShellInner({ children }: { children: ReactNode }) {
                   />
                 </div>
 
-                <div className="pt-4 border-t border-border/40 mt-4 px-2">
-                  <a
-                    href="https://restaurante.novawebstudio.pt"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-between rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs font-semibold text-warning hover:bg-warning/20 transition"
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <Globe className="size-3.5" />
-                      <span>Ementa Pública</span>
-                    </span>
-                    <ExternalLink className="size-3 opacity-70" />
-                  </a>
-                </div>
+                {!isDemoMode() && (
+                  <div className="pt-4 border-t border-border/40 mt-4 px-2">
+                    <a
+                      href="https://restaurante.novawebstudio.pt"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-between rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs font-semibold text-warning hover:bg-warning/20 transition"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Globe className="size-3.5" />
+                        <span>Ementa Pública</span>
+                      </span>
+                      <ExternalLink className="size-3 opacity-70" />
+                    </a>
+                  </div>
+                )}
               </div>
             )}
 
@@ -532,7 +523,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                 <NavItem
                   to="/produtos/match"
                   icon={Trophy}
-                  label="Hub de Futsal"
+                  label="NWS Match"
                   active={pathname === "/produtos/match"}
                   onClick={() => setMenu(false)}
                 />
@@ -568,18 +559,15 @@ function AppShellInner({ children }: { children: ReactNode }) {
       {/* ============================================================ */}
       {/* CONTEÚDO PRINCIPAL (COM HEADER CONTEXTUAL)                   */}
       {/* ============================================================ */}
-      <div
-        className={cn(
-          "flex-1 flex flex-col min-w-0 relative z-10",
-          !ehHub && "lg:pl-[260px]",
-        )}
-      >
+      <div className={cn("flex-1 flex flex-col min-w-0 relative z-10", !ehHub && "lg:pl-[260px]")}>
         {/* Banner de Identificação de Staging / Modo de Demonstração */}
         {isDemoMode() && (
           <div className="bg-gradient-to-r from-amber-500/20 via-primary/15 to-info/20 border-b border-warning/40 px-4 py-1.5 text-center text-[11px] font-bold text-warning backdrop-blur-md flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 mx-auto sm:mx-0">
               <span className="size-2 rounded-full bg-warning animate-pulse" />
-              <span>NWS Workspace — MODO DE DEMONSTRAÇÃO (Ambiente Isolado com Dados Fictícios)</span>
+              <span>
+                NWS Workspace — MODO DE DEMONSTRAÇÃO (Ambiente Isolado com Dados Fictícios)
+              </span>
             </div>
 
             <div className="flex items-center gap-2 mx-auto sm:mx-0">
@@ -629,11 +617,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
             {ehHub ? (
               <Link to="/hub" className="flex items-center gap-3">
                 <div className="grid size-9 place-items-center rounded-xl bg-surface-strong border border-border/80 shadow-inner">
-                  <img
-                    src="/logo.png"
-                    alt="Nova Web Studio"
-                    className="size-6 object-contain"
-                  />
+                  <img src="/logo.png" alt="Nova Web Studio" className="size-6 object-contain" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
@@ -710,16 +694,18 @@ function AppShellInner({ children }: { children: ReactNode }) {
             {/* 2. No Restaurante: Ações contextuais rápidas */}
             {ehRestaurantes && (
               <div className="flex items-center gap-2">
-                <a
-                  href="https://restaurante.novawebstudio.pt"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-warning/30 bg-warning/10 px-3 py-1.5 text-xs font-bold text-warning hover:bg-warning/20 transition"
-                >
-                  <Globe className="size-3.5" />
-                  <span>Site Público</span>
-                  <ExternalLink className="size-3 opacity-60" />
-                </a>
+                {!isDemoMode() && (
+                  <a
+                    href="https://restaurante.novawebstudio.pt"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-warning/30 bg-warning/10 px-3 py-1.5 text-xs font-bold text-warning hover:bg-warning/20 transition"
+                  >
+                    <Globe className="size-3.5" />
+                    <span>Site Público</span>
+                    <ExternalLink className="size-3 opacity-60" />
+                  </a>
+                )}
 
                 <Link
                   to="/produtos/restaurantes/pedidos"
@@ -775,17 +761,11 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
       {/* Modais Globais */}
       {modalNovoNegocio && (
-        <DialogNegocio
-          aberto={modalNovoNegocio}
-          onFechar={() => setModalNovoNegocio(false)}
-        />
+        <DialogNegocio aberto={modalNovoNegocio} onFechar={() => setModalNovoNegocio(false)} />
       )}
 
       {modalNovaTarefa && (
-        <DialogTarefa
-          aberto={modalNovaTarefa}
-          onFechar={() => setModalNovaTarefa(false)}
-        />
+        <DialogTarefa aberto={modalNovaTarefa} onFechar={() => setModalNovaTarefa(false)} />
       )}
     </div>
   );

@@ -653,7 +653,7 @@ export function useCarregarFicheiro() {
       const { ficheiro } = entrada;
       if (ficheiro.size > LIMITE_FICHEIRO) throw new Error("O ficheiro excede os 300 MB.");
       const uid = await utilizadorActual();
-      const caminho = `${entrada.businessId}/${Date.now()}-${ficheiro.name.replace(/[^\w.\-]+/g, "_")}`;
+      const caminho = `${entrada.businessId}/${Date.now()}-${ficheiro.name.replace(/[^\w.-]+/g, "_")}`;
       const { error: eUp } = await supabase.storage
         .from("projetos")
         .upload(caminho, ficheiro, { upsert: false });

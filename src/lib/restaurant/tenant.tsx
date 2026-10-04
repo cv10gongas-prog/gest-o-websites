@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   obterPermissoesAtivas,
@@ -13,6 +6,7 @@ import {
   type RestaurantStaffRole,
 } from "./auth.functions";
 import { CURRENT_RESTAURANT_ID } from "./config";
+import { isDemoMode } from "@/lib/demo-mode";
 
 export type RestaurantTenant = {
   id: string;
@@ -39,42 +33,46 @@ export type RestaurantTenantContextValue = {
   isLoading: boolean;
 };
 
-const RestaurantTenantContext =
-  createContext<RestaurantTenantContextValue | null>(null);
+const RestaurantTenantContext = createContext<RestaurantTenantContextValue | null>(null);
 
 export function useRestaurantTenant(): RestaurantTenantContextValue {
   const v = useContext(RestaurantTenantContext);
   if (!v) {
-    throw new Error(
-      "useRestaurantTenant deve ser usado dentro de um RestaurantTenantProvider",
-    );
+    throw new Error("useRestaurantTenant deve ser usado dentro de um RestaurantTenantProvider");
   }
   return v;
 }
 
-export function RestaurantTenantProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function RestaurantTenantProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
 
-  const { data: authData, isLoading: loadingRestaurantes } = useQuery({
+  const { data: authData, isLoading: loadingRestaurantes } = useQuery<{
+    isAdmin: boolean;
+    restaurantes: RestaurantTenant[];
+  }>({
     queryKey: ["restaurantes_autorizados"],
-    queryFn: () => obterRestaurantesAutorizados(),
+    queryFn: async () =>
+      isDemoMode()
+        ? Promise.resolve({
+            isAdmin: true,
+            restaurantes: [
+              {
+                id: CURRENT_RESTAURANT_ID,
+                nome: "Restaurante de Demonstração [DEMO]",
+                slug: "demo-restaurante",
+                subdominio: "",
+                ativo: true,
+                role: "administrador" as const,
+              },
+            ],
+          })
+        : obterRestaurantesAutorizados(),
     staleTime: 60_000,
   });
 
   const restaurantes: RestaurantTenant[] = useMemo(() => {
-    return (authData?.restaurantes ?? [
-      {
-        id: CURRENT_RESTAURANT_ID,
-        nome: "Casa do Vale",
-        slug: "casa-do-vale",
-        subdominio: "restaurante.novawebstudio.pt",
-        ativo: true,
-      },
-    ]) as RestaurantTenant[];
+    // Never fabricate a real restaurant for an account with no memberships.
+    return (authData?.restaurantes ?? []) as RestaurantTenant[];
   }, [authData]);
 
   const [activeRestaurantId, setActiveRestaurantId] = useState<string>(() => {
@@ -87,10 +85,7 @@ export function RestaurantTenantProvider({
 
   // Atualizar quando os restaurantes autorizados forem carregados
   useEffect(() => {
-    if (
-      restaurantes.length > 0 &&
-      !restaurantes.some((r) => r.id === activeRestaurantId)
-    ) {
+    if (restaurantes.length > 0 && !restaurantes.some((r) => r.id === activeRestaurantId)) {
       const fallback = restaurantes[0]?.id ?? CURRENT_RESTAURANT_ID;
       setActiveRestaurantId(fallback);
       localStorage.setItem("nws_active_restaurant", fallback);
@@ -108,20 +103,21 @@ export function RestaurantTenantProvider({
 
   const { data: permData, isLoading: loadingPerms } = useQuery({
     queryKey: ["restaurant_permissions", activeRestaurantId],
-    queryFn: () =>
-      obterPermissoesAtivas({
-        data: { restaurantId: activeRestaurantId },
-      }),
-    enabled: !!activeRestaurantId,
+    queryFn: async () =>
+      isDemoMode()
+        ? Promise.resolve({
+            permitido: true,
+            restaurantId: activeRestaurantId,
+            role: "administrador" as const,
+            isAdminNWS: true,
+          })
+        : obterPermissoesAtivas({ data: { restaurantId: activeRestaurantId } }),
+    enabled: !!activeRestaurantId && !!restaurantes.length && !loadingRestaurantes,
     staleTime: 60_000,
   });
 
   const activeRestaurant = useMemo(() => {
-    return (
-      restaurantes.find((r) => r.id === activeRestaurantId) ??
-      restaurantes[0] ??
-      null
-    );
+    return restaurantes.find((r) => r.id === activeRestaurantId) ?? restaurantes[0] ?? null;
   }, [restaurantes, activeRestaurantId]);
 
   const isAdminNWS = permData?.isAdminNWS ?? authData?.isAdmin ?? false;
@@ -159,8 +155,6 @@ export function RestaurantTenantProvider({
   };
 
   return (
-    <RestaurantTenantContext.Provider value={value}>
-      {children}
-    </RestaurantTenantContext.Provider>
+    <RestaurantTenantContext.Provider value={value}>{children}</RestaurantTenantContext.Provider>
   );
 }

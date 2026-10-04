@@ -12,9 +12,7 @@ function isNewSupabaseApiKey(value: string): boolean {
 function createSupabaseFetch(supabaseKey: string): typeof fetch {
   return (input, init) => {
     const headers = new Headers(
-      typeof Request !== "undefined" && input instanceof Request
-        ? input.headers
-        : undefined,
+      typeof Request !== "undefined" && input instanceof Request ? input.headers : undefined,
     );
 
     if (init?.headers) {
@@ -33,32 +31,20 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
-let _restaurantAdminClient:
-  | ReturnType<typeof createRestaurantServerClient>
-  | undefined;
+let _restaurantAdminClient: ReturnType<typeof createRestaurantServerClient> | undefined;
 
 function createRestaurantServerClient() {
-  const FALLBACK_URL = "https://lehvydmzzdotmhwzqcwf.supabase.co";
-  const FALLBACK_PUB_KEY = "sb_publishable_-OX-MN1sNEoVihi-b9YKaA_mFGwE6_P";
+  if (process.env["DEMO_MODE"] === "true" || process.env["VITE_DEMO_MODE"] === "true") {
+    throw new Error("[DEMO ISOLADO] O acesso administrativo à base de dados está desativado.");
+  }
 
-  const RESTAURANT_URL =
-    process.env["RESTAURANT_SUPABASE_URL"] ||
-    process.env["VITE_RESTAURANT_SUPABASE_URL"] ||
-    FALLBACK_URL;
+  const RESTAURANT_URL = process.env["RESTAURANT_SUPABASE_URL"];
 
   // Chave de serviço privada (exclusiva de servidor, NUNCA com prefixo VITE_)
-  const RESTAURANT_SERVICE_KEY =
-    process.env["RESTAURANT_SUPABASE_SERVICE_ROLE_KEY"] ||
-    process.env["SUPABASE_SERVICE_ROLE_KEY"] ||
-    process.env["VITE_RESTAURANT_SUPABASE_PUBLISHABLE_KEY"] ||
-    FALLBACK_PUB_KEY;
-
-  if (
-    process.env.NODE_ENV === "production" &&
-    !process.env["RESTAURANT_SUPABASE_SERVICE_ROLE_KEY"]
-  ) {
-    console.warn(
-      "[NWS Restaurantes] Aviso: RESTAURANT_SUPABASE_SERVICE_ROLE_KEY não definida no ambiente. A utilizar chave configurada.",
+  const RESTAURANT_SERVICE_KEY = process.env["RESTAURANT_SUPABASE_SERVICE_ROLE_KEY"];
+  if (!RESTAURANT_URL || !RESTAURANT_SERVICE_KEY) {
+    throw new Error(
+      "[NWS] RESTAURANT_SUPABASE_URL e RESTAURANT_SUPABASE_SERVICE_ROLE_KEY são obrigatórias no servidor.",
     );
   }
 

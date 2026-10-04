@@ -20,12 +20,7 @@ import {
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Field,
   OrderBadge,
@@ -37,6 +32,7 @@ import {
 } from "@/components/restaurant/RestaurantBits";
 import type { Table } from "@/lib/restaurant/demo-data";
 import { PUBLIC_RESTAURANT_URL } from "@/lib/restaurant/config";
+import { isDemoMode } from "@/lib/demo-mode";
 import {
   adminActions,
   formatPrice,
@@ -47,9 +43,7 @@ import {
 } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute(
-  "/_authenticated/produtos/restaurantes/mesas",
-)({
+export const Route = createFileRoute("/_authenticated/produtos/restaurantes/mesas")({
   component: RestaurantTablesAdmin,
 });
 
@@ -144,9 +138,7 @@ function RestaurantTablesAdmin() {
             const openRequests = app.requests.filter(
               (r) => r.tableNumber === t.number && !r.resolved,
             );
-            const tableOrders = app.orders.filter(
-              (o) => o.tableNumber === t.number && !o.closed,
-            );
+            const tableOrders = app.orders.filter((o) => o.tableNumber === t.number && !o.closed);
 
             return (
               <RestaurantCard
@@ -165,9 +157,7 @@ function RestaurantTablesAdmin() {
                         <span className="text-xl font-extrabold text-foreground group-hover:text-primary transition">
                           Mesa {t.number}
                         </span>
-                        <span className="text-xs text-muted-foreground">
-                          ({t.seats} lugares)
-                        </span>
+                        <span className="text-xs text-muted-foreground">({t.seats} lugares)</span>
                       </div>
                       <p className="text-[10px] font-mono text-muted-foreground mt-0.5">
                         /pedir/{t.slug}
@@ -186,9 +176,7 @@ function RestaurantTablesAdmin() {
                           className="flex items-center justify-between rounded-xl bg-rose-500/15 border border-rose-500/30 px-2.5 py-1.5 text-xs text-rose-300"
                         >
                           <span className="font-semibold">
-                            {r.type === "conta"
-                              ? "Pediu a Conta"
-                              : "Pediu Assistência"}
+                            {r.type === "conta" ? "Pediu a Conta" : "Pediu Assistência"}
                           </span>
                           <button
                             type="button"
@@ -209,8 +197,13 @@ function RestaurantTablesAdmin() {
                   {tableOrders.length > 0 && (
                     <div className="mt-3 rounded-xl bg-surface-strong p-2.5 text-xs text-muted-foreground space-y-1">
                       <div className="flex justify-between font-bold text-foreground">
-                        <span>{tableOrders.length} {tableOrders.length === 1 ? "pedido aberto" : "pedidos abertos"}</span>
-                        <span className="font-mono text-primary">{formatPrice(tableOrders.reduce((a, b) => a + b.total, 0))}</span>
+                        <span>
+                          {tableOrders.length}{" "}
+                          {tableOrders.length === 1 ? "pedido aberto" : "pedidos abertos"}
+                        </span>
+                        <span className="font-mono text-primary">
+                          {formatPrice(tableOrders.reduce((a, b) => a + b.total, 0))}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -328,9 +321,7 @@ function RestaurantTablesAdmin() {
             <div className="flex items-center justify-between border-b border-border/60 pb-4">
               <div>
                 <div className="flex items-center gap-2.5">
-                  <h2 className="text-xl font-bold text-foreground">
-                    Mesa {selectedTable.number}
-                  </h2>
+                  <h2 className="text-xl font-bold text-foreground">Mesa {selectedTable.number}</h2>
                   <TableBadge
                     state={selectedTableState}
                     label={tableStateLabel[selectedTableState]}
@@ -397,7 +388,9 @@ function RestaurantTablesAdmin() {
                     <ul className="space-y-1 text-muted-foreground">
                       {o.items.map((i, idx) => (
                         <li key={idx} className="flex justify-between">
-                          <span>{i.qty}× {i.name}</span>
+                          <span>
+                            {i.qty}× {i.name}
+                          </span>
                           <span className="font-mono">{formatPrice(i.price * i.qty)}</span>
                         </li>
                       ))}
@@ -456,9 +449,7 @@ function RestaurantTablesAdmin() {
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent className="max-w-md bg-surface border-border/80 text-foreground">
           <DialogHeader>
-            <DialogTitle>
-              {editing?.id ? `Editar Mesa ${editing.number}` : "Nova Mesa"}
-            </DialogTitle>
+            <DialogTitle>{editing?.id ? `Editar Mesa ${editing.number}` : "Nova Mesa"}</DialogTitle>
           </DialogHeader>
 
           {editing && (
@@ -515,32 +506,23 @@ function RestaurantTablesAdmin() {
             <DialogTitle>QR Code · Mesa {qr?.table.number}</DialogTitle>
           </DialogHeader>
 
-          {qr && (
-            <QrView
-              table={qr.table}
-              autoPrint={qr.print}
-              name={app.settings.name}
-            />
-          )}
+          {qr && <QrView table={qr.table} autoPrint={qr.print} name={app.settings.name} />}
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function QrView({
-  table,
-  autoPrint,
-  name,
-}: {
-  table: Table;
-  autoPrint: boolean;
-  name: string;
-}) {
+function QrView({ table, autoPrint, name }: { table: Table; autoPrint: boolean; name: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const targetUrl = `${PUBLIC_RESTAURANT_URL}/pedir/${table.slug}`;
+  const isDemo = isDemoMode();
+  const targetUrl = isDemo ? "" : `${PUBLIC_RESTAURANT_URL}/pedir/${table.slug}`;
 
   const print = () => {
+    if (isDemo || !targetUrl) {
+      toast.error("Os QR Codes de produção estão indisponíveis no modo DEMO.");
+      return;
+    }
     const svg = ref.current?.querySelector("svg")?.outerHTML ?? "";
     const w = window.open("", "_blank", "width=520,height=680");
     if (!w) {
@@ -627,42 +609,48 @@ function QrView({
   };
 
   useEffect(() => {
-    if (autoPrint) print();
+    if (autoPrint && !isDemo) print();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col items-center gap-4 py-2">
-      <div
-        ref={ref}
-        className="rounded-2xl border border-border bg-white p-5 shadow-inner"
-      >
-        <QRCodeSVG value={targetUrl} size={220} level="M" />
-      </div>
+      {isDemo ? (
+        <div className="w-full rounded-xl border border-warning/40 bg-warning/10 p-6 text-center text-sm text-warning">
+          QR ilustrativo indisponível em DEMO. Configura um endereço de staging público antes de
+          testar ou imprimir QR Codes. Nenhum QR aponta para o restaurante real.
+        </div>
+      ) : (
+        <>
+          <div ref={ref} className="rounded-2xl border border-border bg-white p-5 shadow-inner">
+            <QRCodeSVG value={targetUrl} size={220} level="M" />
+          </div>
 
-      <p className="break-all text-center text-xs font-mono text-muted-foreground px-2">
-        {targetUrl}
-      </p>
+          <p className="break-all text-center text-xs font-mono text-muted-foreground px-2">
+            {targetUrl}
+          </p>
 
-      <div className="flex gap-2 w-full pt-2">
-        <a
-          href={targetUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/80 bg-surface-strong px-3 py-2 text-xs font-semibold text-foreground hover:bg-surface transition"
-        >
-          <ExternalLink className="size-3.5" />
-          <span>Testar Link</span>
-        </a>
+          <div className="flex gap-2 w-full pt-2">
+            <a
+              href={targetUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/80 bg-surface-strong px-3 py-2 text-xs font-semibold text-foreground hover:bg-surface transition"
+            >
+              <ExternalLink className="size-3.5" />
+              <span>Testar Link</span>
+            </a>
 
-        <button
-          type="button"
-          onClick={print}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-3 py-2 text-xs font-bold text-primary-foreground shadow-md transition hover:bg-primary/90"
-        >
-          <Printer className="size-3.5" />
-          <span>Imprimir QR</span>
-        </button>
-      </div>
+            <button
+              type="button"
+              onClick={print}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-3 py-2 text-xs font-bold text-primary-foreground shadow-md transition hover:bg-primary/90"
+            >
+              <Printer className="size-3.5" />
+              <span>Imprimir QR</span>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

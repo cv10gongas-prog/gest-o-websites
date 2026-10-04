@@ -28,22 +28,15 @@ import type {
 } from "./crm";
 
 export function isDemoMode(): boolean {
-  // Modo demo estritamente controlado por variáveis de ambiente de preview / staging
-  const explicitFlag =
-    import.meta.env["VITE_DEMO_MODE"] === "true" ||
-    process.env["DEMO_MODE"] === "true";
-
-  // Em localhost em desenvolvimento permite modo demo isolado
-  if (typeof window !== "undefined") {
-    if (
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1"
-    ) {
-      return true;
-    }
+  // Preview opt-in ONLY. Neither localhost nor a query string can grant admin access.
+  const requested = import.meta.env["VITE_DEMO_MODE"] === "true";
+  const preview = import.meta.env["VITE_DEPLOYMENT_ENV"] === "preview";
+  if (typeof window === "undefined") {
+    // A Vercel Production deployment is never allowed to bypass real auth.
+    if (process.env["VERCEL_ENV"] === "production") return false;
+    return preview && requested && process.env["DEMO_MODE"] === "true";
   }
-
-  return explicitFlag;
+  return preview && requested;
 }
 
 // ============================================================================
@@ -77,7 +70,8 @@ const sampleSettings: Settings = {
 const cleanSettings: Settings = {
   name: "Restaurante de Demonstração [DEMO]",
   tagline: "Configure a identidade do seu restaurante",
-  introduction: "Restaurante de demonstração sem dados iniciais. Clique em 'Carregar dados de exemplo' para simular um restaurante movimentado.",
+  introduction:
+    "Restaurante de demonstração sem dados iniciais. Clique em 'Carregar dados de exemplo' para simular um restaurante movimentado.",
   logo: "",
   primaryColor: "#39D9E6",
   phone: "912 000 000",
@@ -269,8 +263,29 @@ const sampleStaff: DemoStaffMember[] = [
 // DADOS FICTÍCIOS DO CRM
 // ============================================================================
 
+/** Mantém os objetos DEMO com a mesma estrutura dos registos reais do CRM. */
+const demoBusinessDefaults: Pick<
+  Business,
+  | "contactado_por"
+  | "criado_por"
+  | "data_seguimento"
+  | "encontrado_por"
+  | "pessoa_contacto"
+  | "proxima_acao"
+  | "ultima_interacao"
+> = {
+  contactado_por: null,
+  criado_por: null,
+  data_seguimento: null,
+  encontrado_por: null,
+  pessoa_contacto: null,
+  proxima_acao: null,
+  ultima_interacao: null,
+};
+
 const sampleBusinesses: Business[] = [
   {
+    ...demoBusinessDefaults,
     id: "demo-biz-1",
     nome: "Restaurante Exemplo [DEMO]",
     categoria: "Restauração",
@@ -291,6 +306,7 @@ const sampleBusinesses: Business[] = [
     updated_at: new Date().toISOString(),
   },
   {
+    ...demoBusinessDefaults,
     id: "demo-biz-2",
     nome: "Clube Desportivo Teste [DEMO]",
     categoria: "Desporto",
@@ -314,6 +330,9 @@ const sampleBusinesses: Business[] = [
 
 const sampleTasks: Task[] = [
   {
+    concluida_em: null,
+    criado_por: null,
+    responsavel: null,
     id: "demo-task-1",
     business_id: "demo-biz-1",
     tipo: "ligar",
@@ -330,6 +349,8 @@ const sampleTasks: Task[] = [
 
 const sampleWebsiteRequests: WebsiteRequest[] = [
   {
+    business_id: null,
+    quer_reuniao: false,
     id: "demo-req-1",
     nome: "Contacto Fictício Teste",
     empresa: "Empresa de Demonstração Lda",
@@ -466,28 +487,19 @@ class DemoStore {
   }
 
   resolveRequest(requestId: string) {
-    this.requests = this.requests.map((r) =>
-      r.id === requestId ? { ...r, resolved: true } : r,
-    );
+    this.requests = this.requests.map((r) => (r.id === requestId ? { ...r, resolved: true } : r));
   }
 
   freeTable(tableNumber: number) {
     this.orders = this.orders.map((o) =>
-      o.tableNumber === tableNumber
-        ? { ...o, closed: true, status: "entregue" }
-        : o,
+      o.tableNumber === tableNumber ? { ...o, closed: true, status: "entregue" } : o,
     );
     this.requests = this.requests.map((r) =>
       r.tableNumber === tableNumber ? { ...r, resolved: true } : r,
     );
   }
 
-  saveTable(t: {
-    id?: string;
-    number: number;
-    seats: number;
-    active: boolean;
-  }) {
+  saveTable(t: { id?: string; number: number; seats: number; active: boolean }) {
     if (t.id) {
       this.tables = this.tables.map((table) =>
         table.id === t.id
@@ -514,9 +526,7 @@ class DemoStore {
   }
 
   setTableActive(tableId: string, active: boolean) {
-    this.tables = this.tables.map((t) =>
-      t.id === tableId ? { ...t, active } : t,
-    );
+    this.tables = this.tables.map((t) => (t.id === tableId ? { ...t, active } : t));
   }
 
   removeTable(tableId: string) {
@@ -533,13 +543,10 @@ class DemoStore {
     available: boolean;
     featured?: boolean;
   }) {
-    const cat =
-      this.categories.find((c) => c.id === p.categoryId)?.name ?? "Outros";
+    const cat = this.categories.find((c) => c.id === p.categoryId)?.name ?? "Outros";
     if (p.id) {
       this.products = this.products.map((prod) =>
-        prod.id === p.id
-          ? { ...prod, ...p, category: cat, featured: p.featured ?? false }
-          : prod,
+        prod.id === p.id ? { ...prod, ...p, category: cat, featured: p.featured ?? false } : prod,
       );
     } else {
       const newId = `demo-prod-${Date.now()}`;
@@ -558,9 +565,7 @@ class DemoStore {
   }
 
   setProductAvailable(productId: string, available: boolean) {
-    this.products = this.products.map((p) =>
-      p.id === productId ? { ...p, available } : p,
-    );
+    this.products = this.products.map((p) => (p.id === productId ? { ...p, available } : p));
   }
 
   removeProduct(productId: string) {
@@ -650,6 +655,7 @@ class DemoStore {
 
   createBusiness(b: Partial<Business> & { nome: string }): Business {
     const newBiz: Business = {
+      ...demoBusinessDefaults,
       id: `demo-biz-${Date.now()}`,
       nome: b.nome,
       categoria: b.categoria ?? "Geral",
@@ -675,9 +681,7 @@ class DemoStore {
 
   updateBusiness(id: string, patch: Partial<Business>): Business {
     this.businesses = this.businesses.map((b) =>
-      b.id === id
-        ? { ...b, ...patch, updated_at: new Date().toISOString() }
-        : b,
+      b.id === id ? { ...b, ...patch, updated_at: new Date().toISOString() } : b,
     );
     return this.businesses.find((b) => b.id === id)!;
   }

@@ -1,22 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import {
-  ChefHat,
-  Shield,
-  Trash2,
-  UserCheck,
-  UserPlus,
-  Users,
-  UtensilsCrossed,
-} from "lucide-react";
+import { ChefHat, Shield, Trash2, UserCheck, UserPlus, Users, UtensilsCrossed } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Field,
   PanelHeader,
@@ -25,15 +12,14 @@ import {
 } from "@/components/restaurant/RestaurantBits";
 import {
   convidarFuncionarioRestaurante,
+  listarMembrosRestaurante,
+  revogarFuncionarioRestaurante,
   type RestaurantStaffRole,
 } from "@/lib/restaurant/auth.functions";
 import { useRestaurantTenant } from "@/lib/restaurant/tenant";
-import { supabase } from "@/integrations/supabase/client";
 import { isDemoMode, demoStore } from "@/lib/demo-mode";
 
-export const Route = createFileRoute(
-  "/_authenticated/produtos/restaurantes/equipa",
-)({
+export const Route = createFileRoute("/_authenticated/produtos/restaurantes/equipa")({
   component: RestaurantStaffAdmin,
 });
 
@@ -68,8 +54,7 @@ const roleLabels: Record<
 };
 
 function RestaurantStaffAdmin() {
-  const { activeRestaurantId, activeRestaurant, canManageStaff } =
-    useRestaurantTenant();
+  const { activeRestaurantId, activeRestaurant, canManageStaff } = useRestaurantTenant();
   const qc = useQueryClient();
   const [modalConvidar, setModalConvidar] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -81,13 +66,7 @@ function RestaurantStaffAdmin() {
       if (isDemoMode()) {
         return demoStore.staff;
       }
-      const { data, error } = await supabase
-        .from("restaurant_memberships" as any)
-        .select("id, user_id, role, ativo, criado_em, profiles:user_id(nome, email, foto_url)")
-        .eq("restaurant_id", activeRestaurantId);
-
-      if (error) return [];
-      return data ?? [];
+      return listarMembrosRestaurante({ data: { restaurantId: activeRestaurantId } });
     },
     enabled: !!activeRestaurantId,
   });
@@ -107,7 +86,9 @@ function RestaurantStaffAdmin() {
     try {
       if (isDemoMode()) {
         demoStore.inviteStaff({ email, role });
-        toast.success(`[Modo Demo] Acesso atribuído a ${email} com a função "${roleLabels[role].label}".`);
+        toast.success(
+          `[Modo Demo] Acesso atribuído a ${email} com a função "${roleLabels[role].label}".`,
+        );
       } else {
         await convidarFuncionarioRestaurante({
           data: {
@@ -148,29 +129,28 @@ function RestaurantStaffAdmin() {
 
       {/* QUADRO DE NÍVEIS DE ACESSO */}
       <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-        {(Object.entries(roleLabels) as [RestaurantStaffRole, typeof roleLabels[RestaurantStaffRole]][]).map(
-          ([key, info]) => {
-            const Icon = info.icon;
-            return (
-              <div
-                key={key}
-                className="rounded-2xl border border-border/70 bg-surface/50 p-4 backdrop-blur-md space-y-2"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="grid size-7 place-items-center rounded-lg bg-surface-strong text-foreground">
-                    <Icon className="size-4" />
-                  </span>
-                  <span className="text-xs font-bold text-foreground">
-                    {info.label}
-                  </span>
-                </div>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  {info.desc}
-                </p>
+        {(
+          Object.entries(roleLabels) as [
+            RestaurantStaffRole,
+            (typeof roleLabels)[RestaurantStaffRole],
+          ][]
+        ).map(([key, info]) => {
+          const Icon = info.icon;
+          return (
+            <div
+              key={key}
+              className="rounded-2xl border border-border/70 bg-surface/50 p-4 backdrop-blur-md space-y-2"
+            >
+              <div className="flex items-center gap-2">
+                <span className="grid size-7 place-items-center rounded-lg bg-surface-strong text-foreground">
+                  <Icon className="size-4" />
+                </span>
+                <span className="text-xs font-bold text-foreground">{info.label}</span>
               </div>
-            );
-          },
-        )}
+              <p className="text-[11px] text-muted-foreground leading-relaxed">{info.desc}</p>
+            </div>
+          );
+        })}
       </div>
 
       {/* LISTA DE FUNCIONÁRIOS */}
@@ -198,11 +178,12 @@ function RestaurantStaffAdmin() {
               Ainda não existem funcionários associados a este restaurante.
             </p>
             <p className="text-[11px]">
-              Os administradores NWS têm acesso automático; adicione cozinheiros, gerentes ou empregados de sala acima.
+              Os administradores NWS têm acesso automático; adicione cozinheiros, gerentes ou
+              empregados de sala acima.
             </p>
           </div>
         ) : (
-          membros.map((m: any) => {
+          membros.map((m) => {
             const rInfo = roleLabels[m.role as RestaurantStaffRole] ?? roleLabels.sala;
             const Icon = rInfo.icon;
             return (
@@ -240,13 +221,14 @@ function RestaurantStaffAdmin() {
                             demoStore.revokeStaff(m.id);
                             toast.success("[Modo Demo] Acesso revogado.");
                           } else {
-                            await supabase
-                              .from("restaurant_memberships" as any)
-                              .delete()
-                              .eq("id", m.id);
+                            await revogarFuncionarioRestaurante({
+                              data: { restaurantId: activeRestaurantId, memberId: m.id },
+                            });
                             toast.success("Acesso revogado.");
                           }
-                          qc.invalidateQueries({ queryKey: ["restaurant_members", activeRestaurantId] });
+                          qc.invalidateQueries({
+                            queryKey: ["restaurant_members", activeRestaurantId],
+                          });
                         }
                       }}
                       className="rounded-lg p-1.5 text-muted-foreground hover:bg-danger/10 hover:text-danger transition"

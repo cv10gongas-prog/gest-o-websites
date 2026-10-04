@@ -16,14 +16,12 @@ import type { OrderStatus, ReservationStatus } from "@/lib/restaurant/demo-data"
 import type { TableState } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 import { PUBLIC_RESTAURANT_URL } from "@/lib/restaurant/config";
+import { isDemoMode } from "@/lib/demo-mode";
 
 const orderTone: Record<OrderStatus, string> = {
-  recebido:
-    "bg-warning/15 text-warning border-warning/30 ring-1 ring-warning/30",
-  preparacao:
-    "bg-primary/15 text-primary border-primary/30 ring-1 ring-primary/30",
-  pronto:
-    "bg-success/15 text-success border-success/30 ring-1 ring-success/30",
+  recebido: "bg-warning/15 text-warning border-warning/30 ring-1 ring-warning/30",
+  preparacao: "bg-primary/15 text-primary border-primary/30 ring-1 ring-primary/30",
+  pronto: "bg-success/15 text-success border-success/30 ring-1 ring-success/30",
   entregue: "bg-surface-strong text-muted-foreground border-border/60",
 };
 
@@ -81,13 +79,7 @@ const tableTone: Record<TableState, { bg: string; text: string; border: string }
   },
 };
 
-export function TableBadge({
-  state,
-  label,
-}: {
-  state: TableState;
-  label: string;
-}) {
+export function TableBadge({ state, label }: { state: TableState; label: string }) {
   const tone = tableTone[state] ?? tableTone.livre;
   return (
     <span
@@ -111,13 +103,7 @@ const resvTone: Record<ReservationStatus, string> = {
   cancelada: "bg-rose-500/15 text-rose-400 border-rose-500/30",
 };
 
-export function ReservationBadge({
-  status,
-  label,
-}: {
-  status: ReservationStatus;
-  label: string;
-}) {
+export function ReservationBadge({ status, label }: { status: ReservationStatus; label: string }) {
   return (
     <span
       className={cn(
@@ -143,9 +129,7 @@ export function PanelHeader({
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-border/40">
       <div>
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            {title}
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h1>
         </div>
         {subtitle && (
           <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -192,12 +176,8 @@ export function StatCard({
           <p className="mt-1 text-2xl sm:text-3xl font-extrabold font-mono text-foreground tracking-tight">
             {value}
           </p>
-          {subtitle && (
-            <p className="mt-1 text-[11px] text-muted-foreground">{subtitle}</p>
-          )}
-          {trend && (
-            <p className="mt-1 text-[10px] font-semibold text-primary">{trend}</p>
-          )}
+          {subtitle && <p className="mt-1 text-[11px] text-muted-foreground">{subtitle}</p>}
+          {trend && <p className="mt-1 text-[10px] font-semibold text-primary">{trend}</p>}
         </div>
         {Icon && (
           <span
@@ -240,6 +220,14 @@ export function RestaurantPublicBanner({
   name: string;
   restaurantId: string;
 }) {
+  if (isDemoMode()) {
+    return (
+      <div className="rounded-2xl border border-warning/30 bg-warning/10 p-4 text-xs text-warning">
+        <strong>Modo de demonstração:</strong> o site público e os QR Codes reais estão desativados.
+        Nenhum pedido será enviado a um restaurante verdadeiro.
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-warning/30 bg-gradient-to-r from-warning/10 via-surface/60 to-surface/80 p-4 text-xs backdrop-blur-md">
       <div className="flex items-center gap-3">
@@ -250,7 +238,7 @@ export function RestaurantPublicBanner({
           <p className="font-bold text-foreground flex items-center gap-1.5">
             <span>Subdomínio Público do Restaurante</span>
             <span className="rounded bg-warning/20 px-1.5 py-0.2 text-[9px] font-bold text-warning uppercase">
-              Ativo
+              Configurado · não verificado
             </span>
           </p>
           <p className="text-muted-foreground mt-0.5">

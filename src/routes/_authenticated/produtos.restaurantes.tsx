@@ -10,10 +10,7 @@ import {
   adminQuery,
   useRealtime,
 } from "@/lib/restaurant/store";
-import {
-  RestaurantTenantProvider,
-  useRestaurantTenant,
-} from "@/lib/restaurant/tenant";
+import { RestaurantTenantProvider, useRestaurantTenant } from "@/lib/restaurant/tenant";
 import { playNewOrderSound, playTableAlertSound } from "@/lib/restaurant/sound";
 
 export const Route = createFileRoute("/_authenticated/produtos/restaurantes")({
@@ -36,8 +33,15 @@ export const Route = createFileRoute("/_authenticated/produtos/restaurantes")({
 });
 
 function RestaurantesLayoutInner() {
-  const { activeRestaurantId, currentRole, canManageMenu, canManageSettings, canManageStaff } =
-    useRestaurantTenant();
+  const {
+    activeRestaurantId,
+    activeRestaurant,
+    isLoading: tenantLoading,
+    currentRole,
+    canManageMenu,
+    canManageSettings,
+    canManageStaff,
+  } = useRestaurantTenant();
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
@@ -59,12 +63,16 @@ function RestaurantesLayoutInner() {
   }, [pathname, canManageMenu, canManageSettings, canManageStaff, navigate]);
 
   // Carrega e sincroniza todos os dados do restaurante ativo em tempo real
-  const q = useQuery(adminQuery(activeRestaurantId));
-  useRealtime(activeRestaurantId, ADMIN_TABLES, [
-    ["restaurant_admin", activeRestaurantId],
-  ]);
+  const q = useQuery({
+    ...adminQuery(activeRestaurantId),
+    enabled: !tenantLoading && !!activeRestaurant,
+  });
+  useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
 
   const data = q.data;
+
+  // The authenticated user might not have access to any restaurant yet.
+  // No fabricated restaurant is loaded and no private query is sent in that case.
 
   // Deteção inteligente de novos pedidos, chamadas de mesa e reservas para avisos sonoros e toasts
   const seen = useRef<{
@@ -84,9 +92,7 @@ function RestaurantesLayoutInner() {
 
     if (prev) {
       // 1. Novos pedidos na cozinha
-      const newOrders = data.orders.filter(
-        (o) => !prev.o.has(o.id) && !o.closed,
-      );
+      const newOrders = data.orders.filter((o) => !prev.o.has(o.id) && !o.closed);
       if (newOrders.length > 0) {
         playNewOrderSound();
         newOrders.forEach((o) => {
@@ -98,9 +104,7 @@ function RestaurantesLayoutInner() {
       }
 
       // 2. Chamadas de mesa / Pedidos de conta
-      const newRequests = data.requests.filter(
-        (r) => !prev.r.has(r.id) && !r.resolved,
-      );
+      const newRequests = data.requests.filter((r) => !prev.r.has(r.id) && !r.resolved);
       if (newRequests.length > 0) {
         playTableAlertSound();
         newRequests.forEach((r) => {
@@ -135,7 +139,7 @@ function RestaurantesLayoutInner() {
     seen.current = cur;
   }, [data]);
 
-  if (q.isLoading) {
+  if (tenantLoading || q.isLoading) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center">
         <div className="relative">
@@ -149,6 +153,18 @@ function RestaurantesLayoutInner() {
     );
   }
 
+  if (!activeRestaurant) {
+    return (
+      <div className="mx-auto max-w-xl rounded-2xl border border-border bg-surface p-8 text-center">
+        <h2 className="text-lg font-bold">Sem restaurantes atribuídos</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Ainda não tens acesso a nenhum estabelecimento. Contacta o administrador da Nova Web
+          Studio.
+        </p>
+      </div>
+    );
+  }
+
   if (q.isError || !data) {
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-3xl border border-danger/30 bg-danger/5 p-8 text-center max-w-lg mx-auto">
@@ -156,12 +172,9 @@ function RestaurantesLayoutInner() {
           <AlertTriangle className="size-6" />
         </div>
         <div>
-          <h2 className="text-base font-bold text-foreground">
-            Erro ao Ligar ao NWS Restaurantes
-          </h2>
+          <h2 className="text-base font-bold text-foreground">Erro ao Ligar ao NWS Restaurantes</h2>
           <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-            {q.error?.message ||
-              "Não foi possível descarregar os dados do restaurante."}
+            {q.error?.message || "Não foi possível descarregar os dados do restaurante."}
           </p>
         </div>
         <button

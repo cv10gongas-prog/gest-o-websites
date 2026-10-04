@@ -7,20 +7,25 @@ import type { Database } from "./types";
  */
 
 const DEMO_MODE = import.meta.env["VITE_DEMO_MODE"] === "true";
-
-// Valores de fallback apenas para produção atual; ignorados integralmente em modo Demo.
-const FALLBACK_URL = "https://lehvydmzzdotmhwzqcwf.supabase.co";
-const FALLBACK_KEY = "sb_publishable_-OX-MN1sNEoVihi-b9YKaA_mFGwE6_P";
+if (DEMO_MODE && import.meta.env["VITE_DEPLOYMENT_ENV"] !== "preview") {
+  throw new Error("[NWS] A demonstração só pode ser ativada numa Preview explícita.");
+}
 
 export const RESTAURANT_SUPABASE_URL: string = DEMO_MODE
   ? "https://demo-blocked.invalid"
-  : import.meta.env["VITE_RESTAURANT_SUPABASE_URL"] || FALLBACK_URL;
+  : import.meta.env["VITE_RESTAURANT_SUPABASE_URL"] || "";
 
 const RESTAURANT_SUPABASE_KEY: string = DEMO_MODE
   ? "demo-blocked"
   : import.meta.env["VITE_RESTAURANT_SUPABASE_PUBLISHABLE_KEY"] ||
     import.meta.env["VITE_RESTAURANT_SUPABASE_KEY"] ||
-    FALLBACK_KEY;
+    "";
+
+if (!RESTAURANT_SUPABASE_URL || !RESTAURANT_SUPABASE_KEY) {
+  throw new Error(
+    "[NWS] Faltam as variáveis públicas do restaurante. Nenhuma ligação automática à produção é permitida.",
+  );
+}
 
 const cloudFetch: typeof fetch = (input, init) => {
   if (DEMO_MODE) {
@@ -30,9 +35,7 @@ const cloudFetch: typeof fetch = (input, init) => {
   }
 
   const h = new Headers(
-    typeof Request !== "undefined" && input instanceof Request
-      ? input.headers
-      : undefined,
+    typeof Request !== "undefined" && input instanceof Request ? input.headers : undefined,
   );
   if (init?.headers) new Headers(init.headers).forEach((v, k) => h.set(k, v));
   if (

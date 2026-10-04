@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import type { Session } from "@supabase/supabase-js";
+import type { Session, AuthChangeEvent } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
 import { isDemoMode } from "@/lib/demo-mode";
@@ -37,7 +37,7 @@ export function useSession() {
 
   useEffect(() => {
     if (isDemoMode()) return;
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event: AuthChangeEvent) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       qc.invalidateQueries({ queryKey: ["sessao"] });
       if (event !== "SIGNED_OUT") qc.invalidateQueries();
@@ -99,7 +99,7 @@ export function useUtilizador() {
     userId: userId ?? null,
     perfil: perfil.data ?? null,
     funcao: funcao.data ?? null,
-    isAdmin: (funcao.data === "administrador") || isDemoMode(),
+    isAdmin: funcao.data === "administrador" || isDemoMode(),
     aCarregar: aCarregarSessao || perfil.isLoading || funcao.isLoading,
   };
 }

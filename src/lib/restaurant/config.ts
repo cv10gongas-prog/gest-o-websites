@@ -10,5 +10,6 @@ export const CURRENT_RESTAURANT_ID: string =
  * garantindo que clientes no restaurante acedem ao menu oficial sem quebras.
  */
 export const PUBLIC_RESTAURANT_URL: string =
-  import.meta.env["VITE_PUBLIC_RESTAURANT_URL"] ||
-  "https://restaurante.novawebstudio.pt";
+  import.meta.env["VITE_DEMO_MODE"] === "true"
+    ? ""
+    : import.meta.env["VITE_PUBLIC_RESTAURANT_URL"] || "https://restaurante.novawebstudio.pt";

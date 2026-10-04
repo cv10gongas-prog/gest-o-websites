@@ -1,11 +1,5 @@
-import {
-  createFileRoute,
-  useNavigate,
-} from "@tanstack/react-router";
-import {
-  useEffect,
-  useState,
-} from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -48,54 +42,53 @@ function sanitizeRedirectTarget(target?: string): string {
 
   // Verifica se o caminho pertence à lista de destinos internos autorizados
   const isAllowed = ALLOWED_REDIRECT_PREFIXES.some(
-    (prefix) => trimmed === prefix || trimmed.startsWith(`${prefix}/`) || trimmed.startsWith(`${prefix}?`),
+    (prefix) =>
+      trimmed === prefix || trimmed.startsWith(`${prefix}/`) || trimmed.startsWith(`${prefix}?`),
   );
 
   return isAllowed ? trimmed : "/hub";
 }
 
 const authSearchSchema = z.object({
-  redirect: z.string().optional().transform((v) => (v ? sanitizeRedirectTarget(v) : undefined)),
+  redirect: z
+    .string()
+    .optional()
+    .transform((v) => (v ? sanitizeRedirectTarget(v) : undefined)),
 });
 
-export const Route =
-  createFileRoute(
-    "/auth",
-  )({
-    ssr: false,
+export const Route = createFileRoute("/auth")({
+  ssr: false,
 
-    validateSearch: (search: Record<string, unknown>) =>
-      authSearchSchema.parse(search),
+  validateSearch: (search: Record<string, unknown>) => authSearchSchema.parse(search),
 
-    head: () => ({
-      meta: [
-        {
-          title:
-            "Entrar — Nova Web CRM",
-        },
-        {
-          name:
-            "description",
-          content:
-            "Acesso reservado à equipa comercial e utilizadores autorizados da Nova Web Studio.",
-        },
-        {
-          property: "og:title",
-          content: "Entrar — Nova Web CRM",
-        },
-        {
-          property: "og:description",
-          content: "Acesso reservado à equipa comercial e utilizadores autorizados da Nova Web Studio.",
-        },
-        {
-          name: "robots",
-          content: "noindex",
-        },
-      ],
-    }),
+  head: () => ({
+    meta: [
+      {
+        title: "Entrar — Nova Web CRM",
+      },
+      {
+        name: "description",
+        content:
+          "Acesso reservado à equipa comercial e utilizadores autorizados da Nova Web Studio.",
+      },
+      {
+        property: "og:title",
+        content: "Entrar — Nova Web CRM",
+      },
+      {
+        property: "og:description",
+        content:
+          "Acesso reservado à equipa comercial e utilizadores autorizados da Nova Web Studio.",
+      },
+      {
+        name: "robots",
+        content: "noindex",
+      },
+    ],
+  }),
 
-    component: AuthPage,
-  });
+  component: AuthPage,
+});
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -110,14 +103,16 @@ function AuthPage() {
   useEffect(() => {
     let active = true;
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (active && data.session) {
-        navigate({
-          to: safeRedirect as any,
-          replace: true,
-        });
-      }
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }: { data: { session: import("@supabase/supabase-js").Session | null } }) => {
+        if (active && data.session) {
+          navigate({
+            to: safeRedirect as "/hub",
+            replace: true,
+          });
+        }
+      });
 
     return () => {
       active = false;
@@ -126,8 +121,7 @@ function AuthPage() {
 
   async function registarLogin(emailUtilizador: string) {
     try {
-      const { data: dadosUtilizador, error: erroUtilizador } =
-        await supabase.auth.getUser();
+      const { data: dadosUtilizador, error: erroUtilizador } = await supabase.auth.getUser();
 
       if (erroUtilizador) {
         throw erroUtilizador;
@@ -245,16 +239,12 @@ function AuthPage() {
       }
 
       navigate({
-        to: destino as any,
+        to: destino as "/hub",
         replace: true,
       });
     } catch (error) {
       console.error(error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Não foi possível continuar.",
-      );
+      toast.error(error instanceof Error ? error.message : "Não foi possível continuar.");
     } finally {
       setACarregar(false);
     }
@@ -263,10 +253,10 @@ function AuthPage() {
   return (
     <SignInFlow
       email={email}
-      setEmail={setEmail}
       password={password}
-      setPassword={setPassword}
-      aCarregar={aCarregar}
+      onEmailChange={setEmail}
+      onPasswordChange={setPassword}
+      loading={aCarregar}
       onSubmit={submeter}
     />
   );

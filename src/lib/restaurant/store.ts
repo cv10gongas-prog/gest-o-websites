@@ -36,6 +36,7 @@ import {
   serverSetReservationStatus,
   serverSetTableActive,
   serverUpdateReservation,
+  serverUploadImage,
 } from "./auth.functions";
 
 const RID = CURRENT_RESTAURANT_ID;
@@ -98,11 +99,7 @@ async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
       .eq("restaurant_id", restaurantId)
       .order("sort_order")
       .order("created_at"),
-    restaurantCloud
-      .from("tables")
-      .select("*")
-      .eq("restaurant_id", restaurantId)
-      .order("number"),
+    restaurantCloud.from("tables").select("*").eq("restaurant_id", restaurantId).order("number"),
   ]);
 
   if (r.error || s.error) {
@@ -113,9 +110,7 @@ async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
   const set = s.data;
 
   if (!rest || !set) {
-    throw new Error(
-      `O restaurante configurado ("${restaurantId}") não existe na base de dados.`,
-    );
+    throw new Error(`O restaurante configurado ("${restaurantId}") não existe na base de dados.`);
   }
 
   const categories: Category[] = checkRestaurant(c).map((x) => ({
@@ -149,8 +144,7 @@ async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
     description: x.description,
     price: num(x.price),
     categoryId: x.category_id,
-    category:
-      categories.find((k) => k.id === x.category_id)?.name ?? "Outros",
+    category: categories.find((k) => k.id === x.category_id)?.name ?? "Outros",
     image: x.image,
     available: x.available,
     featured: x.featured,
@@ -219,11 +213,7 @@ export function useRealtime(
 
     let ch = restaurantCloud.channel(`rt-rest-${++chan}`);
     for (const table of tk.split(",")) {
-      ch = ch.on(
-        "postgres_changes",
-        { event: "*", schema: "public", table },
-        refresh,
-      );
+      ch = ch.on("postgres_changes", { event: "*", schema: "public", table }, refresh);
     }
     ch.subscribe((status) => {
       if (status === "SUBSCRIBED") refresh();
@@ -366,11 +356,7 @@ export const adminActions = {
     });
   },
 
-  setReservationStatus: async (
-    id: string,
-    status: ReservationStatus,
-    restaurantId = RID,
-  ) => {
+  setReservationStatus: async (id: string, status: ReservationStatus, restaurantId = RID) => {
     if (isDemoMode()) {
       demoStore.setReservationStatus(id, status);
       return;
@@ -541,7 +527,7 @@ export const adminActions = {
   },
 };
 
-/** Envia uma imagem redimensionada para o storage e devolve um URL permanente */
+/** Redimensiona no browser, mas o upload só pode ocorrer no servidor autorizado. */
 export async function uploadImage(
   restaurantId: string = RID,
   file: File,
@@ -552,22 +538,22 @@ export async function uploadImage(
     return URL.createObjectURL(blob);
   }
 
-  const path = `${restaurantId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
-  const up = await restaurantCloud.storage
-    .from("restaurant-media")
-    .upload(path, blob, { contentType: "image/jpeg", upsert: false });
-  if (up.error) {
-    throw new Error(
-      "Não foi possível enviar a imagem para o storage. Tente novamente.",
-    );
+  if (blob.size > 4 * 1024 * 1024) {
+    throw new Error("A fotografia é demasiado grande. Limite: 4 MB.");
   }
-  const signed = await restaurantCloud.storage
-    .from("restaurant-media")
-    .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-  if (signed.error || !signed.data) {
-    throw new Error("Não foi possível obter o endereço da imagem.");
-  }
-  return signed.data.signedUrl;
+  const base64Data = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result ?? "");
+      resolve(result.slice(result.indexOf(",") + 1));
+    };
+    reader.onerror = () => reject(new Error("Não foi possível ler a fotografia."));
+    reader.readAsDataURL(blob);
+  });
+  const result = await serverUploadImage({
+    data: { restaurantId, fileName: file.name, base64Data, contentType: "image/jpeg" },
+  });
+  return result.signedUrl;
 }
 
 function resizeImage(file: File, max: number): Promise<Blob> {
@@ -594,10 +580,7 @@ function resizeImage(file: File, max: number): Promise<Blob> {
       ctx.drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
       c.toBlob(
-        (b) =>
-          b
-            ? resolve(b)
-            : reject(new Error("Não foi possível comprimir a imagem.")),
+        (b) => (b ? resolve(b) : reject(new Error("Não foi possível comprimir a imagem."))),
         "image/jpeg",
         0.75,
       );
@@ -629,13 +612,7 @@ export const reservationStatusLabel: Record<ReservationStatus, string> = {
   cancelada: "Cancelada",
 };
 
-export type TableState =
-  | "inativa"
-  | "conta"
-  | "assistencia"
-  | "ocupada"
-  | "reservada"
-  | "livre";
+export type TableState = "inativa" | "conta" | "assistencia" | "ocupada" | "reservada" | "livre";
 
 export const tableStateLabel: Record<TableState, string> = {
   inativa: "Inativa",
@@ -655,9 +632,7 @@ export function getTableState(
   t: Table,
 ): TableState {
   if (!t.active) return "inativa";
-  const open = s.requests.filter(
-    (r) => r.tableNumber === t.number && !r.resolved,
-  );
+  const open = s.requests.filter((r) => r.tableNumber === t.number && !r.resolved);
   if (open.some((r) => r.type === "conta")) return "conta";
   if (open.some((r) => r.type === "empregado")) return "assistencia";
   if (s.orders.some((o) => o.tableNumber === t.number && !o.closed && o.status !== "entregue"))

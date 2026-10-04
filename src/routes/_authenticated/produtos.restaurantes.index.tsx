@@ -91,18 +91,12 @@ function RestaurantOverview() {
   );
 
   const activeRequests = useMemo(
-    () =>
-      app.requests
-        .filter((r) => !r.resolved)
-        .sort((a, b) => a.createdAt - b.createdAt),
+    () => app.requests.filter((r) => !r.resolved).sort((a, b) => a.createdAt - b.createdAt),
     [app.requests],
   );
 
   const todayReservations = useMemo(
-    () =>
-      app.reservations.filter(
-        (r) => r.date === todayISO() && r.status !== "cancelada",
-      ),
+    () => app.reservations.filter((r) => r.date === todayISO() && r.status !== "cancelada"),
     [app.reservations],
   );
 
@@ -121,18 +115,12 @@ function RestaurantOverview() {
 
   // Métricas financeiras calculadas a partir de pedidos reais (sem confundir com faturação emitida)
   const valorPedidosHoje = todayOrders.reduce((acc, o) => acc + o.total, 0);
-  const ticketMedio =
-    todayOrders.length > 0 ? valorPedidosHoje / todayOrders.length : 0;
+  const ticketMedio = todayOrders.length > 0 ? valorPedidosHoje / todayOrders.length : 0;
 
   const upcomingReservations = useMemo(
     () =>
       app.reservations
-        .filter(
-          (r) =>
-            r.date >= todayISO() &&
-            r.status !== "cancelada" &&
-            r.status !== "concluida",
-        )
+        .filter((r) => r.date >= todayISO() && r.status !== "cancelada" && r.status !== "concluida")
         .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
         .slice(0, 5),
     [app.reservations],
@@ -148,9 +136,7 @@ function RestaurantOverview() {
       const dayStart = new Date(iso + "T00:00:00").getTime();
       const dayEnd = new Date(iso + "T23:59:59").getTime();
 
-      const dayOrders = app.orders.filter(
-        (o) => o.createdAt >= dayStart && o.createdAt <= dayEnd,
-      );
+      const dayOrders = app.orders.filter((o) => o.createdAt >= dayStart && o.createdAt <= dayEnd);
       const label = d.toLocaleDateString("pt-PT", { weekday: "short" });
       days.push({
         label,
@@ -262,11 +248,10 @@ function RestaurantOverview() {
                     {r.type === "conta" ? <Receipt size={14} /> : <Bell size={14} />}
                   </span>
                   <div>
-                    <span className="font-bold text-xs text-foreground">
-                      Mesa {r.tableNumber}
-                    </span>
+                    <span className="font-bold text-xs text-foreground">Mesa {r.tableNumber}</span>
                     <p className="text-[11px] text-rose-300">
-                      {r.type === "conta" ? "Pediu a Conta" : "Pediu Assistência"} ({timeAgo(r.createdAt)})
+                      {r.type === "conta" ? "Pediu a Conta" : "Pediu Assistência"} (
+                      {timeAgo(r.createdAt)})
                     </p>
                   </div>
                 </div>
@@ -313,9 +298,7 @@ function RestaurantOverview() {
           title="Ticket Médio (Hoje)"
           value={todayOrders.length > 0 ? formatPrice(ticketMedio) : "—"}
           subtitle={
-            todayOrders.length > 0
-              ? "Média por pedido hoje"
-              : "Calculado com pedidos do dia"
+            todayOrders.length > 0 ? "Média por pedido hoje" : "Calculado com pedidos do dia"
           }
           icon={BarChart3}
           tone="info"
@@ -355,7 +338,10 @@ function RestaurantOverview() {
           subtitle={
             unavailableProducts.length === 0
               ? "Todos os pratos disponíveis"
-              : `${unavailableProducts.map((p) => p.name).slice(0, 2).join(", ")}${unavailableProducts.length > 2 ? "..." : ""}`
+              : `${unavailableProducts
+                  .map((p) => p.name)
+                  .slice(0, 2)
+                  .join(", ")}${unavailableProducts.length > 2 ? "..." : ""}`
           }
           icon={UtensilsCrossed}
           tone={unavailableProducts.length > 0 ? "danger" : "neutral"}
@@ -397,7 +383,8 @@ function RestaurantOverview() {
                   Ainda não existem mesas configuradas neste restaurante.
                 </p>
                 <p className="text-xs mt-0.5">
-                  Adicione as mesas do estabelecimento em "Gerir Mesas" ou carregue dados de demonstração.
+                  Adicione as mesas do estabelecimento em "Gerir Mesas" ou carregue dados de
+                  demonstração.
                 </p>
               </div>
 
@@ -439,15 +426,11 @@ function RestaurantOverview() {
                       tone,
                     )}
                   >
-                    <span className="text-base font-extrabold font-mono">
-                      {t.number}
-                    </span>
+                    <span className="text-base font-extrabold font-mono">{t.number}</span>
                     <span className="text-[9px] font-semibold uppercase tracking-tight mt-0.5 truncate w-full">
                       {tableStateLabel[st]}
                     </span>
-                    <span className="text-[8px] text-muted-foreground mt-0.5">
-                      {t.seats} lug.
-                    </span>
+                    <span className="text-[8px] text-muted-foreground mt-0.5">{t.seats} lug.</span>
                   </div>
                 );
               })}
@@ -495,9 +478,7 @@ function RestaurantOverview() {
                     <span
                       className={cn(
                         "text-[10px] uppercase font-bold mt-1",
-                        d.dateStr === todayISO()
-                          ? "text-primary"
-                          : "text-muted-foreground",
+                        d.dateStr === todayISO() ? "text-primary" : "text-muted-foreground",
                       )}
                     >
                       {d.label}
@@ -546,9 +527,7 @@ function RestaurantOverview() {
             {upcomingReservations.length === 0 ? (
               <div className="p-8 text-center text-muted-foreground space-y-1">
                 <CalendarDays className="size-8 mx-auto mb-2 opacity-40" />
-                <p className="text-xs font-semibold text-foreground">
-                  Sem reservas agendadas.
-                </p>
+                <p className="text-xs font-semibold text-foreground">Sem reservas agendadas.</p>
                 <p className="text-[11px]">
                   As reservas online e telefónicas surgirão aqui por ordem de chegada.
                 </p>
@@ -570,9 +549,7 @@ function RestaurantOverview() {
                     </div>
 
                     <div className="min-w-0">
-                      <p className="font-bold text-xs text-foreground truncate">
-                        {r.name}
-                      </p>
+                      <p className="font-bold text-xs text-foreground truncate">{r.name}</p>
                       <p className="text-[11px] text-muted-foreground">
                         {r.guests} pessoas
                         {r.tableNumber ? ` · Mesa ${r.tableNumber}` : ""}
@@ -580,10 +557,7 @@ function RestaurantOverview() {
                     </div>
                   </div>
 
-                  <ReservationBadge
-                    status={r.status}
-                    label={r.status}
-                  />
+                  <ReservationBadge status={r.status} label={r.status} />
                 </div>
               ))
             )}

@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database as CentralDatabase } from "@/integrations/supabase/types";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type {
@@ -14,22 +16,12 @@ import type {
   TableRequest,
 } from "./demo-data";
 import { tableSlug } from "./store";
+import type { Database as RestaurantDatabase } from "./types";
 
-export type RestaurantStaffRole =
-  | "proprietario"
-  | "gerente"
-  | "cozinha"
-  | "sala";
+export type RestaurantStaffRole = "proprietario" | "gerente" | "cozinha" | "sala";
 
 export type RestaurantAction =
-  | "ver"
-  | "pedidos"
-  | "mesas"
-  | "menu"
-  | "reservas"
-  | "definicoes"
-  | "equipa"
-  | "repor";
+  "ver" | "pedidos" | "mesas" | "menu" | "reservas" | "definicoes" | "equipa" | "repor";
 
 export type RestaurantAccessInfo = {
   permitido: boolean;
@@ -45,22 +37,7 @@ export type RestaurantAccessInfo = {
  *    e às ações permitidas pela respetiva função (RBAC).
  */
 export async function validarAcessoRestaurante(
-  supabase: {
-    from: (t: string) => {
-      select: (c: string) => {
-        eq: (
-          c: string,
-          v: string,
-        ) => {
-          eq?: (
-            c2: string,
-            v2: unknown,
-          ) => { maybeSingle: () => Promise<{ data: any | null }> };
-          maybeSingle: () => Promise<{ data: any | null }>;
-        };
-      };
-    };
-  },
+  supabase: SupabaseClient<CentralDatabase>,
   userId: string,
   restaurantId: string,
   acao: RestaurantAction = "ver",
@@ -86,7 +63,7 @@ export async function validarAcessoRestaurante(
     .from("restaurant_memberships")
     .select("role, ativo")
     .eq("user_id", userId)
-    .eq!("restaurant_id", restaurantId)
+    .eq("restaurant_id", restaurantId)
     .maybeSingle();
 
   if (!memberData || !memberData.ativo) {
@@ -99,24 +76,8 @@ export async function validarAcessoRestaurante(
 
   // 3. Matriz de Permissões por Função de Restaurante
   const permissoesPorFuncao: Record<RestaurantStaffRole, RestaurantAction[]> = {
-    proprietario: [
-      "ver",
-      "pedidos",
-      "mesas",
-      "menu",
-      "reservas",
-      "definicoes",
-      "equipa",
-    ],
-    gerente: [
-      "ver",
-      "pedidos",
-      "mesas",
-      "menu",
-      "reservas",
-      "definicoes",
-      "equipa",
-    ],
+    proprietario: ["ver", "pedidos", "mesas", "menu", "reservas", "definicoes", "equipa"],
+    gerente: ["ver", "pedidos", "mesas", "menu", "reservas", "definicoes", "equipa"],
     sala: ["ver", "pedidos", "mesas", "reservas"],
     cozinha: ["ver", "pedidos"],
   };
@@ -152,33 +113,18 @@ const num = (v: unknown) => Number(v ?? 0);
  */
 export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: unknown) =>
-    z.object({ restaurantId: z.string().min(1) }).parse(data),
-  )
+  .validator((data: unknown) => z.object({ restaurantId: z.string().min(1) }).parse(data))
   .handler(async ({ data, context }): Promise<AdminData> => {
     const rid = data.restaurantId;
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      rid,
-      "ver",
-    );
+    const access = await validarAcessoRestaurante(context.supabase, context.userId, rid, "ver");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
 
     const since = new Date(Date.now() - 30 * 86400000).toISOString();
     const [r, s, c, p, t, o, rq, rs] = await Promise.all([
-      restClient
-        .from("restaurants")
-        .select("id, slug, name")
-        .eq("id", rid)
-        .maybeSingle(),
-      restClient
-        .from("restaurant_settings")
-        .select("*")
-        .eq("restaurant_id", rid)
-        .maybeSingle(),
+      restClient.from("restaurants").select("id, slug, name").eq("id", rid).maybeSingle(),
+      restClient.from("restaurant_settings").select("*").eq("restaurant_id", rid).maybeSingle(),
       restClient
         .from("menu_categories")
         .select("*")
@@ -191,11 +137,7 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
         .eq("restaurant_id", rid)
         .order("sort_order")
         .order("created_at"),
-      restClient
-        .from("tables")
-        .select("*")
-        .eq("restaurant_id", rid)
-        .order("number"),
+      restClient.from("tables").select("*").eq("restaurant_id", rid).order("number"),
       restClient
         .from("orders")
         .select("*, order_items(name, qty, price, product_id)")
@@ -259,8 +201,7 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
       description: x.description,
       price: num(x.price),
       categoryId: x.category_id,
-      category:
-        categories.find((k) => k.id === x.category_id)?.name ?? "Outros",
+      category: categories.find((k) => k.id === x.category_id)?.name ?? "Outros",
       image: x.image,
       available: x.available,
       featured: x.featured,
@@ -275,7 +216,7 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
       active: x.active,
     }));
 
-    const orders: Order[] = (o.data ?? []).map((x: any) => ({
+    const orders: Order[] = (o.data ?? []).map((x) => ({
       id: x.id,
       code: x.order_number,
       tableId: x.table_id,
@@ -285,7 +226,7 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
       status: x.status as OrderStatus,
       closed: x.closed,
       createdAt: ts(x.created_at),
-      items: (x.order_items ?? []).map((i: any) => ({
+      items: (x.order_items ?? []).map((i) => ({
         productId: i.product_id ?? null,
         name: i.name,
         qty: i.qty,
@@ -302,20 +243,23 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
       resolved: x.resolved,
     }));
 
-    const reservations: Reservation[] = (rs.data ?? []).map((x) => ({
-      id: x.id,
-      name: x.name,
-      phone: x.phone,
-      email: x.email,
-      date: x.date,
-      time: x.time,
-      guests: x.guests,
-      tableNumber: x.table_number ?? undefined,
-      notes: x.notes,
-      origin: x.origin as Reservation["origin"],
-      status: x.status as ReservationStatus,
-      createdAt: ts(x.created_at),
-    }));
+    // Kitchen staff need orders and tables, never reservation contact details.
+    const reservations: Reservation[] = (access.role === "cozinha" ? [] : (rs.data ?? [])).map(
+      (x) => ({
+        id: x.id,
+        name: x.name,
+        phone: x.phone,
+        email: x.email,
+        date: x.date,
+        time: x.time,
+        guests: x.guests,
+        tableNumber: x.table_number ?? undefined,
+        notes: x.notes,
+        origin: x.origin as Reservation["origin"],
+        status: x.status as ReservationStatus,
+        createdAt: ts(x.created_at),
+      }),
+    );
 
     return {
       restaurantId: rest.id,
@@ -343,12 +287,7 @@ export const serverSetOrderStatus = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "pedidos",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "pedidos");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -380,12 +319,7 @@ export const serverResolveRequest = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "mesas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "mesas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -416,12 +350,7 @@ export const serverFreeTable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "mesas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "mesas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -456,12 +385,7 @@ export const serverSaveTable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "mesas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "mesas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -481,9 +405,7 @@ export const serverSaveTable = createServerFn({ method: "POST" })
 
     if (res.error) {
       throw new Error(
-        res.error.code === "23505"
-          ? `Já existe a mesa ${data.number}.`
-          : res.error.message,
+        res.error.code === "23505" ? `Já existe a mesa ${data.number}.` : res.error.message,
       );
     }
     if (data.id && (!res.data || res.data.length === 0)) {
@@ -505,12 +427,7 @@ export const serverSetTableActive = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "mesas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "mesas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -541,12 +458,7 @@ export const serverRemoveTable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "mesas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "mesas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -575,12 +487,7 @@ export const serverSaveCategory = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "menu",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "menu");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -595,11 +502,14 @@ export const serverSaveCategory = createServerFn({ method: "POST" })
           .eq("id", data.id)
           .eq("restaurant_id", data.restaurantId)
           .select("id")
-      : await restClient.from("menu_categories").insert({
-          name: data.name,
-          sort_order: data.sortOrder ?? 99,
-          restaurant_id: data.restaurantId,
-        }).select("id");
+      : await restClient
+          .from("menu_categories")
+          .insert({
+            name: data.name,
+            sort_order: data.sortOrder ?? 99,
+            restaurant_id: data.restaurantId,
+          })
+          .select("id");
 
     if (res.error) throw new Error(res.error.message);
     return { ok: true };
@@ -617,12 +527,7 @@ export const serverRemoveCategory = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "menu",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "menu");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -656,12 +561,7 @@ export const serverSaveProduct = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "menu",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "menu");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -708,12 +608,7 @@ export const serverSetProductAvailable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "menu",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "menu");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -744,12 +639,7 @@ export const serverRemoveProduct = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "menu",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "menu");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -791,7 +681,7 @@ export const serverSaveSettings = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await validarAcessoRestaurante(
-      context.supabase as any,
+      context.supabase,
       context.userId,
       data.restaurantId,
       "definicoes",
@@ -801,10 +691,7 @@ export const serverSaveSettings = createServerFn({ method: "POST" })
     const restClient = getRestaurantServerClient();
     const rid = data.restaurantId;
 
-    const r1 = await restClient
-      .from("restaurants")
-      .update({ name: data.name })
-      .eq("id", rid);
+    const r1 = await restClient.from("restaurants").update({ name: data.name }).eq("id", rid);
 
     if (r1.error) throw new Error(r1.error.message);
 
@@ -835,24 +722,32 @@ export const serverUploadImage = createServerFn({ method: "POST" })
     z
       .object({
         restaurantId: z.string().min(1),
-        fileName: z.string().min(1),
-        base64Data: z.string().min(1),
-        contentType: z.string().default("image/jpeg"),
+        fileName: z.string().min(1).max(255),
+        base64Data: z
+          .string()
+          .min(4)
+          .max(6_000_000)
+          .regex(/^[A-Za-z0-9+/]+={0,2}$/),
+        contentType: z.literal("image/jpeg"),
       })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "menu",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "menu");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
 
     const buffer = Buffer.from(data.base64Data, "base64");
+    if (
+      buffer.length > 4 * 1024 * 1024 ||
+      buffer.length < 4 ||
+      buffer[0] !== 0xff ||
+      buffer[1] !== 0xd8 ||
+      buffer[2] !== 0xff
+    ) {
+      throw new Error("Imagem JPEG inválida ou superior a 4 MB.");
+    }
     const path = `${data.restaurantId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
 
     const up = await restClient.storage
@@ -865,7 +760,7 @@ export const serverUploadImage = createServerFn({ method: "POST" })
 
     const signed = await restClient.storage
       .from("restaurant-media")
-      .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+      .createSignedUrl(path, 60 * 60 * 24 * 365);
 
     if (signed.error || !signed.data) {
       throw new Error("Não foi possível gerar o endereço de acesso à imagem.");
@@ -896,12 +791,7 @@ export const serverAddReservation = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "reservas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "reservas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -944,17 +834,12 @@ export const serverUpdateReservation = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "reservas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "reservas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
 
-    const updatePayload: Record<string, unknown> = {};
+    const updatePayload: RestaurantDatabase["public"]["Tables"]["reservations"]["Update"] = {};
     if (data.name !== undefined) updatePayload.name = data.name;
     if (data.phone !== undefined) updatePayload.phone = data.phone;
     if (data.email !== undefined) updatePayload.email = data.email;
@@ -990,23 +875,12 @@ export const serverSetReservationStatus = createServerFn({ method: "POST" })
       .object({
         restaurantId: z.string(),
         id: z.string(),
-        status: z.enum([
-          "pendente",
-          "confirmada",
-          "chegou",
-          "concluida",
-          "cancelada",
-        ]),
+        status: z.enum(["pendente", "confirmada", "chegou", "concluida", "cancelada"]),
       })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "reservas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "reservas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -1037,12 +911,7 @@ export const serverRemoveReservation = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "reservas",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "reservas");
 
     const { getRestaurantServerClient } = await import("./client.server");
     const restClient = getRestaurantServerClient();
@@ -1057,40 +926,20 @@ export const serverRemoveReservation = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/** Repor dados de demonstração (Completamente desativado para estabelecimentos reais em produção) */
+/** Reset de demonstração existe APENAS no estado em memória do frontend isolado.
+ * Não executar RPC reset_demo na base de dados dedicada de produção. */
 export const serverResetDemo = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: unknown) =>
-    z.object({ restaurantId: z.string() }).parse(data),
-  )
-  .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "repor",
-    );
-
-    // Proteção absoluta: Apenas permitido explicitamente em ambiente isolado sandbox
-    if (data.restaurantId !== "demo-sandbox") {
-      throw new Error(
-        "Ação Bloqueada por Segurança: A reposição de dados de demonstração está desativada para estabelecimentos em produção.",
-      );
-    }
-
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
-
-    const { error } = await restClient.rpc("reset_demo");
-    if (error) throw new Error(error.message);
-    return { ok: true };
+  .validator((data: unknown) => z.object({ restaurantId: z.string() }).parse(data))
+  .handler(async () => {
+    throw new Error("Reset remoto desativado: utilize a demonstração local isolada.");
   });
 
 /** Obter lista de restaurantes aos quais o utilizador autenticado tem acesso */
 export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: roleData } = await (context.supabase as any)
+    const { data: roleData } = await context.supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", context.userId)
@@ -1099,35 +948,28 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
     const isAdmin = roleData?.role === "administrador";
 
     if (isAdmin) {
-      const { data: allRestaurants } = await (context.supabase as any)
+      const { data: allRestaurants, error: listError } = await context.supabase
         .from("crm_restaurants")
         .select("*")
         .order("nome");
 
+      if (listError) throw new Error(listError.message);
+
       return {
         isAdmin: true,
-        restaurantes:
-          allRestaurants && allRestaurants.length > 0
-            ? allRestaurants
-            : [
-                {
-                  id: "casa-do-vale",
-                  nome: "Casa do Vale",
-                  slug: "casa-do-vale",
-                  subdominio: "restaurante.novawebstudio.pt",
-                  ativo: true,
-                },
-              ],
+        restaurantes: allRestaurants ?? [],
       };
     }
 
-    const { data: memberships } = await (context.supabase as any)
+    const { data: memberships, error: membershipError } = await context.supabase
       .from("restaurant_memberships")
       .select("restaurant_id, role, crm_restaurants(*)")
       .eq("user_id", context.userId)
       .eq("ativo", true);
 
-    const permitidos = (memberships ?? []).map((m: any) => ({
+    if (membershipError) throw new Error(membershipError.message);
+
+    const permitidos = (memberships ?? []).map((m) => ({
       id: m.restaurant_id,
       nome: m.crm_restaurants?.nome ?? m.restaurant_id,
       slug: m.crm_restaurants?.slug ?? m.restaurant_id,
@@ -1138,32 +980,18 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
 
     return {
       isAdmin: false,
-      restaurantes:
-        permitidos.length > 0
-          ? permitidos
-          : [
-              {
-                id: "casa-do-vale",
-                nome: "Casa do Vale",
-                slug: "casa-do-vale",
-                subdominio: "restaurante.novawebstudio.pt",
-                role: "sala" as RestaurantStaffRole,
-                ativo: true,
-              },
-            ],
+      restaurantes: permitidos,
     };
   });
 
 /** Obter permissões do utilizador ativo para um restaurante específico */
 export const obterPermissoesAtivas = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: unknown) =>
-    z.object({ restaurantId: z.string().min(1) }).parse(data),
-  )
+  .validator((data: unknown) => z.object({ restaurantId: z.string().min(1) }).parse(data))
   .handler(async ({ data, context }) => {
     try {
       const access = await validarAcessoRestaurante(
-        context.supabase as any,
+        context.supabase,
         context.userId,
         data.restaurantId,
         "ver",
@@ -1193,12 +1021,7 @@ export const convidarFuncionarioRestaurante = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(
-      context.supabase as any,
-      context.userId,
-      data.restaurantId,
-      "equipa",
-    );
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "equipa");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -1209,34 +1032,104 @@ export const convidarFuncionarioRestaurante = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (existingProfile?.id) {
-      const { error: insErr } = await supabaseAdmin
-        .from("restaurant_memberships")
-        .upsert(
-          {
-            user_id: existingProfile.id,
-            restaurant_id: data.restaurantId,
-            role: data.role,
-            ativo: true,
-            criado_por: context.userId,
-          },
-          { onConflict: "user_id,restaurant_id" },
-        );
+      const { error: insErr } = await supabaseAdmin.from("restaurant_memberships").upsert(
+        {
+          user_id: existingProfile.id,
+          restaurant_id: data.restaurantId,
+          role: data.role,
+          ativo: true,
+          criado_por: context.userId,
+        },
+        { onConflict: "user_id,restaurant_id" },
+      );
 
       if (insErr) throw new Error(insErr.message);
       return { ok: true, associadoDireto: true };
     }
 
-    const { error: inviteErr } = await supabaseAdmin
-      .from("restaurant_invites")
-      .insert({
-        email: data.email.trim().toLowerCase(),
-        restaurant_id: data.restaurantId,
-        role: data.role,
-        criado_por: context.userId,
-      });
+    const { error: inviteErr } = await supabaseAdmin.from("restaurant_invites").insert({
+      email: data.email.trim().toLowerCase(),
+      restaurant_id: data.restaurantId,
+      role: data.role,
+      criado_por: context.userId,
+    });
 
     if (inviteErr) throw new Error(inviteErr.message);
     return { ok: true, convidado: true };
+  });
+
+/** Equipa: apenas gestores autorizados recebem dados de outros funcionários. */
+export const listarMembrosRestaurante = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => z.object({ restaurantId: z.string().min(1) }).parse(input))
+  .handler(async ({ data, context }) => {
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "equipa");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: members, error } = await supabaseAdmin
+      .from("restaurant_memberships")
+      .select("id, user_id, role, ativo, criado_em")
+      .eq("restaurant_id", data.restaurantId)
+      .order("criado_em");
+    if (error) throw new Error(error.message);
+
+    const userIds = (members ?? []).map((m) => m.user_id);
+    const profiles = userIds.length
+      ? await supabaseAdmin.from("profiles").select("id, nome, email, foto_url").in("id", userIds)
+      : {
+          data: [] as Array<{ id: string; nome: string; email: string; foto_url: string | null }>,
+          error: null,
+        };
+    if (profiles.error) throw new Error(profiles.error.message);
+    const byId = new Map((profiles.data ?? []).map((p) => [p.id, p]));
+    return (members ?? []).map((m) => ({
+      ...m,
+      profiles: {
+        nome: byId.get(m.user_id)?.nome ?? "Funcionário",
+        email: byId.get(m.user_id)?.email ?? "",
+        foto_url: byId.get(m.user_id)?.foto_url ?? "",
+      },
+    }));
+  });
+
+/** A revogação faz uma desativação auditável e nunca confia só no botão do browser. */
+export const revogarFuncionarioRestaurante = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) =>
+    z.object({ restaurantId: z.string().min(1), memberId: z.string().uuid() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "equipa");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: member, error: readError } = await supabaseAdmin
+      .from("restaurant_memberships")
+      .select("id, role, user_id")
+      .eq("id", data.memberId)
+      .eq("restaurant_id", data.restaurantId)
+      .eq("ativo", true)
+      .maybeSingle();
+    if (readError) throw new Error(readError.message);
+    if (!member) throw new Error("Funcionário não encontrado neste restaurante.");
+
+    if (member.role === "proprietario") {
+      const { count, error: countError } = await supabaseAdmin
+        .from("restaurant_memberships")
+        .select("id", { count: "exact", head: true })
+        .eq("restaurant_id", data.restaurantId)
+        .eq("role", "proprietario")
+        .eq("ativo", true);
+      if (countError) throw new Error(countError.message);
+      if ((count ?? 0) <= 1) throw new Error("Não é possível remover o último proprietário.");
+    }
+
+    const { data: updated, error } = await supabaseAdmin
+      .from("restaurant_memberships")
+      .update({ ativo: false })
+      .eq("id", data.memberId)
+      .eq("restaurant_id", data.restaurantId)
+      .select("id");
+    if (error) throw new Error(error.message);
+    if (!updated?.length) throw new Error("Não foi possível revogar o acesso.");
+    return { ok: true };
   });
 
 /** Criar novo restaurante cliente (Apenas Administrador NWS) */
@@ -1255,7 +1148,7 @@ export const criarNovoRestaurante = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    const { data: roleData } = await (context.supabase as any)
+    const { data: roleData } = await context.supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", context.userId)
@@ -1272,26 +1165,22 @@ export const criarNovoRestaurante = createServerFn({ method: "POST" })
     const restClient = getRestaurantServerClient();
 
     // 1. Criar no catálogo central CRM
-    const { error: crmErr } = await supabaseAdmin
-      .from("crm_restaurants")
-      .insert({
-        id: data.id,
-        nome: data.nome,
-        slug: data.id,
-        subdominio: data.subdominio || `${data.id}.novawebstudio.pt`,
-        ativo: true,
-      });
+    const { error: crmErr } = await supabaseAdmin.from("crm_restaurants").insert({
+      id: data.id,
+      nome: data.nome,
+      slug: data.id,
+      subdominio: data.subdominio || `${data.id}.novawebstudio.pt`,
+      ativo: true,
+    });
 
     if (crmErr) throw new Error(crmErr.message);
 
     // 2. Inicializar na base de dados de restaurantes
-    const { error: restDbErr } = await restClient
-      .from("restaurants")
-      .insert({
-        id: data.id,
-        slug: data.id,
-        name: data.nome,
-      });
+    const { error: restDbErr } = await restClient.from("restaurants").insert({
+      id: data.id,
+      slug: data.id,
+      name: data.nome,
+    });
 
     if (restDbErr) {
       console.warn(

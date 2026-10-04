@@ -14,34 +14,18 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Field,
   PanelHeader,
   RestaurantCard,
   fieldClass,
 } from "@/components/restaurant/RestaurantBits";
-import {
-  resolveImage,
-  type Category,
-  type Product,
-} from "@/lib/restaurant/demo-data";
-import {
-  adminActions,
-  formatPrice,
-  uploadImage,
-  useAdmin,
-} from "@/lib/restaurant/store";
+import { resolveImage, type Category, type Product } from "@/lib/restaurant/demo-data";
+import { adminActions, formatPrice, uploadImage, useAdmin } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute(
-  "/_authenticated/produtos/restaurantes/menu",
-)({
+export const Route = createFileRoute("/_authenticated/produtos/restaurantes/menu")({
   component: RestaurantMenuAdmin,
 });
 
@@ -53,15 +37,10 @@ function RestaurantMenuAdmin() {
 
   const [pesquisa, setPesquisa] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("todas");
-  const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(
-    null,
-  );
+  const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
   const [editingCat, setEditingCat] = useState<Partial<Category> | null>(null);
 
-  const unavailableCount = useMemo(
-    () => products.filter((p) => !p.available).length,
-    [products],
-  );
+  const unavailableCount = useMemo(() => products.filter((p) => !p.available).length, [products]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -84,9 +63,7 @@ function RestaurantMenuAdmin() {
 
   async function saveCategory(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const name = String(new FormData(e.currentTarget).get("name"))
-      .trim()
-      .slice(0, 40);
+    const name = String(new FormData(e.currentTarget).get("name")).trim().slice(0, 40);
     if (!name) return;
 
     try {
@@ -95,14 +72,10 @@ function RestaurantMenuAdmin() {
         name,
         sortOrder: categories.length + 1,
       });
-      toast.success(
-        editingCat?.id ? "Categoria atualizada." : "Categoria criada.",
-      );
+      toast.success(editingCat?.id ? "Categoria atualizada." : "Categoria criada.");
       setEditingCat(null);
     } catch (err) {
-      toast.error(
-        `Não foi possível guardar a categoria: ${(err as Error).message}`,
-      );
+      toast.error(`Não foi possível guardar a categoria: ${(err as Error).message}`);
     }
   }
 
@@ -188,7 +161,8 @@ function RestaurantMenuAdmin() {
               A ementa ainda não tem categorias criadas.
             </p>
             <p className="text-xs mt-1">
-              Comece por criar a primeira categoria (ex.: Entradas, Carnes, Peixes, Sobremesas) para adicionar pratos.
+              Comece por criar a primeira categoria (ex.: Entradas, Carnes, Peixes, Sobremesas) para
+              adicionar pratos.
             </p>
           </div>
           <button
@@ -297,9 +271,7 @@ function RestaurantMenuAdmin() {
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="font-bold text-sm text-foreground truncate">
-                          {p.name}
-                        </p>
+                        <p className="font-bold text-sm text-foreground truncate">{p.name}</p>
                         {p.featured && (
                           <span className="rounded bg-primary/15 px-1.5 py-0.2 text-[9px] font-bold text-primary uppercase">
                             Destaque
@@ -378,10 +350,7 @@ function RestaurantMenuAdmin() {
       ))}
 
       {/* MODAL DE CRIAÇÃO / EDIÇÃO DE PRODUTO */}
-      <Dialog
-        open={!!editingProduct}
-        onOpenChange={(o) => !o && setEditingProduct(null)}
-      >
+      <Dialog open={!!editingProduct} onOpenChange={(o) => !o && setEditingProduct(null)}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-surface border-border/80 text-foreground">
           <DialogHeader>
             <DialogTitle>
@@ -401,15 +370,10 @@ function RestaurantMenuAdmin() {
       </Dialog>
 
       {/* MODAL DE CATEGORIA */}
-      <Dialog
-        open={!!editingCat}
-        onOpenChange={(o) => !o && setEditingCat(null)}
-      >
+      <Dialog open={!!editingCat} onOpenChange={(o) => !o && setEditingCat(null)}>
         <DialogContent className="max-w-sm bg-surface border-border/80 text-foreground">
           <DialogHeader>
-            <DialogTitle>
-              {editingCat?.id ? "Editar Categoria" : "Nova Categoria"}
-            </DialogTitle>
+            <DialogTitle>{editingCat?.id ? "Editar Categoria" : "Nova Categoria"}</DialogTitle>
           </DialogHeader>
 
           {editingCat && (
@@ -500,9 +464,7 @@ function ProductForm({
         available,
         featured,
       });
-      toast.success(
-        product.id ? "Produto atualizado com sucesso." : "Produto criado com sucesso.",
-      );
+      toast.success(product.id ? "Produto atualizado com sucesso." : "Produto criado com sucesso.");
       onDone();
     } catch (err) {
       toast.error(`Erro ao guardar produto: ${(err as Error).message}`);
@@ -588,11 +550,7 @@ function ProductForm({
         </Field>
 
         <Field label="Categoria">
-          <select
-            name="category"
-            defaultValue={product.categoryId ?? ""}
-            className={fieldClass}
-          >
+          <select name="category" defaultValue={product.categoryId ?? ""} className={fieldClass}>
             {categories.map((c) => (
               <option key={c.id} value={c.id} className="bg-surface">
                 {c.name}

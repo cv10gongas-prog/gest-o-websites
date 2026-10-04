@@ -28,9 +28,7 @@ import type { Order, OrderStatus } from "@/lib/restaurant/demo-data";
 import { adminActions, formatPrice, useAdmin } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute(
-  "/_authenticated/produtos/restaurantes/pedidos",
-)({
+export const Route = createFileRoute("/_authenticated/produtos/restaurantes/pedidos")({
   component: RestaurantOrdersBoard,
 });
 
@@ -177,10 +175,7 @@ function RestaurantOrdersBoard() {
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/40 px-1">
                 <div className="flex items-center gap-2">
                   <span
-                    className={cn(
-                      "grid size-7 place-items-center rounded-lg border",
-                      col.color,
-                    )}
+                    className={cn("grid size-7 place-items-center rounded-lg border", col.color)}
                   >
                     <Icon className="size-4" />
                   </span>
@@ -240,19 +235,11 @@ function RestaurantOrdersBoard() {
                 className="flex items-center justify-between rounded-xl border border-border/60 bg-surface/50 p-3 text-xs"
               >
                 <div>
-                  <span className="font-bold text-foreground">
-                    Mesa {o.tableNumber}
-                  </span>
-                  <span className="text-muted-foreground font-mono ml-1.5">
-                    #{o.code}
-                  </span>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
-                    {timeAgo(o.createdAt)}
-                  </p>
+                  <span className="font-bold text-foreground">Mesa {o.tableNumber}</span>
+                  <span className="text-muted-foreground font-mono ml-1.5">#{o.code}</span>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{timeAgo(o.createdAt)}</p>
                 </div>
-                <span className="font-mono font-bold text-success">
-                  {formatPrice(o.total)}
-                </span>
+                <span className="font-mono font-bold text-success">{formatPrice(o.total)}</span>
               </div>
             ))}
           </div>
@@ -280,13 +267,9 @@ function OrderCard({
     setBusy(true);
     try {
       await adminActions.setOrderStatus(order.id, next, restaurantId);
-      toast.success(
-        `Pedido #${order.code} (Mesa ${order.tableNumber}) atualizado.`,
-      );
+      toast.success(`Pedido #${order.code} (Mesa ${order.tableNumber}) atualizado.`);
     } catch (e) {
-      toast.error(
-        `Não foi possível atualizar o pedido: ${(e as Error).message}`,
-      );
+      toast.error(`Não foi possível atualizar o pedido: ${(e as Error).message}`);
     }
     setBusy(false);
   }
@@ -301,9 +284,7 @@ function OrderCard({
       {/* Topo do Card */}
       <div className="flex items-baseline justify-between gap-2 border-b border-border/30 pb-2">
         <div className="flex items-center gap-2">
-          <span className="text-base font-extrabold text-foreground">
-            Mesa {order.tableNumber}
-          </span>
+          <span className="text-base font-extrabold text-foreground">Mesa {order.tableNumber}</span>
           <span className="rounded-md bg-surface-strong px-1.5 py-0.5 text-[10px] font-mono font-bold text-muted-foreground">
             #{order.code}
           </span>
@@ -330,10 +311,7 @@ function OrderCard({
         {order.items.map((item, idx) => (
           <li key={idx} className="flex items-start justify-between gap-2">
             <span className="text-foreground">
-              <strong className="text-primary font-mono font-bold">
-                {item.qty}×
-              </strong>{" "}
-              {item.name}
+              <strong className="text-primary font-mono font-bold">{item.qty}×</strong> {item.name}
             </span>
             <span className="text-[11px] font-mono text-muted-foreground shrink-0">
               {formatPrice(item.price * item.qty)}
@@ -353,9 +331,7 @@ function OrderCard({
       {/* Rodapé com Preço Total e Botão de Ação */}
       <div className="pt-2 border-t border-border/40 flex items-center justify-between gap-2">
         <div>
-          <span className="text-[9px] uppercase font-bold text-muted-foreground block">
-            Total
-          </span>
+          <span className="text-[9px] uppercase font-bold text-muted-foreground block">Total</span>
           <span className="font-mono text-sm font-extrabold text-foreground">
             {formatPrice(order.total)}
           </span>
