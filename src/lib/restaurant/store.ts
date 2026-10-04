@@ -278,13 +278,20 @@ export const adminQuery = (restaurantId: string = RID) =>
   queryOptions({
     queryKey: ["restaurant_admin", restaurantId],
     queryFn: async (): Promise<AdminData> => {
-      if (isDemoMode()) {
+      if (isDemoMode() || !isRestaurantDatabaseConfigured()) {
         return demoStore.getAdminData(restaurantId);
       }
-      return await obterDadosAdminRestaurante({
-        data: { restaurantId },
-      });
+      try {
+        return await obterDadosAdminRestaurante({
+          data: { restaurantId },
+        });
+      } catch (e) {
+        console.error("[adminQuery] Erro ao carregar dados do restaurante:", e);
+        return demoStore.getAdminData(restaurantId);
+      }
     },
+    retry: 1,
+    staleTime: 30_000,
   });
 
 export const AdminContext = createContext<{

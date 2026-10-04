@@ -7,6 +7,7 @@ import {
 } from "./auth.functions";
 import { CURRENT_RESTAURANT_ID } from "./config";
 import { isDemoMode } from "@/lib/demo-mode";
+import { useUtilizador } from "@/hooks/useAuth";
 
 export type RestaurantTenant = {
   id: string;
@@ -46,15 +47,16 @@ export function useRestaurantTenant(): RestaurantTenantContextValue {
 
 const defaultTestRestaurant: RestaurantTenant = {
   id: CURRENT_RESTAURANT_ID,
-  nome: "NWS Restaurante (Teste)",
+  nome: "NWS Restaurante (Espaço de Testes)",
   slug: "casa-do-vale",
   subdominio: "",
   ativo: true,
-  role: "administrador",
+  role: "proprietario",
 };
 
 export function RestaurantTenantProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
+  const { funcao, isAdmin: isAdminUser } = useUtilizador();
   const [simulatedRole, setSimulatedRole] = useState<"administrador" | RestaurantStaffRole | null>(
     null,
   );
@@ -72,6 +74,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
           })
         : obterRestaurantesAutorizados(),
     staleTime: 60_000,
+    retry: 1,
   });
 
   const restaurantes: RestaurantTenant[] = useMemo(() => {
@@ -120,6 +123,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
         : obterPermissoesAtivas({ data: { restaurantId: activeRestaurantId } }),
     enabled: !!activeRestaurantId && !!restaurantes.length && !loadingRestaurantes,
     staleTime: 60_000,
+    retry: 1,
   });
 
   const activeRestaurant = useMemo(() => {
@@ -130,8 +134,8 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     );
   }, [restaurantes, activeRestaurantId]);
 
-  const isAdminNWS = permData?.isAdminNWS ?? authData?.isAdmin ?? true;
-  const rawRole = permData?.role ?? "administrador";
+  const isAdminNWS = permData?.isAdminNWS ?? (isAdminUser || funcao === "administrador");
+  const rawRole = permData?.role ?? (isAdminNWS ? "administrador" : "sala");
   const currentRole = simulatedRole ?? rawRole;
 
   const permissions = useMemo(() => {
