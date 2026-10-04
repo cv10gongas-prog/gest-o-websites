@@ -50,6 +50,8 @@ function RestaurantesLayoutInner() {
 
   // Guarda de rotas baseada em permissões por função
   useEffect(() => {
+    // Aguarda pela sessão, permissões e seleção estável do restaurante.
+    if (tenantLoading || !activeRestaurant || activeRestaurant.id !== activeRestaurantId) return;
     if (pathname.includes("/menu") && !canManageMenu) {
       toast.error("A sua função não tem autorização para gerir a ementa.");
       navigate({ to: "/produtos/restaurantes/pedidos" });
@@ -62,12 +64,21 @@ function RestaurantesLayoutInner() {
       toast.error("A sua função não tem autorização para gerir a equipa.");
       navigate({ to: "/produtos/restaurantes/pedidos" });
     }
-  }, [pathname, canManageMenu, canManageSettings, canManageStaff, navigate]);
+  }, [
+    pathname,
+    tenantLoading,
+    activeRestaurant,
+    activeRestaurantId,
+    canManageMenu,
+    canManageSettings,
+    canManageStaff,
+    navigate,
+  ]);
 
   // Carrega e sincroniza todos os dados do restaurante ativo em tempo real
   const q = useQuery({
     ...adminQuery(activeRestaurantId),
-    enabled: !tenantLoading && !!activeRestaurant,
+    enabled: !tenantLoading && !!activeRestaurant && activeRestaurant.id === activeRestaurantId,
   });
   useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
 

@@ -96,6 +96,7 @@ const FUNCOES: { value: AppRole; label: string; descricao: string }[] = [
 function AdminApp() {
   const [tab, setTab] = useState<TabAdmin>("visao_geral");
   const [membroFocadoId, setMembroFocadoId] = useState<string | null>(null);
+  const [auditFilter, setAuditFilter] = useState<"tudo" | "acessos" | "alteracoes">("tudo");
 
   // Modais de equipa
   const [modalConvidar, setModalConvidar] = useState(false);
@@ -104,13 +105,17 @@ function AdminApp() {
   const [aRemoverId, setARemoverId] = useState<string | null>(null);
 
   const { userId, isAdmin, perfil, funcao } = useUtilizador();
-  const { data: perfis = [], isLoading: loadingPerfis } = useProfiles();
+  const { data: perfis = [], isLoading: loadingPerfis, isError: erroPerfis } = useProfiles();
   const { data: funcoes = [] } = useRoles();
   const { data: convites = [] } = useConvites();
   const { data: negocios = [] } = useBusinesses();
   const { data: tarefas = [] } = useTasks();
   const { data: chamadas = [] } = useInteractions();
-  const { data: atividades = [] } = useActivity();
+  const {
+    data: atividades = [],
+    isLoading: loadingAtividades,
+    isError: erroAtividades,
+  } = useActivity();
   const { prefs, guardar } = usePreferencias();
 
   const convidar = useConvidarMembro();
@@ -122,6 +127,16 @@ function AdminApp() {
     (funcoes.find((f) => f.user_id === id)?.role as AppRole) ?? "colaborador";
 
   const pendentesConvites = convites.filter((c) => !c.aceite_em);
+  const auditoriaFiltrada = atividades
+    .filter((a) =>
+      auditFilter === "tudo"
+        ? true
+        : auditFilter === "acessos"
+          ? a.entidade === "seguranca"
+          : a.entidade !== "seguranca",
+    )
+    .slice(0, 8);
+  const dataCarregada = !loadingPerfis && !loadingAtividades && !erroPerfis && !erroAtividades;
   const membroARemover = perfis.find((p) => p.id === aRemoverId);
 
   // Membro focado para visualização de perfil
@@ -167,208 +182,323 @@ function AdminApp() {
 
   return (
     <div className="space-y-6">
-      {/* HEADER DA APLICAÇÃO ADMIN */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-info">
-            <ShieldCheck className="size-4" />
-            <span>NWS Workspace • Aplicação Central</span>
+      {/* Centro de controlo: estado e atalhos operacionais */}
+      <section className="relative overflow-hidden rounded-[28px] border border-violet-400/20 bg-gradient-to-br from-violet-500/[0.13] via-surface/80 to-cyan-500/[0.06] p-5 sm:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-32 size-80 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-2xl">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[.18em] text-violet-300">
+              <ShieldCheck className="size-4" /> Centro de controlo{" "}
+              <span className="size-1 rounded-full bg-violet-300/70" /> NWS Workspace
+            </div>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Administração da plataforma
+            </h1>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
+              A tua equipa, atividade e segurança num só lugar. Consulta o estado das áreas e
+              resolve o que precisa da tua atenção.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground">
+                <span
+                  className={cn(
+                    "size-2 rounded-full",
+                    dataCarregada
+                      ? "bg-emerald-400"
+                      : erroPerfis || erroAtividades
+                        ? "bg-rose-400"
+                        : "bg-amber-400",
+                  )}
+                />
+                {dataCarregada
+                  ? "Dados disponíveis"
+                  : erroPerfis || erroAtividades
+                    ? "Dados parcialmente indisponíveis"
+                    : "A carregar dados"}
+              </span>
+              <span className="rounded-full border border-violet-400/20 bg-violet-400/10 px-3 py-1.5 text-xs text-violet-200">
+                {isAdmin ? "Administrador" : "Acesso de colaborador"}
+              </span>
+            </div>
           </div>
-          <h1 className="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Administração & Governança
-          </h1>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Gestão da plataforma, membros, segurança forense, auditoria e definições globais.
-          </p>
+          <div className="flex flex-wrap gap-2 lg:max-w-[240px] lg:justify-end">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => setModalConvidar(true)}
+                className="inline-flex items-center gap-2 rounded-xl bg-violet-400 px-4 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-violet-500/10 transition hover:bg-violet-300"
+              >
+                <UserPlus className="size-4" /> Convidar membro
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setTab("seguranca")}
+              className="inline-flex items-center gap-2 rounded-xl border border-violet-300/20 bg-background/50 px-4 py-2.5 text-xs font-semibold text-foreground transition hover:border-violet-300/50"
+            >
+              <Shield className="size-4 text-violet-300" /> Centro de segurança
+            </button>
+          </div>
         </div>
+      </section>
 
-        {isAdmin && (
+      {/* Navegação compacta e utilizável em ecrãs pequenos */}
+      <nav
+        aria-label="Áreas de administração"
+        className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-2 sm:flex-wrap sm:overflow-visible"
+      >
+        {(
+          [
+            ["visao_geral", "Visão geral", Layers],
+            ["equipa", `Equipa (${perfis.length})`, Users],
+            ["analytics", "Analytics", BarChart3],
+            ["seguranca", "Segurança", ShieldAlert],
+            ["permissoes", "Permissões", Key],
+            ["definicoes", "Definições", Settings],
+          ] as const
+        ).map(([id, label, Icon]) => (
           <button
+            key={id}
             type="button"
-            onClick={() => setModalConvidar(true)}
-            className="flex items-center gap-2 rounded-xl bg-info px-4 py-2 text-xs font-bold text-white shadow-lg shadow-info/20 transition hover:bg-info/90 active:scale-95"
+            onClick={() => setTab(id)}
+            aria-current={tab === id ? "page" : undefined}
+            className={cn(
+              "inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition",
+              tab === id
+                ? "border-violet-400/50 bg-violet-500/15 text-violet-200 shadow-sm"
+                : "border-border/50 bg-surface/50 text-muted-foreground hover:border-border hover:bg-surface-strong hover:text-foreground",
+            )}
           >
-            <UserPlus className="size-4" />
-            <span>Convidar Colaborador</span>
+            <Icon className="size-4" />
+            {label}
           </button>
-        )}
-      </div>
-
-      {/* SEPARADORES DE NAVEGAÇÃO DA ADMINISTRAÇÃO */}
-      <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-border/70 bg-surface/50 p-1.5 backdrop-blur-md">
-        <button
-          type="button"
-          onClick={() => setTab("visao_geral")}
-          className={cn(
-            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
-            tab === "visao_geral"
-              ? "bg-info text-white shadow-sm"
-              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-          )}
-        >
-          <Layers className="size-3.5" />
-          <span>1. Visão Geral</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("equipa")}
-          className={cn(
-            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
-            tab === "equipa"
-              ? "bg-info text-white shadow-sm"
-              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-          )}
-        >
-          <Users className="size-3.5" />
-          <span>2. Equipa & Perfis ({perfis.length})</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("analytics")}
-          className={cn(
-            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
-            tab === "analytics"
-              ? "bg-info text-white shadow-sm"
-              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-          )}
-        >
-          <BarChart3 className="size-3.5" />
-          <span>3. Analytics & Rendimento</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("seguranca")}
-          className={cn(
-            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
-            tab === "seguranca"
-              ? "bg-info text-white shadow-sm"
-              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-          )}
-        >
-          <ShieldAlert className="size-3.5 text-danger" />
-          <span>4. Segurança & Auditoria</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("permissoes")}
-          className={cn(
-            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
-            tab === "permissoes"
-              ? "bg-info text-white shadow-sm"
-              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-          )}
-        >
-          <Key className="size-3.5" />
-          <span>5. Permissões & RBAC</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setTab("definicoes")}
-          className={cn(
-            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
-            tab === "definicoes"
-              ? "bg-info text-white shadow-sm"
-              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
-          )}
-        >
-          <Settings className="size-3.5" />
-          <span>6. Definições da Plataforma</span>
-        </button>
-      </div>
+        ))}
+      </nav>
 
       {/* CONTEÚDO DOS SEPARADORES */}
 
-      {/* 1. VISÃO GERAL */}
+      {/* 1. VISÃO GERAL — métricas reais e ações úteis */}
       {tab === "visao_geral" && (
-        <div className="space-y-6">
-          {/* Card de Estado da Plataforma */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-3xl border border-border/70 bg-surface/50 p-5">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1.5">
-                <Users className="size-3.5 text-info" /> Membros na Plataforma
-              </span>
-              <p className="text-3xl font-bold font-mono text-foreground mt-2">{perfis.length}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                {pendentesConvites.length} convite(s) pendente(s)
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/70 bg-surface/50 p-5">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1.5">
-                <CheckCircle2 className="size-3.5 text-success" /> Infraestrutura Supabase
-              </span>
-              <p className="text-xl font-bold text-success mt-2">Operacional</p>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                PostgreSQL • Auth • Storage RLS
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/70 bg-surface/50 p-5">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1.5">
-                <ShieldCheck className="size-3.5 text-primary" /> Sessão Atual
-              </span>
-              <p className="text-sm font-bold text-foreground mt-2 truncate">
-                {perfil?.nome ?? "Utilizador"}
-              </p>
-              <p className="text-[10px] text-primary capitalize mt-1 font-semibold">
-                Função: {funcao}
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/70 bg-surface/50 p-5">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1.5">
-                <Activity className="size-3.5 text-warning" /> Ações Registadas
-              </span>
-              <p className="text-3xl font-bold font-mono text-foreground mt-2">
-                {atividades.length}
-              </p>
-              <p className="text-[10px] text-muted-foreground mt-1">Total de logs de auditoria</p>
-            </div>
-          </div>
-
-          {/* Atividade Recente da Plataforma */}
-          <div className="rounded-3xl border border-border/70 bg-surface/40 p-6 backdrop-blur-md space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
-                <Activity className="size-4 text-info" />
-                Auditoria Recente da Plataforma
-              </h2>
-            </div>
-
-            {atividades.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-6 text-center">
-                Sem eventos registados recentemente.
-              </p>
-            ) : (
-              <div className="divide-y divide-border/30">
-                {atividades.slice(0, 6).map((act) => (
-                  <div
-                    key={act.id}
-                    className="py-3 flex items-center justify-between gap-4 text-xs"
-                  >
-                    <div className="min-w-0">
-                      <span className="font-semibold text-foreground">
-                        {perfis.find((p) => p.id === act.autor)?.nome ?? "Equipa"}
-                      </span>{" "}
-                      <span className="text-muted-foreground">{act.accao}</span>
-                      {act.detalhe && (
-                        <p className="text-[10px] text-muted-foreground font-mono truncate max-w-md mt-0.5">
-                          {act.detalhe}
-                        </p>
-                      )}
-                    </div>
-                    <span className="font-mono text-[10px] text-muted-foreground shrink-0">
-                      {formatarData(act.created_at, true)}
-                    </span>
-                  </div>
-                ))}
+        <div className="space-y-5">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              {
+                label: "Membros",
+                value: loadingPerfis ? "…" : erroPerfis ? "—" : String(perfis.length),
+                detail: "Contas com perfil",
+                Icon: Users,
+                tone: "text-cyan-300 bg-cyan-400/10",
+              },
+              {
+                label: "Convites pendentes",
+                value: String(pendentesConvites.length),
+                detail: pendentesConvites.length ? "Por aceitar" : "Tudo em dia",
+                Icon: Mail,
+                tone: "text-amber-300 bg-amber-400/10",
+              },
+              {
+                label: "Negócios",
+                value: String(negocios.length),
+                detail: "Registos no CRM",
+                Icon: Building2,
+                tone: "text-violet-300 bg-violet-400/10",
+              },
+              {
+                label: "Eventos carregados",
+                value: loadingAtividades ? "…" : erroAtividades ? "—" : String(atividades.length),
+                detail: "Até 100 registos recentes",
+                Icon: Activity,
+                tone: "text-emerald-300 bg-emerald-400/10",
+              },
+            ].map(({ label, value, detail, Icon, tone }) => (
+              <div
+                key={label}
+                className="group rounded-2xl border border-border/65 bg-surface/45 p-5 transition hover:border-violet-300/25 hover:bg-surface/75"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-medium text-muted-foreground">{label}</p>
+                  <span className={cn("grid size-9 place-items-center rounded-xl", tone)}>
+                    <Icon className="size-4" />
+                  </span>
+                </div>
+                <p className="mt-4 text-[32px] font-bold leading-none tracking-tight text-foreground">
+                  {value}
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">{detail}</p>
               </div>
-            )}
+            ))}
+          </div>
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(290px,1fr)]">
+            <section className="overflow-hidden rounded-2xl border border-border/60 bg-surface/35">
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 p-5">
+                <div>
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
+                    <Activity className="size-4 text-cyan-300" /> Atividade recente
+                  </h2>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Ações registadas na plataforma, sem expor dados técnicos em bruto.
+                  </p>
+                </div>
+                <div
+                  className="flex gap-1 rounded-xl border border-border/60 bg-background/40 p-1"
+                  aria-label="Filtrar auditoria"
+                >
+                  {(
+                    [
+                      ["tudo", "Tudo"],
+                      ["acessos", "Acessos"],
+                      ["alteracoes", "Alterações"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setAuditFilter(value)}
+                      className={cn(
+                        "rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition",
+                        auditFilter === value
+                          ? "bg-violet-400/20 text-violet-200"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {erroAtividades ? (
+                <div className="p-7 text-sm text-rose-300">
+                  Não foi possível consultar a atividade. Consulta a área de Segurança para mais
+                  detalhes.
+                </div>
+              ) : loadingAtividades ? (
+                <div className="p-7 text-sm text-muted-foreground">A carregar eventos…</div>
+              ) : auditoriaFiltrada.length === 0 ? (
+                <div className="p-8 text-center text-sm text-muted-foreground">
+                  Ainda não há eventos nesta categoria.
+                </div>
+              ) : (
+                <div className="divide-y divide-border/30 px-5">
+                  {auditoriaFiltrada.map((act) => (
+                    <div key={act.id} className="flex items-start gap-3 py-3.5">
+                      <span
+                        className={cn(
+                          "mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl",
+                          act.entidade === "seguranca"
+                            ? "bg-cyan-400/10 text-cyan-300"
+                            : "bg-violet-400/10 text-violet-300",
+                        )}
+                      >
+                        {act.entidade === "seguranca" ? (
+                          <Shield className="size-4" />
+                        ) : (
+                          <Activity className="size-4" />
+                        )}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs leading-5 text-foreground">
+                          <span className="font-bold">
+                            {perfis.find((p) => p.id === act.autor)?.nome ?? "Equipa"}
+                          </span>{" "}
+                          <span className="text-muted-foreground">{act.accao}</span>
+                        </p>
+                        {act.detalhe && (
+                          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                            {act.detalhe.trim().startsWith("{") ||
+                            act.detalhe.trim().startsWith("[")
+                              ? "Detalhe técnico disponível em Segurança"
+                              : act.detalhe}
+                          </p>
+                        )}
+                      </div>
+                      <time
+                        className="shrink-0 text-right text-[10px] text-muted-foreground"
+                        dateTime={act.created_at}
+                      >
+                        {formatarData(act.created_at, true)}
+                      </time>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => setTab("seguranca")}
+                className="w-full border-t border-border/50 px-5 py-3 text-left text-xs font-semibold text-cyan-300 transition hover:bg-surface-strong/50"
+              >
+                Abrir auditoria e segurança →
+              </button>
+            </section>
+            <div className="space-y-5">
+              <section className="rounded-2xl border border-border/60 bg-surface/40 p-5">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="size-4 text-amber-300" />
+                  <h2 className="text-base font-semibold">Prioridades</h2>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">O que precisa da tua atenção.</p>
+                <button
+                  type="button"
+                  onClick={() => setTab("equipa")}
+                  className="mt-4 flex w-full items-center justify-between rounded-xl border border-border/60 bg-background/30 p-3 text-left transition hover:border-violet-400/40"
+                >
+                  <span>
+                    <span className="block text-xs font-semibold">Convites de colaboradores</span>
+                    <span className="mt-1 block text-[11px] text-muted-foreground">
+                      {pendentesConvites.length
+                        ? `${pendentesConvites.length} por aceitar`
+                        : "Nenhum convite pendente"}
+                    </span>
+                  </span>
+                  <Mail className="size-4 text-violet-300" />
+                </button>
+                {(erroPerfis || erroAtividades) && (
+                  <div className="mt-3 rounded-xl border border-rose-400/25 bg-rose-400/5 p-3 text-xs text-rose-200">
+                    Alguns dados não carregaram. Verifica a ligação e volta a tentar.
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setTab("permissoes")}
+                  className="mt-3 flex w-full items-center justify-between rounded-xl border border-border/60 bg-background/30 p-3 text-left transition hover:border-violet-400/40"
+                >
+                  <span>
+                    <span className="block text-xs font-semibold">Acessos e permissões</span>
+                    <span className="mt-1 block text-[11px] text-muted-foreground">
+                      Rever funções da equipa
+                    </span>
+                  </span>
+                  <Key className="size-4 text-cyan-300" />
+                </button>
+              </section>
+              <section className="rounded-2xl border border-violet-400/20 bg-gradient-to-br from-violet-400/10 to-transparent p-5">
+                <h2 className="text-base font-semibold">Acesso rápido</h2>
+                <p className="mt-1 text-xs text-muted-foreground">Ferramentas de administração.</p>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  {(
+                    [
+                      ["Equipa", "equipa", Users],
+                      ["Analytics", "analytics", BarChart3],
+                      ["Segurança", "seguranca", ShieldAlert],
+                      ["Definições", "definicoes", Settings],
+                    ] as const
+                  ).map(([label, destino, Icon]) => (
+                    <button
+                      key={destino}
+                      type="button"
+                      onClick={() => setTab(destino)}
+                      className="flex flex-col items-start gap-3 rounded-xl border border-border/60 bg-background/40 p-3 text-left text-xs font-semibold transition hover:border-violet-300/40 hover:bg-surface-strong"
+                    >
+                      <Icon className="size-4 text-violet-300" />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </section>
+              <p className="px-1 text-[11px] leading-5 text-muted-foreground">
+                Os indicadores refletem apenas os registos carregados. O estado completo da
+                infraestrutura e das políticas RLS não é inferido a partir destes números.
+              </p>
+            </div>
           </div>
         </div>
       )}

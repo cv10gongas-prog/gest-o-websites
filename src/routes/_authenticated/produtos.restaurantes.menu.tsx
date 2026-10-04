@@ -84,7 +84,7 @@ function RestaurantMenuAdmin() {
       {/* CABEÇALHO */}
       <PanelHeader
         title="Menu & Ementa Digital"
-        subtitle="Gerencie categorias, pratos, bebidas, preços e disponibilidade. Todas as alterações refletem-se instantaneamente nos QR Codes e no subdomínio público."
+        subtitle="Organiza categorias, pratos, bebidas, preços e disponibilidade do restaurante de testes, sem afetar clientes reais."
         action={
           <div className="flex flex-wrap items-center gap-2.5">
             <button

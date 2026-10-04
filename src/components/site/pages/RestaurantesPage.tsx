@@ -181,14 +181,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
 
             <Reveal delay={290}>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  to={paths.restaurantesDemo}
-                  className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
-                >
-                  <ExternalLink className="size-4" />
-                  {t.heroCtaDemo}
-                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                </Link>
 
                 <Link
                   to={paths.contact}
@@ -383,14 +375,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
               </h2>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">{t.modulesLead}</p>
             </div>
-
-            <Link
-              to={paths.restaurantesDemo}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/25 px-4 py-2 text-xs font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
-            >
-              <ExternalLink className="size-3.5" />
-              {t.modulesCtaFull}
-            </Link>
           </div>
         </Reveal>
 
@@ -959,14 +943,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-border/50 flex flex-col sm:flex-row gap-3">
-                  <Link
-                    to={paths.restaurantesDemo}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-xs font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5"
-                  >
-                    <ExternalLink className="size-3.5" />
-                    {t.modulesCtaFull}
-                    <ArrowRight className="size-3.5" />
-                  </Link>
 
                   <Link
                     to={paths.contact}
@@ -1037,14 +1013,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
               </h2>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">{t.featuresLead}</p>
             </div>
-
-            <Link
-              to={paths.restaurantesDemo}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-            >
-              {t.featuresCta}
-              <ArrowUpRight className="size-4" />
-            </Link>
           </div>
         </Reveal>
 
@@ -1210,14 +1178,6 @@ export function RestaurantesPage({ locale }: { locale: Locale }) {
                 >
                   <CalendarCheck className="size-4" />
                   {t.finalCtaProposal}
-                </Link>
-
-                <Link
-                  to={paths.restaurantesDemo}
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-background/80 px-6 text-sm transition hover:bg-accent"
-                >
-                  <ExternalLink className="size-4" />
-                  {t.finalCtaDemo}
                 </Link>
               </div>
             </div>

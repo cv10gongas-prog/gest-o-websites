@@ -58,7 +58,7 @@ export function LanguageSwitcher({ locale, page }: { locale: Locale; page: PageK
             {LOCALES.map((l) => (
               <li key={l}>
                 <Link
-                  to={PATHS[l][page]}
+                  to={PATHS[l][page === "restaurantesDemo" ? "restaurantes" : page]}
                   onClick={() => guardarIdioma(l)}
                   className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-xs transition hover:bg-accent ${
                     l === locale ? "bg-secondary/60 text-foreground" : "text-muted-foreground"

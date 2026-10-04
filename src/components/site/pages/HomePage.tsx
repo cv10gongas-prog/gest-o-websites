@@ -1329,14 +1329,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                     {extra.restaurantCtaPage}
                     <ArrowRight className="size-4" />
                   </Link>
-
-                  <Link
-                    to={paths.restaurantesDemo}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm hover:bg-accent"
-                  >
-                    <ExternalLink className="size-4" />
-                    {extra.restaurantCtaDemo}
-                  </Link>
                 </div>
               </div>
             </div>

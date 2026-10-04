@@ -56,7 +56,7 @@ const defaultTestRestaurant: RestaurantTenant = {
 
 export function RestaurantTenantProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
-  const { funcao, isAdmin: isAdminUser } = useUtilizador();
+  const { funcao, isAdmin: isAdminUser, aCarregar } = useUtilizador();
   const [simulatedRole, setSimulatedRole] = useState<"administrador" | RestaurantStaffRole | null>(
     null,
   );
@@ -83,11 +83,11 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     if (authData?.restaurantes && authData.restaurantes.length > 0) {
       return authData.restaurantes as RestaurantTenant[];
     }
-    if (isDemoMode() || isUserAdmin) {
+    if (isDemoMode() || authData?.isAdmin === true) {
       return [defaultTestRestaurant];
     }
     return [];
-  }, [authData, isUserAdmin]);
+  }, [authData]);
 
   const [activeRestaurantId, setActiveRestaurantId] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -137,8 +137,12 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     return restaurantes.find((r) => r.id === activeRestaurantId) ?? restaurantes[0] ?? null;
   }, [restaurantes, activeRestaurantId]);
 
-  const isAdminNWS = permData?.isAdminNWS ?? isUserAdmin;
-  const rawRole = permData?.role ?? (isAdminNWS ? "administrador" : "sala");
+  // Só dados autenticados e validados no servidor concedem permissões administrativas.
+  const isAdminNWS =
+    authData?.isAdmin === true ||
+    permData?.isAdminNWS === true ||
+    (activeRestaurantId === "demo-restaurante" && isDemoMode());
+  const rawRole = isAdminNWS ? "administrador" : permData?.permitido ? permData.role : "sala";
   const currentRole = simulatedRole ?? rawRole;
 
   const permissions = useMemo(() => {
@@ -170,7 +174,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     setCurrentRoleSimulated: setSimulatedRole,
     isAdminNWS,
     ...permissions,
-    isLoading: loadingRestaurantes || loadingPerms,
+    isLoading: aCarregar || loadingRestaurantes || loadingPerms,
   };
 
   return (
