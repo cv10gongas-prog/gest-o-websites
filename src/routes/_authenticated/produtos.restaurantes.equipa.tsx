@@ -133,13 +133,13 @@ function RestaurantStaffAdmin() {
         }
       />
 
-      {/* SIMULADOR DE PERFIS PARA TESTES NO WORKSPACE */}
-      {setCurrentRoleSimulated && (
+      {/* SIMULADOR DE PERFIS PARA TESTES NO WORKSPACE (APENAS EM MODO DEMO ISOLADO) */}
+      {isDemoMode() && setCurrentRoleSimulated && (
         <div className="rounded-2xl border border-warning/30 bg-surface/50 p-4 backdrop-blur-md flex flex-wrap items-center justify-between gap-3 shadow-sm">
           <div>
             <span className="text-xs font-bold text-warning flex items-center gap-1.5">
               <Shield className="size-4 text-warning" />
-              Simulador de Funções no Workspace:
+              Simulador de Funções no Workspace (Ambiente DEMO):
             </span>
             <p className="text-[11px] text-muted-foreground mt-0.5">
               Função atualmente simulada nesta sessão:{" "}

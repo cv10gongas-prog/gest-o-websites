@@ -28,12 +28,24 @@ import type {
 } from "./crm";
 
 export function isDemoMode(): boolean {
+  // Production deployment is NEVER allowed to enter demo mode or bypass auth.
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (
+      host === "novawebstudio.pt" ||
+      host === "www.novawebstudio.pt" ||
+      host.endsWith(".novawebstudio.pt")
+    ) {
+      return false;
+    }
+  } else {
+    if (process.env["VERCEL_ENV"] === "production") return false;
+  }
+
   // Preview opt-in ONLY. Neither localhost nor a query string can grant admin access.
   const requested = import.meta.env["VITE_DEMO_MODE"] === "true";
   const preview = import.meta.env["VITE_DEPLOYMENT_ENV"] === "preview";
   if (typeof window === "undefined") {
-    // A Vercel Production deployment is never allowed to bypass real auth.
-    if (process.env["VERCEL_ENV"] === "production") return false;
     return preview && requested && process.env["DEMO_MODE"] === "true";
   }
   return preview && requested;
