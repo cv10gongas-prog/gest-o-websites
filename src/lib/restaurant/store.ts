@@ -64,7 +64,7 @@ export function useHydrated() {
 const num = (v: unknown) => Number(v ?? 0);
 
 async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
-  if (isDemoMode()) {
+  if (isLocalOperation(restaurantId)) {
     const d = demoStore.getAdminData(restaurantId);
     return {
       restaurantId: d.restaurantId,
@@ -73,34 +73,6 @@ async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
       categories: d.categories,
       products: d.products,
       tables: d.tables,
-    };
-  }
-
-  if (!isRestaurantDatabaseConfigured()) {
-    return {
-      restaurantId,
-      slug: restaurantId,
-      settings: {
-        name: "Restaurante (Configuração Pendente)",
-        tagline: "Aguardando configuração das variáveis dedicadas do restaurante",
-        introduction:
-          "As variáveis VITE_RESTAURANT_SUPABASE_* não se encontram configuradas no ambiente.",
-        logo: "",
-        primaryColor: "#5b6e4a",
-        phone: "",
-        email: "",
-        address: "",
-        hours: [],
-        features: {
-          qrOrders: false,
-          callWaiter: false,
-          requestBill: false,
-          reservations: false,
-        },
-      },
-      categories: [],
-      products: [],
-      tables: [],
     };
   }
 
@@ -305,13 +277,18 @@ export function useAdmin() {
   return v;
 }
 
+function isLocalOperation(restaurantId: string): boolean {
+  return isDemoMode() || !isRestaurantDatabaseConfigured() || restaurantId === "demo-restaurante";
+}
+
 /**
  * Ações Administrativas Protegidas:
- * Em modo de demonstração alteram o estado local seguro; em produção passam por Server Functions
+ * Em modo de demonstração/testes operam exclusivamente sobre o demoStore local seguro;
+ * Em produção com restaurante dedicado configurado passam por Server Functions validadas no servidor.
  */
 export const adminActions = {
   setOrderStatus: async (id: string, status: OrderStatus, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.setOrderStatus(id, status);
       return;
     }
@@ -321,7 +298,7 @@ export const adminActions = {
   },
 
   resolveRequest: async (id: string, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.resolveRequest(id);
       return;
     }
@@ -331,7 +308,7 @@ export const adminActions = {
   },
 
   freeTable: async (restaurantId = RID, tableNumber: number) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.freeTable(tableNumber);
       return;
     }
@@ -346,7 +323,7 @@ export const adminActions = {
       status?: ReservationStatus;
     },
   ) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.addReservation(r);
       return;
     }
@@ -371,7 +348,7 @@ export const adminActions = {
     r: Partial<Omit<Reservation, "id" | "createdAt">>,
     restaurantId = RID,
   ) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       if (r.status) demoStore.setReservationStatus(id, r.status);
       return;
     }
@@ -392,7 +369,7 @@ export const adminActions = {
   },
 
   setReservationStatus: async (id: string, status: ReservationStatus, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.setReservationStatus(id, status);
       return;
     }
@@ -402,7 +379,7 @@ export const adminActions = {
   },
 
   removeReservation: async (id: string, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.removeReservation(id);
       return;
     }
@@ -415,7 +392,7 @@ export const adminActions = {
     restaurantId = RID,
     t: Omit<Table, "id" | "slug" | "name"> & { id?: string | undefined },
   ) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.saveTable(t);
       return;
     }
@@ -431,7 +408,7 @@ export const adminActions = {
   },
 
   setTableActive: async (id: string, active: boolean, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.setTableActive(id, active);
       return;
     }
@@ -441,7 +418,7 @@ export const adminActions = {
   },
 
   removeTable: async (id: string, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.removeTable(id);
       return;
     }
@@ -454,7 +431,7 @@ export const adminActions = {
     restaurantId = RID,
     c: { id?: string | undefined; name: string; sortOrder?: number },
   ) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.saveCategory(c);
       return;
     }
@@ -469,7 +446,7 @@ export const adminActions = {
   },
 
   removeCategory: async (id: string, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.removeCategory(id);
       return;
     }
@@ -491,7 +468,7 @@ export const adminActions = {
       featured?: boolean;
     },
   ) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.saveProduct(p);
       return;
     }
@@ -511,7 +488,7 @@ export const adminActions = {
   },
 
   setAvailable: async (id: string, available: boolean, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.setProductAvailable(id, available);
       return;
     }
@@ -521,7 +498,7 @@ export const adminActions = {
   },
 
   removeProduct: async (id: string, restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.removeProduct(id);
       return;
     }
@@ -531,7 +508,7 @@ export const adminActions = {
   },
 
   saveSettings: async (restaurantId = RID, s: AdminData["settings"]) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
       demoStore.saveSettings(s);
       return;
     }
@@ -553,7 +530,8 @@ export const adminActions = {
   },
 
   reset: async (restaurantId = RID) => {
-    if (isDemoMode()) {
+    if (isLocalOperation(restaurantId)) {
+      demoStore.resetDemo();
       return;
     }
     await serverResetDemo({
@@ -569,7 +547,7 @@ export async function uploadImage(
   max = 900,
 ): Promise<string> {
   const blob = await resizeImage(file, max);
-  if (isDemoMode()) {
+  if (isLocalOperation(restaurantId)) {
     return URL.createObjectURL(blob);
   }
 

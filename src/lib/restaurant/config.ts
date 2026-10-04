@@ -1,8 +1,8 @@
 /**
- * Configuração do Restaurante integrado no Workspace
+ * Configuração do Restaurante no Workspace
  */
 export const CURRENT_RESTAURANT_ID: string =
-  import.meta.env["VITE_RESTAURANT_ID"] || "casa-do-vale";
+  import.meta.env["VITE_RESTAURANT_ID"] || "demo-restaurante";
 
 /**
  * Endereço público de produção do subdomínio do restaurante.

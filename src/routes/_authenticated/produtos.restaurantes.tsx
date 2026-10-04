@@ -195,24 +195,37 @@ function RestaurantesLayoutInner() {
     <AdminContext.Provider value={{ data, restaurantId: activeRestaurantId }}>
       <RestaurantContext.Provider value={data}>
         <div className="space-y-6">
-          {!isDemoMode() && !isRestaurantDatabaseConfigured() && (
-            <div className="rounded-2xl border border-warning/40 bg-warning/10 p-4 text-xs text-warning backdrop-blur-md flex items-start gap-3">
-              <Database className="size-5 shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <p className="font-bold">
-                  Base de Dados Dedicada do Restaurante — Configuração Pendente
-                </p>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  O NWS Restaurantes opera com uma base de dados Supabase autónoma e isolada do CRM.
-                  Para sincronizar pedidos e mesas reais em produção, configure as variáveis{" "}
-                  <code className="font-mono text-warning">RESTAURANT_SUPABASE_URL</code> e{" "}
-                  <code className="font-mono text-warning">
-                    RESTAURANT_SUPABASE_SERVICE_ROLE_KEY
-                  </code>{" "}
-                  no servidor.
-                </p>
+          {activeRestaurantId === "demo-restaurante" ? (
+            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-3.5 text-xs text-primary backdrop-blur-md flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-primary animate-pulse" />
+                <span>
+                  <strong>Espaço de Testes do Workspace</strong> — Operação em modo local seguro.
+                  Podes testar mesas, ementa, pedidos e reservas sem tocar em dados reais.
+                </span>
               </div>
             </div>
+          ) : (
+            !isRestaurantDatabaseConfigured() && (
+              <div className="rounded-2xl border border-warning/40 bg-warning/10 p-4 text-xs text-warning backdrop-blur-md flex items-start gap-3">
+                <Database className="size-5 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <p className="font-bold">
+                    Base de Dados Dedicada do Restaurante — Configuração Pendente
+                  </p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    O restaurante <strong>{activeRestaurant?.nome || activeRestaurantId}</strong>{" "}
+                    opera com uma base de dados Supabase autónoma e isolada do CRM. Para sincronizar
+                    dados reais em produção, configure as variáveis{" "}
+                    <code className="font-mono text-warning">RESTAURANT_SUPABASE_URL</code> e{" "}
+                    <code className="font-mono text-warning">
+                      RESTAURANT_SUPABASE_SERVICE_ROLE_KEY
+                    </code>{" "}
+                    no servidor.
+                  </p>
+                </div>
+              </div>
+            )
           )}
           <Outlet />
         </div>
