@@ -21,6 +21,7 @@ import {
   Smartphone,
   Sparkles,
   Users,
+  type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -529,7 +530,7 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                 "guest",
               ] as ModuleKey[]
             ).map((key) => {
-              const icons: Record<ModuleKey, any> = {
+              const icons: Record<ModuleKey, LucideIcon> = {
                 overview: LayoutDashboard,
                 bookings: CalendarDays,
                 tables: LayoutGrid,
@@ -862,7 +863,7 @@ export function RestaurantesDemoPage({ locale }: { locale: Locale }) {
                   "menu",
                 ] as ModuleKey[]
               ).map((key) => {
-                const icons: Record<ModuleKey, any> = {
+                const icons: Record<ModuleKey, LucideIcon> = {
                   overview: LayoutDashboard,
                   bookings: CalendarDays,
                   tables: LayoutGrid,

@@ -56,6 +56,10 @@ export const ESTADOS: { value: BusinessStatus; label: string; tone: Tone }[] = [
 export const estadoInfo = (estado: BusinessStatus) =>
   ESTADOS.find((e) => e.value === estado) ?? ESTADOS[0]!;
 
+export const ROTULOS_ESTADO: Record<BusinessStatus, string> = Object.fromEntries(
+  ESTADOS.map((e) => [e.value, e.label]),
+) as Record<BusinessStatus, string>;
+
 export const PRIORIDADES: { value: Prioridade; label: string; tone: Tone }[] = [
   { value: "alta", label: "Alta", tone: "danger" },
   { value: "media", label: "Média", tone: "warning" },
@@ -153,6 +157,8 @@ export function euros(valor?: number | null) {
   if (valor === null || valor === undefined) return "—";
   return new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" }).format(valor);
 }
+
+export const formatarMoeda = (valor?: number | null) => euros(valor);
 
 export function paraInputDateTime(valor?: string | null) {
   if (!valor) return "";

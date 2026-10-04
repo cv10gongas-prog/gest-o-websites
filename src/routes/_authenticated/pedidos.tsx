@@ -1,38 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  BriefcaseBusiness,
   Building2,
   CalendarCheck,
   CalendarClock,
   Check,
+  CheckCircle2,
   ExternalLink,
   Globe,
   Globe2,
   Mail,
   MessageSquareText,
   Phone,
+  Plus,
   Trash2,
+  UserPlus,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { Chip, Panel, Vazio } from "@/components/crm/Bits";
-import { btnPequeno, selectClass } from "@/components/crm/Modal";
-import { formatarData } from "@/lib/crm";
+import { Chip, Dot, Vazio } from "@/components/crm/Bits";
+import { DialogNegocio } from "@/components/crm/DialogNegocio";
+import { formatarData, type Business } from "@/lib/crm";
 import {
   useActualizarPedido,
   useApagarPedido,
   useWebsiteRequests,
 } from "@/lib/queries";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/pedidos")({
   head: () => ({
     meta: [
       {
-        title: "Pedidos do site — Nova Web CRM",
+        title: "Pedidos do Site — Nova Web Studio",
       },
       {
         name: "description",
         content:
-          "Pedidos de orçamento recebidos pelo website público.",
+          "Central de triagem de contactos e orçamentos submetidos pelo website público.",
       },
       {
         name: "robots",
@@ -40,14 +45,10 @@ export const Route = createFileRoute("/_authenticated/pedidos")({
       },
     ],
   }),
-
   component: Pedidos,
 });
 
-type Filtro =
-  | "pendentes"
-  | "tratados"
-  | "todos";
+type Filtro = "pendentes" | "tratados" | "todos";
 
 type MensagemParsed = {
   mensagem: string | null;
@@ -56,9 +57,7 @@ type MensagemParsed = {
   origem: string | null;
 };
 
-function parseMensagem(
-  mensagem?: string | null,
-): MensagemParsed {
+function parseMensagem(mensagem?: string | null): MensagemParsed {
   if (!mensagem) {
     return {
       mensagem: null,
@@ -80,188 +79,40 @@ function parseMensagem(
   const mensagemNormal: string[] = [];
 
   for (const linha of linhas) {
-    const linhaLower =
-      linha.toLowerCase();
+    const linhaLower = linha.toLowerCase();
 
     if (
-      linhaLower.startsWith(
-        "website atual:",
-      )
+      linhaLower.startsWith("website atual:") ||
+      linhaLower.startsWith("current website:") ||
+      linhaLower.startsWith("aktuelle website:") ||
+      linhaLower.startsWith("site actuel:") ||
+      linhaLower.startsWith("web actual:")
     ) {
-      website = linha
-        .slice(
-          "website atual:".length,
-        )
-        .trim();
-
+      website = linha.substring(linha.indexOf(":") + 1).trim();
       continue;
     }
 
     if (
-      linhaLower.startsWith(
-        "current website:",
-      )
+      linhaLower.startsWith("prazo desejado:") ||
+      linhaLower.startsWith("preferred deadline:") ||
+      linhaLower.startsWith("gewünschter zeitraum:") ||
+      linhaLower.startsWith("délai souhaité:") ||
+      linhaLower.startsWith("plazo deseado:")
     ) {
-      website = linha
-        .slice(
-          "current website:".length,
-        )
-        .trim();
-
+      prazo = linha.substring(linha.indexOf(":") + 1).trim();
       continue;
     }
 
-    if (
-      linhaLower.startsWith(
-        "aktuelle website:",
-      )
-    ) {
-      website = linha
-        .slice(
-          "aktuelle website:".length,
-        )
-        .trim();
-
+    if (linhaLower.startsWith("origem:") || linhaLower.startsWith("source:")) {
+      origem = linha.substring(linha.indexOf(":") + 1).trim();
       continue;
     }
 
-    if (
-      linhaLower.startsWith(
-        "site actuel:",
-      )
-    ) {
-      website = linha
-        .slice(
-          "site actuel:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "web actual:",
-      )
-    ) {
-      website = linha
-        .slice(
-          "web actual:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "prazo desejado:",
-      )
-    ) {
-      prazo = linha
-        .slice(
-          "prazo desejado:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "preferred deadline:",
-      )
-    ) {
-      prazo = linha
-        .slice(
-          "preferred deadline:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "gewünschter zeitraum:",
-      )
-    ) {
-      prazo = linha
-        .slice(
-          "gewünschter zeitraum:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "délai souhaité:",
-      )
-    ) {
-      prazo = linha
-        .slice(
-          "délai souhaité:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "plazo deseado:",
-      )
-    ) {
-      prazo = linha
-        .slice(
-          "plazo deseado:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "origem:",
-      )
-    ) {
-      origem = linha
-        .slice(
-          "origem:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    if (
-      linhaLower.startsWith(
-        "source:",
-      )
-    ) {
-      origem = linha
-        .slice(
-          "source:".length,
-        )
-        .trim();
-
-      continue;
-    }
-
-    mensagemNormal.push(
-      linha,
-    );
+    mensagemNormal.push(linha);
   }
 
   return {
-    mensagem:
-      mensagemNormal.length > 0
-        ? mensagemNormal.join("\n")
-        : null,
-
+    mensagem: mensagemNormal.length > 0 ? mensagemNormal.join("\n") : null,
     website,
     prazo,
     origem,
@@ -269,333 +120,251 @@ function parseMensagem(
 }
 
 function Pedidos() {
-  const {
-    data: pedidos = [],
-    isLoading,
-  } =
-    useWebsiteRequests();
+  const { data: pedidos = [], isLoading } = useWebsiteRequests();
+  const actualizar = useActualizarPedido();
+  const apagar = useApagarPedido();
 
-  const actualizar =
-    useActualizarPedido();
+  const [filtro, setFiltro] = useState<Filtro>("pendentes");
+  const [negocioParaCriar, setNegocioParaCriar] = useState<Partial<Business> | null>(null);
 
-  const apagar =
-    useApagarPedido();
+  const lista = useMemo(() => {
+    if (filtro === "pendentes") {
+      return pedidos.filter((p) => !p.tratado);
+    }
+    if (filtro === "tratados") {
+      return pedidos.filter((p) => p.tratado);
+    }
+    return pedidos;
+  }, [pedidos, filtro]);
 
-  const [
-    filtro,
-    setFiltro,
-  ] =
-    useState<Filtro>(
-      "pendentes",
-    );
+  const porTratar = pedidos.filter((p) => !p.tratado).length;
+  const tratados = pedidos.filter((p) => p.tratado).length;
 
-  const lista =
-    useMemo(() => {
-      if (
-        filtro ===
-        "pendentes"
-      ) {
-        return pedidos.filter(
-          (p) =>
-            !p.tratado,
-        );
-      }
-
-      if (
-        filtro ===
-        "tratados"
-      ) {
-        return pedidos.filter(
-          (p) =>
-            p.tratado,
-        );
-      }
-
-      return pedidos;
-    }, [
-      pedidos,
-      filtro,
-    ]);
-
-  const porTratar =
-    pedidos.filter(
-      (p) =>
-        !p.tratado,
-    ).length;
+  function converterEmNegocio(p: (typeof pedidos)[number]) {
+    const parsed = parseMensagem(p.mensagem);
+    setNegocioParaCriar({
+      nome: p.empresa || p.nome,
+      categoria: p.tipo_projeto || "Website Profissional",
+      telefone: p.telefone || "",
+      email: p.email || "",
+      website: parsed.website || "",
+      origem: `Website Público (${parsed.origem || "Formulário"})`,
+      notas: `Contacto original: ${p.nome}\nMensagem: ${p.mensagem || ""}`,
+      estado: "por_contactar",
+      prioridade: p.quer_reuniao ? "alta" : "media",
+    });
+  }
 
   return (
-    <div className="space-y-5">
-      {/* HEADER */}
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-6">
+      {/* HEADER DA PÁGINA */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">
-            Pedidos do site
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+            <Globe className="size-3.5" />
+            <span>Website Público • Leads Recebidas</span>
+          </div>
+          <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            Pedidos do Website
           </h1>
-
           <p className="mt-1 text-xs text-muted-foreground">
-            {porTratar}{" "}
-            {porTratar === 1
-              ? "pedido por tratar"
-              : "pedidos por tratar"}{" "}
-            · origem: Website público
+            {porTratar} pedido(s) por responder • {tratados} pedido(s) tratados
           </p>
         </div>
+      </div>
 
-        <select
-          className={`${selectClass} w-auto`}
-          value={filtro}
-          onChange={(e) =>
-            setFiltro(
-              e.target.value as Filtro,
-            )
-          }
-        >
-          <option value="pendentes">
-            Por tratar
-          </option>
+      {/* FILTROS RÁPIDOS */}
+      <div className="flex flex-wrap gap-1.5 rounded-2xl border border-border/70 bg-surface/50 p-1.5 backdrop-blur-md">
+        {[
+          { chave: "pendentes", label: `Por Tratar (${porTratar})` },
+          { chave: "tratados", label: `Tratados (${tratados})` },
+          { chave: "todos", label: `Todos (${pedidos.length})` },
+        ].map((f) => (
+          <button
+            key={f.chave}
+            type="button"
+            onClick={() => setFiltro(f.chave as Filtro)}
+            className={cn(
+              "rounded-xl px-3.5 py-1.5 text-xs font-semibold transition",
+              filtro === f.chave
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+            )}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
 
-          <option value="tratados">
-            Tratados
-          </option>
-
-          <option value="todos">
-            Todos
-          </option>
-        </select>
-      </header>
-
-      <Panel bodyClassName="p-0">
+      {/* LISTA DE PEDIDOS */}
+      <div className="rounded-3xl border border-border/70 bg-surface/40 backdrop-blur-md overflow-hidden">
         {isLoading ? (
-          <Vazio
-            texto="A carregar pedidos…"
-            icon={Globe}
-          />
-        ) : lista.length ===
-          0 ? (
-          <Vazio
-            texto="Sem pedidos nesta vista."
-            icon={Globe}
-          />
+          <div className="p-12 text-center text-xs text-muted-foreground">
+            A carregar pedidos do website...
+          </div>
+        ) : lista.length === 0 ? (
+          <div className="p-12 text-center">
+            <CheckCircle2 className="size-8 mx-auto mb-2 text-success" />
+            <p className="text-sm font-semibold text-foreground">Sem pedidos nesta vista</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Todos os pedidos recebidos foram respondidos e tratados.
+            </p>
+          </div>
         ) : (
-          <ul className="divide-y divide-border/60">
+          <ul className="divide-y divide-border/30">
             {lista.map((p) => {
-              const detalhes =
-                parseMensagem(
-                  p.mensagem,
-                );
+              const detalhes = parseMensagem(p.mensagem);
 
               return (
-                <li
-                  key={p.id}
-                  className="p-4 sm:p-5"
-                >
-                  {/* TOPO */}
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0">
+                <li key={p.id} className="p-5 sm:p-6 transition hover:bg-surface-strong/40 space-y-4">
+                  {/* Topo do Pedido */}
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-semibold">
-                          {p.nome}
-                        </span>
-
+                        <span className="font-bold text-base text-foreground">{p.nome}</span>
                         {p.empresa && (
-                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                            <Building2 className="size-3" />
-
+                          <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-surface/80 px-2 py-0.5 text-xs text-muted-foreground">
+                            <Building2 className="size-3 text-primary" />
                             {p.empresa}
                           </span>
                         )}
-
                         {p.quer_reuniao && (
-                          <Chip tone="warning">
-                            <CalendarCheck className="mr-1 inline size-3" />
-
-                            Quer reunião
-                          </Chip>
+                          <span className="rounded-full bg-warning/20 px-2 py-0.5 text-[10px] font-bold text-warning flex items-center gap-1">
+                            <CalendarCheck className="size-3" />
+                            Pretende Reunião
+                          </span>
                         )}
-
-                        <Chip
-                          tone={
-                            p.tratado
-                              ? "success"
-                              : "primary"
-                          }
-                        >
-                          {p.tratado
-                            ? "Tratado"
-                            : "Por tratar"}
+                        <Chip tone={p.tratado ? "success" : "primary"}>
+                          {p.tratado ? "Tratado" : "Por Tratar"}
                         </Chip>
                       </div>
 
-                      {/* CONTACTOS */}
-                      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <a
-                          className="inline-flex items-center gap-1 transition hover:text-foreground"
                           href={`mailto:${p.email}`}
+                          className="flex items-center gap-1 text-primary hover:underline font-medium"
                         >
-                          <Mail className="size-3" />
-
-                          <span className="break-all">
-                            {p.email}
-                          </span>
+                          <Mail className="size-3.5" />
+                          {p.email}
                         </a>
-
                         {p.telefone && (
                           <a
-                            className="inline-flex items-center gap-1 transition hover:text-foreground"
                             href={`tel:${p.telefone}`}
+                            className="flex items-center gap-1 text-foreground hover:underline font-medium"
                           >
-                            <Phone className="size-3" />
-
+                            <Phone className="size-3.5" />
                             {p.telefone}
                           </a>
                         )}
-
-                        <span>
-                          {formatarData(
-                            p.created_at,
-                            true,
-                          )}
+                        <span className="font-mono text-[11px]">
+                          Recebido em {formatarData(p.created_at, true)}
                         </span>
                       </div>
                     </div>
 
-                    {/* AÇÕES */}
+                    {/* Ações */}
                     <div className="flex flex-wrap items-center gap-2">
                       <button
-                        className={btnPequeno}
-                        onClick={() =>
-                          actualizar.mutate({
-                            id: p.id,
-                            valores: {
-                              tratado:
-                                !p.tratado,
-                            },
-                          })
-                        }
+                        type="button"
+                        onClick={() => converterEmNegocio(p)}
+                        className="flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90 transition"
                       >
-                        <Check className="size-3.5" />
-
-                        {p.tratado
-                          ? "Reabrir"
-                          : "Marcar tratado"}
+                        <BriefcaseBusiness className="size-3.5" />
+                        <span>Converter em Negócio</span>
                       </button>
 
                       <button
-                        className={btnPequeno}
+                        type="button"
                         onClick={() =>
-                          apagar.mutate(
-                            p.id,
-                          )
+                          actualizar.mutate({
+                            id: p.id,
+                            valores: { tratado: !p.tratado },
+                          })
                         }
+                        className="flex items-center gap-1 rounded-xl border border-border/70 bg-surface/80 px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-surface-strong transition"
+                      >
+                        <Check className="size-3.5" />
+                        <span>{p.tratado ? "Reabrir" : "Marcar Tratado"}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (confirm(`Eliminar o pedido de ${p.nome}?`)) {
+                            apagar.mutate(p.id);
+                          }
+                        }}
+                        className="grid size-8 place-items-center rounded-xl border border-border/70 bg-surface/80 text-muted-foreground hover:text-danger hover:border-danger/40 transition"
+                        aria-label="Apagar pedido"
                       >
                         <Trash2 className="size-3.5" />
-
-                        Apagar
                       </button>
                     </div>
                   </div>
 
-                  {/* CHIPS */}
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  {/* Chips de Informação */}
+                  <div className="flex flex-wrap gap-2 text-xs">
                     {p.tipo_projeto && (
-                      <Chip tone="info">
-                        {p.tipo_projeto}
-                      </Chip>
+                      <span className="rounded-xl border border-info/30 bg-info/10 px-2.5 py-1 text-info font-medium">
+                        Tipo: {p.tipo_projeto}
+                      </span>
                     )}
 
                     {p.orcamento && (
-                      <Chip tone="muted">
-                        Orçamento:{" "}
-                        {p.orcamento}
-                      </Chip>
+                      <span className="rounded-xl border border-border/60 bg-surface/80 px-2.5 py-1 text-muted-foreground font-mono">
+                        Orçamento: {p.orcamento}
+                      </span>
                     )}
 
                     {detalhes.prazo && (
-                      <Chip tone="muted">
-                        <CalendarClock className="mr-1 inline size-3" />
-
-                        {detalhes.prazo}
-                      </Chip>
+                      <span className="rounded-xl border border-warning/30 bg-warning/10 px-2.5 py-1 text-warning font-medium flex items-center gap-1">
+                        <CalendarClock className="size-3" />
+                        Prazo: {detalhes.prazo}
+                      </span>
                     )}
                   </div>
 
-                  {/* DETALHES */}
-                  {(detalhes.mensagem ||
-                    detalhes.website ||
-                    detalhes.prazo ||
-                    detalhes.origem) && (
-                    <div className="mt-4 grid gap-3 lg:grid-cols-[1.4fr_.6fr]">
-                      {/* MENSAGEM */}
+                  {/* Detalhes & Mensagem */}
+                  {(detalhes.mensagem || detalhes.website || detalhes.origem) && (
+                    <div className="grid gap-3 lg:grid-cols-[1.4fr_.6fr] pt-2">
                       {detalhes.mensagem && (
-                        <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4">
-                          <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.15em] text-muted-foreground">
+                        <div className="rounded-2xl border border-border/50 bg-surface/60 p-4 space-y-1.5">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                             <MessageSquareText className="size-3.5 text-primary" />
-
-                            Mensagem
-                          </div>
-
-                          <p className="mt-3 whitespace-pre-line text-xs leading-6 text-foreground/90">
+                            Mensagem do Cliente
+                          </span>
+                          <p className="whitespace-pre-line text-xs leading-relaxed text-foreground/90">
                             {detalhes.mensagem}
                           </p>
                         </div>
                       )}
 
-                      {/* INFO LATERAL */}
-                      {(detalhes.website ||
-                        detalhes.prazo ||
-                        detalhes.origem) && (
-                        <div className="grid gap-3">
-                          {/* WEBSITE */}
+                      {(detalhes.website || detalhes.origem) && (
+                        <div className="space-y-2">
                           {detalhes.website && (
-                            <div className="rounded-2xl border border-border/60 bg-background/35 p-4">
-                              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.15em] text-muted-foreground">
-                                <Globe2 className="size-3.5 text-primary" />
-
-                                Website atual
-                              </div>
-
+                            <div className="rounded-2xl border border-border/50 bg-surface/60 p-3">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                                <Globe2 className="size-3 text-primary" />
+                                Website Atual
+                              </span>
                               <a
-                                href={
-                                  detalhes.website
-                                }
+                                href={detalhes.website}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="mt-2 flex items-start gap-1.5 break-all text-xs font-medium text-foreground transition hover:text-primary"
+                                className="mt-1 flex items-center gap-1 text-xs text-primary font-medium hover:underline truncate"
                               >
-                                <span>
-                                  {detalhes.website}
-                                </span>
-
-                                <ExternalLink className="mt-0.5 size-3 shrink-0" />
+                                <span>{detalhes.website}</span>
+                                <ExternalLink className="size-3" />
                               </a>
                             </div>
                           )}
 
-                          {/* PRAZO */}
-                          {detalhes.prazo && (
-                            <div className="rounded-2xl border border-border/60 bg-background/35 p-4">
-                              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.15em] text-muted-foreground">
-                                <CalendarClock className="size-3.5 text-primary" />
-
-                                Prazo desejado
-                              </div>
-
-                              <p className="mt-2 text-xs font-medium">
-                                {detalhes.prazo}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* ORIGEM */}
                           {detalhes.origem && (
-                            <div className="rounded-2xl border border-border/60 bg-background/35 p-4">
-                              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.15em] text-muted-foreground">
-                                <Globe className="size-3.5 text-primary" />
-
-                                Origem
-                              </div>
-
-                              <p className="mt-2 text-xs font-medium">
+                            <div className="rounded-2xl border border-border/50 bg-surface/60 p-3">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                                Origem / Canal
+                              </span>
+                              <p className="mt-1 text-xs text-foreground font-medium">
                                 {detalhes.origem}
                               </p>
                             </div>
@@ -609,7 +378,16 @@ function Pedidos() {
             })}
           </ul>
         )}
-      </Panel>
+      </div>
+
+      {/* Modal de Criação de Negócio Pré-Preenchido */}
+      {negocioParaCriar && (
+        <DialogNegocio
+          aberto={!!negocioParaCriar}
+          onFechar={() => setNegocioParaCriar(null)}
+          negocio={negocioParaCriar as Business}
+        />
+      )}
     </div>
   );
 }

@@ -15,14 +15,17 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as PortefolioRouteImport } from './routes/portefolio'
 import { Route as RestaurantesRouteImport } from './routes/restaurantes'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedArquivosRouteImport } from './routes/_authenticated/arquivos'
 import { Route as AuthenticatedDefinicoesRouteImport } from './routes/_authenticated/definicoes'
 import { Route as AuthenticatedEmailsRouteImport } from './routes/_authenticated/emails'
 import { Route as AuthenticatedEquipaRouteImport } from './routes/_authenticated/equipa'
+import { Route as AuthenticatedHubRouteImport } from './routes/_authenticated/hub'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
 import { Route as AuthenticatedProjetosRouteImport } from './routes/_authenticated/projetos'
+import { Route as AuthenticatedSegurancaRouteImport } from './routes/_authenticated/seguranca'
 import { Route as AuthenticatedTarefasRouteImport } from './routes/_authenticated/tarefas'
 import { Route as DeIndexRouteImport } from './routes/de.index'
 import { Route as DeContactRouteImport } from './routes/de.contact'
@@ -43,10 +46,19 @@ import { Route as FrRestaurantsRouteImport } from './routes/fr.restaurants'
 import { Route as RestaurantesDemonstracaoRouteImport } from './routes/restaurantes_.demonstracao'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
 import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
+import { Route as AuthenticatedProdutosMatchRouteImport } from './routes/_authenticated/produtos.match'
+import { Route as AuthenticatedProdutosRestaurantesRouteImport } from './routes/_authenticated/produtos.restaurantes'
 import { Route as DeRestaurantsDemoRouteImport } from './routes/de.restaurants_.demo'
 import { Route as EnRestaurantsDemoRouteImport } from './routes/en.restaurants_.demo'
 import { Route as EsRestaurantesDemoRouteImport } from './routes/es.restaurantes_.demo'
 import { Route as FrRestaurantsDemoRouteImport } from './routes/fr.restaurants_.demo'
+import { Route as AuthenticatedProdutosRestaurantesIndexRouteImport } from './routes/_authenticated/produtos.restaurantes.index'
+import { Route as AuthenticatedProdutosRestaurantesDefinicoesRouteImport } from './routes/_authenticated/produtos.restaurantes.definicoes'
+import { Route as AuthenticatedProdutosRestaurantesEquipaRouteImport } from './routes/_authenticated/produtos.restaurantes.equipa'
+import { Route as AuthenticatedProdutosRestaurantesMenuRouteImport } from './routes/_authenticated/produtos.restaurantes.menu'
+import { Route as AuthenticatedProdutosRestaurantesMesasRouteImport } from './routes/_authenticated/produtos.restaurantes.mesas'
+import { Route as AuthenticatedProdutosRestaurantesPedidosRouteImport } from './routes/_authenticated/produtos.restaurantes.pedidos'
+import { Route as AuthenticatedProdutosRestaurantesReservasRouteImport } from './routes/_authenticated/produtos.restaurantes.reservas'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +89,11 @@ const RestaurantesRoute = RestaurantesRouteImport.update({
   path: '/restaurantes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedArquivosRoute = AuthenticatedArquivosRouteImport.update({
   id: '/arquivos',
   path: '/arquivos',
@@ -97,6 +114,11 @@ const AuthenticatedEquipaRoute = AuthenticatedEquipaRouteImport.update({
   path: '/equipa',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHubRoute = AuthenticatedHubRouteImport.update({
+  id: '/hub',
+  path: '/hub',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   id: '/painel',
   path: '/painel',
@@ -115,6 +137,11 @@ const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
 const AuthenticatedProjetosRoute = AuthenticatedProjetosRouteImport.update({
   id: '/projetos',
   path: '/projetos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSegurancaRoute = AuthenticatedSegurancaRouteImport.update({
+  id: '/seguranca',
+  path: '/seguranca',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTarefasRoute = AuthenticatedTarefasRouteImport.update({
@@ -219,6 +246,18 @@ const AuthenticatedNegociosIdRoute = AuthenticatedNegociosIdRouteImport.update({
   path: '/negocios/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProdutosMatchRoute =
+  AuthenticatedProdutosMatchRouteImport.update({
+    id: '/produtos/match',
+    path: '/produtos/match',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesRoute =
+  AuthenticatedProdutosRestaurantesRouteImport.update({
+    id: '/produtos/restaurantes',
+    path: '/produtos/restaurantes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const DeRestaurantsDemoRoute = DeRestaurantsDemoRouteImport.update({
   id: '/de/restaurants_/demo',
   path: '/de/restaurants/demo',
@@ -239,6 +278,48 @@ const FrRestaurantsDemoRoute = FrRestaurantsDemoRouteImport.update({
   path: '/fr/restaurants/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProdutosRestaurantesIndexRoute =
+  AuthenticatedProdutosRestaurantesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesDefinicoesRoute =
+  AuthenticatedProdutosRestaurantesDefinicoesRouteImport.update({
+    id: '/definicoes',
+    path: '/definicoes',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesEquipaRoute =
+  AuthenticatedProdutosRestaurantesEquipaRouteImport.update({
+    id: '/equipa',
+    path: '/equipa',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesMenuRoute =
+  AuthenticatedProdutosRestaurantesMenuRouteImport.update({
+    id: '/menu',
+    path: '/menu',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesMesasRoute =
+  AuthenticatedProdutosRestaurantesMesasRouteImport.update({
+    id: '/mesas',
+    path: '/mesas',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesPedidosRoute =
+  AuthenticatedProdutosRestaurantesPedidosRouteImport.update({
+    id: '/pedidos',
+    path: '/pedidos',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
+const AuthenticatedProdutosRestaurantesReservasRoute =
+  AuthenticatedProdutosRestaurantesReservasRouteImport.update({
+    id: '/reservas',
+    path: '/reservas',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -246,14 +327,17 @@ export interface FileRoutesByFullPath {
   '/contacto': typeof ContactoRoute
   '/portefolio': typeof PortefolioRoute
   '/restaurantes': typeof RestaurantesRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/arquivos': typeof AuthenticatedArquivosRoute
   '/definicoes': typeof AuthenticatedDefinicoesRoute
   '/emails': typeof AuthenticatedEmailsRoute
   '/equipa': typeof AuthenticatedEquipaRoute
+  '/hub': typeof AuthenticatedHubRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/projetos': typeof AuthenticatedProjetosRoute
+  '/seguranca': typeof AuthenticatedSegurancaRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
   '/de/contact': typeof DeContactRoute
   '/de/portfolio': typeof DePortfolioRoute
@@ -273,11 +357,20 @@ export interface FileRoutesByFullPath {
   '/es/': typeof EsIndexRoute
   '/fr/': typeof FrIndexRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/produtos/match': typeof AuthenticatedProdutosMatchRoute
+  '/produtos/restaurantes': typeof AuthenticatedProdutosRestaurantesRouteWithChildren
   '/de/restaurants/demo': typeof DeRestaurantsDemoRoute
   '/en/restaurants/demo': typeof EnRestaurantsDemoRoute
   '/es/restaurantes/demo': typeof EsRestaurantesDemoRoute
   '/fr/restaurants/demo': typeof FrRestaurantsDemoRoute
   '/negocios/': typeof AuthenticatedNegociosIndexRoute
+  '/produtos/restaurantes/definicoes': typeof AuthenticatedProdutosRestaurantesDefinicoesRoute
+  '/produtos/restaurantes/equipa': typeof AuthenticatedProdutosRestaurantesEquipaRoute
+  '/produtos/restaurantes/menu': typeof AuthenticatedProdutosRestaurantesMenuRoute
+  '/produtos/restaurantes/mesas': typeof AuthenticatedProdutosRestaurantesMesasRoute
+  '/produtos/restaurantes/pedidos': typeof AuthenticatedProdutosRestaurantesPedidosRoute
+  '/produtos/restaurantes/reservas': typeof AuthenticatedProdutosRestaurantesReservasRoute
+  '/produtos/restaurantes/': typeof AuthenticatedProdutosRestaurantesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -285,14 +378,17 @@ export interface FileRoutesByTo {
   '/contacto': typeof ContactoRoute
   '/portefolio': typeof PortefolioRoute
   '/restaurantes': typeof RestaurantesRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/arquivos': typeof AuthenticatedArquivosRoute
   '/definicoes': typeof AuthenticatedDefinicoesRoute
   '/emails': typeof AuthenticatedEmailsRoute
   '/equipa': typeof AuthenticatedEquipaRoute
+  '/hub': typeof AuthenticatedHubRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/projetos': typeof AuthenticatedProjetosRoute
+  '/seguranca': typeof AuthenticatedSegurancaRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
   '/de/contact': typeof DeContactRoute
   '/de/portfolio': typeof DePortfolioRoute
@@ -312,11 +408,19 @@ export interface FileRoutesByTo {
   '/es': typeof EsIndexRoute
   '/fr': typeof FrIndexRoute
   '/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/produtos/match': typeof AuthenticatedProdutosMatchRoute
   '/de/restaurants/demo': typeof DeRestaurantsDemoRoute
   '/en/restaurants/demo': typeof EnRestaurantsDemoRoute
   '/es/restaurantes/demo': typeof EsRestaurantesDemoRoute
   '/fr/restaurants/demo': typeof FrRestaurantsDemoRoute
   '/negocios': typeof AuthenticatedNegociosIndexRoute
+  '/produtos/restaurantes/definicoes': typeof AuthenticatedProdutosRestaurantesDefinicoesRoute
+  '/produtos/restaurantes/equipa': typeof AuthenticatedProdutosRestaurantesEquipaRoute
+  '/produtos/restaurantes/menu': typeof AuthenticatedProdutosRestaurantesMenuRoute
+  '/produtos/restaurantes/mesas': typeof AuthenticatedProdutosRestaurantesMesasRoute
+  '/produtos/restaurantes/pedidos': typeof AuthenticatedProdutosRestaurantesPedidosRoute
+  '/produtos/restaurantes/reservas': typeof AuthenticatedProdutosRestaurantesReservasRoute
+  '/produtos/restaurantes': typeof AuthenticatedProdutosRestaurantesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -326,14 +430,17 @@ export interface FileRoutesById {
   '/contacto': typeof ContactoRoute
   '/portefolio': typeof PortefolioRoute
   '/restaurantes': typeof RestaurantesRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/arquivos': typeof AuthenticatedArquivosRoute
   '/_authenticated/definicoes': typeof AuthenticatedDefinicoesRoute
   '/_authenticated/emails': typeof AuthenticatedEmailsRoute
   '/_authenticated/equipa': typeof AuthenticatedEquipaRoute
+  '/_authenticated/hub': typeof AuthenticatedHubRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
   '/_authenticated/projetos': typeof AuthenticatedProjetosRoute
+  '/_authenticated/seguranca': typeof AuthenticatedSegurancaRoute
   '/_authenticated/tarefas': typeof AuthenticatedTarefasRoute
   '/de/contact': typeof DeContactRoute
   '/de/portfolio': typeof DePortfolioRoute
@@ -353,11 +460,20 @@ export interface FileRoutesById {
   '/es/': typeof EsIndexRoute
   '/fr/': typeof FrIndexRoute
   '/_authenticated/negocios/$id': typeof AuthenticatedNegociosIdRoute
+  '/_authenticated/produtos/match': typeof AuthenticatedProdutosMatchRoute
+  '/_authenticated/produtos/restaurantes': typeof AuthenticatedProdutosRestaurantesRouteWithChildren
   '/de/restaurants_/demo': typeof DeRestaurantsDemoRoute
   '/en/restaurants_/demo': typeof EnRestaurantsDemoRoute
   '/es/restaurantes_/demo': typeof EsRestaurantesDemoRoute
   '/fr/restaurants_/demo': typeof FrRestaurantsDemoRoute
   '/_authenticated/negocios/': typeof AuthenticatedNegociosIndexRoute
+  '/_authenticated/produtos/restaurantes/definicoes': typeof AuthenticatedProdutosRestaurantesDefinicoesRoute
+  '/_authenticated/produtos/restaurantes/equipa': typeof AuthenticatedProdutosRestaurantesEquipaRoute
+  '/_authenticated/produtos/restaurantes/menu': typeof AuthenticatedProdutosRestaurantesMenuRoute
+  '/_authenticated/produtos/restaurantes/mesas': typeof AuthenticatedProdutosRestaurantesMesasRoute
+  '/_authenticated/produtos/restaurantes/pedidos': typeof AuthenticatedProdutosRestaurantesPedidosRoute
+  '/_authenticated/produtos/restaurantes/reservas': typeof AuthenticatedProdutosRestaurantesReservasRoute
+  '/_authenticated/produtos/restaurantes/': typeof AuthenticatedProdutosRestaurantesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -367,14 +483,17 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/portefolio'
     | '/restaurantes'
+    | '/admin'
     | '/arquivos'
     | '/definicoes'
     | '/emails'
     | '/equipa'
+    | '/hub'
     | '/painel'
     | '/pedidos'
     | '/pipeline'
     | '/projetos'
+    | '/seguranca'
     | '/tarefas'
     | '/de/contact'
     | '/de/portfolio'
@@ -394,11 +513,20 @@ export interface FileRouteTypes {
     | '/es/'
     | '/fr/'
     | '/negocios/$id'
+    | '/produtos/match'
+    | '/produtos/restaurantes'
     | '/de/restaurants/demo'
     | '/en/restaurants/demo'
     | '/es/restaurantes/demo'
     | '/fr/restaurants/demo'
     | '/negocios/'
+    | '/produtos/restaurantes/definicoes'
+    | '/produtos/restaurantes/equipa'
+    | '/produtos/restaurantes/menu'
+    | '/produtos/restaurantes/mesas'
+    | '/produtos/restaurantes/pedidos'
+    | '/produtos/restaurantes/reservas'
+    | '/produtos/restaurantes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -406,14 +534,17 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/portefolio'
     | '/restaurantes'
+    | '/admin'
     | '/arquivos'
     | '/definicoes'
     | '/emails'
     | '/equipa'
+    | '/hub'
     | '/painel'
     | '/pedidos'
     | '/pipeline'
     | '/projetos'
+    | '/seguranca'
     | '/tarefas'
     | '/de/contact'
     | '/de/portfolio'
@@ -433,11 +564,19 @@ export interface FileRouteTypes {
     | '/es'
     | '/fr'
     | '/negocios/$id'
+    | '/produtos/match'
     | '/de/restaurants/demo'
     | '/en/restaurants/demo'
     | '/es/restaurantes/demo'
     | '/fr/restaurants/demo'
     | '/negocios'
+    | '/produtos/restaurantes/definicoes'
+    | '/produtos/restaurantes/equipa'
+    | '/produtos/restaurantes/menu'
+    | '/produtos/restaurantes/mesas'
+    | '/produtos/restaurantes/pedidos'
+    | '/produtos/restaurantes/reservas'
+    | '/produtos/restaurantes'
   id:
     | '__root__'
     | '/'
@@ -446,14 +585,17 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/portefolio'
     | '/restaurantes'
+    | '/_authenticated/admin'
     | '/_authenticated/arquivos'
     | '/_authenticated/definicoes'
     | '/_authenticated/emails'
     | '/_authenticated/equipa'
+    | '/_authenticated/hub'
     | '/_authenticated/painel'
     | '/_authenticated/pedidos'
     | '/_authenticated/pipeline'
     | '/_authenticated/projetos'
+    | '/_authenticated/seguranca'
     | '/_authenticated/tarefas'
     | '/de/contact'
     | '/de/portfolio'
@@ -473,11 +615,20 @@ export interface FileRouteTypes {
     | '/es/'
     | '/fr/'
     | '/_authenticated/negocios/$id'
+    | '/_authenticated/produtos/match'
+    | '/_authenticated/produtos/restaurantes'
     | '/de/restaurants_/demo'
     | '/en/restaurants_/demo'
     | '/es/restaurantes_/demo'
     | '/fr/restaurants_/demo'
     | '/_authenticated/negocios/'
+    | '/_authenticated/produtos/restaurantes/definicoes'
+    | '/_authenticated/produtos/restaurantes/equipa'
+    | '/_authenticated/produtos/restaurantes/menu'
+    | '/_authenticated/produtos/restaurantes/mesas'
+    | '/_authenticated/produtos/restaurantes/pedidos'
+    | '/_authenticated/produtos/restaurantes/reservas'
+    | '/_authenticated/produtos/restaurantes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -554,6 +705,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RestaurantesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/arquivos': {
       id: '/_authenticated/arquivos'
       path: '/arquivos'
@@ -582,6 +740,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEquipaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/hub': {
+      id: '/_authenticated/hub'
+      path: '/hub'
+      fullPath: '/hub'
+      preLoaderRoute: typeof AuthenticatedHubRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel': {
       id: '/_authenticated/painel'
       path: '/painel'
@@ -608,6 +773,13 @@ declare module '@tanstack/react-router' {
       path: '/projetos'
       fullPath: '/projetos'
       preLoaderRoute: typeof AuthenticatedProjetosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/seguranca': {
+      id: '/_authenticated/seguranca'
+      path: '/seguranca'
+      fullPath: '/seguranca'
+      preLoaderRoute: typeof AuthenticatedSegurancaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tarefas': {
@@ -750,6 +922,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNegociosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/produtos/match': {
+      id: '/_authenticated/produtos/match'
+      path: '/produtos/match'
+      fullPath: '/produtos/match'
+      preLoaderRoute: typeof AuthenticatedProdutosMatchRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/produtos/restaurantes': {
+      id: '/_authenticated/produtos/restaurantes'
+      path: '/produtos/restaurantes'
+      fullPath: '/produtos/restaurantes'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/de/restaurants_/demo': {
       id: '/de/restaurants_/demo'
       path: '/de/restaurants/demo'
@@ -778,34 +964,127 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrRestaurantsDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/produtos/restaurantes/': {
+      id: '/_authenticated/produtos/restaurantes/'
+      path: '/'
+      fullPath: '/produtos/restaurantes/'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesIndexRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
+    '/_authenticated/produtos/restaurantes/definicoes': {
+      id: '/_authenticated/produtos/restaurantes/definicoes'
+      path: '/definicoes'
+      fullPath: '/produtos/restaurantes/definicoes'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesDefinicoesRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
+    '/_authenticated/produtos/restaurantes/equipa': {
+      id: '/_authenticated/produtos/restaurantes/equipa'
+      path: '/equipa'
+      fullPath: '/produtos/restaurantes/equipa'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesEquipaRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
+    '/_authenticated/produtos/restaurantes/menu': {
+      id: '/_authenticated/produtos/restaurantes/menu'
+      path: '/menu'
+      fullPath: '/produtos/restaurantes/menu'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesMenuRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
+    '/_authenticated/produtos/restaurantes/mesas': {
+      id: '/_authenticated/produtos/restaurantes/mesas'
+      path: '/mesas'
+      fullPath: '/produtos/restaurantes/mesas'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesMesasRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
+    '/_authenticated/produtos/restaurantes/pedidos': {
+      id: '/_authenticated/produtos/restaurantes/pedidos'
+      path: '/pedidos'
+      fullPath: '/produtos/restaurantes/pedidos'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesPedidosRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
+    '/_authenticated/produtos/restaurantes/reservas': {
+      id: '/_authenticated/produtos/restaurantes/reservas'
+      path: '/reservas'
+      fullPath: '/produtos/restaurantes/reservas'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesReservasRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
   }
 }
 
+interface AuthenticatedProdutosRestaurantesRouteChildren {
+  AuthenticatedProdutosRestaurantesDefinicoesRoute: typeof AuthenticatedProdutosRestaurantesDefinicoesRoute
+  AuthenticatedProdutosRestaurantesEquipaRoute: typeof AuthenticatedProdutosRestaurantesEquipaRoute
+  AuthenticatedProdutosRestaurantesMenuRoute: typeof AuthenticatedProdutosRestaurantesMenuRoute
+  AuthenticatedProdutosRestaurantesMesasRoute: typeof AuthenticatedProdutosRestaurantesMesasRoute
+  AuthenticatedProdutosRestaurantesPedidosRoute: typeof AuthenticatedProdutosRestaurantesPedidosRoute
+  AuthenticatedProdutosRestaurantesReservasRoute: typeof AuthenticatedProdutosRestaurantesReservasRoute
+  AuthenticatedProdutosRestaurantesIndexRoute: typeof AuthenticatedProdutosRestaurantesIndexRoute
+}
+
+const AuthenticatedProdutosRestaurantesRouteChildren: AuthenticatedProdutosRestaurantesRouteChildren =
+  {
+    AuthenticatedProdutosRestaurantesDefinicoesRoute:
+      AuthenticatedProdutosRestaurantesDefinicoesRoute,
+    AuthenticatedProdutosRestaurantesEquipaRoute:
+      AuthenticatedProdutosRestaurantesEquipaRoute,
+    AuthenticatedProdutosRestaurantesMenuRoute:
+      AuthenticatedProdutosRestaurantesMenuRoute,
+    AuthenticatedProdutosRestaurantesMesasRoute:
+      AuthenticatedProdutosRestaurantesMesasRoute,
+    AuthenticatedProdutosRestaurantesPedidosRoute:
+      AuthenticatedProdutosRestaurantesPedidosRoute,
+    AuthenticatedProdutosRestaurantesReservasRoute:
+      AuthenticatedProdutosRestaurantesReservasRoute,
+    AuthenticatedProdutosRestaurantesIndexRoute:
+      AuthenticatedProdutosRestaurantesIndexRoute,
+  }
+
+const AuthenticatedProdutosRestaurantesRouteWithChildren =
+  AuthenticatedProdutosRestaurantesRoute._addFileChildren(
+    AuthenticatedProdutosRestaurantesRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedArquivosRoute: typeof AuthenticatedArquivosRoute
   AuthenticatedDefinicoesRoute: typeof AuthenticatedDefinicoesRoute
   AuthenticatedEmailsRoute: typeof AuthenticatedEmailsRoute
   AuthenticatedEquipaRoute: typeof AuthenticatedEquipaRoute
+  AuthenticatedHubRoute: typeof AuthenticatedHubRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
   AuthenticatedProjetosRoute: typeof AuthenticatedProjetosRoute
+  AuthenticatedSegurancaRoute: typeof AuthenticatedSegurancaRoute
   AuthenticatedTarefasRoute: typeof AuthenticatedTarefasRoute
   AuthenticatedNegociosIdRoute: typeof AuthenticatedNegociosIdRoute
+  AuthenticatedProdutosMatchRoute: typeof AuthenticatedProdutosMatchRoute
+  AuthenticatedProdutosRestaurantesRoute: typeof AuthenticatedProdutosRestaurantesRouteWithChildren
   AuthenticatedNegociosIndexRoute: typeof AuthenticatedNegociosIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedArquivosRoute: AuthenticatedArquivosRoute,
   AuthenticatedDefinicoesRoute: AuthenticatedDefinicoesRoute,
   AuthenticatedEmailsRoute: AuthenticatedEmailsRoute,
   AuthenticatedEquipaRoute: AuthenticatedEquipaRoute,
+  AuthenticatedHubRoute: AuthenticatedHubRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
   AuthenticatedProjetosRoute: AuthenticatedProjetosRoute,
+  AuthenticatedSegurancaRoute: AuthenticatedSegurancaRoute,
   AuthenticatedTarefasRoute: AuthenticatedTarefasRoute,
   AuthenticatedNegociosIdRoute: AuthenticatedNegociosIdRoute,
+  AuthenticatedProdutosMatchRoute: AuthenticatedProdutosMatchRoute,
+  AuthenticatedProdutosRestaurantesRoute:
+    AuthenticatedProdutosRestaurantesRouteWithChildren,
   AuthenticatedNegociosIndexRoute: AuthenticatedNegociosIndexRoute,
 }
 
