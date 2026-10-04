@@ -6,7 +6,7 @@ import { isDemoMode } from "@/lib/demo-mode";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     if (isDemoMode()) {
       return {
         user: {
@@ -16,7 +16,12 @@ export const Route = createFileRoute("/_authenticated")({
       };
     }
     const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/auth" });
+    if (error || !data.user) {
+      throw redirect({
+        to: "/auth",
+        search: { redirect: location.href },
+      });
+    }
     return { user: data.user };
   },
   component: () => (

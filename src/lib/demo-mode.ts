@@ -380,12 +380,40 @@ const sampleWebsiteRequests: WebsiteRequest[] = [
 // STORE EM MEMÓRIA (INICIALIZA VAZIO POR OMISSÃO PARA FIDELIDADE AOS DADOS REAIS)
 // ============================================================================
 
+const LOCAL_TEST_TABLES_KEY = "nws-test-restaurant-tables-v1";
+
+function restoreLocalTestTables(): Table[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(LOCAL_TEST_TABLES_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(
+        (v): v is Table =>
+          v !== null &&
+          typeof v === "object" &&
+          typeof v.id === "string" &&
+          Number.isSafeInteger(v.number) &&
+          v.number > 0 &&
+          Number.isSafeInteger(v.seats) &&
+          v.seats >= 1 &&
+          typeof v.active === "boolean",
+      )
+      .slice(0, 200)
+      .map((t) => ({ ...t, name: `Mesa ${t.number}`, slug: `mesa-${t.number}` }));
+  } catch {
+    return [];
+  }
+}
+
 class DemoStore {
   isPopulated = false;
   settings: Settings = { ...cleanSettings };
   categories: Category[] = [];
   products: Product[] = [];
-  tables: Table[] = [];
+  tables: Table[] = restoreLocalTestTables();
   orders: Order[] = [];
   requests: TableRequest[] = [];
   reservations: Reservation[] = [];
@@ -463,6 +491,7 @@ class DemoStore {
         createdAt: now - 3600000,
       },
     ];
+    this.persistLocalTestTables();
   }
 
   resetDemo() {
@@ -475,6 +504,7 @@ class DemoStore {
     this.requests = [];
     this.reservations = [];
     this.staff = [...initialStaff];
+    this.persistLocalTestTables();
   }
 
   getAdminData(restaurantId: string): AdminData {
@@ -575,6 +605,15 @@ class DemoStore {
     return newReq;
   }
 
+  private persistLocalTestTables() {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(LOCAL_TEST_TABLES_KEY, JSON.stringify(this.tables));
+    } catch {
+      // Armazenamento desativado ou sem espaco: o teste continua em memoria.
+    }
+  }
+
   saveTable(t: { id?: string; number: number; seats: number; active: boolean }) {
     if (t.id) {
       this.tables = this.tables.map((table) =>
@@ -585,6 +624,7 @@ class DemoStore {
               seats: t.seats,
               active: t.active,
               name: `Mesa ${t.number}`,
+              slug: `mesa-${t.number}`,
             }
           : table,
       );
@@ -599,14 +639,17 @@ class DemoStore {
         slug: `mesa-${t.number}`,
       });
     }
+    this.persistLocalTestTables();
   }
 
   setTableActive(tableId: string, active: boolean) {
     this.tables = this.tables.map((t) => (t.id === tableId ? { ...t, active } : t));
+    this.persistLocalTestTables();
   }
 
   removeTable(tableId: string) {
     this.tables = this.tables.filter((t) => t.id !== tableId);
+    this.persistLocalTestTables();
   }
 
   saveProduct(p: {

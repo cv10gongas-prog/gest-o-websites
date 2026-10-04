@@ -31,13 +31,11 @@ import {
   timeAgo,
 } from "@/components/restaurant/RestaurantBits";
 import type { Table } from "@/lib/restaurant/demo-data";
-import { PUBLIC_RESTAURANT_URL } from "@/lib/restaurant/config";
 import { isDemoMode } from "@/lib/demo-mode";
 import {
   adminActions,
   formatPrice,
   getTableState,
-  tableSlug,
   tableStateLabel,
   useAdmin,
 } from "@/lib/restaurant/store";
@@ -52,6 +50,21 @@ function RestaurantTablesAdmin() {
   const [editing, setEditing] = useState<Partial<Table> | null>(null);
   const [qr, setQr] = useState<{ table: Table; print: boolean } | null>(null);
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
+
+  const qrMesaParam =
+    typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("mesa");
+  const qrMesa = qrMesaParam && /^[1-9]\d*$/.test(qrMesaParam) ? Number(qrMesaParam) : null;
+  const qrMesaProcessed = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (qrMesa === null || !Number.isSafeInteger(qrMesa) || qrMesaProcessed.current === qrMesa)
+      return;
+    const target = app.tables.find((table) => table.number === qrMesa);
+    if (target) {
+      qrMesaProcessed.current = qrMesa;
+      setSelectedTable(target);
+    }
+  }, [qrMesa, app.tables]);
 
   async function saveTable(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,7 +91,7 @@ function RestaurantTablesAdmin() {
       toast.success(
         editing?.id
           ? "Mesa atualizada com sucesso."
-          : `Mesa ${number} criada com sucesso · /pedir/${tableSlug(number)}`,
+          : `Mesa ${number} criada com sucesso. O QR privado ja esta disponivel.`,
       );
       setEditing(null);
     } catch (err) {
@@ -104,7 +117,7 @@ function RestaurantTablesAdmin() {
       {/* CABEÇALHO */}
       <PanelHeader
         title="Gestão de Mesas & QR Codes"
-        subtitle="Configure a disposição da sala. Cada mesa possui um código QR único para os clientes abrirem a ementa e realizarem pedidos."
+        subtitle="Organiza as mesas e cria um QR privado para cada uma. O acesso exige login no NWS Workspace; este teste nao sincroniza entre telemoveis."
         action={
           <button
             type="button"
@@ -116,6 +129,20 @@ function RestaurantTablesAdmin() {
           </button>
         }
       />
+
+      {qrMesa !== null &&
+        Number.isSafeInteger(qrMesa) &&
+        !app.tables.some((t) => t.number === qrMesa) && (
+          <div
+            role="alert"
+            className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-warning"
+          >
+            A Mesa {qrMesa} ainda nao existe neste browser. O espaco de testes e local: uma mesa
+            criada no computador nao aparece automaticamente noutro telemovel, mesmo com login. Para
+            sincronizar dispositivos diferentes sera necessario armazenamento partilhado e
+            autenticado.
+          </div>
+        )}
 
       {/* GRELHA DE MESAS */}
       {app.tables.length === 0 ? (
@@ -160,7 +187,7 @@ function RestaurantTablesAdmin() {
                         <span className="text-xs text-muted-foreground">({t.seats} lugares)</span>
                       </div>
                       <p className="text-[10px] font-mono text-muted-foreground mt-0.5">
-                        /pedir/{t.slug}
+                        Acesso privado · Mesa {t.number}
                       </p>
                     </div>
 
@@ -328,7 +355,7 @@ function RestaurantTablesAdmin() {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Capacidade: {selectedTable.seats} lugares · /pedir/{selectedTable.slug}
+                  Capacidade: {selectedTable.seats} lugares · Acesso privado no Workspace
                 </p>
               </div>
 
@@ -516,7 +543,9 @@ function RestaurantTablesAdmin() {
 function QrView({ table, autoPrint, name }: { table: Table; autoPrint: boolean; name: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const isDemo = isDemoMode();
-  const targetUrl = isDemo ? "" : `${PUBLIC_RESTAURANT_URL}/pedir/${table.slug}`;
+  const appOrigin =
+    typeof window === "undefined" ? "https://www.novawebstudio.pt" : window.location.origin;
+  const targetUrl = isDemo ? "" : `${appOrigin}/produtos/restaurantes/mesas?mesa=${table.number}`;
 
   const print = () => {
     if (isDemo || !targetUrl) {
@@ -598,7 +627,7 @@ function QrView({ table, autoPrint, name }: { table: Table; autoPrint: boolean; 
     <h1>${esc(name)}</h1>
     <h2>Mesa ${table.number}</h2>
     ${svg}
-    <p class="instrucao">Aponte a câmara do telemóvel para ver a ementa e pedir.</p>
+    <p class="instrucao">Acesso privado: inicie sessao no NWS Workspace para abrir esta mesa.</p>
     <p class="url">${esc(targetUrl)}</p>
   </div>
 </body>
