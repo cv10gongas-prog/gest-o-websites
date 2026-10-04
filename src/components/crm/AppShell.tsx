@@ -499,23 +499,6 @@ function AppShellInner({ children }: { children: ReactNode }) {
                     onClick={() => setMenu(false)}
                   />
                 </div>
-
-                {!isDemoMode() && (
-                  <div className="pt-4 border-t border-border/40 mt-4 px-2">
-                    <a
-                      href="https://restaurante.novawebstudio.pt"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center justify-between rounded-xl border border-warning/30 bg-warning/10 px-3 py-2 text-xs font-semibold text-warning hover:bg-warning/20 transition"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Globe className="size-3.5" />
-                        <span>Ementa Pública</span>
-                      </span>
-                      <ExternalLink className="size-3 opacity-70" />
-                    </a>
-                  </div>
-                )}
               </div>
             )}
 
@@ -699,19 +682,6 @@ function AppShellInner({ children }: { children: ReactNode }) {
             {/* 2. No Restaurante: Ações contextuais rápidas */}
             {ehRestaurantes && (
               <div className="flex items-center gap-2">
-                {!isDemoMode() && (
-                  <a
-                    href="https://restaurante.novawebstudio.pt"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-warning/30 bg-warning/10 px-3 py-1.5 text-xs font-bold text-warning hover:bg-warning/20 transition"
-                  >
-                    <Globe className="size-3.5" />
-                    <span>Site Público</span>
-                    <ExternalLink className="size-3 opacity-60" />
-                  </a>
-                )}
-
                 <Link
                   to="/produtos/restaurantes/pedidos"
                   className="inline-flex items-center gap-1.5 rounded-xl bg-warning px-3 py-1.5 text-xs font-bold text-black shadow-sm transition hover:bg-warning/90"
