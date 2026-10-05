@@ -33,17 +33,30 @@ export type RestaurantAccessInfo = {
 
 export const NWS_RESTAURANT_WORKSPACE_ID = "nws-restaurantes";
 
-/** Obter papel do utilizador via cliente autenticado */
+/**
+ * Obter papel do utilizador via cliente autenticado.
+ * Usa primeiro a função segura public.has_role(_user_id, _role), que não depende da RLS
+ * de user_roles nem falha quando existem várias linhas; a leitura direta fica como recurso.
+ */
 export async function getNwsUserRole(
   client: SupabaseClient<CentralDatabase>,
   userId: string,
 ): Promise<string | null> {
-  const { data } = await client
+  const { data: isAdmin, error: rpcError } = await client.rpc("has_role", {
+    _user_id: userId,
+    _role: "administrador",
+  });
+  if (rpcError) console.error("[getNwsUserRole] has_role falhou:", rpcError.message);
+  if (isAdmin === true) return "administrador";
+
+  const { data, error } = await client
     .from("user_roles")
     .select("role")
-    .eq("user_id", userId)
-    .maybeSingle();
-  return data?.role ?? null;
+    .eq("user_id", userId);
+  if (error) console.error("[getNwsUserRole] leitura de user_roles falhou:", error.message);
+  const roles = (data ?? []).map((r) => r.role as string);
+  if (roles.includes("administrador")) return "administrador";
+  return roles[0] ?? null;
 }
 
 /** Garantir existência dos 3 registos técnicos base (crm_restaurants, restaurants, restaurant_settings) */
