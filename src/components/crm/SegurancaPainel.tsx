@@ -392,6 +392,7 @@ export function SegurancaPainel() {
 
   return (
     <div className="space-y-6">
+      <IpsBloqueados podeDesbloquear={isAdmin} />
       {/* HEADER DA CENTRAL DE SEGURANÇA */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
