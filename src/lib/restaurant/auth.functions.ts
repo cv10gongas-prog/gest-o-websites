@@ -18,6 +18,7 @@ import type {
 import { tableSlug } from "./store";
 import type { Database as RestaurantDatabase } from "./types";
 import { isRestaurantServerConfigured } from "./client.server";
+import { supabaseProjectHost } from "@/lib/supabase-public-config";
 
 export type RestaurantStaffRole = "proprietario" | "gerente" | "cozinha" | "sala";
 
