@@ -31,6 +31,7 @@ import { useMemo, useState } from "react";
 import { Avatar, Chip, Dot, Vazio } from "@/components/crm/Bits";
 import { useActivity, useProfiles } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { useUtilizador } from "@/hooks/useAuth";
 import { formatarData, formatarHora } from "@/lib/crm";
 import { cn } from "@/lib/utils";
