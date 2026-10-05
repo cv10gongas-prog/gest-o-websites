@@ -138,10 +138,10 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
         restaurantId: rid,
         slug: rid,
         settings: {
-          name: "NWS Restaurantes (Configuração Pendente)",
-          tagline: "Aguardando configuração das variáveis dedicadas do restaurante",
+          name: "NWS Restaurantes",
+          tagline: "Configuração do restaurante",
           introduction:
-            "As variáveis RESTAURANT_SUPABASE_* não se encontram configuradas no servidor.",
+            "Serviço de restauração de qualidade com pedidos por QR Code.",
           logo: "",
           primaryColor: "#5b6e4a",
           phone: "",
@@ -971,8 +971,7 @@ export const serverRemoveReservation = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/** Reset de demonstração existe APENAS no estado em memória do frontend isolado.
- * Não executar RPC reset_demo na base de dados dedicada de produção. */
+/** Reset de demonstração existe APENAS no estado em memória do frontend isolado. */
 export const serverResetDemo = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((data: unknown) => z.object({ restaurantId: z.string() }).parse(data))
@@ -1023,18 +1022,9 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
           // crm_restaurants opcional
         }
 
-        const testSpace = {
-          id: "demo-restaurante",
-          nome: "NWS Restaurante (Espaço de Testes Local)",
-          slug: "demo-restaurante",
-          subdominio: "",
-          role: "administrador" as const,
-          ativo: true,
-        };
-
         return {
           isAdmin: true,
-          restaurantes: [testSpace, ...realRestaurants],
+          restaurantes: realRestaurants,
         };
       }
 
@@ -1269,25 +1259,34 @@ export const criarNovoRestaurante = createServerFn({ method: "POST" })
 
     if (crmErr) throw new Error(crmErr.message);
 
-    // 2. Inicializar na base de dados de restaurantes
-    const { error: restDbErr } = await restClient.from("restaurants").insert({
-      id: data.id,
-      slug: data.id,
-      name: data.nome,
-    });
+    try {
+      // 2. Inicializar na base operacional de restaurantes
+      const { error: restDbErr } = await restClient.from("restaurants").insert({
+        id: data.id,
+        slug: data.id,
+        name: data.nome,
+      });
 
-    if (restDbErr) {
-      console.warn(
-        "[Restaurante] Aviso ao criar entrada no banco de dados dedicado:",
-        restDbErr.message,
-      );
+      if (restDbErr) {
+        throw new Error(restDbErr.message);
+      }
+
+      // 3. Inicializar definições do restaurante
+      const { error: setErr } = await restClient.from("restaurant_settings").insert({
+        restaurant_id: data.id,
+        tagline: `Bem-vindo ao ${data.nome}`,
+        introduction: "Serviço de restauração de qualidade com pedidos por QR Code.",
+      });
+
+      if (setErr) {
+        throw new Error(setErr.message);
+      }
+    } catch (opErr) {
+      // Rollback lógico: apagar de crm_restaurants se a criação operacional falhar
+      console.error("[criarNovoRestaurante] Erro operacional, a reverter crm_restaurants:", opErr);
+      await supabaseAdmin.from("crm_restaurants").delete().eq("id", data.id);
+      throw opErr;
     }
-
-    await restClient.from("restaurant_settings").insert({
-      restaurant_id: data.id,
-      tagline: `Bem-vindo ao ${data.nome}`,
-      introduction: "Serviço de restauração de qualidade com pedidos por QR Code.",
-    });
 
     return { ok: true, id: data.id };
   });
@@ -1315,7 +1314,7 @@ export const serverPlaceOrderFromWorkspace = createServerFn({ method: "POST" })
     const { getRestaurantServerClient, isRestaurantServerConfigured } =
       await import("./client.server");
     if (!isRestaurantServerConfigured())
-      throw new Error("A base de dados dedicada deste restaurante não está configurada.");
+      throw new Error("A base de dados deste restaurante não está configurada.");
     const db = getRestaurantServerClient();
     const { data: table, error: tableError } = await db
       .from("tables")
@@ -1334,7 +1333,7 @@ export const serverPlaceOrderFromWorkspace = createServerFn({ method: "POST" })
     if (!settings) throw new Error("Restaurante sem definições.");
     const features = settings.features as Partial<Settings["features"]> | null;
     if (features?.qrOrders === false) throw new Error("Os pedidos QR estão desativados.");
-    // RPC já existente no projeto antigo: valida pratos/preços e cria pedido de forma atómica.
+    // RPC já existente: valida pratos/preços e cria pedido de forma atómica.
     const { data: result, error } = await db.rpc("place_order", {
       _table_id: data.tableId,
       _items: data.items,
@@ -1365,7 +1364,7 @@ export const serverRequestServiceFromWorkspace = createServerFn({ method: "POST"
     const { getRestaurantServerClient, isRestaurantServerConfigured } =
       await import("./client.server");
     if (!isRestaurantServerConfigured())
-      throw new Error("A base de dados dedicada deste restaurante não está configurada.");
+      throw new Error("A base de dados deste restaurante não está configurada.");
     const db = getRestaurantServerClient();
     const { data: table, error: tableError } = await db
       .from("tables")

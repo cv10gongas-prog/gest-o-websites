@@ -62,6 +62,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   );
 
   const isUserAdmin = isAdminUser || funcao === "administrador";
+  const demoActive = isDemoMode();
 
   const { data: authData, isLoading: loadingRestaurantes } = useQuery<{
     isAdmin: boolean;
@@ -69,7 +70,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   }>({
     queryKey: ["restaurantes_autorizados"],
     queryFn: async () =>
-      isDemoMode()
+      demoActive
         ? Promise.resolve({
             isAdmin: true,
             restaurantes: [defaultTestRestaurant],
@@ -79,51 +80,60 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     retry: 1,
   });
 
-  // A função central lida pelo Workspace autoriza APENAS o simulador local.
-  // Os restaurantes reais continuam a depender da lista devolvida pelo servidor.
-  const canUseLocalTestRestaurant =
-    isDemoMode() || authData?.isAdmin === true || (!aCarregar && isUserAdmin);
-
   const restaurantes: RestaurantTenant[] = useMemo(() => {
-    const reaisAutorizados = (authData?.restaurantes ?? []).filter(
-      (r) => r.id !== "demo-restaurante",
-    );
-    return canUseLocalTestRestaurant
-      ? [defaultTestRestaurant, ...reaisAutorizados]
-      : reaisAutorizados;
-  }, [authData, canUseLocalTestRestaurant]);
+    if (demoActive) {
+      return [defaultTestRestaurant];
+    }
+    return authData?.restaurantes ?? [];
+  }, [authData, demoActive]);
 
   const [activeRestaurantId, setActiveRestaurantId] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("nws_active_restaurant");
       if (saved) return saved;
     }
-    return isUserAdmin ? "demo-restaurante" : CURRENT_RESTAURANT_ID;
+    return demoActive ? "demo-restaurante" : CURRENT_RESTAURANT_ID;
   });
 
   // Atualizar quando os restaurantes autorizados forem carregados
   useEffect(() => {
-    if (restaurantes.length > 0 && !restaurantes.some((r) => r.id === activeRestaurantId)) {
-      const fallback = restaurantes[0]?.id ?? "";
-      if (fallback) {
-        setActiveRestaurantId(fallback);
-        localStorage.setItem("nws_active_restaurant", fallback);
+    if (restaurantes.length > 0) {
+      if (!activeRestaurantId || !restaurantes.some((r) => r.id === activeRestaurantId)) {
+        const fallback = restaurantes[0]?.id ?? "";
+        if (fallback) {
+          setActiveRestaurantId(fallback);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("nws_active_restaurant", fallback);
+          }
+        }
+      }
+    } else if (!demoActive && !loadingRestaurantes) {
+      if (activeRestaurantId) {
+        setActiveRestaurantId("");
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("nws_active_restaurant");
+        }
       }
     }
-  }, [restaurantes, activeRestaurantId]);
+  }, [restaurantes, activeRestaurantId, demoActive, loadingRestaurantes]);
 
   const setRestaurantAndStore = (id: string) => {
     setSimulatedRole(null);
     setActiveRestaurantId(id);
     if (typeof window !== "undefined") {
-      localStorage.setItem("nws_active_restaurant", id);
+      if (id) {
+        localStorage.setItem("nws_active_restaurant", id);
+      } else {
+        localStorage.removeItem("nws_active_restaurant");
+      }
     }
-    qc.invalidateQueries({ queryKey: ["restaurant_admin", id] });
-    qc.invalidateQueries({ queryKey: ["restaurant_permissions", id] });
+    if (id) {
+      qc.invalidateQueries({ queryKey: ["restaurant_admin", id] });
+      qc.invalidateQueries({ queryKey: ["restaurant_permissions", id] });
+    }
   };
 
-  const testeLocalAutorizado =
-    activeRestaurantId === "demo-restaurante" && canUseLocalTestRestaurant;
+  const testeLocalAutorizado = demoActive && activeRestaurantId === "demo-restaurante";
 
   const { data: permData, isLoading: loadingPerms } = useQuery({
     queryKey: ["restaurant_permissions", activeRestaurantId],
@@ -146,19 +156,18 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
   });
 
   const activeRestaurant = useMemo(() => {
-    return restaurantes.find((r) => r.id === activeRestaurantId) ?? restaurantes[0] ?? null;
+    if (!activeRestaurantId) return null;
+    return restaurantes.find((r) => r.id === activeRestaurantId) ?? null;
   }, [restaurantes, activeRestaurantId]);
 
-  // Um administrador confirmado pelo cliente central só ganha acesso ao TESTE LOCAL.
-  // Para qualquer restaurante real, exige-se autorização verificada pelo servidor.
   const isAdminNWS =
     testeLocalAutorizado ||
-    (activeRestaurantId !== "demo-restaurante" &&
-      (authData?.isAdmin === true ||
-        (permData?.permitido === true && permData.isAdminNWS === true)));
+    isUserAdmin ||
+    authData?.isAdmin === true ||
+    (permData?.permitido === true && permData.isAdminNWS === true);
   const rawRole = isAdminNWS ? "administrador" : permData?.permitido ? permData.role : "sala";
   const currentRole =
-    activeRestaurantId === "demo-restaurante" ? (simulatedRole ?? rawRole) : rawRole;
+    testeLocalAutorizado ? (simulatedRole ?? rawRole) : rawRole;
 
   const permissions = useMemo(() => {
     const isOwnerOrManager =
@@ -189,7 +198,7 @@ export function RestaurantTenantProvider({ children }: { children: ReactNode }) 
     setCurrentRoleSimulated: setSimulatedRole,
     isAdminNWS,
     ...permissions,
-    isLoading: aCarregar || loadingRestaurantes || loadingPerms,
+    isLoading: aCarregar || loadingRestaurantes || (!!activeRestaurantId && loadingPerms),
   };
 
   return (
