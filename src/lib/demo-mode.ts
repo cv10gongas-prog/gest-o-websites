@@ -494,6 +494,12 @@ class DemoStore {
     this.persistLocalTestTables();
   }
 
+  /** Carrega apenas o menu de exemplo, mantendo as mesas, pedidos e reservas atuais. */
+  loadSampleMenu() {
+    this.categories = [...sampleCategories];
+    this.products = [...sampleProducts];
+  }
+
   resetDemo() {
     this.isPopulated = false;
     this.settings = { ...cleanSettings };
@@ -811,3 +817,66 @@ class DemoStore {
 }
 
 export const demoStore = new DemoStore();
+
+/** Fictício e LOCAL: apenas outros separadores do mesmo navegador partilham estes dados. */
+export const LOCAL_RESTAURANT_STORAGE_KEY = "nws-workspace:restaurante-teste:v1";
+let localRestaurantHydrated = false;
+
+export function hydrateLocalRestaurantDemo() {
+  if (localRestaurantHydrated || typeof window === "undefined") return;
+  localRestaurantHydrated = true;
+  try {
+    const text = localStorage.getItem(LOCAL_RESTAURANT_STORAGE_KEY);
+    if (!text) return;
+    const state: unknown = JSON.parse(text);
+    if (!state || typeof state !== "object") return;
+    const d = state as Record<string, unknown>;
+    if (
+      d.version !== 1 ||
+      !d.settings ||
+      !Array.isArray(d.categories) ||
+      !Array.isArray(d.products) ||
+      !Array.isArray(d.tables) ||
+      !Array.isArray(d.orders) ||
+      !Array.isArray(d.requests) ||
+      !Array.isArray(d.reservations)
+    )
+      return;
+    demoStore.settings = d.settings as Settings;
+    demoStore.categories = d.categories as Category[];
+    demoStore.products = d.products as Product[];
+    demoStore.tables = d.tables as Table[];
+    demoStore.orders = d.orders as Order[];
+    demoStore.requests = d.requests as TableRequest[];
+    demoStore.reservations = d.reservations as Reservation[];
+  } catch (error) {
+    console.warn("[NWS] O estado local de testes não pôde ser carregado:", error);
+  }
+}
+
+export function reloadLocalRestaurantDemo() {
+  localRestaurantHydrated = false;
+  hydrateLocalRestaurantDemo();
+}
+
+export function persistLocalRestaurantDemo() {
+  if (typeof window === "undefined") return;
+  const state = {
+    version: 1,
+    settings: demoStore.settings,
+    categories: demoStore.categories,
+    products: demoStore.products,
+    tables: demoStore.tables,
+    orders: demoStore.orders,
+    requests: demoStore.requests,
+    reservations: demoStore.reservations,
+  };
+  try {
+    localStorage.setItem(LOCAL_RESTAURANT_STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    throw new Error(
+      "Armazenamento deste browser cheio. Reduz as fotografias do menu ou remove dados de testes antes de continuar.",
+    );
+  }
+  window.dispatchEvent(new Event("nws:local-rest-changed"));
+}

@@ -54,6 +54,7 @@ import { Route as AuthenticatedProdutosRestaurantesMenuRouteImport } from './rou
 import { Route as AuthenticatedProdutosRestaurantesMesasRouteImport } from './routes/_authenticated/produtos.restaurantes.mesas'
 import { Route as AuthenticatedProdutosRestaurantesPedidosRouteImport } from './routes/_authenticated/produtos.restaurantes.pedidos'
 import { Route as AuthenticatedProdutosRestaurantesReservasRouteImport } from './routes/_authenticated/produtos.restaurantes.reservas'
+import { Route as AuthenticatedProdutosRestaurantesPedirMesaRouteImport } from './routes/_authenticated/produtos.restaurantes.pedir.$mesa'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -289,6 +290,12 @@ const AuthenticatedProdutosRestaurantesReservasRoute =
     path: '/reservas',
     getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
   } as any)
+const AuthenticatedProdutosRestaurantesPedirMesaRoute =
+  AuthenticatedProdutosRestaurantesPedirMesaRouteImport.update({
+    id: '/pedir/$mesa',
+    path: '/pedir/$mesa',
+    getParentRoute: () => AuthenticatedProdutosRestaurantesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -335,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/produtos/restaurantes/pedidos': typeof AuthenticatedProdutosRestaurantesPedidosRoute
   '/produtos/restaurantes/reservas': typeof AuthenticatedProdutosRestaurantesReservasRoute
   '/produtos/restaurantes/': typeof AuthenticatedProdutosRestaurantesIndexRoute
+  '/produtos/restaurantes/pedir/$mesa': typeof AuthenticatedProdutosRestaurantesPedirMesaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -380,6 +388,7 @@ export interface FileRoutesByTo {
   '/produtos/restaurantes/pedidos': typeof AuthenticatedProdutosRestaurantesPedidosRoute
   '/produtos/restaurantes/reservas': typeof AuthenticatedProdutosRestaurantesReservasRoute
   '/produtos/restaurantes': typeof AuthenticatedProdutosRestaurantesIndexRoute
+  '/produtos/restaurantes/pedir/$mesa': typeof AuthenticatedProdutosRestaurantesPedirMesaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -428,6 +437,7 @@ export interface FileRoutesById {
   '/_authenticated/produtos/restaurantes/pedidos': typeof AuthenticatedProdutosRestaurantesPedidosRoute
   '/_authenticated/produtos/restaurantes/reservas': typeof AuthenticatedProdutosRestaurantesReservasRoute
   '/_authenticated/produtos/restaurantes/': typeof AuthenticatedProdutosRestaurantesIndexRoute
+  '/_authenticated/produtos/restaurantes/pedir/$mesa': typeof AuthenticatedProdutosRestaurantesPedirMesaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -476,6 +486,7 @@ export interface FileRouteTypes {
     | '/produtos/restaurantes/pedidos'
     | '/produtos/restaurantes/reservas'
     | '/produtos/restaurantes/'
+    | '/produtos/restaurantes/pedir/$mesa'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -521,6 +532,7 @@ export interface FileRouteTypes {
     | '/produtos/restaurantes/pedidos'
     | '/produtos/restaurantes/reservas'
     | '/produtos/restaurantes'
+    | '/produtos/restaurantes/pedir/$mesa'
   id:
     | '__root__'
     | '/'
@@ -568,6 +580,7 @@ export interface FileRouteTypes {
     | '/_authenticated/produtos/restaurantes/pedidos'
     | '/_authenticated/produtos/restaurantes/reservas'
     | '/_authenticated/produtos/restaurantes/'
+    | '/_authenticated/produtos/restaurantes/pedir/$mesa'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -912,6 +925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProdutosRestaurantesReservasRouteImport
       parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
     }
+    '/_authenticated/produtos/restaurantes/pedir/$mesa': {
+      id: '/_authenticated/produtos/restaurantes/pedir/$mesa'
+      path: '/pedir/$mesa'
+      fullPath: '/produtos/restaurantes/pedir/$mesa'
+      preLoaderRoute: typeof AuthenticatedProdutosRestaurantesPedirMesaRouteImport
+      parentRoute: typeof AuthenticatedProdutosRestaurantesRoute
+    }
   }
 }
 
@@ -923,6 +943,7 @@ interface AuthenticatedProdutosRestaurantesRouteChildren {
   AuthenticatedProdutosRestaurantesPedidosRoute: typeof AuthenticatedProdutosRestaurantesPedidosRoute
   AuthenticatedProdutosRestaurantesReservasRoute: typeof AuthenticatedProdutosRestaurantesReservasRoute
   AuthenticatedProdutosRestaurantesIndexRoute: typeof AuthenticatedProdutosRestaurantesIndexRoute
+  AuthenticatedProdutosRestaurantesPedirMesaRoute: typeof AuthenticatedProdutosRestaurantesPedirMesaRoute
 }
 
 const AuthenticatedProdutosRestaurantesRouteChildren: AuthenticatedProdutosRestaurantesRouteChildren =
@@ -941,6 +962,8 @@ const AuthenticatedProdutosRestaurantesRouteChildren: AuthenticatedProdutosResta
       AuthenticatedProdutosRestaurantesReservasRoute,
     AuthenticatedProdutosRestaurantesIndexRoute:
       AuthenticatedProdutosRestaurantesIndexRoute,
+    AuthenticatedProdutosRestaurantesPedirMesaRoute:
+      AuthenticatedProdutosRestaurantesPedirMesaRoute,
   }
 
 const AuthenticatedProdutosRestaurantesRouteWithChildren =

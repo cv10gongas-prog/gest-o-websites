@@ -1291,3 +1291,106 @@ export const criarNovoRestaurante = createServerFn({ method: "POST" })
 
     return { ok: true, id: data.id };
   });
+
+/** Pedido proveniente de um QR PRIVADO: login central, RBAC, mesa pertencente ao restaurante. */
+export const serverPlaceOrderFromWorkspace = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((value: unknown) =>
+    z
+      .object({
+        restaurantId: z.string().min(1).max(150),
+        tableId: z.string().min(1).max(150),
+        items: z
+          .array(z.object({ id: z.string().min(1), qty: z.number().int().min(1).max(50) }))
+          .min(1)
+          .max(50),
+        note: z.string().max(300),
+      })
+      .parse(value),
+  )
+  .handler(async ({ data, context }) => {
+    if (data.restaurantId === "demo-restaurante")
+      throw new Error("O espaço de testes nunca envia pedidos à base de dados real.");
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "ver");
+    const { getRestaurantServerClient, isRestaurantServerConfigured } =
+      await import("./client.server");
+    if (!isRestaurantServerConfigured())
+      throw new Error("A base de dados dedicada deste restaurante não está configurada.");
+    const db = getRestaurantServerClient();
+    const { data: table, error: tableError } = await db
+      .from("tables")
+      .select("id, active, restaurant_id")
+      .eq("id", data.tableId)
+      .eq("restaurant_id", data.restaurantId)
+      .maybeSingle();
+    if (tableError) throw new Error(tableError.message);
+    if (!table?.active) throw new Error("A mesa não existe neste restaurante ou está inativa.");
+    const { data: settings, error: settingsError } = await db
+      .from("restaurant_settings")
+      .select("features")
+      .eq("restaurant_id", data.restaurantId)
+      .maybeSingle();
+    if (settingsError) throw new Error(settingsError.message);
+    if (!settings) throw new Error("Restaurante sem definições.");
+    const features = settings.features as Partial<Settings["features"]> | null;
+    if (features?.qrOrders === false) throw new Error("Os pedidos QR estão desativados.");
+    // RPC já existente no projeto antigo: valida pratos/preços e cria pedido de forma atómica.
+    const { data: result, error } = await db.rpc("place_order", {
+      _table_id: data.tableId,
+      _items: data.items,
+      _note: data.note,
+    });
+    if (error) throw new Error(error.message);
+    const first = result?.[0];
+    if (!first) throw new Error("O restaurante não confirmou o pedido.");
+    return { code: first.order_number };
+  });
+
+/** Chamar empregado/pedir conta via a RPC original, mas APENAS com login e acesso verificado. */
+export const serverRequestServiceFromWorkspace = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((value: unknown) =>
+    z
+      .object({
+        restaurantId: z.string().min(1).max(150),
+        tableId: z.string().min(1).max(150),
+        type: z.enum(["empregado", "conta"]),
+      })
+      .parse(value),
+  )
+  .handler(async ({ data, context }) => {
+    if (data.restaurantId === "demo-restaurante")
+      throw new Error("O espaço de testes nunca envia chamadas à base de dados real.");
+    await validarAcessoRestaurante(context.supabase, context.userId, data.restaurantId, "ver");
+    const { getRestaurantServerClient, isRestaurantServerConfigured } =
+      await import("./client.server");
+    if (!isRestaurantServerConfigured())
+      throw new Error("A base de dados dedicada deste restaurante não está configurada.");
+    const db = getRestaurantServerClient();
+    const { data: table, error: tableError } = await db
+      .from("tables")
+      .select("id, active, restaurant_id")
+      .eq("id", data.tableId)
+      .eq("restaurant_id", data.restaurantId)
+      .maybeSingle();
+    if (tableError) throw new Error(tableError.message);
+    if (!table?.active) throw new Error("Mesa inativa ou de outro restaurante.");
+    const { data: settings, error: settingsError } = await db
+      .from("restaurant_settings")
+      .select("features")
+      .eq("restaurant_id", data.restaurantId)
+      .maybeSingle();
+    if (settingsError) throw new Error(settingsError.message);
+    if (!settings) throw new Error("Restaurante sem definições.");
+    const features = settings.features as Partial<Settings["features"]> | null;
+    if (data.type === "empregado" && features?.callWaiter === false)
+      throw new Error("Chamadas de empregado desativadas.");
+    if (data.type === "conta" && features?.requestBill === false)
+      throw new Error("Pedidos de conta desativados.");
+    const { error } = await db.rpc("request_service", {
+      _table_id: data.tableId,
+      _type: data.type,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

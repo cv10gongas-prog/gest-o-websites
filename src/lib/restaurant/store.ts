@@ -16,7 +16,12 @@ import type {
 import { todayISO } from "./demo-data";
 import { CURRENT_RESTAURANT_ID } from "./config";
 import { checkRestaurant, isRestaurantDatabaseConfigured, restaurantCloud } from "./cloud";
-import { isDemoMode, demoStore } from "@/lib/demo-mode";
+import {
+  isDemoMode,
+  demoStore,
+  hydrateLocalRestaurantDemo,
+  persistLocalRestaurantDemo,
+} from "@/lib/demo-mode";
 import {
   obterDadosAdminRestaurante,
   serverAddReservation,
@@ -253,6 +258,7 @@ export const adminQuery = (restaurantId: string = RID) =>
     queryFn: async (): Promise<AdminData> => {
       // Apenas o espaço de testes explícito (demo-restaurante) ou o modo DEMO usam o demoStore local
       if (restaurantId === "demo-restaurante" || isDemoMode()) {
+        hydrateLocalRestaurantDemo();
         return demoStore.getAdminData(restaurantId);
       }
       // Para qualquer restaurante real, invoca a Server Function protegida e não mascara erros reais
@@ -289,6 +295,7 @@ export const adminActions = {
   setOrderStatus: async (id: string, status: OrderStatus, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.setOrderStatus(id, status);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSetOrderStatus({
@@ -299,6 +306,7 @@ export const adminActions = {
   resolveRequest: async (id: string, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.resolveRequest(id);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverResolveRequest({
@@ -309,6 +317,7 @@ export const adminActions = {
   freeTable: async (restaurantId = RID, tableNumber: number) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.freeTable(tableNumber);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverFreeTable({
@@ -324,6 +333,7 @@ export const adminActions = {
   ) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.addReservation(r);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverAddReservation({
@@ -349,6 +359,7 @@ export const adminActions = {
   ) => {
     if (isLocalOperation(restaurantId)) {
       if (r.status) demoStore.setReservationStatus(id, r.status);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverUpdateReservation({
@@ -370,6 +381,7 @@ export const adminActions = {
   setReservationStatus: async (id: string, status: ReservationStatus, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.setReservationStatus(id, status);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSetReservationStatus({
@@ -380,6 +392,7 @@ export const adminActions = {
   removeReservation: async (id: string, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.removeReservation(id);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverRemoveReservation({
@@ -393,6 +406,7 @@ export const adminActions = {
   ) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.saveTable(t);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSaveTable({
@@ -409,6 +423,7 @@ export const adminActions = {
   setTableActive: async (id: string, active: boolean, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.setTableActive(id, active);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSetTableActive({
@@ -419,6 +434,7 @@ export const adminActions = {
   removeTable: async (id: string, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.removeTable(id);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverRemoveTable({
@@ -432,6 +448,7 @@ export const adminActions = {
   ) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.saveCategory(c);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSaveCategory({
@@ -447,6 +464,7 @@ export const adminActions = {
   removeCategory: async (id: string, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.removeCategory(id);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverRemoveCategory({
@@ -469,6 +487,7 @@ export const adminActions = {
   ) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.saveProduct(p);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSaveProduct({
@@ -489,6 +508,7 @@ export const adminActions = {
   setAvailable: async (id: string, available: boolean, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.setProductAvailable(id, available);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSetProductAvailable({
@@ -499,6 +519,7 @@ export const adminActions = {
   removeProduct: async (id: string, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.removeProduct(id);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverRemoveProduct({
@@ -509,6 +530,7 @@ export const adminActions = {
   saveSettings: async (restaurantId = RID, s: AdminData["settings"]) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.saveSettings(s);
+      persistLocalRestaurantDemo();
       return;
     }
     await serverSaveSettings({
@@ -531,6 +553,7 @@ export const adminActions = {
   reset: async (restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.resetDemo();
+      persistLocalRestaurantDemo();
       return;
     }
     await serverResetDemo({
@@ -547,7 +570,12 @@ export async function uploadImage(
 ): Promise<string> {
   const blob = await resizeImage(file, max);
   if (isLocalOperation(restaurantId)) {
-    return URL.createObjectURL(blob);
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error("Não foi possível guardar a imagem de testes."));
+      reader.readAsDataURL(blob);
+    });
   }
 
   if (blob.size > 4 * 1024 * 1024) {

@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { UtensilsCrossed, AlertTriangle, RefreshCw, Database } from "lucide-react";
 import {
@@ -11,7 +12,11 @@ import {
   useRealtime,
 } from "@/lib/restaurant/store";
 import { isRestaurantDatabaseConfigured } from "@/lib/restaurant/cloud";
-import { isDemoMode } from "@/lib/demo-mode";
+import {
+  isDemoMode,
+  LOCAL_RESTAURANT_STORAGE_KEY,
+  reloadLocalRestaurantDemo,
+} from "@/lib/demo-mode";
 import { RestaurantTenantProvider, useRestaurantTenant } from "@/lib/restaurant/tenant";
 import { playNewOrderSound, playTableAlertSound } from "@/lib/restaurant/sound";
 
@@ -35,6 +40,7 @@ export const Route = createFileRoute("/_authenticated/produtos/restaurantes")({
 });
 
 function RestaurantesLayoutInner() {
+  const qc = useQueryClient();
   const {
     activeRestaurantId,
     activeRestaurant,
@@ -81,6 +87,25 @@ function RestaurantesLayoutInner() {
     enabled: !tenantLoading && !!activeRestaurant && activeRestaurant.id === activeRestaurantId,
   });
   useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
+
+  // As mesas/pedidos da demonstração são partilhados entre separadores do MESMO browser.
+  useEffect(() => {
+    if (activeRestaurantId !== "demo-restaurante") return;
+    const refresh = () =>
+      void qc.invalidateQueries({ queryKey: ["restaurant_admin", activeRestaurantId] });
+    const storage = (event: StorageEvent) => {
+      if (event.key === LOCAL_RESTAURANT_STORAGE_KEY) {
+        reloadLocalRestaurantDemo();
+        refresh();
+      }
+    };
+    window.addEventListener("nws:local-rest-changed", refresh);
+    window.addEventListener("storage", storage);
+    return () => {
+      window.removeEventListener("nws:local-rest-changed", refresh);
+      window.removeEventListener("storage", storage);
+    };
+  }, [activeRestaurantId, qc]);
 
   const data = q.data;
 

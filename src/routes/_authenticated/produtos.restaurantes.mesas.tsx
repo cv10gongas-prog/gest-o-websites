@@ -117,7 +117,7 @@ function RestaurantTablesAdmin() {
       {/* CABEÇALHO */}
       <PanelHeader
         title="Gestão de Mesas & QR Codes"
-        subtitle="Organiza as mesas e cria um QR privado para cada uma. O acesso exige login no NWS Workspace; este teste nao sincroniza entre telemoveis."
+        subtitle="Cada mesa tem um QR privado que abre a EMENTA e o carrinho após login. O teste local partilha dados apenas entre separadores do mesmo browser."
         action={
           <button
             type="button"
@@ -533,19 +533,38 @@ function RestaurantTablesAdmin() {
             <DialogTitle>QR Code · Mesa {qr?.table.number}</DialogTitle>
           </DialogHeader>
 
-          {qr && <QrView table={qr.table} autoPrint={qr.print} name={app.settings.name} />}
+          {qr && (
+            <QrView
+              table={qr.table}
+              autoPrint={qr.print}
+              name={app.settings.name}
+              restaurantId={restaurantId}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function QrView({ table, autoPrint, name }: { table: Table; autoPrint: boolean; name: string }) {
+function QrView({
+  table,
+  autoPrint,
+  name,
+  restaurantId,
+}: {
+  table: Table;
+  autoPrint: boolean;
+  name: string;
+  restaurantId: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const isDemo = isDemoMode();
   const appOrigin =
     typeof window === "undefined" ? "https://www.novawebstudio.pt" : window.location.origin;
-  const targetUrl = isDemo ? "" : `${appOrigin}/produtos/restaurantes/mesas?mesa=${table.number}`;
+  const targetUrl = isDemo
+    ? ""
+    : `${appOrigin}/produtos/restaurantes/pedir/${encodeURIComponent(table.slug)}?restaurante=${encodeURIComponent(restaurantId)}`;
 
   const print = () => {
     if (isDemo || !targetUrl) {
@@ -627,7 +646,7 @@ function QrView({ table, autoPrint, name }: { table: Table; autoPrint: boolean; 
     <h1>${esc(name)}</h1>
     <h2>Mesa ${table.number}</h2>
     ${svg}
-    <p class="instrucao">Acesso privado: inicie sessao no NWS Workspace para abrir esta mesa.</p>
+    <p class="instrucao">Lê o QR, inicia sessão no NWS Workspace e faz o pedido nesta mesa.</p>
     <p class="url">${esc(targetUrl)}</p>
   </div>
 </body>
@@ -645,8 +664,8 @@ function QrView({ table, autoPrint, name }: { table: Table; autoPrint: boolean; 
     <div className="flex flex-col items-center gap-4 py-2">
       {isDemo ? (
         <div className="w-full rounded-xl border border-warning/40 bg-warning/10 p-6 text-center text-sm text-warning">
-          QR ilustrativo indisponível em DEMO. Configura um endereço de staging público antes de
-          testar ou imprimir QR Codes. Nenhum QR aponta para o restaurante real.
+          QR desativado nesta pré-visualização sem login real. Utiliza a versão de produção com
+          autenticação.
         </div>
       ) : (
         <>
