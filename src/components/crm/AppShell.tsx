@@ -153,6 +153,9 @@ function AppShellInner({ children }: { children: ReactNode }) {
     select: (s) => s.location.pathname,
   });
 
+  const adminTab = useRouterState({
+    select: (s) => (s.location.search as { tab?: string }).tab,
+  });
   const ehHub = pathname === "/hub";
   const ehAdmin = pathname.startsWith("/admin");
   const ehRestaurantes = pathname.startsWith("/produtos/restaurantes");
@@ -428,13 +431,26 @@ function AppShellInner({ children }: { children: ReactNode }) {
                 <div className="px-2.5 text-[10px] font-bold uppercase tracking-[.2em] text-muted-foreground/70">
                   Painel de Administração
                 </div>
-                <NavItem
-                  to="/admin"
-                  icon={Layers}
-                  label="Visão Geral"
-                  active={pathname === "/admin"}
-                  onClick={() => setMenu(false)}
-                />
+                {(
+                  [
+                    ["visao_geral", "Visão Geral", Layers],
+                    ["equipa", "Equipa", Users],
+                    ["analytics", "Analytics", BarChart3],
+                    ["seguranca", "Segurança", ShieldAlert],
+                    ["permissoes", "Permissões", Key],
+                    ["definicoes", "Definições", Settings],
+                  ] as const
+                ).map(([id, label, Icon]) => (
+                  <NavItem
+                    key={id}
+                    to="/admin"
+                    search={id === "visao_geral" ? {} : { tab: id }}
+                    icon={Icon}
+                    label={label}
+                    active={pathname === "/admin" && (adminTab ?? "visao_geral") === id}
+                    onClick={() => setMenu(false)}
+                  />
+                ))}
               </div>
             )}
 

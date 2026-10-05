@@ -31,6 +31,7 @@ import { useMemo, useState } from "react";
 import { Avatar, Chip, Dot, Vazio } from "@/components/crm/Bits";
 import { useActivity, useProfiles } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { useUtilizador } from "@/hooks/useAuth";
 import { formatarData, formatarHora } from "@/lib/crm";
 import { cn } from "@/lib/utils";
@@ -392,6 +393,7 @@ export function SegurancaPainel() {
 
   return (
     <div className="space-y-6">
+      <IpsBloqueados podeDesbloquear={isAdmin} />
       {/* HEADER DA CENTRAL DE SEGURANÇA */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
@@ -870,5 +872,81 @@ export function SegurancaPainel() {
         </div>
       )}
     </div>
+  );
+}
+
+/** IPs bloqueados automaticamente após 3 tentativas de login falhadas */
+function IpsBloqueados({ podeDesbloquear }: { podeDesbloquear: boolean }) {
+  const qc = useQueryClient();
+  const { data: ips = [], isLoading } = useQuery({
+    queryKey: ["security-ip-blocks"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("security_ip_blocks")
+        .select("*")
+        .order("last_attempt_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data ?? [];
+    },
+    refetchInterval: 15000,
+  });
+
+  async function desbloquear(ip: string) {
+    const { error } = await supabase.from("security_ip_blocks").delete().eq("ip", ip);
+    if (error) {
+      toast.error(`Não foi possível desbloquear: ${error.message}`);
+      return;
+    }
+    toast.success(`IP ${ip} desbloqueado.`);
+    void qc.invalidateQueries({ queryKey: ["security-ip-blocks"] });
+  }
+
+  const bloqueados = ips.filter((i) => i.blocked);
+  const emRisco = ips.filter((i) => !i.blocked && i.failed_count > 0);
+
+  return (
+    <section className="rounded-2xl border border-border/50 bg-surface/50 p-4">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <Ban className="size-4 text-danger" />
+        <h3 className="text-sm font-bold">IPs bloqueados</h3>
+        <span className="text-xs text-muted-foreground">
+          Bloqueio automático após 3 tentativas de login falhadas
+        </span>
+      </div>
+      {isLoading ? (
+        <p className="text-xs text-muted-foreground">A carregar…</p>
+      ) : bloqueados.length === 0 && emRisco.length === 0 ? (
+        <p className="text-xs text-muted-foreground">Nenhum IP bloqueado.</p>
+      ) : (
+        <ul className="divide-y divide-border/40">
+          {[...bloqueados, ...emRisco].map((i) => (
+            <li key={i.ip} className="flex flex-wrap items-center justify-between gap-2 py-2 text-xs">
+              <div>
+                <span className="font-mono font-semibold">{i.ip}</span>
+                <span className="ml-2 text-muted-foreground">
+                  {i.failed_count} tentativa(s) · último email: {i.last_email ?? "—"} ·{" "}
+                  {new Date(i.last_attempt_at).toLocaleString("pt-PT")}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={i.blocked ? "font-bold text-danger" : "text-warning"}>
+                  {i.blocked ? "Bloqueado" : "Em observação"}
+                </span>
+                {podeDesbloquear && (
+                  <button
+                    type="button"
+                    onClick={() => void desbloquear(i.ip)}
+                    className="rounded-lg border border-border/60 px-2.5 py-1 font-semibold hover:bg-surface-strong"
+                  >
+                    {i.blocked ? "Desbloquear" : "Limpar"}
+                  </button>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

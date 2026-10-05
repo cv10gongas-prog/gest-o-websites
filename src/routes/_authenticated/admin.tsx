@@ -75,10 +75,17 @@ export const Route = createFileRoute("/_authenticated/admin")({
       { name: "robots", content: "noindex" },
     ],
   }),
+  validateSearch: (search: Record<string, unknown>): { tab?: TabAdmin } => {
+    const t = search["tab"];
+    return typeof t === "string" && (TABS_ADMIN as readonly string[]).includes(t)
+      ? { tab: t as TabAdmin }
+      : {};
+  },
   component: AdminApp,
 });
 
-type TabAdmin = "visao_geral" | "equipa" | "analytics" | "seguranca" | "permissoes" | "definicoes";
+const TABS_ADMIN = ["visao_geral", "equipa", "analytics", "seguranca", "permissoes", "definicoes"] as const;
+type TabAdmin = (typeof TABS_ADMIN)[number];
 
 const FUNCOES: { value: AppRole; label: string; descricao: string }[] = [
   {
@@ -94,7 +101,10 @@ const FUNCOES: { value: AppRole; label: string; descricao: string }[] = [
 ];
 
 function AdminApp() {
-  const [tab, setTab] = useState<TabAdmin>("visao_geral");
+  // O separador ativo vive no endereço (?tab=) para a barra lateral o poder controlar.
+  const navigateTab = useNavigate({ from: "/admin" });
+  const tab: TabAdmin = Route.useSearch().tab ?? "visao_geral";
+  const setTab = (t: TabAdmin) => void navigateTab({ search: t === "visao_geral" ? {} : { tab: t } });
   const [membroFocadoId, setMembroFocadoId] = useState<string | null>(null);
   const [auditFilter, setAuditFilter] = useState<"tudo" | "acessos" | "alteracoes">("tudo");
 
@@ -242,38 +252,6 @@ function AdminApp() {
         </div>
       </section>
 
-      {/* Navegação compacta e utilizável em ecrãs pequenos */}
-      <nav
-        aria-label="Áreas de administração"
-        className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-2 sm:flex-wrap sm:overflow-visible"
-      >
-        {(
-          [
-            ["visao_geral", "Visão geral", Layers],
-            ["equipa", `Equipa (${perfis.length})`, Users],
-            ["analytics", "Analytics", BarChart3],
-            ["seguranca", "Segurança", ShieldAlert],
-            ["permissoes", "Permissões", Key],
-            ["definicoes", "Definições", Settings],
-          ] as const
-        ).map(([id, label, Icon]) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setTab(id)}
-            aria-current={tab === id ? "page" : undefined}
-            className={cn(
-              "inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition",
-              tab === id
-                ? "border-violet-400/50 bg-violet-500/15 text-violet-200 shadow-sm"
-                : "border-border/50 bg-surface/50 text-muted-foreground hover:border-border hover:bg-surface-strong hover:text-foreground",
-            )}
-          >
-            <Icon className="size-4" />
-            {label}
-          </button>
-        ))}
-      </nav>
 
       {/* CONTEÚDO DOS SEPARADORES */}
 

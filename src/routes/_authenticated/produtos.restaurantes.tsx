@@ -78,9 +78,18 @@ function RestaurantesLayoutInner() {
   // Carrega e sincroniza todos os dados do restaurante ativo em tempo real
   const q = useQuery({
     ...adminQuery(activeRestaurantId),
+    refetchInterval: 10_000, // rede de segurança caso o tempo real caia
     enabled: !tenantLoading && !!activeRestaurant && activeRestaurant.id === activeRestaurantId,
   });
   useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
+
+  // Qualquer alteração feita neste dispositivo recarrega logo os dados (sem atualizar a página).
+  useEffect(() => {
+    const refresh = () =>
+      void qc.invalidateQueries({ queryKey: ["restaurant_admin", activeRestaurantId] });
+    window.addEventListener("nws:restaurant-changed", refresh);
+    return () => window.removeEventListener("nws:restaurant-changed", refresh);
+  }, [activeRestaurantId, qc]);
 
   // As mesas/pedidos da demonstração são partilhados entre separadores do MESMO browser.
   useEffect(() => {

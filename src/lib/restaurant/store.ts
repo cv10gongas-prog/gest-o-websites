@@ -214,7 +214,7 @@ export function useRealtime(
         (JSON.parse(k) as unknown[][]).forEach((key) => {
           qc.invalidateQueries({ queryKey: key });
         });
-      }, 150);
+      }, 50);
     };
 
     let ch = restaurantCloud.channel(`rt-rest-${++chan}`);
@@ -291,7 +291,7 @@ function isLocalOperation(restaurantId: string): boolean {
  * Em modo de demonstração/testes operam exclusivamente sobre o demoStore local seguro;
  * Em produção com restaurante dedicado configurado passam por Server Functions validadas no servidor.
  */
-export const adminActions = {
+const rawAdminActions = {
   setOrderStatus: async (id: string, status: OrderStatus, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.setOrderStatus(id, status);
@@ -561,6 +561,26 @@ export const adminActions = {
     });
   },
 };
+
+/**
+ * Após cada alteração (mesa, ementa, pedido, reserva…) avisa o painel para recarregar
+ * os dados de imediato, sem ser preciso atualizar a página.
+ */
+export const adminActions = new Proxy(rawAdminActions, {
+  get(target, prop, receiver) {
+    const fn = Reflect.get(target, prop, receiver);
+    if (typeof fn !== "function") return fn;
+    return async (...args: unknown[]) => {
+      try {
+        return await (fn as (...a: unknown[]) => unknown).apply(target, args);
+      } finally {
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("nws:restaurant-changed"));
+        }
+      }
+    };
+  },
+}) as typeof rawAdminActions;
 
 /** Redimensiona no browser, mas o upload só pode ocorrer no servidor autorizado. */
 export async function uploadImage(

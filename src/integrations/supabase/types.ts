@@ -948,6 +948,39 @@ export type Database = {
           },
         ]
       }
+      security_ip_blocks: {
+        Row: {
+          blocked: boolean
+          blocked_at: string | null
+          failed_count: number
+          ip: string
+          last_attempt_at: string
+          last_email: string | null
+          unblocked_at: string | null
+          unblocked_by: string | null
+        }
+        Insert: {
+          blocked?: boolean
+          blocked_at?: string | null
+          failed_count?: number
+          ip: string
+          last_attempt_at?: string
+          last_email?: string | null
+          unblocked_at?: string | null
+          unblocked_by?: string | null
+        }
+        Update: {
+          blocked?: boolean
+          blocked_at?: string | null
+          failed_count?: number
+          ip?: string
+          last_attempt_at?: string
+          last_email?: string | null
+          unblocked_at?: string | null
+          unblocked_by?: string | null
+        }
+        Relationships: []
+      }
       security_login_attempts: {
         Row: {
           cidade: string | null
@@ -1243,6 +1276,7 @@ export type Database = {
         Returns: boolean
       }
       is_team_member: { Args: { _user_id: string }; Returns: boolean }
+      login_ip_blocked: { Args: never; Returns: boolean }
       place_order: {
         Args: { _items: Json; _note: string; _table_id: string }
         Returns: {
@@ -1252,6 +1286,12 @@ export type Database = {
           total: number
         }[]
       }
+      register_login_failure: {
+        Args: { p_email: string; p_user_agent?: string }
+        Returns: boolean
+      }
+      register_login_success: { Args: never; Returns: undefined }
+      request_client_ip: { Args: never; Returns: string }
       request_service: {
         Args: { _table_id: string; _type: string }
         Returns: undefined

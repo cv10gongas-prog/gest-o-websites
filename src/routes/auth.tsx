@@ -222,6 +222,14 @@ function AuthPage() {
     setACarregar(true);
 
     try {
+      // IP bloqueado após 3 tentativas falhadas — só um administrador o pode desbloquear.
+      const { data: bloqueado } = await supabase.rpc("login_ip_blocked");
+      if (bloqueado === true) {
+        throw new Error(
+          "Este endereço IP foi bloqueado após várias tentativas falhadas. Contacte o administrador.",
+        );
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: emailNormalizado,
         password,
@@ -229,8 +237,19 @@ function AuthPage() {
 
       if (error) {
         await registarTentativaFalhada(emailNormalizado);
+        const { data: ficouBloqueado } = await supabase.rpc("register_login_failure", {
+          p_email: emailNormalizado,
+          p_user_agent: navigator.userAgent.slice(0, 500),
+        });
+        if (ficouBloqueado === true) {
+          throw new Error(
+            "Demasiadas tentativas falhadas. Este endereço IP foi bloqueado.",
+          );
+        }
         throw error;
       }
+
+      void supabase.rpc("register_login_success");
 
       if (!data.session) {
         throw new Error("O login não devolveu uma sessão válida.");
