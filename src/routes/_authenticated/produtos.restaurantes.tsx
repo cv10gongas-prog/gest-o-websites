@@ -78,6 +78,7 @@ function RestaurantesLayoutInner() {
   // Carrega e sincroniza todos os dados do restaurante ativo em tempo real
   const q = useQuery({
     ...adminQuery(activeRestaurantId),
+    refetchInterval: 10_000, // rede de segurança caso o tempo real caia
     enabled: !tenantLoading && !!activeRestaurant && activeRestaurant.id === activeRestaurantId,
   });
   useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
