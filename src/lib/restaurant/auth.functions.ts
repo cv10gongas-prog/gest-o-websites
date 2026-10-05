@@ -223,7 +223,8 @@ export async function validarAcessoRestaurante(
   }
 
   throw new Error(
-    `Acesso Negado: O seu utilizador não possui autorização para operar o restaurante "${restaurantId}".`,
+    `Acesso Negado: O seu utilizador não possui autorização para operar o restaurante "${restaurantId}".` +
+      ` [diagnóstico: projeto=${lastAuthDiag?.project ?? supabaseProjectHost()}, utilizador=${userId}, has_role=${lastAuthDiag?.hasRole ?? "n/d"}]`,
   );
 }
 
