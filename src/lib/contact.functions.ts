@@ -948,6 +948,8 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       process.env.CONTACT_FORM_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
     try {
+      // A função SQL aceita NULL nos campos opcionais; os tipos gerados marcam-nos como string.
+      type GuardArgs = Database["public"]["Functions"]["submit_guarded_contact_request"]["Args"];
       const rpcArgs = {
         p_secret: submissionSecret,
         p_request_id: leadId,
@@ -955,8 +957,7 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
         p_ip_hash: ipHash,
         p_email_hash: emailHash,
         p_nome: data.nome,
-        // A função SQL aceita NULL; os tipos gerados marcam o parâmetro como string.
-        p_empresa: (data.empresa || null) as unknown as string,
+        p_empresa: data.empresa || null,
         p_email: normalizedEmail,
         p_telefone: data.telefone || null,
         p_tipo_projeto: tipoProjeto,
@@ -964,7 +965,7 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
         p_mensagem: mensagemComposta || null,
         p_quer_reuniao: data.querReuniao,
         p_created_at: nowIso,
-      };
+      } as unknown as GuardArgs;
 
       if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_URL) {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
