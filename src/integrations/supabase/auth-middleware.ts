@@ -4,6 +4,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 import { supabase } from "./client";
+import { resolveSupabasePublicConfig } from "@/lib/supabase-public-config";
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
@@ -53,9 +54,9 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" })
       throw new Error("Forbidden: Server Functions are disabled in the isolated demo.");
     }
 
-    const SUPABASE_URL = process.env["SUPABASE_URL"] || process.env["VITE_SUPABASE_URL"];
-    const SUPABASE_PUBLISHABLE_KEY =
-      process.env["SUPABASE_PUBLISHABLE_KEY"] || process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+    // Mesma resolução que o frontend: VITE_* primeiro, SUPABASE_* só como recurso.
+    const { url: SUPABASE_URL, publishableKey: SUPABASE_PUBLISHABLE_KEY } =
+      resolveSupabasePublicConfig();
 
     if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
       const missing = [
