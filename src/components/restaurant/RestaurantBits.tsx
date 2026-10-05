@@ -126,10 +126,12 @@ export function PanelHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-border/40">
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h1>
+    <div className="flex min-w-0 flex-col gap-3 border-b border-border/40 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 items-center gap-2">
+          <h1 className="min-w-0 break-words text-xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
+            {title}
+          </h1>
         </div>
         {subtitle && (
           <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -137,7 +139,11 @@ export function PanelHeader({
           </p>
         )}
       </div>
-      {action && <div className="flex items-center gap-2.5 shrink-0">{action}</div>}
+      {action && (
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+          {action}
+        </div>
+      )}
     </div>
   );
 }
@@ -167,7 +173,7 @@ export function StatCard({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-surface/50 p-5 backdrop-blur-md transition hover:border-border hover:bg-surface/70 shadow-sm">
+    <div className="relative min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-surface/50 p-4 backdrop-blur-md transition hover:border-border hover:bg-surface/70 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">

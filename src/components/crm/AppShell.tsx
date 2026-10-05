@@ -300,7 +300,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
+    <div className="flex min-h-screen min-w-0 bg-background text-foreground">
       {/* Luz ambiente discreta */}
       <div className="orbit-glow pointer-events-none fixed inset-0 z-0" />
 
@@ -589,8 +589,8 @@ function AppShellInner({ children }: { children: ReactNode }) {
         )}
 
         {/* Top Header Sticky */}
-        <header className="sticky top-0 z-30 flex h-[68px] items-center justify-between border-b border-border/70 bg-background/85 px-4 backdrop-blur-xl sm:px-8">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="sticky top-0 z-30 flex min-h-[64px] items-center justify-between gap-2 border-b border-border/70 bg-background/85 px-3 py-2 backdrop-blur-xl sm:h-[68px] sm:px-6 lg:px-8">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
             {!ehHub && (
               <button
                 className="lg:hidden text-muted-foreground hover:text-foreground"
@@ -620,31 +620,42 @@ function AppShellInner({ children }: { children: ReactNode }) {
               </Link>
             ) : (
               /* Breadcrumbs Contextuais */
-              <div className="flex items-center gap-2 text-xs">
-                <Link
-                  to="/hub"
-                  className="font-bold text-muted-foreground hover:text-primary transition flex items-center gap-1"
+              <div className="min-w-0 flex-1">
+                <span
+                  className="block truncate text-sm font-semibold text-foreground sm:hidden"
+                  title={breadcrumb.tela}
                 >
-                  <Grid className="size-3.5" />
-                  <span>Workspace</span>
-                </Link>
-                <ChevronRight className="size-3.5 text-muted-foreground/50" />
-                <span className="font-semibold text-foreground tracking-tight">
-                  {breadcrumb.app}
+                  {breadcrumb.tela}
                 </span>
-                <ChevronRight className="size-3.5 text-muted-foreground/50" />
-                <span className="text-muted-foreground">{breadcrumb.tela}</span>
+                <div className="hidden min-w-0 items-center gap-1.5 text-xs sm:flex">
+                  <Link
+                    to="/hub"
+                    className="flex shrink-0 items-center gap-1 font-bold text-muted-foreground transition hover:text-primary"
+                    aria-label="Voltar ao Workspace"
+                  >
+                    <Grid className="size-3.5" />
+                    <span className="hidden lg:inline">Workspace</span>
+                  </Link>
+                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/50" />
+                  <span className="hidden max-w-[130px] truncate font-semibold text-foreground lg:inline">
+                    {breadcrumb.app}
+                  </span>
+                  <ChevronRight className="hidden size-3.5 shrink-0 text-muted-foreground/50 lg:inline" />
+                  <span className="min-w-0 truncate text-foreground" title={breadcrumb.tela}>
+                    {breadcrumb.tela}
+                  </span>
+                </div>
               </div>
             )}
           </div>
 
           {/* Ações Rápidas no Header */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2.5">
             {/* Atalho Workspace no Header */}
             {!ehHub && (
               <Link
                 to="/hub"
-                className="hidden sm:flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition"
+                className="hidden xl:flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition"
               >
                 <Grid className="size-3.5" />
                 <span>Workspace</span>
@@ -681,13 +692,13 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
             {/* 2. No Restaurante: Ações contextuais rápidas */}
             {ehRestaurantes && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Link
                   to="/produtos/restaurantes/pedidos"
                   className="inline-flex items-center gap-1.5 rounded-xl bg-warning px-3 py-1.5 text-xs font-bold text-black shadow-sm transition hover:bg-warning/90"
                 >
                   <ClipboardList className="size-3.5" />
-                  <span className="hidden xs:inline">Pedidos</span>
+                  <span className="hidden sm:inline">Pedidos</span>
                   {restCounts.pedidosNovos > 0 && (
                     <span className="rounded-full bg-black px-1.5 py-0.2 text-[9px] font-extrabold text-warning">
                       {restCounts.pedidosNovos}
@@ -718,7 +729,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
         {/* Corpo da Página */}
         <main
           className={cn(
-            "flex-1 p-4 sm:p-7 w-full mx-auto",
+            "min-w-0 w-full max-w-full flex-1 p-3 sm:p-6 lg:p-7 mx-auto",
             ehHub ? "max-w-[1400px]" : "max-w-[1550px]",
           )}
         >

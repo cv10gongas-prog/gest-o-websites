@@ -185,9 +185,9 @@ function PrivateTableOrderPage() {
   }
 
   return (
-    <div className="-mx-2 min-h-[78vh] rounded-3xl bg-surface pb-28 sm:mx-0">
+    <div className="-mx-1 min-h-[78vh] min-w-0 rounded-2xl bg-surface pb-28 sm:mx-0 sm:rounded-3xl">
       <header className="border-b border-border bg-background/85">
-        <div className="mx-auto max-w-[720px] px-5 pb-6 pt-5">
+        <div className="mx-auto max-w-[720px] min-w-0 px-3 pb-5 pt-4 sm:px-5 sm:pb-6 sm:pt-5">
           <Link
             to="/produtos/restaurantes/mesas"
             className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
@@ -206,7 +206,7 @@ function PrivateTableOrderPage() {
             </p>
           )}
           {(data.settings.features.callWaiter || data.settings.features.requestBill) && (
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="mt-5 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:gap-3">
               {data.settings.features.callWaiter && (
                 <Button
                   type="button"
@@ -238,7 +238,7 @@ function PrivateTableOrderPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[720px] px-5">
+      <main className="mx-auto max-w-[720px] min-w-0 px-3 sm:px-5">
         {justSent && (
           <div
             role="status"
@@ -288,7 +288,7 @@ function PrivateTableOrderPage() {
             })}
           </section>
         )}
-        <div className="sticky top-0 z-20 -mx-5 mt-5 overflow-x-auto border-b border-border bg-surface/95 px-5 py-3 backdrop-blur">
+        <div className="sticky top-0 z-20 -mx-3 mt-5 overflow-x-auto border-b border-border bg-surface/95 px-3 py-3 backdrop-blur sm:-mx-5 sm:px-5">
           <div className="flex gap-2">
             {[{ id: "Todos", name: "Todos" }, ...categories].map((cat) => (
               <button

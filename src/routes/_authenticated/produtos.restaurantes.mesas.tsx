@@ -113,7 +113,7 @@ function RestaurantTablesAdmin() {
   const selectedTableState = selectedTable ? getTableState(app, selectedTable) : "livre";
 
   return (
-    <div className="space-y-6 max-w-[1450px]">
+    <div className="min-w-0 max-w-[1450px] space-y-5 sm:space-y-6">
       {/* CABEÇALHO */}
       <PanelHeader
         title="Gestão de Mesas & QR Codes"
@@ -178,7 +178,7 @@ function RestaurantTablesAdmin() {
               >
                 <div onClick={() => setSelectedTable(t)}>
                   {/* Topo da Mesa */}
-                  <div className="flex items-start justify-between gap-2 border-b border-border/40 pb-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2 border-b border-border/40 pb-3">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-xl font-extrabold text-foreground group-hover:text-primary transition">
@@ -343,7 +343,7 @@ function RestaurantTablesAdmin() {
 
       {/* PAINEL LATERAL DE DETALHES DA MESA SELECIONADA */}
       {selectedTable && (
-        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-surface/95 backdrop-blur-2xl border-l border-border/80 shadow-2xl p-6 overflow-y-auto flex flex-col justify-between">
+        <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col justify-between overflow-y-auto border-l border-border/80 bg-surface/95 p-4 pb-8 shadow-2xl backdrop-blur-2xl sm:p-6">
           <div className="space-y-5">
             <div className="flex items-center justify-between border-b border-border/60 pb-4">
               <div>

@@ -111,7 +111,11 @@ function RestaurantOrdersBoard() {
         action={
           <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
             <span className="size-2 rounded-full bg-success animate-pulse" />
-            <span>Sincronização em direto ativa</span>
+            <span>
+              {restaurantId === "demo-restaurante"
+                ? "Dados só neste browser"
+                : "Ligação ao restaurante"}
+            </span>
           </div>
         }
       />
@@ -161,7 +165,7 @@ function RestaurantOrdersBoard() {
       </div>
 
       {/* QUADRO KANBAN DE 3 COLUNAS OPERACIONAIS */}
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-3 xl:gap-5">
         {columns.map((col) => {
           const list = openOrders.filter((o) => o.status === col.status);
           const Icon = col.icon;
@@ -169,7 +173,7 @@ function RestaurantOrdersBoard() {
           return (
             <div
               key={col.status}
-              className="flex flex-col rounded-3xl border border-border/70 bg-surface/40 p-4 backdrop-blur-xl min-h-[520px]"
+              className="flex min-w-0 flex-col rounded-2xl border border-border/70 bg-surface/40 p-3 backdrop-blur-xl min-h-[220px] sm:min-h-[320px] sm:p-4 xl:min-h-[520px] xl:rounded-3xl"
             >
               {/* Título da Coluna */}
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/40 px-1">
