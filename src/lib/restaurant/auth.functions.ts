@@ -17,6 +17,7 @@ import type {
 } from "./demo-data";
 import { tableSlug } from "./store";
 import type { Database as RestaurantDatabase } from "./types";
+import { isRestaurantServerConfigured } from "./client.server";
 
 export type RestaurantStaffRole = "proprietario" | "gerente" | "cozinha" | "sala";
 
@@ -32,10 +33,12 @@ export type RestaurantAccessInfo = {
 
 export const NWS_RESTAURANT_WORKSPACE_ID = "nws-restaurantes";
 
-/** Obter papel do utilizador via supabaseAdmin sem depender de RLS */
-export async function getNwsUserRole(userId: string): Promise<string | null> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data } = await supabaseAdmin
+/** Obter papel do utilizador via cliente autenticado */
+export async function getNwsUserRole(
+  client: SupabaseClient<CentralDatabase>,
+  userId: string,
+): Promise<string | null> {
+  const { data } = await client
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
@@ -44,13 +47,15 @@ export async function getNwsUserRole(userId: string): Promise<string | null> {
 }
 
 /** Garantir existência dos 3 registos técnicos base (crm_restaurants, restaurants, restaurant_settings) */
-export async function ensureNwsRestaurantWorkspace(userId: string): Promise<void> {
-  const role = await getNwsUserRole(userId);
+export async function ensureNwsRestaurantWorkspace(
+  client: SupabaseClient<CentralDatabase>,
+  userId: string,
+): Promise<void> {
+  const role = await getNwsUserRole(client, userId);
   const isAdmin = role === "administrador";
 
   if (!isAdmin) {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: member } = await supabaseAdmin
+    const { data: member } = await client
       .from("restaurant_memberships")
       .select("id")
       .eq("user_id", userId)
@@ -63,57 +68,58 @@ export async function ensureNwsRestaurantWorkspace(userId: string): Promise<void
     }
   }
 
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { getRestaurantServerClient } = await import("./client.server");
-  const restClient = getRestaurantServerClient();
+  // Apenas administradores executam o aprovisionamento/upsert dos registos base
+  if (isAdmin) {
+    const restClient = client as unknown as SupabaseClient<RestaurantDatabase>;
 
-  // 1. Garantir crm_restaurants
-  await supabaseAdmin.from("crm_restaurants").upsert(
-    {
-      id: NWS_RESTAURANT_WORKSPACE_ID,
-      nome: "NWS Restaurantes",
-      slug: NWS_RESTAURANT_WORKSPACE_ID,
-      subdominio: "",
-      ativo: true,
-    },
-    { onConflict: "id" },
-  );
-
-  // 2. Garantir restaurants
-  await restClient.from("restaurants").upsert(
-    {
-      id: NWS_RESTAURANT_WORKSPACE_ID,
-      slug: NWS_RESTAURANT_WORKSPACE_ID,
-      name: "NWS Restaurantes",
-    },
-    { onConflict: "id" },
-  );
-
-  // 3. Garantir restaurant_settings
-  const { data: existingSettings } = await restClient
-    .from("restaurant_settings")
-    .select("restaurant_id")
-    .eq("restaurant_id", NWS_RESTAURANT_WORKSPACE_ID)
-    .maybeSingle();
-
-  if (!existingSettings) {
-    await restClient.from("restaurant_settings").insert({
-      restaurant_id: NWS_RESTAURANT_WORKSPACE_ID,
-      tagline: "",
-      introduction: "",
-      logo: "",
-      primary_color: "#5b6e4a",
-      phone: "",
-      email: "",
-      address: "",
-      hours: [],
-      features: {
-        qrOrders: true,
-        callWaiter: true,
-        requestBill: true,
-        reservations: true,
+    // 1. Garantir crm_restaurants
+    await client.from("crm_restaurants").upsert(
+      {
+        id: NWS_RESTAURANT_WORKSPACE_ID,
+        nome: "NWS Restaurantes",
+        slug: NWS_RESTAURANT_WORKSPACE_ID,
+        subdominio: "",
+        ativo: true,
       },
-    });
+      { onConflict: "id" },
+    );
+
+    // 2. Garantir restaurants
+    await restClient.from("restaurants").upsert(
+      {
+        id: NWS_RESTAURANT_WORKSPACE_ID,
+        slug: NWS_RESTAURANT_WORKSPACE_ID,
+        name: "NWS Restaurantes",
+      },
+      { onConflict: "id" },
+    );
+
+    // 3. Garantir restaurant_settings
+    const { data: existingSettings } = await restClient
+      .from("restaurant_settings")
+      .select("restaurant_id")
+      .eq("restaurant_id", NWS_RESTAURANT_WORKSPACE_ID)
+      .maybeSingle();
+
+    if (!existingSettings) {
+      await restClient.from("restaurant_settings").insert({
+        restaurant_id: NWS_RESTAURANT_WORKSPACE_ID,
+        tagline: "",
+        introduction: "",
+        logo: "",
+        primary_color: "#5b6e4a",
+        phone: "",
+        email: "",
+        address: "",
+        hours: [],
+        features: {
+          qrOrders: true,
+          callWaiter: true,
+          requestBill: true,
+          reservations: true,
+        },
+      });
+    }
   }
 }
 
@@ -124,12 +130,13 @@ export async function ensureNwsRestaurantWorkspace(userId: string): Promise<void
  *    e às ações permitidas pela respetiva função (RBAC).
  */
 export async function validarAcessoRestaurante(
+  client: SupabaseClient<CentralDatabase>,
   userId: string,
   restaurantId: string,
   acao: RestaurantAction = "ver",
 ): Promise<RestaurantAccessInfo> {
-  // 1. Verificar se é Administrador Global da Nova Web Studio via supabaseAdmin
-  const role = await getNwsUserRole(userId);
+  // 1. Verificar se é Administrador Global da Nova Web Studio via cliente autenticado
+  const role = await getNwsUserRole(client, userId);
   const isAdmin = role === "administrador";
 
   if (isAdmin) {
@@ -150,8 +157,7 @@ export async function validarAcessoRestaurante(
 
   // 3. Verificar afiliação de funcionário no restaurante para estabelecimentos reais
   try {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: memberData } = await supabaseAdmin
+    const { data: memberData } = await client
       .from("restaurant_memberships")
       .select("role, ativo")
       .eq("user_id", userId)
@@ -210,14 +216,12 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ restaurantId: z.string().min(1) }).parse(data))
   .handler(async ({ data, context }): Promise<AdminData> => {
     const rid = data.restaurantId;
-    const access = await validarAcessoRestaurante(context.userId, rid, "ver");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    const access = await validarAcessoRestaurante(client, context.userId, rid, "ver");
 
     if (rid === NWS_RESTAURANT_WORKSPACE_ID) {
-      await ensureNwsRestaurantWorkspace(context.userId);
+      await ensureNwsRestaurantWorkspace(client, context.userId);
     }
-
-    const { isRestaurantServerConfigured, getRestaurantServerClient } =
-      await import("./client.server");
 
     if (!isRestaurantServerConfigured()) {
       return {
@@ -250,7 +254,7 @@ export const obterDadosAdminRestaurante = createServerFn({ method: "POST" })
       };
     }
 
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const since = new Date(Date.now() - 30 * 86400000).toISOString();
     const [r, s, c, p, t, o, rq, rs] = await Promise.all([
@@ -418,10 +422,10 @@ export const serverSetOrderStatus = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "pedidos");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "pedidos");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const isDelivered = data.status === "entregue";
     const { data: updated, error } = await restClient
@@ -450,10 +454,10 @@ export const serverResolveRequest = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "mesas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "mesas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { data: updated, error } = await restClient
       .from("service_requests")
@@ -481,10 +485,10 @@ export const serverFreeTable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "mesas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "mesas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     // Chamada exclusiva à RPC atómica com isolamento de restaurante
     const { error } = await restClient.rpc("free_table", {
@@ -516,10 +520,10 @@ export const serverSaveTable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "mesas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "mesas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const row = { number: data.number, seats: data.seats, active: data.active };
     const res = data.id
@@ -558,10 +562,10 @@ export const serverSetTableActive = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "mesas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "mesas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { data: updated, error } = await restClient
       .from("tables")
@@ -589,10 +593,10 @@ export const serverRemoveTable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "mesas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "mesas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { error } = await restClient
       .from("tables")
@@ -618,10 +622,10 @@ export const serverSaveCategory = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "menu");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "menu");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const res = data.id
       ? await restClient
@@ -658,10 +662,10 @@ export const serverRemoveCategory = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "menu");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "menu");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { error } = await restClient
       .from("menu_categories")
@@ -692,10 +696,10 @@ export const serverSaveProduct = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "menu");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "menu");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const row = {
       name: data.name,
@@ -739,10 +743,10 @@ export const serverSetProductAvailable = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "menu");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "menu");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { data: updated, error } = await restClient
       .from("menu_items")
@@ -770,10 +774,10 @@ export const serverRemoveProduct = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "menu");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "menu");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { error } = await restClient
       .from("menu_items")
@@ -811,14 +815,15 @@ export const serverSaveSettings = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
     await validarAcessoRestaurante(
+      client,
       context.userId,
       data.restaurantId,
       "definicoes",
     );
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
     const rid = data.restaurantId;
 
     const r1 = await restClient.from("restaurants").update({ name: data.name }).eq("id", rid);
@@ -845,7 +850,7 @@ export const serverSaveSettings = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/** Upload seguro de imagem através do servidor */
+/** Upload seguro de imagem através do servidor com cliente autenticado */
 export const serverUploadImage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((data: unknown) =>
@@ -863,10 +868,10 @@ export const serverUploadImage = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "menu");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "menu");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const buffer = Buffer.from(data.base64Data, "base64");
     if (
@@ -921,10 +926,10 @@ export const serverAddReservation = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "reservas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "reservas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { error } = await restClient.from("reservations").insert({
       restaurant_id: data.restaurantId,
@@ -964,10 +969,10 @@ export const serverUpdateReservation = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "reservas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "reservas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const updatePayload: RestaurantDatabase["public"]["Tables"]["reservations"]["Update"] = {};
     if (data.name !== undefined) updatePayload.name = data.name;
@@ -1010,10 +1015,10 @@ export const serverSetReservationStatus = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "reservas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "reservas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { data: updated, error } = await restClient
       .from("reservations")
@@ -1041,10 +1046,10 @@ export const serverRemoveReservation = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "reservas");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "reservas");
 
-    const { getRestaurantServerClient } = await import("./client.server");
-    const restClient = getRestaurantServerClient();
+    const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
     const { error } = await restClient
       .from("reservations")
@@ -1069,11 +1074,12 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     try {
-      const role = await getNwsUserRole(context.userId);
+      const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+      const role = await getNwsUserRole(client, context.userId);
       const isAdmin = role === "administrador";
 
       if (isAdmin) {
-        await ensureNwsRestaurantWorkspace(context.userId);
+        await ensureNwsRestaurantWorkspace(client, context.userId);
 
         return {
           isAdmin: true,
@@ -1091,8 +1097,7 @@ export const obterRestaurantesAutorizados = createServerFn({ method: "GET" })
       }
 
       // Utilizadores não administradores só recebem nws-restaurantes se tiverem afiliação ativa
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data: membership } = await supabaseAdmin
+      const { data: membership } = await client
         .from("restaurant_memberships")
         .select("restaurant_id, role")
         .eq("user_id", context.userId)
@@ -1135,7 +1140,9 @@ export const obterPermissoesAtivas = createServerFn({ method: "POST" })
   .validator((data: unknown) => z.object({ restaurantId: z.string().min(1) }).parse(data))
   .handler(async ({ data, context }) => {
     try {
+      const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
       const access = await validarAcessoRestaurante(
+        client,
         context.userId,
         data.restaurantId,
         "ver",
@@ -1165,18 +1172,17 @@ export const convidarFuncionarioRestaurante = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "equipa");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "equipa");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { data: existingProfile } = await supabaseAdmin
+    const { data: existingProfile } = await client
       .from("profiles")
       .select("id, email")
       .ilike("email", data.email.trim())
       .maybeSingle();
 
     if (existingProfile?.id) {
-      const { error: insErr } = await supabaseAdmin.from("restaurant_memberships").upsert(
+      const { error: insErr } = await client.from("restaurant_memberships").upsert(
         {
           user_id: existingProfile.id,
           restaurant_id: data.restaurantId,
@@ -1191,7 +1197,7 @@ export const convidarFuncionarioRestaurante = createServerFn({ method: "POST" })
       return { ok: true, associadoDireto: true };
     }
 
-    const { error: inviteErr } = await supabaseAdmin.from("restaurant_invites").insert({
+    const { error: inviteErr } = await client.from("restaurant_invites").insert({
       email: data.email.trim().toLowerCase(),
       restaurant_id: data.restaurantId,
       role: data.role,
@@ -1207,9 +1213,10 @@ export const listarMembrosRestaurante = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((input: unknown) => z.object({ restaurantId: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "equipa");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: members, error } = await supabaseAdmin
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "equipa");
+
+    const { data: members, error } = await client
       .from("restaurant_memberships")
       .select("id, user_id, role, ativo, criado_em")
       .eq("restaurant_id", data.restaurantId)
@@ -1218,7 +1225,7 @@ export const listarMembrosRestaurante = createServerFn({ method: "POST" })
 
     const userIds = (members ?? []).map((m) => m.user_id);
     const profiles = userIds.length
-      ? await supabaseAdmin.from("profiles").select("id, nome, email, foto_url").in("id", userIds)
+      ? await client.from("profiles").select("id, nome, email, foto_url").in("id", userIds)
       : {
           data: [] as Array<{ id: string; nome: string; email: string; foto_url: string | null }>,
           error: null,
@@ -1242,9 +1249,10 @@ export const revogarFuncionarioRestaurante = createServerFn({ method: "POST" })
     z.object({ restaurantId: z.string().min(1), memberId: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "equipa");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: member, error: readError } = await supabaseAdmin
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "equipa");
+
+    const { data: member, error: readError } = await client
       .from("restaurant_memberships")
       .select("id, role, user_id")
       .eq("id", data.memberId)
@@ -1255,7 +1263,7 @@ export const revogarFuncionarioRestaurante = createServerFn({ method: "POST" })
     if (!member) throw new Error("Funcionário não encontrado neste restaurante.");
 
     if (member.role === "proprietario") {
-      const { count, error: countError } = await supabaseAdmin
+      const { count, error: countError } = await client
         .from("restaurant_memberships")
         .select("id", { count: "exact", head: true })
         .eq("restaurant_id", data.restaurantId)
@@ -1265,7 +1273,7 @@ export const revogarFuncionarioRestaurante = createServerFn({ method: "POST" })
       if ((count ?? 0) <= 1) throw new Error("Não é possível remover o último proprietário.");
     }
 
-    const { data: updated, error } = await supabaseAdmin
+    const { data: updated, error } = await client
       .from("restaurant_memberships")
       .update({ ativo: false })
       .eq("id", data.memberId)
@@ -1280,7 +1288,8 @@ export const revogarFuncionarioRestaurante = createServerFn({ method: "POST" })
 export const serverEnsureNwsWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await ensureNwsRestaurantWorkspace(context.userId);
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await ensureNwsRestaurantWorkspace(client, context.userId);
     return { ok: true };
   });
 
@@ -1303,12 +1312,13 @@ export const serverPlaceOrderFromWorkspace = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     if (data.restaurantId === "demo-restaurante")
       throw new Error("O espaço de testes nunca envia pedidos à base de dados real.");
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "ver");
-    const { getRestaurantServerClient, isRestaurantServerConfigured } =
-      await import("./client.server");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "ver");
+
     if (!isRestaurantServerConfigured())
       throw new Error("A base de dados deste restaurante não está configurada.");
-    const db = getRestaurantServerClient();
+
+    const db = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
     const { data: table, error: tableError } = await db
       .from("tables")
       .select("id, active, restaurant_id")
@@ -1344,8 +1354,8 @@ export const serverRequestServiceFromWorkspace = createServerFn({ method: "POST"
   .validator((value: unknown) =>
     z
       .object({
-        restaurantId: z.string().min(1).max(150),
-        tableId: z.string().min(1).max(150),
+        restaurantId: z.string(),
+        tableId: z.string(),
         type: z.enum(["empregado", "conta"]),
       })
       .parse(value),
@@ -1353,12 +1363,13 @@ export const serverRequestServiceFromWorkspace = createServerFn({ method: "POST"
   .handler(async ({ data, context }) => {
     if (data.restaurantId === "demo-restaurante")
       throw new Error("O espaço de testes nunca envia chamadas à base de dados real.");
-    await validarAcessoRestaurante(context.userId, data.restaurantId, "ver");
-    const { getRestaurantServerClient, isRestaurantServerConfigured } =
-      await import("./client.server");
+    const client = context.supabase as unknown as SupabaseClient<CentralDatabase>;
+    await validarAcessoRestaurante(client, context.userId, data.restaurantId, "ver");
+
     if (!isRestaurantServerConfigured())
       throw new Error("A base de dados deste restaurante não está configurada.");
-    const db = getRestaurantServerClient();
+
+    const db = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
     const { data: table, error: tableError } = await db
       .from("tables")
       .select("id, active, restaurant_id")
@@ -1386,4 +1397,3 @@ export const serverRequestServiceFromWorkspace = createServerFn({ method: "POST"
     if (error) throw new Error(error.message);
     return { ok: true };
   });
-
