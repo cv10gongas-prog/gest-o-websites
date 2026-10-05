@@ -955,7 +955,8 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
         p_ip_hash: ipHash,
         p_email_hash: emailHash,
         p_nome: data.nome,
-        p_empresa: data.empresa || null,
+        // A função SQL aceita NULL; os tipos gerados marcam o parâmetro como string.
+        p_empresa: (data.empresa || null) as unknown as string,
         p_email: normalizedEmail,
         p_telefone: data.telefone || null,
         p_tipo_projeto: tipoProjeto,
