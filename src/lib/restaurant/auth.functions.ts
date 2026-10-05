@@ -18,6 +18,7 @@ import type {
 import { tableSlug } from "./store";
 import type { Database as RestaurantDatabase } from "./types";
 import { isRestaurantServerConfigured } from "./client.server";
+import { supabaseProjectHost } from "@/lib/supabase-public-config";
 
 export type RestaurantStaffRole = "proprietario" | "gerente" | "cozinha" | "sala";
 
@@ -33,6 +34,8 @@ export type RestaurantAccessInfo = {
 
 export const NWS_RESTAURANT_WORKSPACE_ID = "nws-restaurantes";
 
+let lastAuthDiag: { project: string; user: string; hasRole: string } | null = null;
+
 /**
  * Obter papel do utilizador via cliente autenticado.
  * Usa primeiro a função segura public.has_role(_user_id, _role), que não depende da RLS
@@ -46,7 +49,15 @@ export async function getNwsUserRole(
     _user_id: userId,
     _role: "administrador",
   });
-  if (rpcError) console.error("[getNwsUserRole] has_role falhou:", rpcError.message);
+  // Diagnóstico temporário e seguro: nunca imprime tokens, chaves, cookies ou headers.
+  lastAuthDiag = {
+    project: supabaseProjectHost(),
+    user: userId,
+    hasRole: rpcError ? `erro: ${rpcError.message}` : String(isAdmin),
+  };
+  console.log(
+    `[NWS AUTH] project = ${lastAuthDiag.project} | user = ${userId} | admin = ${lastAuthDiag.hasRole}`,
+  );
   if (isAdmin === true) return "administrador";
 
   const { data, error } = await client
@@ -213,7 +224,8 @@ export async function validarAcessoRestaurante(
   }
 
   throw new Error(
-    `Acesso Negado: O seu utilizador não possui autorização para operar o restaurante "${restaurantId}".`,
+    `Acesso Negado: O seu utilizador não possui autorização para operar o restaurante "${restaurantId}".` +
+      ` [diagnóstico: projeto=${lastAuthDiag?.project ?? supabaseProjectHost()}, utilizador=${userId}, has_role=${lastAuthDiag?.hasRole ?? "n/d"}]`,
   );
 }
 
