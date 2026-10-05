@@ -3,6 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 import { dict, ORCAMENTO_VALUES, TIPO_VALUES, type Locale } from "@/lib/i18n";
+import type { Database } from "@/integrations/supabase/types";
 
 async function sha256(value: string): Promise<string> {
   const bytes = new TextEncoder().encode(value);
