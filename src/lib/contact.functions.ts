@@ -3,6 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 import { dict, ORCAMENTO_VALUES, TIPO_VALUES, type Locale } from "@/lib/i18n";
+import type { Database } from "@/integrations/supabase/types";
 
 async function sha256(value: string): Promise<string> {
   const bytes = new TextEncoder().encode(value);
@@ -948,6 +949,8 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
       process.env.CONTACT_FORM_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
     try {
+      // A função SQL aceita NULL nos campos opcionais; os tipos gerados marcam-nos como string.
+      type GuardArgs = Database["public"]["Functions"]["submit_guarded_contact_request"]["Args"];
       const rpcArgs = {
         p_secret: submissionSecret,
         p_request_id: leadId,
@@ -963,7 +966,7 @@ export const submeterPedidoContacto = createServerFn({ method: "POST" })
         p_mensagem: mensagemComposta || null,
         p_quer_reuniao: data.querReuniao,
         p_created_at: nowIso,
-      };
+      } as unknown as GuardArgs;
 
       if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_URL) {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
