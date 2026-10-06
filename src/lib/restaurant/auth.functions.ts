@@ -571,7 +571,7 @@ export const serverSaveTable = createServerFn({ method: "POST" })
     if (data.id && (!res.data || res.data.length === 0)) {
       throw new Error("Mesa não encontrada ou não pertence a este restaurante.");
     }
-    return { ok: true };
+    return { ok: true, id: (res.data?.[0]?.id as string | undefined) ?? data.id ?? null };
   });
 
 /** Ativar/inativar mesa */
@@ -672,7 +672,7 @@ export const serverSaveCategory = createServerFn({ method: "POST" })
           .select("id");
 
     if (res.error) throw new Error(res.error.message);
-    return { ok: true };
+    return { ok: true, id: (res.data?.[0]?.id as string | undefined) ?? data.id ?? null };
   });
 
 /** Remover categoria da ementa */
@@ -752,7 +752,7 @@ export const serverSaveProduct = createServerFn({ method: "POST" })
     if (data.id && (!res.data || res.data.length === 0)) {
       throw new Error("Produto não encontrado ou não pertence a este restaurante.");
     }
-    return { ok: true };
+    return { ok: true, id: (res.data?.[0]?.id as string | undefined) ?? data.id ?? null };
   });
 
 /** Alterar disponibilidade rápida de produto */
@@ -956,7 +956,7 @@ export const serverAddReservation = createServerFn({ method: "POST" })
 
     const restClient = context.supabase as unknown as SupabaseClient<RestaurantDatabase>;
 
-    const { error } = await restClient.from("reservations").insert({
+    const { data: created, error } = await restClient.from("reservations").insert({
       restaurant_id: data.restaurantId,
       name: data.name,
       phone: data.phone,
@@ -968,10 +968,10 @@ export const serverAddReservation = createServerFn({ method: "POST" })
       notes: data.notes,
       origin: "telefone",
       status: data.status,
-    });
+    }).select("id");
 
     if (error) throw new Error(error.message);
-    return { ok: true };
+    return { ok: true, id: (created?.[0]?.id as string | undefined) ?? null };
   });
 
 /** Atualizar dados de reserva preservando campos existentes sem sobrescrever */
