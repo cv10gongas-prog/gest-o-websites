@@ -18,6 +18,7 @@ export type SatisfactionSurvey = {
   improvement_text: string | null;
   testimonial: string | null;
   testimonial_authorized: boolean;
+  portfolio_authorized: boolean;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -46,6 +47,7 @@ export type SubmitSurveyPayload = {
   improvement_text?: string | null;
   testimonial?: string | null;
   testimonial_authorized?: boolean;
+  portfolio_authorized?: boolean;
 };
 
 export type SatisfactionStats = {

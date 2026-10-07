@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Check, Copy, ExternalLink, MessageSquareHeart } from "lucide-react";
 import { toast } from "sonner";
 
+import { Modal, btnPrimario, btnSecundario, inputClass } from "@/components/crm/Modal";
 import {
-  Modal,
-  btnPrimario,
-  btnSecundario,
-  inputClass,
-  selectClass,
-} from "@/components/crm/Modal";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useBusinesses } from "@/lib/queries";
 import { useCriarInqueritoSatisfacao } from "@/lib/satisfacao.queries";
 import { gerarUrlInquerito, type SatisfactionSurvey } from "@/lib/satisfacao";
@@ -26,7 +27,7 @@ export function DialogInqueritoSatisfacao({
   businessIdPredefinido,
   onCriado,
 }: DialogInqueritoSatisfacaoProps) {
-  const { data: businesses = [] } = useBusinesses();
+  const { data: businesses = [], isLoading: businessesLoading } = useBusinesses();
   const criar = useCriarInqueritoSatisfacao();
   const [businessId, setBusinessId] = useState("");
   const [clientDisplayName, setClientDisplayName] = useState("");
@@ -102,7 +103,7 @@ export function DialogInqueritoSatisfacao({
           ? "A ligação pública está pronta para enviar ao cliente."
           : "Escolhe o cliente e identifica o projeto. O cliente responde sem iniciar sessão."
       }
-      largura="max-w-md"
+      largura="max-w-lg"
       rodape={
         created ? (
           <button type="button" onClick={close} className={btnPrimario}>
@@ -169,22 +170,45 @@ export function DialogInqueritoSatisfacao({
         </div>
       ) : (
         <form id="form-criar-inquerito" onSubmit={handleSubmit} className="space-y-4 text-xs">
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-3.5">
+            <div className="flex items-center gap-2 font-semibold text-foreground">
+              <MessageSquareHeart className="size-4 text-primary" />
+              Inquérito privado para o cliente
+            </div>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+              Escolhe o cliente, confirma o nome que ele vai ver e identifica o projeto. Depois de criar,
+              recebes uma ligação única pronta a copiar e enviar.
+            </p>
+          </div>
           {!businessIdPredefinido ? (
             <div className="space-y-1.5">
               <label className="font-semibold">Cliente / Negócio</label>
-              <select
-                value={businessId}
-                onChange={(event) => setBusinessId(event.target.value)}
-                className={selectClass}
-                required
+              <Select
+                value={businessId || undefined}
+                onValueChange={setBusinessId}
+                disabled={businessesLoading || businesses.length === 0}
               >
-                <option value="">Selecionar...</option>
-                {businesses.map((business) => (
-                  <option key={business.id} value={business.id}>
-                    {business.nome}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="h-11 rounded-xl border-border/80 bg-background/70 px-3 text-xs shadow-none focus:ring-primary/30">
+                  <SelectValue
+                    placeholder={businessesLoading ? "A carregar clientes..." : "Selecionar cliente / negócio"}
+                  />
+                </SelectTrigger>
+                <SelectContent
+                  position="popper"
+                  sideOffset={6}
+                  className="z-[80] max-h-72 rounded-xl border-border/80 bg-popover p-1 shadow-2xl"
+                >
+                  {businesses.map((business) => (
+                    <SelectItem
+                      key={business.id}
+                      value={business.id}
+                      className="cursor-pointer rounded-lg px-3 py-2.5 text-xs focus:bg-primary/10 focus:text-foreground"
+                    >
+                      {business.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           ) : null}
 

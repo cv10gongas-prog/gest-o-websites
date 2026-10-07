@@ -150,15 +150,24 @@ export function SeccaoSatisfacaoNegocio({
                     ) : null}
                     {survey.testimonial ? (
                       <div className="rounded-xl border border-border/50 bg-surface-strong/40 p-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="inline-flex items-center gap-1.5 font-bold"><Quote className="size-3.5 text-primary" /> Testemunho</span>
-                          <Chip tone={survey.testimonial_authorized ? "success" : "muted"}>
-                            {survey.testimonial_authorized ? "Autorizado para uso público" : "Uso interno"}
-                          </Chip>
-                        </div>
+                        <span className="inline-flex items-center gap-1.5 font-bold"><Quote className="size-3.5 text-primary" /> Testemunho</span>
                         <p className="mt-2 italic leading-relaxed text-muted-foreground">“{survey.testimonial}”</p>
                       </div>
                     ) : null}
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="rounded-xl border border-border/50 bg-surface-strong/40 p-3">
+                        <p className="font-bold">Autorização para aparecer no site</p>
+                        <Chip tone={survey.portfolio_authorized ? "success" : "muted"}>
+                          {survey.portfolio_authorized ? "Sim" : "Não"}
+                        </Chip>
+                      </div>
+                      <div className="rounded-xl border border-border/50 bg-surface-strong/40 p-3">
+                        <p className="font-bold">Autorização para testemunho público</p>
+                        <Chip tone={survey.testimonial_authorized ? "success" : "muted"}>
+                          {survey.testimonial_authorized ? "Sim" : "Não"}
+                        </Chip>
+                      </div>
+                    </div>
                   </div>
                 ) : null}
               </div>

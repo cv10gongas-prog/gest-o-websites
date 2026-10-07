@@ -66,6 +66,7 @@ export function useHydrated() {
 
 // ============ Leitura pública / base ============
 const num = (v: unknown) => Number(v ?? 0);
+const ts = (value: string) => Date.parse(value);
 
 async function loadPublic(restaurantId: string = RID): Promise<PublicData> {
   if (isLocalOperation(restaurantId)) {
@@ -179,6 +180,153 @@ export const publicQuery = (restaurantId: string = RID) =>
     queryFn: () => loadPublic(restaurantId),
   });
 
+
+async function loadAdminDirect(restaurantId: string = RID): Promise<AdminData> {
+  if (isLocalOperation(restaurantId)) {
+    hydrateLocalRestaurantDemo();
+    return demoStore.getAdminData(restaurantId);
+  }
+
+  // As tabelas do restaurante estão protegidas por RLS. Ler diretamente com a sessão autenticada
+  // evita uma viagem extra ao servidor em cada refresh e torna o painel muito mais rápido.
+  const since = new Date(Date.now() - 30 * 86400000).toISOString();
+  const [r, s, c, p, t, o, rq, rs] = await Promise.all([
+    restaurantCloud.from("restaurants").select("id, slug, name").eq("id", restaurantId).maybeSingle(),
+    restaurantCloud.from("restaurant_settings").select("*").eq("restaurant_id", restaurantId).maybeSingle(),
+    restaurantCloud.from("menu_categories").select("*").eq("restaurant_id", restaurantId).order("sort_order").order("name"),
+    restaurantCloud.from("menu_items").select("*").eq("restaurant_id", restaurantId).order("sort_order").order("created_at"),
+    restaurantCloud.from("tables").select("*").eq("restaurant_id", restaurantId).order("number"),
+    restaurantCloud
+      .from("orders")
+      .select("*, order_items(name, qty, price, product_id)")
+      .eq("restaurant_id", restaurantId)
+      .gte("created_at", since)
+      .order("created_at")
+      .limit(500),
+    restaurantCloud
+      .from("service_requests")
+      .select("*")
+      .eq("restaurant_id", restaurantId)
+      .gte("created_at", since)
+      .order("created_at"),
+    restaurantCloud
+      .from("reservations")
+      .select("*")
+      .eq("restaurant_id", restaurantId)
+      .order("date")
+      .order("time"),
+  ]);
+
+  const firstError = [r, s, c, p, t, o, rq, rs].find((response) => response.error)?.error;
+  if (firstError) throw new Error(firstError.message);
+
+  const rest = r.data;
+  const set = s.data;
+  if (!rest || !set) {
+    throw new Error(`O restaurante "${restaurantId}" não foi encontrado na base de dados.`);
+  }
+
+  const categories: Category[] = (c.data ?? []).map((x) => ({
+    id: x.id,
+    name: x.name,
+    sortOrder: x.sort_order,
+  }));
+
+  const f = (set.features ?? {}) as Partial<Settings["features"]>;
+  const settings: Settings = {
+    name: rest.name,
+    tagline: set.tagline,
+    introduction: set.introduction,
+    logo: set.logo,
+    primaryColor: set.primary_color,
+    phone: set.phone,
+    email: set.email,
+    address: set.address,
+    hours: set.hours ?? [],
+    features: {
+      qrOrders: f.qrOrders ?? true,
+      callWaiter: f.callWaiter ?? true,
+      requestBill: f.requestBill ?? true,
+      reservations: f.reservations ?? true,
+    },
+  };
+
+  const products: Product[] = (p.data ?? []).map((x) => ({
+    id: x.id,
+    name: x.name,
+    description: x.description,
+    price: num(x.price),
+    categoryId: x.category_id,
+    category: categories.find((category) => category.id === x.category_id)?.name ?? "Outros",
+    image: x.image,
+    available: x.available,
+    featured: x.featured,
+  }));
+
+  const tables: Table[] = (t.data ?? []).map((x) => ({
+    id: x.id,
+    number: x.number,
+    name: `Mesa ${x.number}`,
+    slug: tableSlug(x.number),
+    seats: x.seats,
+    active: x.active,
+  }));
+
+  const orders: Order[] = (o.data ?? []).map((x) => ({
+    id: x.id,
+    code: x.order_number,
+    tableId: x.table_id,
+    tableNumber: x.table_number,
+    note: x.note,
+    total: num(x.total),
+    status: x.status as OrderStatus,
+    closed: x.closed,
+    createdAt: ts(x.created_at),
+    items: (x.order_items ?? []).map((item) => ({
+      productId: item.product_id ?? null,
+      name: item.name,
+      qty: item.qty,
+      price: num(item.price),
+    })),
+  }));
+
+  const requests: TableRequest[] = (rq.data ?? []).map((x) => ({
+    id: x.id,
+    tableId: x.table_id,
+    tableNumber: x.table_number,
+    type: x.type as TableRequest["type"],
+    createdAt: ts(x.created_at),
+    resolved: x.resolved,
+  }));
+
+  const reservations: Reservation[] = (rs.data ?? []).map((x) => ({
+    id: x.id,
+    name: x.name,
+    phone: x.phone,
+    email: x.email,
+    date: x.date,
+    time: x.time,
+    guests: x.guests,
+    tableNumber: x.table_number ?? undefined,
+    notes: x.notes,
+    origin: x.origin as Reservation["origin"],
+    status: x.status as ReservationStatus,
+    createdAt: ts(x.created_at),
+  }));
+
+  return {
+    restaurantId: rest.id,
+    slug: rest.slug,
+    settings,
+    categories,
+    products,
+    tables,
+    orders,
+    requests,
+    reservations,
+  };
+}
+
 type TableName =
   | "restaurants"
   | "restaurant_settings"
@@ -218,7 +366,15 @@ export function useRealtime(
 
     let ch = restaurantCloud.channel(`rt-rest-${++chan}`);
     for (const table of tk.split(",")) {
-      ch = ch.on("postgres_changes", { event: "*", schema: "public", table }, refresh);
+      const filter =
+        table === "restaurants"
+          ? `id=eq.${_restaurantId}`
+          : `restaurant_id=eq.${_restaurantId}`;
+      ch = ch.on(
+        "postgres_changes",
+        { event: "*", schema: "public", table, filter },
+        refresh,
+      );
     }
     ch.subscribe((status) => {
       if (status === "SUBSCRIBED") refresh();
@@ -248,25 +404,26 @@ export const ADMIN_TABLES: TableName[] = [
 ];
 
 /**
- * Consulta Administrativa Protegida:
- * Todas as leituras administrativas passam pela Server Function protegida (ou demoStore em staging visual)
+ * Consulta administrativa rápida.
+ * A segurança continua no Postgres através de RLS/RBAC; evitamos apenas a viagem redundante
+ * browser -> server function -> Supabase em cada atualização.
  */
 export const adminQuery = (restaurantId: string = RID) =>
   queryOptions({
     queryKey: ["restaurant_admin", restaurantId],
-    queryFn: async (): Promise<AdminData> => {
-      // Apenas o espaço de testes explícito (demo-restaurante) ou o modo DEMO usam o demoStore local
-      if (restaurantId === "demo-restaurante" || isDemoMode()) {
-        hydrateLocalRestaurantDemo();
-        return demoStore.getAdminData(restaurantId);
+    queryFn: async () => {
+      try {
+        return await loadAdminDirect(restaurantId);
+      } catch (directError) {
+        // Compatibilidade: se uma instalação ainda não tiver as políticas RLS mais recentes,
+        // mantém o caminho protegido anterior em vez de partir o painel.
+        console.warn("[NWS Restaurantes] leitura direta indisponível; a usar servidor protegido", directError);
+        return await obterDadosAdminRestaurante({ data: { restaurantId } });
       }
-      // Para qualquer restaurante real, invoca a Server Function protegida e não mascara erros reais
-      return await obterDadosAdminRestaurante({
-        data: { restaurantId },
-      });
     },
     retry: 1,
-    staleTime: 30_000,
+    staleTime: 2_000,
+    refetchOnWindowFocus: true,
   });
 
 export const AdminContext = createContext<{
@@ -750,42 +907,58 @@ export function useRestaurantActions(explicitRestaurantId?: string) {
           ]);
           return updatedId;
         } else {
-          let createdId: string | null = null;
-          if (isLocalOperation(rid)) {
-            createdId = demoStore.saveTable(table);
-            persistLocalRestaurantDemo();
-          } else {
-            const res = await serverSaveTable({
-              data: {
-                restaurantId: rid,
-                number: table.number,
-                seats: table.seats,
-                active: table.active,
-              },
-            });
-            createdId = res.id ?? null;
-          }
-
-          if (createdId) {
-            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
-              if (!current || current.tables.some((item) => item.id === createdId)) return current;
-              const created: Table = {
-                id: createdId,
-                number: table.number,
-                seats: table.seats,
-                active: table.active,
-                name: `Mesa ${table.number}`,
-                slug: tableSlug(table.number),
-              };
-              return { ...current, tables: [...current.tables, created].sort((a, b) => a.number - b.number) };
+          await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+          const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+          const optimisticId = `optimistic-table-${crypto.randomUUID()}`;
+          const optimisticTable: Table = {
+            id: optimisticId,
+            number: table.number,
+            seats: table.seats,
+            active: table.active,
+            name: `Mesa ${table.number}`,
+            slug: tableSlug(table.number),
+          };
+          if (previousData) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+              ...previousData,
+              tables: [...previousData.tables, optimisticTable].sort((a, b) => a.number - b.number),
             });
           }
 
-          void Promise.all([
-            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
-            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
-          ]);
-          return createdId;
+          try {
+            const createdId = isLocalOperation(rid)
+              ? demoStore.saveTable(table)
+              : (await serverSaveTable({
+                  data: {
+                    restaurantId: rid,
+                    number: table.number,
+                    seats: table.seats,
+                    active: table.active,
+                  },
+                })).id ?? null;
+            if (isLocalOperation(rid)) persistLocalRestaurantDemo();
+
+            if (createdId) {
+              qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) =>
+                current
+                  ? {
+                      ...current,
+                      tables: current.tables.map((item) =>
+                        item.id === optimisticId ? { ...item, id: createdId } : item,
+                      ),
+                    }
+                  : current,
+              );
+            }
+            void Promise.all([
+              qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+              qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+            ]);
+            return createdId;
+          } catch (err) {
+            if (previousData) qc.setQueryData(["restaurant_admin", rid], previousData);
+            throw err;
+          }
         }
       },
 
@@ -917,41 +1090,56 @@ export function useRestaurantActions(explicitRestaurantId?: string) {
           ]);
           return updatedId;
         } else {
-          let createdId: string | null = null;
-          if (isLocalOperation(rid)) {
-            createdId = demoStore.saveCategory(category);
-            persistLocalRestaurantDemo();
-          } else {
-            const res = await serverSaveCategory({
-              data: {
-                restaurantId: rid,
-                name: category.name,
-                sortOrder: category.sortOrder,
-              },
-            });
-            createdId = res.id ?? null;
-          }
-
-          if (createdId) {
-            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
-              if (!current || current.categories.some((item) => item.id === createdId)) return current;
-              const created: Category = {
-                id: createdId,
-                name: category.name,
-                sortOrder: category.sortOrder ?? current.categories.length + 1,
-              };
-              return {
-                ...current,
-                categories: [...current.categories, created].sort((a, b) => a.sortOrder - b.sortOrder),
-              };
+          await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+          const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+          const optimisticId = `optimistic-category-${crypto.randomUUID()}`;
+          if (previousData) {
+            const optimisticCategory: Category = {
+              id: optimisticId,
+              name: category.name,
+              sortOrder: category.sortOrder ?? previousData.categories.length + 1,
+            };
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+              ...previousData,
+              categories: [...previousData.categories, optimisticCategory].sort(
+                (a, b) => a.sortOrder - b.sortOrder,
+              ),
             });
           }
 
-          void Promise.all([
-            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
-            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
-          ]);
-          return createdId;
+          try {
+            const createdId = isLocalOperation(rid)
+              ? demoStore.saveCategory(category)
+              : (await serverSaveCategory({
+                  data: {
+                    restaurantId: rid,
+                    name: category.name,
+                    sortOrder: category.sortOrder,
+                  },
+                })).id ?? null;
+            if (isLocalOperation(rid)) persistLocalRestaurantDemo();
+
+            if (createdId) {
+              qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) =>
+                current
+                  ? {
+                      ...current,
+                      categories: current.categories.map((item) =>
+                        item.id === optimisticId ? { ...item, id: createdId } : item,
+                      ),
+                    }
+                  : current,
+              );
+            }
+            void Promise.all([
+              qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+              qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+            ]);
+            return createdId;
+          } catch (err) {
+            if (previousData) qc.setQueryData(["restaurant_admin", rid], previousData);
+            throw err;
+          }
         }
       },
 
@@ -1075,44 +1263,60 @@ export function useRestaurantActions(explicitRestaurantId?: string) {
           ]);
           return updatedId;
         } else {
-          let createdId: string | null = null;
-          if (isLocalOperation(rid)) {
-            createdId = demoStore.saveProduct(product);
-            persistLocalRestaurantDemo();
-          } else {
-            const res = await serverSaveProduct({
-              data: {
-                restaurantId: rid,
-                ...product,
-              },
-            });
-            createdId = res.id ?? null;
-          }
-
-          if (createdId) {
-            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
-              if (!current || current.products.some((item) => item.id === createdId)) return current;
-              const created: Product = {
-                id: createdId,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                categoryId: product.categoryId,
-                category:
-                  current.categories.find((item) => item.id === product.categoryId)?.name ?? "Outros",
-                image: product.image,
-                available: product.available,
-                featured: product.featured ?? false,
-              };
-              return { ...current, products: [...current.products, created] };
+          await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+          const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+          const optimisticId = `optimistic-product-${crypto.randomUUID()}`;
+          if (previousData) {
+            const optimisticProduct: Product = {
+              id: optimisticId,
+              name: product.name,
+              description: product.description,
+              price: product.price,
+              categoryId: product.categoryId,
+              category:
+                previousData.categories.find((item) => item.id === product.categoryId)?.name ?? "Outros",
+              image: product.image,
+              available: product.available,
+              featured: product.featured ?? false,
+            };
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+              ...previousData,
+              products: [...previousData.products, optimisticProduct],
             });
           }
 
-          void Promise.all([
-            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
-            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
-          ]);
-          return createdId;
+          try {
+            const createdId = isLocalOperation(rid)
+              ? demoStore.saveProduct(product)
+              : (await serverSaveProduct({
+                  data: {
+                    restaurantId: rid,
+                    ...product,
+                  },
+                })).id ?? null;
+            if (isLocalOperation(rid)) persistLocalRestaurantDemo();
+
+            if (createdId) {
+              qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) =>
+                current
+                  ? {
+                      ...current,
+                      products: current.products.map((item) =>
+                        item.id === optimisticId ? { ...item, id: createdId } : item,
+                      ),
+                    }
+                  : current,
+              );
+            }
+            void Promise.all([
+              qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+              qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+            ]);
+            return createdId;
+          } catch (err) {
+            if (previousData) qc.setQueryData(["restaurant_admin", rid], previousData);
+            throw err;
+          }
         }
       },
 
@@ -1229,51 +1433,67 @@ export function useRestaurantActions(explicitRestaurantId?: string) {
         const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
         const reservation = (typeof arg1 === "object" ? arg1 : arg2) as Omit<Reservation, "id" | "createdAt" | "status"> & { status?: ReservationStatus };
 
-        let createdId: string | null = null;
-        if (isLocalOperation(rid)) {
-          createdId = demoStore.addReservation(reservation);
-          persistLocalRestaurantDemo();
-        } else {
-          const res = await serverAddReservation({
-            data: {
-              restaurantId: rid,
-              name: reservation.name,
-              phone: reservation.phone,
-              email: reservation.email,
-              date: reservation.date,
-              time: reservation.time,
-              guests: reservation.guests,
-              tableNumber: reservation.tableNumber,
-              notes: reservation.notes,
-              status: reservation.status ?? "confirmada",
-            },
-          });
-          createdId = res.id ?? null;
-        }
-
-        if (createdId) {
-          qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
-            if (!current || current.reservations.some((item) => item.id === createdId)) return current;
-            const created: Reservation = {
-              id: createdId,
-              name: reservation.name,
-              phone: reservation.phone,
-              email: reservation.email,
-              date: reservation.date,
-              time: reservation.time,
-              guests: reservation.guests,
-              tableNumber: reservation.tableNumber,
-              notes: reservation.notes,
-              origin: "telefone",
-              status: reservation.status ?? "confirmada",
-              createdAt: Date.now(),
-            };
-            return { ...current, reservations: [...current.reservations, created] };
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+        const optimisticId = `optimistic-reservation-${crypto.randomUUID()}`;
+        const optimisticReservation: Reservation = {
+          id: optimisticId,
+          name: reservation.name,
+          phone: reservation.phone,
+          email: reservation.email,
+          date: reservation.date,
+          time: reservation.time,
+          guests: reservation.guests,
+          tableNumber: reservation.tableNumber,
+          notes: reservation.notes,
+          origin: "telefone",
+          status: reservation.status ?? "confirmada",
+          createdAt: Date.now(),
+        };
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            reservations: [...previousData.reservations, optimisticReservation],
           });
         }
 
-        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
-        return createdId;
+        try {
+          const createdId = isLocalOperation(rid)
+            ? demoStore.addReservation(reservation)
+            : (await serverAddReservation({
+                data: {
+                  restaurantId: rid,
+                  name: reservation.name,
+                  phone: reservation.phone,
+                  email: reservation.email,
+                  date: reservation.date,
+                  time: reservation.time,
+                  guests: reservation.guests,
+                  tableNumber: reservation.tableNumber,
+                  notes: reservation.notes,
+                  status: reservation.status ?? "confirmada",
+                },
+              })).id ?? null;
+          if (isLocalOperation(rid)) persistLocalRestaurantDemo();
+
+          if (createdId) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) =>
+              current
+                ? {
+                    ...current,
+                    reservations: current.reservations.map((item) =>
+                      item.id === optimisticId ? { ...item, id: createdId } : item,
+                    ),
+                  }
+                : current,
+            );
+          }
+          void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+          return createdId;
+        } catch (err) {
+          if (previousData) qc.setQueryData(["restaurant_admin", rid], previousData);
+          throw err;
+        }
       },
 
       updateReservation: async (

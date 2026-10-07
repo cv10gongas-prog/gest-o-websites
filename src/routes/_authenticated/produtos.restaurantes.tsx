@@ -78,8 +78,9 @@ function RestaurantesLayoutInner() {
   // Carrega e sincroniza todos os dados do restaurante ativo em tempo real
   const q = useQuery({
     ...adminQuery(activeRestaurantId),
-    refetchInterval: 10_000, // rede de segurança caso o tempo real caia
-    enabled: !tenantLoading && !!activeRestaurant && activeRestaurant.id === activeRestaurantId,
+    refetchInterval: 4_000, // fallback curto: mesmo se o Realtime falhar, não é preciso F5
+    refetchIntervalInBackground: false,
+    enabled: Boolean(activeRestaurantId),
   });
   useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
 
@@ -169,7 +170,7 @@ function RestaurantesLayoutInner() {
     seen.current = cur;
   }, [data]);
 
-  if (tenantLoading || q.isLoading) {
+  if (q.isLoading) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center">
         <div className="relative">

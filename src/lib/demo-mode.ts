@@ -397,6 +397,7 @@ const sampleSurveys: SatisfactionSurvey[] = [
     testimonial:
       "A Nova Web Studio tornou a nossa presença digital muito mais clara e fácil de usar.",
     testimonial_authorized: true,
+    portfolio_authorized: true,
     created_by: "demo-admin-id",
     created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
     updated_at: new Date(Date.now() - 2 * 86400000).toISOString(),
@@ -419,6 +420,7 @@ const sampleSurveys: SatisfactionSurvey[] = [
     improvement_text: null,
     testimonial: null,
     testimonial_authorized: false,
+    portfolio_authorized: false,
     created_by: "demo-admin-id",
     created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
     updated_at: new Date(Date.now() - 1 * 86400000).toISOString(),
@@ -946,6 +948,7 @@ class DemoStore {
       improvement_text: null,
       testimonial: null,
       testimonial_authorized: false,
+      portfolio_authorized: false,
       created_by: "demo-admin-id",
       created_at: now,
       updated_at: now,
@@ -1004,6 +1007,7 @@ class DemoStore {
     survey.testimonial = data.testimonial?.trim() || null;
     survey.testimonial_authorized =
       Boolean(data.testimonial_authorized) && Boolean(survey.testimonial);
+    survey.portfolio_authorized = Boolean(data.portfolio_authorized);
     survey.updated_at = new Date().toISOString();
 
     return { ok: true };

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -15,8 +16,37 @@ const allSurveysKey = ["satisfaction", "dashboard"] as const;
 const businessSurveysKey = (businessId: string) => ["satisfaction", "business", businessId] as const;
 
 export function useSatisfactionSurveys(businessId?: string) {
+  const qc = useQueryClient();
+  const queryKey = businessId ? businessSurveysKey(businessId) : allSurveysKey;
+
+  useEffect(() => {
+    if (isDemoMode()) return;
+
+    const channel = supabase
+      .channel(`satisfaction-${businessId ?? "dashboard"}-${Math.random().toString(36).slice(2)}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "customer_satisfaction_surveys",
+          ...(businessId ? { filter: `business_id=eq.${businessId}` } : {}),
+        },
+        () => {
+          const key = businessId ? businessSurveysKey(businessId) : allSurveysKey;
+          void qc.invalidateQueries({ queryKey: key });
+          if (businessId) void qc.invalidateQueries({ queryKey: allSurveysKey });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [businessId, qc]);
+
   return useQuery({
-    queryKey: businessId ? businessSurveysKey(businessId) : allSurveysKey,
+    queryKey,
     queryFn: async (): Promise<SatisfactionSurvey[]> => {
       if (isDemoMode()) return demoStore.getSatisfactionSurveys(businessId);
 
@@ -30,6 +60,10 @@ export function useSatisfactionSurveys(businessId?: string) {
       if (error) throw error;
       return (data ?? []) as SatisfactionSurvey[];
     },
+    staleTime: 1_000,
+    refetchInterval: 4_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -61,12 +95,36 @@ export function useAlternarInquerito() {
       if (isDemoMode()) return demoStore.toggleSatisfactionSurvey(id, active);
       return alternarEstadoInquerito({ data: { id, active } });
     },
+    onMutate: async ({ id, active }) => {
+      await qc.cancelQueries({ queryKey: ["satisfaction"] });
+      const previousDashboard = qc.getQueryData<SatisfactionSurvey[]>(allSurveysKey);
+      const survey = previousDashboard?.find((item) => item.id === id);
+      const businessKey = survey ? businessSurveysKey(survey.business_id) : null;
+      const previousBusiness = businessKey
+        ? qc.getQueryData<SatisfactionSurvey[]>(businessKey)
+        : undefined;
+      const apply = (items?: SatisfactionSurvey[]) =>
+        items?.map((item) => (item.id === id ? { ...item, active } : item));
+
+      if (previousDashboard) qc.setQueryData(allSurveysKey, apply(previousDashboard));
+      if (businessKey && previousBusiness) qc.setQueryData(businessKey, apply(previousBusiness));
+
+      return { previousDashboard, previousBusiness, businessKey };
+    },
     onSuccess: (survey) => {
-      qc.invalidateQueries({ queryKey: allSurveysKey });
-      qc.invalidateQueries({ queryKey: businessSurveysKey(survey.business_id) });
       toast.success(survey.active ? "Inquérito reativado." : "Inquérito desativado.");
     },
-    onError: (error: Error) => toast.error(error.message),
+    onError: (error: Error, _variables, context) => {
+      if (context?.previousDashboard) qc.setQueryData(allSurveysKey, context.previousDashboard);
+      if (context?.businessKey && context.previousBusiness) {
+        qc.setQueryData(context.businessKey, context.previousBusiness);
+      }
+      toast.error(error.message);
+    },
+    onSettled: (survey) => {
+      void qc.invalidateQueries({ queryKey: allSurveysKey });
+      if (survey) void qc.invalidateQueries({ queryKey: businessSurveysKey(survey.business_id) });
+    },
   });
 }
 

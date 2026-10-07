@@ -28,6 +28,11 @@ const EXTRA_TEXT: Record<
     secondWork: string;
     thirdWork: string;
     selectedLead: string;
+    principalProjects: string;
+    vinilartBadge: string;
+    vinilartText: string;
+    vinilartSportText: string;
+    vinilartVisit: string;
 
     projectType: string;
     projectTypeValue: string;
@@ -86,6 +91,13 @@ const EXTRA_TEXT: Record<
 
     selectedLead:
       "Projetos desenvolvidos com foco em clareza, experiência de utilização e uma presença digital mais profissional.",
+    principalProjects: "Projetos principais",
+    vinilartBadge: "Projeto real em destaque",
+    vinilartText:
+      "Presença digital da VinilArt, marca de comunicação visual, impressão e personalização com sede em Oeiras.",
+    vinilartSportText:
+      "Experiência digital dedicada à personalização desportiva da VinilArt Sport.",
+    vinilartVisit: "Visitar projeto",
 
     projectType: "Tipo",
     projectTypeValue: "Website institucional",
@@ -184,6 +196,13 @@ const EXTRA_TEXT: Record<
 
     selectedLead:
       "Projects developed with a focus on clarity, user experience and a stronger digital presence.",
+    principalProjects: "Principal projects",
+    vinilartBadge: "Featured live project",
+    vinilartText:
+      "Digital presence for VinilArt, an Oeiras-based visual communication, printing and personalisation brand.",
+    vinilartSportText:
+      "A dedicated digital experience for VinilArt Sport's sports personalisation offering.",
+    vinilartVisit: "Visit project",
 
     projectType: "Type",
     projectTypeValue: "Business website",
@@ -282,6 +301,13 @@ const EXTRA_TEXT: Record<
 
     selectedLead:
       "Projekte mit Fokus auf Klarheit, Benutzerfreundlichkeit und einen professionelleren digitalen Auftritt.",
+    principalProjects: "Hauptprojekte",
+    vinilartBadge: "Ausgewähltes reales Projekt",
+    vinilartText:
+      "Digitale Präsenz für VinilArt, eine Marke aus Oeiras für visuelle Kommunikation, Druck und Personalisierung.",
+    vinilartSportText:
+      "Eine eigene digitale Erfahrung für die Sportpersonalisierung von VinilArt Sport.",
+    vinilartVisit: "Projekt besuchen",
 
     projectType: "Typ",
     projectTypeValue: "Unternehmenswebsite",
@@ -374,6 +400,13 @@ const EXTRA_TEXT: Record<
     thirdWork: "Autre projet réel",
 
     selectedLead: "Des projets développés autour de la clarté et de l'expérience utilisateur.",
+    principalProjects: "Projets principaux",
+    vinilartBadge: "Projet réel à la une",
+    vinilartText:
+      "Présence digitale de VinilArt, marque d'Oeiras spécialisée en communication visuelle, impression et personnalisation.",
+    vinilartSportText:
+      "Une expérience digitale dédiée à la personnalisation sportive de VinilArt Sport.",
+    vinilartVisit: "Visiter le projet",
 
     projectType: "Type",
     projectTypeValue: "Site institutionnel",
@@ -466,6 +499,13 @@ const EXTRA_TEXT: Record<
     thirdWork: "Otro proyecto real",
 
     selectedLead: "Proyectos desarrollados con foco en claridad y experiencia de usuario.",
+    principalProjects: "Proyectos principales",
+    vinilartBadge: "Proyecto real destacado",
+    vinilartText:
+      "Presencia digital de VinilArt, marca de Oeiras especializada en comunicación visual, impresión y personalización.",
+    vinilartSportText:
+      "Una experiencia digital dedicada a la personalización deportiva de VinilArt Sport.",
+    vinilartVisit: "Visitar proyecto",
 
     projectType: "Tipo",
     projectTypeValue: "Web corporativa",
@@ -668,6 +708,72 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* VINILART — PROJETOS PRINCIPAIS */}
+      <section className="mt-14">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+              {extra.principalProjects}
+            </span>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+              VinilArt & VinilArt Sport
+            </h2>
+          </div>
+          <span className="hidden text-[9px] uppercase tracking-[.18em] text-muted-foreground sm:block">
+            01 — 02
+          </span>
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-2">
+          {[
+            {
+              name: "VinilArt",
+              url: "https://vinilart.pt",
+              logo: "/vinilart-logo.png",
+              text: extra.vinilartText,
+              accent: "from-[#f2d01f]/20 via-background to-[#e83b8a]/10",
+            },
+            {
+              name: "VinilArt Sport",
+              url: "https://sport.vinilart.pt",
+              logo: "/vinilart-sport-logo.png",
+              text: extra.vinilartSportText,
+              accent: "from-[#34d399]/15 via-background to-[#38bdf8]/10",
+            },
+          ].map((project) => (
+            <article
+              key={project.name}
+              className="group overflow-hidden rounded-3xl border border-primary/25 bg-card/50 shadow-xl shadow-black/5 transition duration-300 hover:-translate-y-1 hover:border-primary/50"
+            >
+              <div className={`relative flex min-h-64 items-center justify-center overflow-hidden bg-gradient-to-br ${project.accent} p-8`}>
+                <div className="absolute -right-16 -top-16 size-52 rounded-full bg-primary/10 blur-3xl" />
+                <div className="relative flex min-h-40 w-full items-center justify-center rounded-[1.75rem] border border-border/60 bg-white p-7 shadow-xl sm:p-10">
+                  <img
+                    src={project.logo}
+                    alt={project.name}
+                    className="max-h-28 max-w-full object-contain transition duration-300 group-hover:scale-[1.03]"
+                  />
+                </div>
+              </div>
+              <div className="p-6 sm:p-7">
+                <Chip tone="primary">{extra.vinilartBadge}</Chip>
+                <h3 className="mt-4 text-2xl font-semibold tracking-tight">{project.name}</h3>
+                <p className="mt-3 min-h-14 text-sm leading-7 text-muted-foreground">{project.text}</p>
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
+                >
+                  {extra.vinilartVisit}
+                  <ArrowUpRight className="size-4" />
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {/* MANIQUE */}
       <section className="mt-14">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -676,7 +782,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
 
           <span className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
-            01 — {extra.projectTypeValue}
+            03 — {extra.projectTypeValue}
           </span>
         </div>
 
@@ -793,7 +899,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 <a
                   href="https://31janeiromanique.net"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
                 >
                   {t.visit}
@@ -823,7 +929,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
 
           <span className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
-            02 — {extra.radioType}
+            04 — {extra.radioType}
           </span>
         </div>
 
@@ -932,7 +1038,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                 <a
                   href="https://radioalcabidechefm.eu"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 sm:w-auto"
                 >
                   {extra.radioVisit}
@@ -953,7 +1059,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
 
           <span className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
-            03 — {extra.gespoolType}
+            05 — {extra.gespoolType}
           </span>
         </div>
 
@@ -1084,7 +1190,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </div>
 
           <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
-            04 — 06
+            06 — 08
           </span>
         </div>
 
@@ -1113,7 +1219,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                     </span>
 
                     <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
-                      0{idx + 4}
+                      0{idx + 6}
                     </span>
                   </div>
 

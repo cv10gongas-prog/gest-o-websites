@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.customer_satisfaction_surveys (
   improvement_text text,
   testimonial text,
   testimonial_authorized boolean NOT NULL DEFAULT false,
+  portfolio_authorized boolean NOT NULL DEFAULT false,
 
   created_by uuid REFERENCES public.profiles(id) ON DELETE SET NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -44,6 +45,10 @@ CREATE TABLE IF NOT EXISTS public.customer_satisfaction_surveys (
     (responded_at IS NOT NULL AND recommendation_score IS NOT NULL AND service_score IS NOT NULL AND result_score IS NOT NULL AND communication_score IS NOT NULL AND deadlines_score IS NOT NULL AND ease_score IS NOT NULL)
   )
 );
+
+-- Mantém a migration repetível caso uma versão anterior da tabela tenha sido criada parcialmente.
+ALTER TABLE public.customer_satisfaction_surveys
+  ADD COLUMN IF NOT EXISTS portfolio_authorized boolean NOT NULL DEFAULT false;
 
 CREATE INDEX IF NOT EXISTS idx_customer_satisfaction_business
   ON public.customer_satisfaction_surveys(business_id, created_at DESC);
@@ -119,7 +124,8 @@ CREATE OR REPLACE FUNCTION public.submit_public_satisfaction_survey(
   p_liked_text text DEFAULT NULL,
   p_improvement_text text DEFAULT NULL,
   p_testimonial text DEFAULT NULL,
-  p_testimonial_authorized boolean DEFAULT false
+  p_testimonial_authorized boolean DEFAULT false,
+  p_portfolio_authorized boolean DEFAULT false
 )
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -168,7 +174,8 @@ BEGIN
     improvement_text = NULLIF(btrim(p_improvement_text), ''),
     testimonial = NULLIF(btrim(p_testimonial), ''),
     testimonial_authorized = COALESCE(p_testimonial_authorized, false)
-      AND NULLIF(btrim(p_testimonial), '') IS NOT NULL
+      AND NULLIF(btrim(p_testimonial), '') IS NOT NULL,
+    portfolio_authorized = COALESCE(p_portfolio_authorized, false)
   WHERE token = p_token
     AND active = true
     AND responded_at IS NULL
@@ -197,8 +204,8 @@ END;
 $$;
 
 REVOKE ALL ON FUNCTION public.submit_public_satisfaction_survey(
-  text, integer, integer, integer, integer, integer, integer, text, text, text, boolean
+  text, integer, integer, integer, integer, integer, integer, text, text, text, boolean, boolean
 ) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.submit_public_satisfaction_survey(
-  text, integer, integer, integer, integer, integer, integer, text, text, text, boolean
+  text, integer, integer, integer, integer, integer, integer, text, text, text, boolean, boolean
 ) TO anon, authenticated, service_role;

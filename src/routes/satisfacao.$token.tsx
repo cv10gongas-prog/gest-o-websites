@@ -1,5 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, ExternalLink, MessageSquareHeart, Send, Sparkles } from "lucide-react";
+import {
+  CheckCircle2,
+  ExternalLink,
+  MessageSquareHeart,
+  Send,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -39,6 +46,7 @@ function PaginaPublicaSatisfacao() {
   const [improvement, setImprovement] = useState("");
   const [testimonial, setTestimonial] = useState("");
   const [testimonialAuthorized, setTestimonialAuthorized] = useState(false);
+  const [portfolioAuthorized, setPortfolioAuthorized] = useState(false);
 
   if (isLoading) return <PublicState title="A carregar..." />;
 
@@ -97,6 +105,7 @@ function PaginaPublicaSatisfacao() {
       improvement_text: improvement.trim() || null,
       testimonial: testimonial.trim() || null,
       testimonial_authorized: testimonialAuthorized,
+      portfolio_authorized: portfolioAuthorized,
     };
 
     try {
@@ -111,9 +120,14 @@ function PaginaPublicaSatisfacao() {
     }
   }
 
+  const answeredCount = [recommendation, service, result, communication, deadlines, ease].filter(
+    (value) => value !== null,
+  ).length;
+  const progress = Math.round((answeredCount / 6) * 100);
+
   return (
-    <div className="min-h-screen bg-[#07101c] px-4 py-10 text-[#e2e8f0] sm:px-6">
-      <div className="mx-auto max-w-3xl space-y-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#10243a_0,#07101c_42%,#050b13_100%)] px-4 py-8 text-[#e2e8f0] sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-3xl space-y-6">
         <header className="space-y-3 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
             <Sparkles className="size-3.5" /> Nova Web Studio
@@ -124,14 +138,27 @@ function PaginaPublicaSatisfacao() {
           <p className="mx-auto max-w-xl text-sm leading-relaxed text-[#94a3b8]">
             Queremos perceber o que correu bem e onde podemos melhorar. A resposta demora poucos minutos.
           </p>
-          <div className="inline-block rounded-2xl border border-[#1f2e42] bg-[#0e1927] px-4 py-2 text-xs text-[#cbd5e1]">
+          <div className="inline-flex items-center gap-2 rounded-2xl border border-[#1f2e42] bg-[#0e1927]/90 px-4 py-2.5 text-xs text-[#cbd5e1] shadow-xl">
             <strong className="text-white">{survey.client_display_name}</strong>
-            <span className="mx-2 text-[#475569]">·</span>
+            <span className="text-[#475569]">·</span>
             <span>{survey.project_name}</span>
           </div>
         </header>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="rounded-2xl border border-[#1f2e42] bg-[#0e1927]/80 p-4 shadow-lg backdrop-blur">
+          <div className="mb-2 flex items-center justify-between text-[11px] font-semibold">
+            <span className="text-[#cbd5e1]">Progresso</span>
+            <span className="text-primary">{answeredCount}/6 avaliações</span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-[#17263a]">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <ScaleQuestion
             number={1}
             title="De 0 a 20, qual a probabilidade de recomendar a Nova Web Studio a outra pessoa ou empresa?"
@@ -213,15 +240,42 @@ function PaginaPublicaSatisfacao() {
               placeholder="Escreva aqui o seu testemunho."
             />
 
-            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#1f2e42] bg-[#0b1522] p-3 text-xs leading-relaxed text-[#cbd5e1]">
-              <input
-                type="checkbox"
-                checked={testimonialAuthorized}
-                onChange={(event) => setTestimonialAuthorized(event.target.checked)}
-                className="mt-0.5 size-4 rounded border-[#334155] text-primary focus:ring-primary"
-              />
-              <span>Autorizo a Nova Web Studio a utilizar este testemunho publicamente.</span>
-            </label>
+            <div className="space-y-3 border-t border-[#1f2e42] pt-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+                Autorizações opcionais
+              </p>
+              <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#1f2e42] bg-[#0b1522] p-4 text-xs leading-relaxed text-[#cbd5e1] transition hover:border-primary/40">
+                <input
+                  type="checkbox"
+                  checked={testimonialAuthorized}
+                  onChange={(event) => setTestimonialAuthorized(event.target.checked)}
+                  className="mt-0.5 size-5 shrink-0 rounded border-[#334155] text-primary focus:ring-primary"
+                />
+                <span>
+                  <strong className="block text-white">Autorização para testemunho público</strong>
+                  Autorizo a Nova Web Studio a utilizar publicamente o testemunho escrito acima.
+                </span>
+              </label>
+              <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#1f2e42] bg-[#0b1522] p-4 text-xs leading-relaxed text-[#cbd5e1] transition hover:border-primary/40">
+                <input
+                  type="checkbox"
+                  checked={portfolioAuthorized}
+                  onChange={(event) => setPortfolioAuthorized(event.target.checked)}
+                  className="mt-0.5 size-5 shrink-0 rounded border-[#334155] text-primary focus:ring-primary"
+                />
+                <span>
+                  <strong className="block text-white">
+                    Autorização para apresentar o negócio ou projeto
+                  </strong>
+                  Autorizo a Nova Web Studio a apresentar o meu negócio/projeto no seu website e
+                  portefólio. Isto pode incluir o nome e logótipo do negócio, imagens ou apresentação
+                  do trabalho realizado e uma ligação para o website/projeto público.
+                </span>
+              </label>
+              <p className="text-[11px] leading-relaxed text-[#64748b]">
+                As duas autorizações são independentes, opcionais e não estão selecionadas por defeito.
+              </p>
+            </div>
           </div>
 
           <button
@@ -271,12 +325,23 @@ function ScaleQuestion({
   const values = Array.from({ length: max - min + 1 }, (_, index) => min + index);
   const recommendationScale = max === 20;
   return (
-    <section className="space-y-4 rounded-3xl border border-[#1f2e42] bg-[#0e1927] p-6">
-      <div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
-          Pergunta {number} de 6
-        </span>
-        <h2 className="mt-1 text-base font-bold text-white">{title} *</h2>
+    <section className="space-y-4 rounded-3xl border border-[#1f2e42] bg-[#0e1927]/95 p-5 shadow-xl shadow-black/10 transition sm:p-6">
+      <div className="flex items-start gap-3">
+        <div className="grid size-9 shrink-0 place-items-center rounded-xl border border-primary/25 bg-primary/10 text-xs font-extrabold text-primary">
+          {number}
+        </div>
+        <div className="min-w-0 flex-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+            Pergunta {number} de 6
+          </span>
+          <h2 className="mt-1 text-base font-bold leading-snug text-white">{title} *</h2>
+        </div>
+        {value !== null ? (
+          <div className="hidden shrink-0 items-center gap-1 rounded-xl border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-xs font-bold text-primary sm:flex">
+            <Star className="size-3.5 fill-current" />
+            {value}/{max}
+          </div>
+        ) : null}
       </div>
       <div
         className={cn(
@@ -292,7 +357,7 @@ function ScaleQuestion({
             type="button"
             onClick={() => onChange(score)}
             className={cn(
-              "h-10 rounded-xl border text-xs font-bold transition",
+              "h-10 rounded-xl border text-xs font-bold transition duration-150 active:scale-95",
               value === score
                 ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/20"
                 : "border-[#1f2e42] bg-[#132032] text-[#e2e8f0] hover:border-primary/50",

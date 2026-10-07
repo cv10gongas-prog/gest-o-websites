@@ -66,7 +66,14 @@ export const criarInqueritoSatisfacao = createServerFn({ method: "POST" })
 
     if (error || !survey) {
       console.error("[Satisfação] Erro ao criar inquérito:", error);
-      throw new Error("Não foi possível criar o inquérito de satisfação.");
+      const code = String((error as { code?: string } | null)?.code ?? "");
+      const message = String((error as { message?: string } | null)?.message ?? "");
+      if (code === "42P01" || message.includes("customer_satisfaction_surveys")) {
+        throw new Error(
+          "A base de dados dos inquéritos ainda não foi ativada. É preciso aplicar a migration de Satisfação no Supabase.",
+        );
+      }
+      throw new Error(message || "Não foi possível criar o inquérito de satisfação.");
     }
 
     try {
@@ -168,6 +175,7 @@ export const submitSurveySchema = z.object({
   improvement_text: z.string().trim().max(3000).optional().nullable(),
   testimonial: z.string().trim().max(3000).optional().nullable(),
   testimonial_authorized: z.boolean().default(false),
+  portfolio_authorized: z.boolean().default(false),
 });
 
 export const submeterInqueritoPublico = createServerFn({ method: "POST" })
@@ -186,6 +194,7 @@ export const submeterInqueritoPublico = createServerFn({ method: "POST" })
       p_improvement_text: data.improvement_text?.trim() || null,
       p_testimonial: data.testimonial?.trim() || null,
       p_testimonial_authorized: Boolean(data.testimonial_authorized),
+      p_portfolio_authorized: Boolean(data.portfolio_authorized),
     } as never);
 
     if (error) {
