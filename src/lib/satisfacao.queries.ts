@@ -15,6 +15,28 @@ import {
 const allSurveysKey = ["satisfaction", "dashboard"] as const;
 const businessSurveysKey = (businessId: string) => ["satisfaction", "business", businessId] as const;
 
+export function isSatisfactionSchemaUnavailable(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as { code?: unknown; message?: unknown; details?: unknown; hint?: unknown };
+  const code = String(candidate.code ?? "").toUpperCase();
+  const message = [candidate.message, candidate.details, candidate.hint]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return (
+    code === "42P01" ||
+    code === "PGRST200" ||
+    code === "PGRST204" ||
+    code === "PGRST205" ||
+    (message.includes("customer_satisfaction_surveys") &&
+      (message.includes("does not exist") ||
+        message.includes("schema cache") ||
+        message.includes("could not find") ||
+        message.includes("not found")))
+  );
+}
+
 export function useSatisfactionSurveys(businessId?: string) {
   const qc = useQueryClient();
   const queryKey = businessId ? businessSurveysKey(businessId) : allSurveysKey;
@@ -61,9 +83,11 @@ export function useSatisfactionSurveys(businessId?: string) {
       return (data ?? []) as SatisfactionSurvey[];
     },
     staleTime: 1_000,
-    refetchInterval: 4_000,
+    retry: (failureCount, error) =>
+      !isSatisfactionSchemaUnavailable(error) && failureCount < 2,
+    refetchInterval: (query) => (query.state.status === "error" ? false : 4_000),
     refetchIntervalInBackground: false,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: (query) => !isSatisfactionSchemaUnavailable(query.state.error),
   });
 }
 

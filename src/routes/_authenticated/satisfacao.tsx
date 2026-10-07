@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  AlertTriangle,
   Check,
   Copy,
+  DatabaseZap,
   ExternalLink,
   MessageSquareHeart,
   Plus,
+  RefreshCw,
   Search,
   ToggleLeft,
   ToggleRight,
@@ -21,7 +24,11 @@ import {
   gerarUrlInquerito,
   type SatisfactionSurvey,
 } from "@/lib/satisfacao";
-import { useAlternarInquerito, useSatisfactionSurveys } from "@/lib/satisfacao.queries";
+import {
+  isSatisfactionSchemaUnavailable,
+  useAlternarInquerito,
+  useSatisfactionSurveys,
+} from "@/lib/satisfacao.queries";
 
 export const Route = createFileRoute("/_authenticated/satisfacao")({
   head: () => ({
@@ -36,7 +43,8 @@ export const Route = createFileRoute("/_authenticated/satisfacao")({
 type StatusFilter = "todos" | "por_responder" | "respondidos" | "desativados";
 
 function DashboardSatisfacao() {
-  const { data: surveys = [], isLoading } = useSatisfactionSurveys();
+  const surveysQuery = useSatisfactionSurveys();
+  const surveys = surveysQuery.data ?? [];
   const toggle = useAlternarInquerito();
   const [createOpen, setCreateOpen] = useState(false);
   const [details, setDetails] = useState<SatisfactionSurvey | null>(null);
@@ -83,8 +91,19 @@ function DashboardSatisfacao() {
     }
   }
 
-  if (isLoading) {
+  if (surveysQuery.isPending && surveysQuery.data === undefined) {
     return <Vazio texto="A carregar inquéritos de satisfação..." />;
+  }
+
+  if (surveysQuery.isError && surveysQuery.data === undefined) {
+    const schemaUnavailable = isSatisfactionSchemaUnavailable(surveysQuery.error);
+    return (
+      <SatisfactionLoadError
+        schemaUnavailable={schemaUnavailable}
+        retrying={surveysQuery.isFetching}
+        onRetry={() => void surveysQuery.refetch()}
+      />
+    );
   }
 
   return (
@@ -297,6 +316,62 @@ function DashboardSatisfacao() {
           ) : null}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function SatisfactionLoadError({
+  schemaUnavailable,
+  retrying,
+  onRetry,
+}: {
+  schemaUnavailable: boolean;
+  retrying: boolean;
+  onRetry: () => void;
+}) {
+  const Icon = schemaUnavailable ? DatabaseZap : AlertTriangle;
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Satisfação</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Cria ligações privadas de feedback e acompanha a experiência dos clientes.
+        </p>
+      </div>
+      <div className="overflow-hidden rounded-3xl border border-warning/30 bg-surface/60 shadow-xl shadow-black/5">
+        <div className="h-1 bg-gradient-to-r from-warning via-primary to-transparent" />
+        <div className="flex flex-col items-start gap-5 p-6 sm:flex-row sm:p-8">
+          <div className="grid size-12 shrink-0 place-items-center rounded-2xl border border-warning/30 bg-warning/10 text-warning">
+            <Icon className="size-6" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-bold">
+              {schemaUnavailable
+                ? "Base de dados de Satisfação ainda não ativada"
+                : "Não foi possível carregar os inquéritos"}
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {schemaUnavailable
+                ? "A estrutura necessária para os inquéritos ainda não foi aplicada ao backend. Assim que a migration de Satisfação estiver ativa, este painel ficará disponível."
+                : "O CRM não conseguiu obter os dados de Satisfação. Verifica a ligação e tenta novamente."}
+            </p>
+            {schemaUnavailable ? (
+              <p className="mt-3 rounded-xl border border-border/60 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
+                O painel não apresenta valores a zero porque os dados ainda não puderam ser consultados.
+              </p>
+            ) : null}
+            <button
+              type="button"
+              onClick={onRetry}
+              disabled={retrying}
+              className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-bold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-wait disabled:opacity-60"
+            >
+              <RefreshCw className={`size-3.5 ${retrying ? "animate-spin" : ""}`} />
+              {retrying ? "A tentar..." : "Tentar novamente"}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

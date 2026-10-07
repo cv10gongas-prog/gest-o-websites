@@ -730,29 +730,49 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
               name: "VinilArt",
               url: "https://vinilart.pt",
               logo: "/vinilart-logo.png",
+              preview: "/vinilart-preview.png",
+              hostname: "vinilart.pt",
               text: extra.vinilartText,
-              accent: "from-[#f2d01f]/20 via-background to-[#e83b8a]/10",
             },
             {
               name: "VinilArt Sport",
               url: "https://sport.vinilart.pt",
               logo: "/vinilart-sport-logo.png",
+              preview: "/vinilart-sport-preview.png",
+              hostname: "sport.vinilart.pt",
               text: extra.vinilartSportText,
-              accent: "from-[#34d399]/15 via-background to-[#38bdf8]/10",
             },
           ].map((project) => (
             <article
               key={project.name}
               className="group overflow-hidden rounded-3xl border border-primary/25 bg-card/50 shadow-xl shadow-black/5 transition duration-300 hover:-translate-y-1 hover:border-primary/50"
             >
-              <div className={`relative flex min-h-64 items-center justify-center overflow-hidden bg-gradient-to-br ${project.accent} p-8`}>
-                <div className="absolute -right-16 -top-16 size-52 rounded-full bg-primary/10 blur-3xl" />
-                <div className="relative flex min-h-40 w-full items-center justify-center rounded-[1.75rem] border border-border/60 bg-white p-7 shadow-xl sm:p-10">
-                  <img
-                    src={project.logo}
-                    alt={project.name}
-                    className="max-h-28 max-w-full object-contain transition duration-300 group-hover:scale-[1.03]"
-                  />
+              <div className="relative bg-[#07111b] p-3 sm:p-4">
+                <div className="overflow-hidden rounded-2xl border border-cyan-400/25 bg-[#07101a] shadow-2xl shadow-cyan-950/30">
+                  <div className="flex h-10 items-center gap-1.5 border-b border-white/10 bg-[#0b1723] px-3">
+                    <span className="size-2 rounded-full bg-rose-400/80" />
+                    <span className="size-2 rounded-full bg-amber-300/80" />
+                    <span className="size-2 rounded-full bg-emerald-400/80" />
+                    <div className="ml-2 flex h-6 min-w-0 flex-1 items-center rounded-md border border-white/[0.06] bg-white/[0.04] px-2.5 text-[9px] text-slate-400">
+                      {project.hostname}
+                    </div>
+                  </div>
+                  <div className="relative aspect-[16/10] overflow-hidden bg-[#050b11]">
+                    <img
+                      src={project.preview}
+                      alt={`${project.name} — homepage`}
+                      className="size-full object-cover object-top transition duration-500 group-hover:scale-[1.015]"
+                    />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#050b11]/60 to-transparent" />
+                    <div className="absolute bottom-3 left-3 flex h-9 max-w-36 items-center rounded-xl border border-white/15 bg-black/70 px-3 py-1.5 shadow-lg backdrop-blur-md">
+                      <img
+                        src={project.logo}
+                        alt=""
+                        aria-hidden="true"
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="p-6 sm:p-7">
