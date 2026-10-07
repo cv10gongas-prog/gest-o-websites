@@ -21,6 +21,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  MessageSquareHeart,
   Phone,
   Plus,
   QrCode,
@@ -98,6 +99,12 @@ const NAVEGACAO_CRM = [
   {
     titulo: "Recursos & Produção",
     itens: [
+      {
+        to: "/satisfacao",
+        label: "Inquéritos de Satisfação",
+        sublabel: "Recomendação & Avaliações",
+        icon: MessageSquareHeart,
+      },
       {
         to: "/emails",
         label: "Modelos de Email",
@@ -247,6 +254,9 @@ function AppShellInner({ children }: { children: ReactNode }) {
     }
     if (pathname.startsWith("/pedidos")) {
       return { app: "Nova Web Studio CRM", tela: "Pedidos do Site" };
+    }
+    if (pathname.startsWith("/satisfacao")) {
+      return { app: "Nova Web Studio CRM", tela: "Inquéritos de Satisfação" };
     }
     if (pathname.startsWith("/emails")) {
       return { app: "Nova Web Studio CRM", tela: "Modelos de Email" };
@@ -693,7 +703,11 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
             {/* Ações contextuais de Topo */}
             {/* 1. No CRM: Botão Novo Negócio */}
-            {!ehHub && !ehAdmin && !ehRestaurantes && !ehMatch && (
+            {!ehHub &&
+              !ehAdmin &&
+              !ehRestaurantes &&
+              !ehMatch &&
+              !pathname.startsWith("/satisfacao") && (
               <div className="flex items-center gap-1">
                 <button
                   type="button"

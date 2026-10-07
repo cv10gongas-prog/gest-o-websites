@@ -25,6 +25,7 @@ import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
 import { Route as AuthenticatedProjetosRouteImport } from './routes/_authenticated/projetos'
+import { Route as AuthenticatedSatisfacaoRouteImport } from './routes/_authenticated/satisfacao'
 import { Route as AuthenticatedSegurancaRouteImport } from './routes/_authenticated/seguranca'
 import { Route as AuthenticatedTarefasRouteImport } from './routes/_authenticated/tarefas'
 import { Route as DeIndexRouteImport } from './routes/de.index'
@@ -43,6 +44,7 @@ import { Route as FrIndexRouteImport } from './routes/fr.index'
 import { Route as FrContactRouteImport } from './routes/fr.contact'
 import { Route as FrPortfolioRouteImport } from './routes/fr.portfolio'
 import { Route as FrRestaurantsRouteImport } from './routes/fr.restaurants'
+import { Route as SatisfacaoTokenRouteImport } from './routes/satisfacao.$token'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
 import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
 import { Route as AuthenticatedProdutosMatchRouteImport } from './routes/_authenticated/produtos.match'
@@ -135,6 +137,11 @@ const AuthenticatedProjetosRoute = AuthenticatedProjetosRouteImport.update({
   path: '/projetos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSatisfacaoRoute = AuthenticatedSatisfacaoRouteImport.update({
+  id: '/satisfacao',
+  path: '/satisfacao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSegurancaRoute = AuthenticatedSegurancaRouteImport.update({
   id: '/seguranca',
   path: '/seguranca',
@@ -225,6 +232,11 @@ const FrRestaurantsRoute = FrRestaurantsRouteImport.update({
   path: '/fr/restaurants',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SatisfacaoTokenRoute = SatisfacaoTokenRouteImport.update({
+  id: '/satisfacao/$token',
+  path: '/satisfacao/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedNegociosIndexRoute =
   AuthenticatedNegociosIndexRouteImport.update({
     id: '/negocios/',
@@ -313,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/projetos': typeof AuthenticatedProjetosRoute
+  '/satisfacao': typeof AuthenticatedSatisfacaoRoute
   '/seguranca': typeof AuthenticatedSegurancaRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
   '/de/contact': typeof DeContactRoute
@@ -327,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/fr/contact': typeof FrContactRoute
   '/fr/portfolio': typeof FrPortfolioRoute
   '/fr/restaurants': typeof FrRestaurantsRoute
+  '/satisfacao/$token': typeof SatisfacaoTokenRoute
   '/de/': typeof DeIndexRoute
   '/en/': typeof EnIndexRoute
   '/es/': typeof EsIndexRoute
@@ -360,6 +374,7 @@ export interface FileRoutesByTo {
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/projetos': typeof AuthenticatedProjetosRoute
+  '/satisfacao': typeof AuthenticatedSatisfacaoRoute
   '/seguranca': typeof AuthenticatedSegurancaRoute
   '/tarefas': typeof AuthenticatedTarefasRoute
   '/de/contact': typeof DeContactRoute
@@ -374,6 +389,7 @@ export interface FileRoutesByTo {
   '/fr/contact': typeof FrContactRoute
   '/fr/portfolio': typeof FrPortfolioRoute
   '/fr/restaurants': typeof FrRestaurantsRoute
+  '/satisfacao/$token': typeof SatisfacaoTokenRoute
   '/de': typeof DeIndexRoute
   '/en': typeof EnIndexRoute
   '/es': typeof EsIndexRoute
@@ -408,6 +424,7 @@ export interface FileRoutesById {
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
   '/_authenticated/projetos': typeof AuthenticatedProjetosRoute
+  '/_authenticated/satisfacao': typeof AuthenticatedSatisfacaoRoute
   '/_authenticated/seguranca': typeof AuthenticatedSegurancaRoute
   '/_authenticated/tarefas': typeof AuthenticatedTarefasRoute
   '/de/contact': typeof DeContactRoute
@@ -422,6 +439,7 @@ export interface FileRoutesById {
   '/fr/contact': typeof FrContactRoute
   '/fr/portfolio': typeof FrPortfolioRoute
   '/fr/restaurants': typeof FrRestaurantsRoute
+  '/satisfacao/$token': typeof SatisfacaoTokenRoute
   '/de/': typeof DeIndexRoute
   '/en/': typeof EnIndexRoute
   '/es/': typeof EsIndexRoute
@@ -457,6 +475,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/pipeline'
     | '/projetos'
+    | '/satisfacao'
     | '/seguranca'
     | '/tarefas'
     | '/de/contact'
@@ -471,6 +490,7 @@ export interface FileRouteTypes {
     | '/fr/contact'
     | '/fr/portfolio'
     | '/fr/restaurants'
+    | '/satisfacao/$token'
     | '/de/'
     | '/en/'
     | '/es/'
@@ -504,6 +524,7 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/pipeline'
     | '/projetos'
+    | '/satisfacao'
     | '/seguranca'
     | '/tarefas'
     | '/de/contact'
@@ -518,6 +539,7 @@ export interface FileRouteTypes {
     | '/fr/contact'
     | '/fr/portfolio'
     | '/fr/restaurants'
+    | '/satisfacao/$token'
     | '/de'
     | '/en'
     | '/es'
@@ -551,6 +573,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pedidos'
     | '/_authenticated/pipeline'
     | '/_authenticated/projetos'
+    | '/_authenticated/satisfacao'
     | '/_authenticated/seguranca'
     | '/_authenticated/tarefas'
     | '/de/contact'
@@ -565,6 +588,7 @@ export interface FileRouteTypes {
     | '/fr/contact'
     | '/fr/portfolio'
     | '/fr/restaurants'
+    | '/satisfacao/$token'
     | '/de/'
     | '/en/'
     | '/es/'
@@ -602,6 +626,7 @@ export interface RootRouteChildren {
   FrContactRoute: typeof FrContactRoute
   FrPortfolioRoute: typeof FrPortfolioRoute
   FrRestaurantsRoute: typeof FrRestaurantsRoute
+  SatisfacaoTokenRoute: typeof SatisfacaoTokenRoute
   DeIndexRoute: typeof DeIndexRoute
   EnIndexRoute: typeof EnIndexRoute
   EsIndexRoute: typeof EsIndexRoute
@@ -720,6 +745,13 @@ declare module '@tanstack/react-router' {
       path: '/projetos'
       fullPath: '/projetos'
       preLoaderRoute: typeof AuthenticatedProjetosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/satisfacao': {
+      id: '/_authenticated/satisfacao'
+      path: '/satisfacao'
+      fullPath: '/satisfacao'
+      preLoaderRoute: typeof AuthenticatedSatisfacaoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/seguranca': {
@@ -846,6 +878,13 @@ declare module '@tanstack/react-router' {
       path: '/fr/restaurants'
       fullPath: '/fr/restaurants'
       preLoaderRoute: typeof FrRestaurantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/satisfacao/$token': {
+      id: '/satisfacao/$token'
+      path: '/satisfacao/$token'
+      fullPath: '/satisfacao/$token'
+      preLoaderRoute: typeof SatisfacaoTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/negocios/': {
@@ -982,6 +1021,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
   AuthenticatedProjetosRoute: typeof AuthenticatedProjetosRoute
+  AuthenticatedSatisfacaoRoute: typeof AuthenticatedSatisfacaoRoute
   AuthenticatedSegurancaRoute: typeof AuthenticatedSegurancaRoute
   AuthenticatedTarefasRoute: typeof AuthenticatedTarefasRoute
   AuthenticatedNegociosIdRoute: typeof AuthenticatedNegociosIdRoute
@@ -1001,6 +1041,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
   AuthenticatedProjetosRoute: AuthenticatedProjetosRoute,
+  AuthenticatedSatisfacaoRoute: AuthenticatedSatisfacaoRoute,
   AuthenticatedSegurancaRoute: AuthenticatedSegurancaRoute,
   AuthenticatedTarefasRoute: AuthenticatedTarefasRoute,
   AuthenticatedNegociosIdRoute: AuthenticatedNegociosIdRoute,
@@ -1032,6 +1073,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrContactRoute: FrContactRoute,
   FrPortfolioRoute: FrPortfolioRoute,
   FrRestaurantsRoute: FrRestaurantsRoute,
+  SatisfacaoTokenRoute: SatisfacaoTokenRoute,
   DeIndexRoute: DeIndexRoute,
   EnIndexRoute: EnIndexRoute,
   EsIndexRoute: EsIndexRoute,

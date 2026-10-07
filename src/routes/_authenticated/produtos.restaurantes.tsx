@@ -83,14 +83,6 @@ function RestaurantesLayoutInner() {
   });
   useRealtime(activeRestaurantId, ADMIN_TABLES, [["restaurant_admin", activeRestaurantId]]);
 
-  // Qualquer alteração feita neste dispositivo recarrega logo os dados (sem atualizar a página).
-  useEffect(() => {
-    const refresh = () =>
-      void qc.invalidateQueries({ queryKey: ["restaurant_admin", activeRestaurantId] });
-    window.addEventListener("nws:restaurant-changed", refresh);
-    return () => window.removeEventListener("nws:restaurant-changed", refresh);
-  }, [activeRestaurantId, qc]);
-
   // As mesas/pedidos da demonstração são partilhados entre separadores do MESMO browser.
   useEffect(() => {
     if (activeRestaurantId !== "demo-restaurante") return;

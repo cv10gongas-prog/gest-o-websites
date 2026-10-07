@@ -19,6 +19,7 @@ import {
   ListTodo,
   Mail,
   MapPin,
+  MessageSquareHeart,
   Pencil,
   Phone,
   PhoneCall,
@@ -37,6 +38,7 @@ import { DialogChamada } from "@/components/crm/DialogChamada";
 import { DialogNegocio } from "@/components/crm/DialogNegocio";
 import { DialogTarefa } from "@/components/crm/DialogTarefa";
 import { PainelArquivos } from "@/components/crm/PainelArquivos";
+import { SeccaoSatisfacaoNegocio } from "@/components/crm/SeccaoSatisfacaoNegocio";
 import {
   ESTADOS,
   estadoInfo,
@@ -76,7 +78,7 @@ export const Route = createFileRoute("/_authenticated/negocios/$id")({
   component: FichaNegocio,
 });
 
-type SeparadorFicha = "geral" | "chamadas" | "propostas" | "tarefas" | "arquivos" | "auditoria";
+type SeparadorFicha = "geral" | "chamadas" | "propostas" | "tarefas" | "satisfacao" | "arquivos" | "auditoria";
 
 function FichaNegocio() {
   const { id } = Route.useParams();
@@ -365,6 +367,20 @@ function FichaNegocio() {
 
         <button
           type="button"
+          onClick={() => setTab("satisfacao")}
+          className={cn(
+            "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
+            tab === "satisfacao"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+          )}
+        >
+          <MessageSquareHeart className="size-3.5" />
+          <span>5. Satisfação & Testemunhos</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setTab("arquivos")}
           className={cn(
             "flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-semibold transition",
@@ -374,7 +390,7 @@ function FichaNegocio() {
           )}
         >
           <FileArchive className="size-3.5" />
-          <span>5. Arquivos & Staging (.rar)</span>
+          <span>6. Arquivos & Staging (.rar)</span>
         </button>
 
         <button
@@ -388,7 +404,7 @@ function FichaNegocio() {
           )}
         >
           <History className="size-3.5" />
-          <span>6. Auditoria & Log</span>
+          <span>7. Auditoria & Log</span>
         </button>
       </div>
 
@@ -672,7 +688,12 @@ function FichaNegocio() {
         </div>
       )}
 
-      {/* TAB 5: ARQUIVOS & STAGING */}
+      {/* TAB 5: SATISFAÇÃO DO CLIENTE */}
+      {tab === "satisfacao" && (
+        <SeccaoSatisfacaoNegocio businessId={negocio.id} businessNome={negocio.nome} />
+      )}
+
+      {/* TAB 6: ARQUIVOS & STAGING */}
       {tab === "arquivos" && (
         <div className="space-y-4">
           <div className="rounded-3xl border border-border/70 bg-surface/50 p-6 backdrop-blur-md">
@@ -685,7 +706,7 @@ function FichaNegocio() {
         </div>
       )}
 
-      {/* TAB 6: AUDITORIA & LOG */}
+      {/* TAB 7: AUDITORIA & LOG */}
       {tab === "auditoria" && (
         <div className="space-y-4">
           <h2 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">

@@ -2,13 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, type FormEvent } from "react";
 import {
   AlertCircle,
-  Check,
   FolderPlus,
   ImagePlus,
   Pencil,
   Plus,
   Search,
-  Sparkles,
   Trash2,
   UtensilsCrossed,
 } from "lucide-react";
@@ -22,7 +20,7 @@ import {
   fieldClass,
 } from "@/components/restaurant/RestaurantBits";
 import { resolveImage, type Category, type Product } from "@/lib/restaurant/demo-data";
-import { adminActions, formatPrice, uploadImage, useAdmin } from "@/lib/restaurant/store";
+import { formatPrice, uploadImage, useAdmin, useRestaurantActions } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/produtos/restaurantes/menu")({
@@ -34,6 +32,7 @@ function RestaurantMenuAdmin() {
     data: { products, categories },
     restaurantId,
   } = useAdmin();
+  const actions = useRestaurantActions(restaurantId);
 
   const [pesquisa, setPesquisa] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("todas");
@@ -67,11 +66,11 @@ function RestaurantMenuAdmin() {
     if (!name) return;
 
     try {
-      await adminActions.saveCategory(restaurantId, {
+      await actions.saveCategory({
         id: editingCat?.id,
         name,
-        sortOrder: categories.length + 1,
-      });
+        sortOrder: editingCat?.sortOrder ?? categories.length + 1,
+      }, restaurantId);
       toast.success(editingCat?.id ? "Categoria atualizada." : "Categoria criada.");
       setEditingCat(null);
     } catch (err) {
@@ -84,7 +83,7 @@ function RestaurantMenuAdmin() {
       {/* CABEÇALHO */}
       <PanelHeader
         title="Menu & Ementa Digital"
-        subtitle="Organiza categorias, pratos, bebidas, preços e disponibilidade do restaurante de testes, sem afetar clientes reais."
+        subtitle="Organiza categorias, pratos, bebidas, preços e disponibilidade da ementa digital. As alterações ficam disponíveis aos clientes assim que são guardadas."
         action={
           <div className="flex flex-wrap items-center gap-2.5">
             <button
@@ -228,7 +227,7 @@ function RestaurantMenuAdmin() {
                         `Apagar a categoria "${c.name}"? Os produtos ficarão sem categoria mas não serão apagados.`,
                       )
                     ) {
-                      adminActions
+                      actions
                         .removeCategory(c.id, restaurantId)
                         .then(() => toast.success("Categoria removida."))
                         .catch((e: Error) => toast.error(e.message));
@@ -305,7 +304,7 @@ function RestaurantMenuAdmin() {
                       <Switch
                         checked={p.available}
                         onCheckedChange={(v) =>
-                          adminActions
+                          actions
                             .setAvailable(p.id, v, restaurantId)
                             .then(() =>
                               toast.success(
@@ -330,7 +329,7 @@ function RestaurantMenuAdmin() {
                       type="button"
                       onClick={() => {
                         if (confirm(`Eliminar "${p.name}" da ementa?`)) {
-                          adminActions
+                          actions
                             .removeProduct(p.id, restaurantId)
                             .then(() => toast.success("Produto eliminado."))
                             .catch((e: Error) => toast.error(e.message));
@@ -423,6 +422,7 @@ function ProductForm({
   restaurantId: string;
   onDone: () => void;
 }) {
+  const actions = useRestaurantActions(restaurantId);
   const [image, setImage] = useState(product.image ?? "");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -454,7 +454,7 @@ function ProductForm({
 
     setSaving(true);
     try {
-      await adminActions.saveProduct(restaurantId, {
+      await actions.saveProduct({
         id: product.id,
         name: String(f.get("name")).trim().slice(0, 80),
         description: String(f.get("description")).trim().slice(0, 240),
@@ -463,7 +463,7 @@ function ProductForm({
         image,
         available,
         featured,
-      });
+      }, restaurantId);
       toast.success(product.id ? "Produto atualizado com sucesso." : "Produto criado com sucesso.");
       onDone();
     } catch (err) {

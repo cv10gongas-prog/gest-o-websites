@@ -9,6 +9,7 @@ import {
   Globe,
   LayoutDashboard,
   Mail,
+  MessageSquareHeart,
   Phone,
   Plus,
   Search,
@@ -207,6 +208,13 @@ export function CommandPalette({
           >
             <Globe className="size-4 text-muted-foreground" />
             <span>Pedidos do Website ({pedidos.filter((p) => !p.tratado).length} pendentes)</span>
+          </CommandItem>
+          <CommandItem
+            onSelect={() => navegar("/satisfacao")}
+            className="cursor-pointer gap-2.5 rounded-lg py-2"
+          >
+            <MessageSquareHeart className="size-4 text-muted-foreground" />
+            <span>Inquéritos de Satisfação</span>
           </CommandItem>
           <CommandItem
             onSelect={() => navegar("/equipa")}

@@ -1,22 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import {
-  Bell,
-  Check,
-  ChevronRight,
-  ExternalLink,
-  Pencil,
-  Plus,
-  Printer,
-  QrCode,
-  Receipt,
-  Sparkles,
-  Table2,
-  Trash2,
-  Users,
-  UtensilsCrossed,
-  X,
-} from "lucide-react";
+import { ExternalLink, Pencil, Plus, Printer, QrCode, Table2, Trash2, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
@@ -28,16 +12,15 @@ import {
   RestaurantCard,
   TableBadge,
   fieldClass,
-  timeAgo,
 } from "@/components/restaurant/RestaurantBits";
 import type { Table } from "@/lib/restaurant/demo-data";
 import { isDemoMode } from "@/lib/demo-mode";
 import {
-  adminActions,
   formatPrice,
   getTableState,
   tableStateLabel,
   useAdmin,
+  useRestaurantActions,
 } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
@@ -47,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/produtos/restaurantes/mesa
 
 function RestaurantTablesAdmin() {
   const { data: app, restaurantId } = useAdmin();
+  const actions = useRestaurantActions(restaurantId);
   const [editing, setEditing] = useState<Partial<Table> | null>(null);
   const [qr, setQr] = useState<{ table: Table; print: boolean } | null>(null);
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
@@ -66,6 +50,24 @@ function RestaurantTablesAdmin() {
     }
   }, [qrMesa, app.tables]);
 
+  // Mantém o painel lateral ligado à versão mais recente da mesa no cache otimista.
+  // Se a mesa for apagada, fecha o painel imediatamente em vez de deixar dados antigos visíveis.
+  useEffect(() => {
+    if (!selectedTable) return;
+    const latest = app.tables.find((table) => table.id === selectedTable.id);
+    if (!latest) {
+      setSelectedTable(null);
+      return;
+    }
+    if (
+      latest.number !== selectedTable.number ||
+      latest.seats !== selectedTable.seats ||
+      latest.active !== selectedTable.active
+    ) {
+      setSelectedTable(latest);
+    }
+  }, [app.tables, selectedTable]);
+
   async function saveTable(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
@@ -82,12 +84,12 @@ function RestaurantTablesAdmin() {
     }
 
     try {
-      await adminActions.saveTable(restaurantId, {
+      await actions.saveTable({
         id: editing?.id,
         number,
         seats,
         active: editing?.active ?? true,
-      });
+      }, restaurantId);
       toast.success(
         editing?.id
           ? "Mesa atualizada com sucesso."
@@ -117,7 +119,11 @@ function RestaurantTablesAdmin() {
       {/* CABEÇALHO */}
       <PanelHeader
         title="Gestão de Mesas & QR Codes"
-        subtitle="Cada mesa tem um QR privado que abre a EMENTA e o carrinho após login. O teste local partilha dados apenas entre separadores do mesmo browser."
+        subtitle={
+          isDemoMode()
+            ? "Cada mesa tem um QR privado que abre a ementa e o carrinho. No modo de testes, os dados ficam apenas neste browser."
+            : "Cada mesa tem um QR privado que abre a ementa e o carrinho. Alterações e pedidos sincronizam em tempo real entre dispositivos."
+        }
         action={
           <button
             type="button"
@@ -130,7 +136,8 @@ function RestaurantTablesAdmin() {
         }
       />
 
-      {qrMesa !== null &&
+      {isDemoMode() &&
+        qrMesa !== null &&
         Number.isSafeInteger(qrMesa) &&
         !app.tables.some((t) => t.number === qrMesa) && (
           <div
@@ -209,7 +216,9 @@ function RestaurantTablesAdmin() {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              adminActions.resolveRequest(r.id, restaurantId);
+                              void actions
+                                .resolveRequest(r.id, restaurantId)
+                                .catch((error: Error) => toast.error(error.message));
                             }}
                             className="rounded-lg bg-rose-500/30 px-2 py-0.5 text-[10px] font-bold text-white hover:bg-rose-500 transition"
                           >
@@ -268,7 +277,7 @@ function RestaurantTablesAdmin() {
                           )
                         ) {
                           try {
-                            await adminActions.freeTable(restaurantId, t.number);
+                            await actions.freeTable(restaurantId, t.number);
                             toast.success(`Mesa ${t.number} libertada.`);
                             if (selectedTable?.id === t.id) {
                               setSelectedTable(null);
@@ -290,7 +299,7 @@ function RestaurantTablesAdmin() {
                       <Switch
                         checked={t.active}
                         onCheckedChange={(v) =>
-                          adminActions
+                          actions
                             .setTableActive(t.id, v, restaurantId)
                             .then(() =>
                               toast.success(
@@ -321,7 +330,7 @@ function RestaurantTablesAdmin() {
                               `Remover a Mesa ${t.number}? Os registos associados serão apagados.`,
                             )
                           ) {
-                            adminActions
+                            actions
                               .removeTable(t.id, restaurantId)
                               .then(() => toast.success(`Mesa ${t.number} removida.`))
                               .catch((e: Error) => toast.error(e.message));
@@ -382,7 +391,11 @@ function RestaurantTablesAdmin() {
                     <span>{r.type === "conta" ? "Pediu a Conta" : "Chamou Empregado"}</span>
                     <button
                       type="button"
-                      onClick={() => adminActions.resolveRequest(r.id, restaurantId)}
+                      onClick={() => {
+                        void actions
+                          .resolveRequest(r.id, restaurantId)
+                          .catch((error: Error) => toast.error(error.message));
+                      }}
                       className="rounded-lg bg-rose-500 px-2.5 py-1 text-xs font-bold text-white hover:bg-rose-600 transition"
                     >
                       Resolver
@@ -458,7 +471,7 @@ function RestaurantTablesAdmin() {
                 type="button"
                 onClick={async () => {
                   if (confirm(`Libertar a Mesa ${selectedTable.number}?`)) {
-                    await adminActions.freeTable(restaurantId, selectedTable.number);
+                    await actions.freeTable(restaurantId, selectedTable.number);
                     toast.success(`Mesa ${selectedTable.number} libertada.`);
                     setSelectedTable(null);
                   }

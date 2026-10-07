@@ -15,6 +15,7 @@ export const SECCOES = [
   { chave: "/negocios", label: "Criação e Modernização de Sites" },
   { chave: "/pipeline", label: "Pipeline" },
   { chave: "/tarefas", label: "Tarefas" },
+  { chave: "/satisfacao", label: "Satisfação" },
   { chave: "/emails", label: "Modelos de email" },
   { chave: "/projetos", label: "Projetos" },
   { chave: "/arquivos", label: "Arquivos de projetos" },

@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
-import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
+import { queryOptions, useQueryClient } from "@tanstack/react-query";
 import type {
   AdminData,
   Category,
@@ -30,7 +30,6 @@ import {
   serverRemoveProduct,
   serverRemoveReservation,
   serverRemoveTable,
-  serverResetDemo,
   serverResolveRequest,
   serverSaveCategory,
   serverSaveProduct,
@@ -291,7 +290,7 @@ function isLocalOperation(restaurantId: string): boolean {
  * Em modo de demonstração/testes operam exclusivamente sobre o demoStore local seguro;
  * Em produção com restaurante dedicado configurado passam por Server Functions validadas no servidor.
  */
-const rawAdminActions = {
+export const rawAdminActions = {
   setOrderStatus: async (id: string, status: OrderStatus, restaurantId = RID) => {
     if (isLocalOperation(restaurantId)) {
       demoStore.setOrderStatus(id, status);
@@ -330,13 +329,13 @@ const rawAdminActions = {
     r: Omit<Reservation, "id" | "createdAt" | "status"> & {
       status?: ReservationStatus;
     },
-  ) => {
+  ): Promise<string | null> => {
     if (isLocalOperation(restaurantId)) {
-      demoStore.addReservation(r);
+      const id = demoStore.addReservation(r);
       persistLocalRestaurantDemo();
-      return;
+      return id;
     }
-    await serverAddReservation({
+    const res = await serverAddReservation({
       data: {
         restaurantId,
         name: r.name,
@@ -350,6 +349,7 @@ const rawAdminActions = {
         status: r.status ?? "confirmada",
       },
     });
+    return res.id ?? null;
   },
 
   updateReservation: async (
@@ -358,6 +358,7 @@ const rawAdminActions = {
     restaurantId = RID,
   ) => {
     if (isLocalOperation(restaurantId)) {
+      demoStore.updateReservation(id, r);
       if (r.status) demoStore.setReservationStatus(id, r.status);
       persistLocalRestaurantDemo();
       return;
@@ -376,6 +377,11 @@ const rawAdminActions = {
         notes: r.notes,
       },
     });
+    if (r.status) {
+      await serverSetReservationStatus({
+        data: { restaurantId, id, status: r.status },
+      });
+    }
   },
 
   setReservationStatus: async (id: string, status: ReservationStatus, restaurantId = RID) => {
@@ -403,13 +409,13 @@ const rawAdminActions = {
   saveTable: async (
     restaurantId = RID,
     t: Omit<Table, "id" | "slug" | "name"> & { id?: string | undefined },
-  ) => {
+  ): Promise<string | null> => {
     if (isLocalOperation(restaurantId)) {
-      demoStore.saveTable(t);
+      const id = demoStore.saveTable(t);
       persistLocalRestaurantDemo();
-      return;
+      return id;
     }
-    await serverSaveTable({
+    const res = await serverSaveTable({
       data: {
         restaurantId,
         id: t.id,
@@ -418,6 +424,7 @@ const rawAdminActions = {
         active: t.active,
       },
     });
+    return res.id ?? t.id ?? null;
   },
 
   setTableActive: async (id: string, active: boolean, restaurantId = RID) => {
@@ -445,13 +452,13 @@ const rawAdminActions = {
   saveCategory: async (
     restaurantId = RID,
     c: { id?: string | undefined; name: string; sortOrder?: number },
-  ) => {
+  ): Promise<string | null> => {
     if (isLocalOperation(restaurantId)) {
-      demoStore.saveCategory(c);
+      const id = demoStore.saveCategory(c);
       persistLocalRestaurantDemo();
-      return;
+      return id;
     }
-    await serverSaveCategory({
+    const res = await serverSaveCategory({
       data: {
         restaurantId,
         id: c.id,
@@ -459,6 +466,7 @@ const rawAdminActions = {
         sortOrder: c.sortOrder,
       },
     });
+    return res.id ?? c.id ?? null;
   },
 
   removeCategory: async (id: string, restaurantId = RID) => {
@@ -484,13 +492,13 @@ const rawAdminActions = {
       available: boolean;
       featured?: boolean;
     },
-  ) => {
+  ): Promise<string | null> => {
     if (isLocalOperation(restaurantId)) {
-      demoStore.saveProduct(p);
+      const id = demoStore.saveProduct(p);
       persistLocalRestaurantDemo();
-      return;
+      return id;
     }
-    await serverSaveProduct({
+    const res = await serverSaveProduct({
       data: {
         restaurantId,
         id: p.id,
@@ -503,6 +511,7 @@ const rawAdminActions = {
         featured: p.featured ?? false,
       },
     });
+    return res.id ?? p.id ?? null;
   },
 
   setAvailable: async (id: string, available: boolean, restaurantId = RID) => {
@@ -551,36 +560,906 @@ const rawAdminActions = {
   },
 
   reset: async (restaurantId = RID) => {
-    if (isLocalOperation(restaurantId)) {
-      demoStore.resetDemo();
-      persistLocalRestaurantDemo();
-      return;
+    if (!isLocalOperation(restaurantId)) {
+      throw new Error("A reposição de demonstração só está disponível no modo de testes.");
     }
-    await serverResetDemo({
-      data: { restaurantId },
-    });
+    demoStore.resetDemo();
+    persistLocalRestaurantDemo();
   },
 };
 
+/** Ações diretas sem proxy/evento global normal */
+export const adminActions = rawAdminActions;
+
 /**
- * Após cada alteração (mesa, ementa, pedido, reserva…) avisa o painel para recarregar
- * os dados de imediato, sem ser preciso atualizar a página.
+ * Hook de ações administrativas de restaurante com atualizações otimistas imediatas,
+ * reversão em caso de erro e reconciliação via invalidação de queries do TanStack Query.
  */
-export const adminActions = new Proxy(rawAdminActions, {
-  get(target, prop, receiver) {
-    const fn = Reflect.get(target, prop, receiver);
-    if (typeof fn !== "function") return fn;
-    return async (...args: unknown[]) => {
-      try {
-        return await (fn as (...a: unknown[]) => unknown).apply(target, args);
-      } finally {
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("nws:restaurant-changed"));
+export function useRestaurantActions(explicitRestaurantId?: string) {
+  const qc = useQueryClient();
+  const adminCtx = useContext(AdminContext);
+  const boundRid = explicitRestaurantId ?? adminCtx?.restaurantId ?? RID;
+
+  return useMemo(() => {
+    const getRid = (customRid?: string) => customRid ?? boundRid;
+
+    return {
+      setOrderStatus: async (id: string, status: OrderStatus, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            orders: previousData.orders.map((o) =>
+              o.id === id ? { ...o, status, closed: status === "entregue" } : o,
+            ),
+          });
         }
-      }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.setOrderStatus(id, status);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverSetOrderStatus({
+              data: { restaurantId: rid, orderId: id, status },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+      },
+
+      resolveRequest: async (id: string, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            requests: previousData.requests.map((r) =>
+              r.id === id ? { ...r, resolved: true } : r,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.resolveRequest(id);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverResolveRequest({
+              data: { restaurantId: rid, requestId: id },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+      },
+
+      freeTable: async (
+        arg1: number | string,
+        arg2?: number | string,
+      ) => {
+        const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
+        const tableNumber = typeof arg1 === "number" ? arg1 : Number(arg2);
+
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            orders: previousData.orders.map((o) =>
+              o.tableNumber === tableNumber ? { ...o, closed: true, status: "entregue" as const } : o,
+            ),
+            requests: previousData.requests.map((r) =>
+              r.tableNumber === tableNumber ? { ...r, resolved: true } : r,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.freeTable(tableNumber);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverFreeTable({
+              data: { restaurantId: rid, tableNumber },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+      },
+
+      saveTable: async (
+        arg1: string | (Omit<Table, "id" | "slug" | "name"> & { id?: string }),
+        arg2?: (Omit<Table, "id" | "slug" | "name"> & { id?: string }) | string,
+      ): Promise<string | null> => {
+        const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
+        const table = (typeof arg1 === "object" ? arg1 : arg2) as Omit<Table, "id" | "slug" | "name"> & { id?: string };
+
+        if (table.id) {
+          await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+          const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+          if (previousData) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+              ...previousData,
+              tables: previousData.tables.map((t) =>
+                t.id === table.id
+                  ? {
+                      ...t,
+                      number: table.number,
+                      seats: table.seats,
+                      active: table.active,
+                      name: `Mesa ${table.number}`,
+                      slug: tableSlug(table.number),
+                    }
+                  : t,
+              ),
+            });
+          }
+
+          let updatedId: string | null = table.id;
+          try {
+            if (isLocalOperation(rid)) {
+              updatedId = demoStore.saveTable(table);
+              persistLocalRestaurantDemo();
+            } else {
+              const res = await serverSaveTable({
+                data: {
+                  restaurantId: rid,
+                  id: table.id,
+                  number: table.number,
+                  seats: table.seats,
+                  active: table.active,
+                },
+              });
+              updatedId = res.id ?? table.id;
+            }
+          } catch (err) {
+            if (previousData) {
+              qc.setQueryData(["restaurant_admin", rid], previousData);
+            }
+            throw err;
+          }
+
+          void Promise.all([
+            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+          ]);
+          return updatedId;
+        } else {
+          let createdId: string | null = null;
+          if (isLocalOperation(rid)) {
+            createdId = demoStore.saveTable(table);
+            persistLocalRestaurantDemo();
+          } else {
+            const res = await serverSaveTable({
+              data: {
+                restaurantId: rid,
+                number: table.number,
+                seats: table.seats,
+                active: table.active,
+              },
+            });
+            createdId = res.id ?? null;
+          }
+
+          if (createdId) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
+              if (!current || current.tables.some((item) => item.id === createdId)) return current;
+              const created: Table = {
+                id: createdId,
+                number: table.number,
+                seats: table.seats,
+                active: table.active,
+                name: `Mesa ${table.number}`,
+                slug: tableSlug(table.number),
+              };
+              return { ...current, tables: [...current.tables, created].sort((a, b) => a.number - b.number) };
+            });
+          }
+
+          void Promise.all([
+            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+          ]);
+          return createdId;
+        }
+      },
+
+      setTableActive: async (tableId: string, active: boolean, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            tables: previousData.tables.map((t) =>
+              t.id === tableId ? { ...t, active } : t,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.setTableActive(tableId, active);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverSetTableActive({
+              data: { restaurantId: rid, tableId, active },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      removeTable: async (tableId: string, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            tables: previousData.tables.filter((t) => t.id !== tableId),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.removeTable(tableId);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverRemoveTable({
+              data: { restaurantId: rid, tableId },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      saveCategory: async (
+        arg1: string | { id?: string; name: string; sortOrder?: number },
+        arg2?: { id?: string; name: string; sortOrder?: number } | string,
+      ): Promise<string | null> => {
+        const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
+        const category = (typeof arg1 === "object" ? arg1 : arg2) as { id?: string; name: string; sortOrder?: number };
+
+        if (category.id) {
+          await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+          const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+          if (previousData) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+              ...previousData,
+              categories: previousData.categories.map((c) =>
+                c.id === category.id
+                  ? {
+                      ...c,
+                      name: category.name,
+                      ...(category.sortOrder !== undefined ? { sortOrder: category.sortOrder } : {}),
+                    }
+                  : c,
+              ),
+              products: previousData.products.map((p) =>
+                p.categoryId === category.id ? { ...p, category: category.name } : p,
+              ),
+            });
+          }
+
+          let updatedId: string | null = category.id;
+          try {
+            if (isLocalOperation(rid)) {
+              updatedId = demoStore.saveCategory(category);
+              persistLocalRestaurantDemo();
+            } else {
+              const res = await serverSaveCategory({
+                data: {
+                  restaurantId: rid,
+                  id: category.id,
+                  name: category.name,
+                  sortOrder: category.sortOrder,
+                },
+              });
+              updatedId = res.id ?? category.id;
+            }
+          } catch (err) {
+            if (previousData) {
+              qc.setQueryData(["restaurant_admin", rid], previousData);
+            }
+            throw err;
+          }
+
+          void Promise.all([
+            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+          ]);
+          return updatedId;
+        } else {
+          let createdId: string | null = null;
+          if (isLocalOperation(rid)) {
+            createdId = demoStore.saveCategory(category);
+            persistLocalRestaurantDemo();
+          } else {
+            const res = await serverSaveCategory({
+              data: {
+                restaurantId: rid,
+                name: category.name,
+                sortOrder: category.sortOrder,
+              },
+            });
+            createdId = res.id ?? null;
+          }
+
+          if (createdId) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
+              if (!current || current.categories.some((item) => item.id === createdId)) return current;
+              const created: Category = {
+                id: createdId,
+                name: category.name,
+                sortOrder: category.sortOrder ?? current.categories.length + 1,
+              };
+              return {
+                ...current,
+                categories: [...current.categories, created].sort((a, b) => a.sortOrder - b.sortOrder),
+              };
+            });
+          }
+
+          void Promise.all([
+            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+          ]);
+          return createdId;
+        }
+      },
+
+      removeCategory: async (categoryId: string, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            categories: previousData.categories.filter((c) => c.id !== categoryId),
+            products: previousData.products.map((p) =>
+              p.categoryId === categoryId ? { ...p, categoryId: null, category: "Outros" } : p,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.removeCategory(categoryId);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverRemoveCategory({
+              data: { restaurantId: rid, categoryId },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      saveProduct: async (
+        arg1: string | {
+          id?: string;
+          name: string;
+          description: string;
+          price: number;
+          categoryId: string | null;
+          image: string;
+          available: boolean;
+          featured?: boolean;
+        },
+        arg2?: {
+          id?: string;
+          name: string;
+          description: string;
+          price: number;
+          categoryId: string | null;
+          image: string;
+          available: boolean;
+          featured?: boolean;
+        } | string,
+      ): Promise<string | null> => {
+        const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
+        const product = (typeof arg1 === "object" ? arg1 : arg2) as {
+          id?: string;
+          name: string;
+          description: string;
+          price: number;
+          categoryId: string | null;
+          image: string;
+          available: boolean;
+          featured?: boolean;
+        };
+
+        if (product.id) {
+          await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+          const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+          if (previousData) {
+            const catName =
+              previousData.categories.find((c) => c.id === product.categoryId)?.name ?? "Outros";
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+              ...previousData,
+              products: previousData.products.map((p) =>
+                p.id === product.id
+                  ? {
+                      ...p,
+                      ...product,
+                      category: catName,
+                      featured: product.featured ?? false,
+                    }
+                  : p,
+              ),
+            });
+          }
+
+          let updatedId: string | null = product.id;
+          try {
+            if (isLocalOperation(rid)) {
+              updatedId = demoStore.saveProduct(product);
+              persistLocalRestaurantDemo();
+            } else {
+              const res = await serverSaveProduct({
+                data: {
+                  restaurantId: rid,
+                  ...product,
+                },
+              });
+              updatedId = res.id ?? product.id;
+            }
+          } catch (err) {
+            if (previousData) {
+              qc.setQueryData(["restaurant_admin", rid], previousData);
+            }
+            throw err;
+          }
+
+          void Promise.all([
+            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+          ]);
+          return updatedId;
+        } else {
+          let createdId: string | null = null;
+          if (isLocalOperation(rid)) {
+            createdId = demoStore.saveProduct(product);
+            persistLocalRestaurantDemo();
+          } else {
+            const res = await serverSaveProduct({
+              data: {
+                restaurantId: rid,
+                ...product,
+              },
+            });
+            createdId = res.id ?? null;
+          }
+
+          if (createdId) {
+            qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
+              if (!current || current.products.some((item) => item.id === createdId)) return current;
+              const created: Product = {
+                id: createdId,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                categoryId: product.categoryId,
+                category:
+                  current.categories.find((item) => item.id === product.categoryId)?.name ?? "Outros",
+                image: product.image,
+                available: product.available,
+                featured: product.featured ?? false,
+              };
+              return { ...current, products: [...current.products, created] };
+            });
+          }
+
+          void Promise.all([
+            qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+            qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+          ]);
+          return createdId;
+        }
+      },
+
+      setProductAvailable: async (productId: string, available: boolean, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            products: previousData.products.map((p) =>
+              p.id === productId ? { ...p, available } : p,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.setProductAvailable(productId, available);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverSetProductAvailable({
+              data: { restaurantId: rid, productId, available },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      setAvailable: async (productId: string, available: boolean, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            products: previousData.products.map((p) =>
+              p.id === productId ? { ...p, available } : p,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.setProductAvailable(productId, available);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverSetProductAvailable({
+              data: { restaurantId: rid, productId, available },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      removeProduct: async (productId: string, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            products: previousData.products.filter((p) => p.id !== productId),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.removeProduct(productId);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverRemoveProduct({
+              data: { restaurantId: rid, productId },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      addReservation: async (
+        arg1: string | (Omit<Reservation, "id" | "createdAt" | "status"> & { status?: ReservationStatus }),
+        arg2?: (Omit<Reservation, "id" | "createdAt" | "status"> & { status?: ReservationStatus }) | string,
+      ): Promise<string | null> => {
+        const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
+        const reservation = (typeof arg1 === "object" ? arg1 : arg2) as Omit<Reservation, "id" | "createdAt" | "status"> & { status?: ReservationStatus };
+
+        let createdId: string | null = null;
+        if (isLocalOperation(rid)) {
+          createdId = demoStore.addReservation(reservation);
+          persistLocalRestaurantDemo();
+        } else {
+          const res = await serverAddReservation({
+            data: {
+              restaurantId: rid,
+              name: reservation.name,
+              phone: reservation.phone,
+              email: reservation.email,
+              date: reservation.date,
+              time: reservation.time,
+              guests: reservation.guests,
+              tableNumber: reservation.tableNumber,
+              notes: reservation.notes,
+              status: reservation.status ?? "confirmada",
+            },
+          });
+          createdId = res.id ?? null;
+        }
+
+        if (createdId) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], (current) => {
+            if (!current || current.reservations.some((item) => item.id === createdId)) return current;
+            const created: Reservation = {
+              id: createdId,
+              name: reservation.name,
+              phone: reservation.phone,
+              email: reservation.email,
+              date: reservation.date,
+              time: reservation.time,
+              guests: reservation.guests,
+              tableNumber: reservation.tableNumber,
+              notes: reservation.notes,
+              origin: "telefone",
+              status: reservation.status ?? "confirmada",
+              createdAt: Date.now(),
+            };
+            return { ...current, reservations: [...current.reservations, created] };
+          });
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+        return createdId;
+      },
+
+      updateReservation: async (
+        id: string,
+        patch: Partial<Omit<Reservation, "id" | "createdAt">>,
+        customRid?: string,
+      ) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            reservations: previousData.reservations.map((r) =>
+              r.id === id ? { ...r, ...patch } : r,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.updateReservation(id, patch);
+            if (patch.status) demoStore.setReservationStatus(id, patch.status);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverUpdateReservation({
+              data: {
+                restaurantId: rid,
+                id,
+                name: patch.name,
+                phone: patch.phone,
+                email: patch.email,
+                date: patch.date,
+                time: patch.time,
+                guests: patch.guests,
+                tableNumber: patch.tableNumber,
+                notes: patch.notes,
+              },
+            });
+            if (patch.status) {
+              await serverSetReservationStatus({
+                data: { restaurantId: rid, id, status: patch.status },
+              });
+            }
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+      },
+
+      setReservationStatus: async (id: string, status: ReservationStatus, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            reservations: previousData.reservations.map((r) =>
+              r.id === id ? { ...r, status } : r,
+            ),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.setReservationStatus(id, status);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverSetReservationStatus({
+              data: { restaurantId: rid, id, status },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+      },
+
+      removeReservation: async (id: string, customRid?: string) => {
+        const rid = getRid(customRid);
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            reservations: previousData.reservations.filter((r) => r.id !== id),
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.removeReservation(id);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverRemoveReservation({
+              data: { restaurantId: rid, id },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] });
+      },
+
+      saveSettings: async (
+        arg1: string | AdminData["settings"],
+        arg2?: AdminData["settings"] | string,
+      ) => {
+        const rid = typeof arg1 === "string" ? arg1 : getRid(typeof arg2 === "string" ? arg2 : undefined);
+        const settings = (typeof arg1 === "object" ? arg1 : arg2) as AdminData["settings"];
+
+        await qc.cancelQueries({ queryKey: ["restaurant_admin", rid] });
+        const previousData = qc.getQueryData<AdminData>(["restaurant_admin", rid]);
+
+        if (previousData) {
+          qc.setQueryData<AdminData>(["restaurant_admin", rid], {
+            ...previousData,
+            settings: { ...settings },
+          });
+        }
+
+        try {
+          if (isLocalOperation(rid)) {
+            demoStore.saveSettings(settings);
+            persistLocalRestaurantDemo();
+          } else {
+            await serverSaveSettings({
+              data: {
+                restaurantId: rid,
+                name: settings.name,
+                tagline: settings.tagline,
+                introduction: settings.introduction,
+                logo: settings.logo,
+                primaryColor: settings.primaryColor,
+                phone: settings.phone,
+                email: settings.email,
+                address: settings.address,
+                hours: settings.hours,
+                features: settings.features,
+              },
+            });
+          }
+        } catch (err) {
+          if (previousData) {
+            qc.setQueryData(["restaurant_admin", rid], previousData);
+          }
+          throw err;
+        }
+
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
+
+      reset: async (customRid?: string) => {
+        const rid = getRid(customRid);
+        if (!isLocalOperation(rid)) {
+          throw new Error("A reposição de demonstração só está disponível no modo de testes.");
+        }
+        demoStore.resetDemo();
+        persistLocalRestaurantDemo();
+        void Promise.all([
+          qc.invalidateQueries({ queryKey: ["restaurant_admin", rid] }),
+          qc.invalidateQueries({ queryKey: ["restaurant_public", rid] }),
+        ]);
+      },
     };
-  },
-}) as typeof rawAdminActions;
+  }, [boundRid, qc]);
+}
 
 /** Redimensiona no browser, mas o upload só pode ocorrer no servidor autorizado. */
 export async function uploadImage(

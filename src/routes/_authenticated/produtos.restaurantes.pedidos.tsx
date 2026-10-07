@@ -2,30 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   AlertTriangle,
-  Check,
   CheckCircle2,
   ChefHat,
   ChevronRight,
-  ClipboardList,
-  Clock3,
   Filter,
   Flame,
   PackageCheck,
-  RotateCcw,
   Search,
-  Sparkles,
-  Utensils,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
-  OrderBadge,
   PanelHeader,
   RestaurantCard,
   orderTimeInfo,
   timeAgo,
 } from "@/components/restaurant/RestaurantBits";
 import type { Order, OrderStatus } from "@/lib/restaurant/demo-data";
-import { adminActions, formatPrice, useAdmin } from "@/lib/restaurant/store";
+import { formatPrice, useAdmin, useRestaurantActions } from "@/lib/restaurant/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/produtos/restaurantes/pedidos")({
@@ -265,12 +258,13 @@ function OrderCard({
   restaurantId: string;
 }) {
   const [busy, setBusy] = useState(false);
+  const actions = useRestaurantActions(restaurantId);
   const timeInfo = orderTimeInfo(order.createdAt);
 
   async function avancar() {
     setBusy(true);
     try {
-      await adminActions.setOrderStatus(order.id, next, restaurantId);
+      await actions.setOrderStatus(order.id, next, restaurantId);
       toast.success(`Pedido #${order.code} (Mesa ${order.tableNumber}) atualizado.`);
     } catch (e) {
       toast.error(`Não foi possível atualizar o pedido: ${(e as Error).message}`);

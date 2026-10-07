@@ -418,7 +418,10 @@ export type Database = {
         };
         Returns: undefined;
       };
-      free_table: { Args: { _number: number }; Returns: undefined };
+      free_table: {
+        Args: { _number: number; _restaurant_id: string };
+        Returns: undefined;
+      };
       place_order: {
         Args: { _items: Json; _note: string; _table_id: string };
         Returns: {

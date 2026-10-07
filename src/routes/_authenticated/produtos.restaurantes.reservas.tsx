@@ -9,6 +9,7 @@ import {
   Phone,
   Plus,
   Table2,
+  Trash2,
   UserCheck,
   Users,
   X,
@@ -29,8 +30,7 @@ import {
   type Reservation,
   type ReservationStatus,
 } from "@/lib/restaurant/demo-data";
-import { adminActions, reservationStatusLabel, useAdmin } from "@/lib/restaurant/store";
-import { cn } from "@/lib/utils";
+import { reservationStatusLabel, useAdmin, useRestaurantActions } from "@/lib/restaurant/store";
 
 export const Route = createFileRoute("/_authenticated/produtos/restaurantes/reservas")({
   component: RestaurantReservationsAdmin,
@@ -41,6 +41,7 @@ function RestaurantReservationsAdmin() {
     data: { reservations, tables },
     restaurantId,
   } = useAdmin();
+  const actions = useRestaurantActions(restaurantId);
 
   const [editing, setEditing] = useState<Partial<Reservation> | null>(null);
   const [showPast, setShowPast] = useState(false);
@@ -72,13 +73,13 @@ function RestaurantReservationsAdmin() {
 
     try {
       if (editing?.id) {
-        await adminActions.updateReservation(editing.id, payload);
+        await actions.updateReservation(editing.id, payload, restaurantId);
         toast.success("Reserva atualizada com sucesso.");
       } else {
-        await adminActions.addReservation(restaurantId, {
+        await actions.addReservation({
           ...payload,
           origin: "telefone",
-        });
+        }, restaurantId);
         toast.success("Reserva telefónica registada com sucesso.");
       }
       setEditing(null);
@@ -89,7 +90,7 @@ function RestaurantReservationsAdmin() {
 
   const setStatus = async (id: string, s: ReservationStatus) => {
     try {
-      await adminActions.setReservationStatus(id, s);
+      await actions.setReservationStatus(id, s, restaurantId);
       toast.success(`Reserva marcada como ${reservationStatusLabel[s]}.`);
     } catch (e) {
       toast.error((e as Error).message);
@@ -273,6 +274,24 @@ function RestaurantReservationsAdmin() {
                         <X className="size-3.5" />
                       </button>
                     )}
+
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (confirm(`Eliminar permanentemente a reserva de ${r.name}?`)) {
+                          try {
+                            await actions.removeReservation(r.id, restaurantId);
+                            toast.success("Reserva eliminada com sucesso.");
+                          } catch (e) {
+                            toast.error(`Erro ao eliminar reserva: ${(e as Error).message}`);
+                          }
+                        }
+                      }}
+                      className="rounded-xl border border-border/70 bg-surface-strong p-2 text-muted-foreground hover:bg-danger/10 hover:text-danger transition"
+                      title="Eliminar Reserva"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
                   </div>
                 </div>
               ))}

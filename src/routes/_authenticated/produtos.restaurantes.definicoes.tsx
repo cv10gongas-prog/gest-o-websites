@@ -1,17 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import {
-  AlertTriangle,
-  Building2,
-  Check,
-  Globe,
-  ImagePlus,
-  Palette,
-  RotateCcw,
-  Save,
-  Sliders,
-  Sparkles,
-} from "lucide-react";
+import { Building2, Globe, ImagePlus, RotateCcw, Save, Sliders } from "lucide-react";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -21,7 +10,8 @@ import {
   fieldClass,
 } from "@/components/restaurant/RestaurantBits";
 import type { Settings } from "@/lib/restaurant/demo-data";
-import { adminActions, uploadImage, useAdmin } from "@/lib/restaurant/store";
+import { isDemoMode } from "@/lib/demo-mode";
+import { uploadImage, useAdmin, useRestaurantActions } from "@/lib/restaurant/store";
 
 export const Route = createFileRoute("/_authenticated/produtos/restaurantes/definicoes")({
   component: RestaurantSettingsPage,
@@ -55,6 +45,7 @@ function RestaurantSettingsPage() {
     data: { settings },
     restaurantId,
   } = useAdmin();
+  const actions = useRestaurantActions(restaurantId);
 
   const [logo, setLogo] = useState(settings.logo);
   const [color, setColor] = useState(settings.primaryColor);
@@ -89,7 +80,7 @@ function RestaurantSettingsPage() {
 
     setSaving(true);
     try {
-      await adminActions.saveSettings(restaurantId, {
+      await actions.saveSettings({
         ...settings,
         name: getVal("name", 60),
         tagline: getVal("tagline", 80),
@@ -104,7 +95,7 @@ function RestaurantSettingsPage() {
         logo,
         primaryColor: color,
         features,
-      });
+      }, restaurantId);
       toast.success(
         "Configurações guardadas. O website público e a ementa digital foram atualizados.",
       );
@@ -124,7 +115,7 @@ function RestaurantSettingsPage() {
     }
 
     try {
-      await adminActions.reset(restaurantId);
+      await actions.reset(restaurantId);
       toast.success("Dados de demonstração repostos com sucesso.");
     } catch (e) {
       toast.error(`Erro ao repor: ${(e as Error).message}`);
@@ -344,14 +335,20 @@ function RestaurantSettingsPage() {
 
       {/* BLOCO 4: ZONA DE MANUTENÇÃO & REPOSIÇÃO */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border/40">
-        <button
-          type="button"
-          onClick={resetDemoData}
-          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-danger transition"
-        >
-          <RotateCcw className="size-3.5" />
-          <span>Repor Dados de Demonstração</span>
-        </button>
+        {isDemoMode() ? (
+          <button
+            type="button"
+            onClick={resetDemoData}
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-danger transition"
+          >
+            <RotateCcw className="size-3.5" />
+            <span>Repor Dados de Demonstração</span>
+          </button>
+        ) : (
+          <span className="text-[11px] text-muted-foreground">
+            As alterações são guardadas no restaurante real.
+          </span>
+        )}
 
         <button
           type="submit"

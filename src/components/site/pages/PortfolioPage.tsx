@@ -26,6 +26,7 @@ const EXTRA_TEXT: Record<
     introBadge: string;
     selectedWork: string;
     secondWork: string;
+    thirdWork: string;
     selectedLead: string;
 
     projectType: string;
@@ -49,6 +50,18 @@ const EXTRA_TEXT: Record<
     radioItems: string[];
     radioVisit: string;
 
+    gespoolBadge: string;
+    gespoolSubtitle: string;
+    gespoolLocation: string;
+    gespoolTagExperience: string;
+    gespoolTagApp: string;
+    gespoolText: string;
+    gespoolType: string;
+    gespoolObjective: string;
+    gespoolDelivery: string;
+    gespoolItems: string[];
+    gespoolVisit: string;
+
     conceptsBadge: string;
     conceptNote: string;
     conceptLabels: string[];
@@ -69,6 +82,7 @@ const EXTRA_TEXT: Record<
 
     selectedWork: "Trabalho em destaque",
     secondWork: "Outro projeto real",
+    thirdWork: "Outro projeto real",
 
     selectedLead:
       "Projetos desenvolvidos com foco em clareza, experiência de utilização e uma presença digital mais profissional.",
@@ -110,6 +124,24 @@ const EXTRA_TEXT: Record<
 
     radioVisit: "Ver projeto",
 
+    gespoolBadge: "Projeto real",
+    gespoolSubtitle: "Piscinas · Manutenção & Assistência Técnica",
+    gespoolLocation: "Cascais & Lisboa",
+    gespoolTagExperience: "30+ Anos de Experiência",
+    gespoolTagApp: "App Própria de Gestão",
+    gespoolText:
+      "Website institucional desenvolvido para a GESPOOL, especialista com mais de 30 anos em manutenção semanal, assistência técnica, tratamento automático da água e equipamentos para piscinas em Cascais e Lisboa.",
+    gespoolType: "Website institucional & técnico",
+    gespoolObjective: "Apresentação de serviços técnicos & contacto",
+    gespoolDelivery: "Projeto desenvolvido",
+    gespoolItems: [
+      "Mais de 30 anos de experiência com atuação em Cascais e Lisboa",
+      "Manutenção semanal preventiva, diagnóstico e reparação técnica",
+      "Instalação e dimensionamento de bombas de calor, coberturas e tratamento automático",
+      "Aplicação própria de gestão técnica das intervenções e relatórios",
+    ],
+    gespoolVisit: "Ver projeto",
+
     conceptsBadge: "Exploração visual",
 
     conceptNote:
@@ -148,6 +180,7 @@ const EXTRA_TEXT: Record<
     introBadge: "Projects & concepts",
     selectedWork: "Featured work",
     secondWork: "Another live project",
+    thirdWork: "Another live project",
 
     selectedLead:
       "Projects developed with a focus on clarity, user experience and a stronger digital presence.",
@@ -189,6 +222,24 @@ const EXTRA_TEXT: Record<
 
     radioVisit: "View project",
 
+    gespoolBadge: "Live project",
+    gespoolSubtitle: "Swimming Pools · Maintenance & Technical Support",
+    gespoolLocation: "Cascais & Lisbon",
+    gespoolTagExperience: "30+ Years Experience",
+    gespoolTagApp: "Proprietary Management App",
+    gespoolText:
+      "Institutional website developed for GESPOOL, a specialist with over 30 years of experience in weekly maintenance, technical support, automatic water treatment and equipment in Cascais and Lisbon.",
+    gespoolType: "Technical business website",
+    gespoolObjective: "Service presentation & technical contact",
+    gespoolDelivery: "Developed project",
+    gespoolItems: [
+      "Over 30 years of experience serving Cascais and Lisbon",
+      "Weekly maintenance, diagnostics and technical repair",
+      "Installation of heat pumps, covers and automatic chemical treatment",
+      "Proprietary technical management app for service visits and reports",
+    ],
+    gespoolVisit: "View project",
+
     conceptsBadge: "Visual exploration",
 
     conceptNote:
@@ -227,6 +278,7 @@ const EXTRA_TEXT: Record<
     introBadge: "Projekte & Konzepte",
     selectedWork: "Ausgewähltes Projekt",
     secondWork: "Weiteres reales Projekt",
+    thirdWork: "Weiteres reales Projekt",
 
     selectedLead:
       "Projekte mit Fokus auf Klarheit, Benutzerfreundlichkeit und einen professionelleren digitalen Auftritt.",
@@ -267,6 +319,24 @@ const EXTRA_TEXT: Record<
 
     radioVisit: "Projekt ansehen",
 
+    gespoolBadge: "Reales Projekt",
+    gespoolSubtitle: "Schwimmbäder · Wartung & Technischer Service",
+    gespoolLocation: "Cascais & Lissabon",
+    gespoolTagExperience: "30+ Jahre Erfahrung",
+    gespoolTagApp: "Eigene Management-App",
+    gespoolText:
+      "Website für GESPOOL, Spezialist mit über 30 Jahren Erfahrung in wöchentlicher Wartung, technischem Service, automatischer Wasseraufbereitung und Poolausstattung in Cascais und Lissabon.",
+    gespoolType: "Technische Unternehmenswebsite",
+    gespoolObjective: "Präsentation technischer Dienstleistungen",
+    gespoolDelivery: "Entwickeltes Projekt",
+    gespoolItems: [
+      "Über 30 Jahre Erfahrung im Raum Cascais und Lissabon",
+      "Wöchentliche Wartung, Diagnose und technische Reparaturen",
+      "Installation von Wärmepumpen, Abdeckungen und automatischer Dosierung",
+      "Eigene technische Management-App für Einsätze und Berichte",
+    ],
+    gespoolVisit: "Projekt ansehen",
+
     conceptsBadge: "Visuelle Exploration",
     conceptNote: "Demonstrationskonzepte für verschiedene Branchen und Anforderungen.",
 
@@ -301,6 +371,7 @@ const EXTRA_TEXT: Record<
     introBadge: "Projets & concepts",
     selectedWork: "Projet à la une",
     secondWork: "Autre projet réel",
+    thirdWork: "Autre projet réel",
 
     selectedLead: "Des projets développés autour de la clarté et de l'expérience utilisateur.",
 
@@ -340,6 +411,24 @@ const EXTRA_TEXT: Record<
 
     radioVisit: "Voir le projet",
 
+    gespoolBadge: "Projet réel",
+    gespoolSubtitle: "Piscines · Entretien & Assistance Technique",
+    gespoolLocation: "Cascais & Lisbonne",
+    gespoolTagExperience: "30+ Ans d'Expérience",
+    gespoolTagApp: "Application de Gestion Propre",
+    gespoolText:
+      "Site institutionnel développé pour GESPOOL, spécialiste avec plus de 30 ans d'expérience dans l'entretien hebdomadaire, l'assistance technique, le traitement automatique et les équipements de piscines à Cascais et Lisbonne.",
+    gespoolType: "Site institutionnel technique",
+    gespoolObjective: "Présentation des services techniques & contact",
+    gespoolDelivery: "Projet développé",
+    gespoolItems: [
+      "Plus de 30 ans d'expérience au service de Cascais et Lisbonne",
+      "Entretien hebdomadaire, diagnostic et réparation technique",
+      "Installation de pompes à chaleur, couvertures et traitement automatique",
+      "Application propre de gestion technique des interventions et rapports",
+    ],
+    gespoolVisit: "Voir le projet",
+
     conceptsBadge: "Exploration visuelle",
     conceptNote: "Concepts démonstratifs créés pour différents secteurs.",
 
@@ -374,6 +463,7 @@ const EXTRA_TEXT: Record<
     introBadge: "Proyectos & conceptos",
     selectedWork: "Proyecto destacado",
     secondWork: "Otro proyecto real",
+    thirdWork: "Otro proyecto real",
 
     selectedLead: "Proyectos desarrollados con foco en claridad y experiencia de usuario.",
 
@@ -412,6 +502,24 @@ const EXTRA_TEXT: Record<
     ],
 
     radioVisit: "Ver proyecto",
+
+    gespoolBadge: "Proyecto real",
+    gespoolSubtitle: "Piscinas · Mantenimiento y Asistencia Técnica",
+    gespoolLocation: "Cascais y Lisboa",
+    gespoolTagExperience: "30+ Años de Experiencia",
+    gespoolTagApp: "App Propia de Gestión",
+    gespoolText:
+      "Sitio web institucional desarrollado para GESPOOL, especialista con más de 30 años de experiencia en mantenimiento semanal, asistencia técnica, tratamiento automático y equipamiento de piscinas en Cascais y Lisboa.",
+    gespoolType: "Web institucional técnica",
+    gespoolObjective: "Presentación de servicios técnicos y contacto",
+    gespoolDelivery: "Proyecto desarrollado",
+    gespoolItems: [
+      "Más de 30 años de experiencia en Cascais y Lisboa",
+      "Mantenimiento semanal preventivo, diagnóstico y reparación técnica",
+      "Instalación de bombas de calor, cubiertas y tratamiento automático",
+      "Aplicación propia de gestión técnica de intervenciones e informes",
+    ],
+    gespoolVisit: "Ver proyecto",
 
     conceptsBadge: "Exploración visual",
     conceptNote: "Conceptos demostrativos creados para distintos sectores.",
@@ -837,6 +945,131 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
         </article>
       </section>
 
+      {/* GESPOOL */}
+      <section className="mt-16">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+            {extra.thirdWork}
+          </span>
+
+          <span className="text-[9px] uppercase tracking-[.18em] text-muted-foreground">
+            03 — {extra.gespoolType}
+          </span>
+        </div>
+
+        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
+          <div className="grid lg:grid-cols-[.9fr_1.1fr]">
+            <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#021827] via-[#04243a] to-[#07364f] p-6 sm:p-8 lg:border-b-0 lg:border-r">
+              <div className="absolute -left-20 -top-20 size-72 rounded-full bg-cyan-400/10 blur-3xl" />
+              <div className="nws-portfolio-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-primary/20 blur-3xl" />
+
+              <div className="relative w-full max-w-md">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm sm:p-10">
+                  <div className="flex justify-center">
+                    <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/15 bg-white p-4 shadow-xl sm:size-52">
+                      <img
+                        src="/gespool.png"
+                        alt="GESPOOL"
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-7 text-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-cyan-400">
+                      {extra.gespoolSubtitle}
+                    </p>
+
+                    <h3 className="mt-3 text-xl font-semibold text-white sm:text-2xl">GESPOOL</h3>
+
+                    <p className="mt-1 text-xs text-cyan-200/70">{extra.gespoolLocation}</p>
+
+                    <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                      <span className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-[10px] font-medium text-cyan-200">
+                        {extra.gespoolTagExperience}
+                      </span>
+                      <span className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-[10px] font-medium text-cyan-200">
+                        {extra.gespoolTagApp}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-10">
+              <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+                <Chip tone="primary">{extra.gespoolBadge}</Chip>
+              </div>
+
+              <div className="mt-5 flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary sm:justify-start">
+                <Waves className="size-3.5" />
+                {extra.gespoolSubtitle}
+              </div>
+
+              <h2 className="mt-3 text-center text-2xl font-semibold tracking-tight sm:text-left sm:text-3xl">
+                GESPOOL
+              </h2>
+
+              <p className="mt-4 text-sm leading-7 text-muted-foreground">{extra.gespoolText}</p>
+
+              <div className="mt-7 grid gap-3">
+                <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
+                  <span className="text-muted-foreground">{extra.projectType}</span>
+                  <span className="font-medium">{extra.gespoolType}</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1 border-b border-border/60 pb-3 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
+                  <span className="text-muted-foreground">{extra.objective}</span>
+                  <span className="font-medium">{extra.gespoolObjective}</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1 text-xs sm:grid-cols-[90px_1fr] sm:gap-4">
+                  <span className="text-muted-foreground">{extra.delivery}</span>
+                  <span className="font-medium">{extra.gespoolDelivery}</span>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <p className="text-xs font-semibold">{extra.workTitle}</p>
+
+                <div className="mt-3 space-y-2">
+                  {extra.gespoolItems.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground"
+                    >
+                      <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-primary" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="https://gespool.pt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5 sm:w-auto"
+                >
+                  {extra.gespoolVisit}
+                  <ArrowUpRight className="size-4" />
+                </a>
+
+                <Link
+                  to={paths.contact}
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent sm:w-auto"
+                >
+                  {t.ctaButton}
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
       {/* CONCEITOS */}
       <section className="mt-20">
         <div className="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
@@ -851,7 +1084,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </div>
 
           <span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">
-            03 — 05
+            04 — 06
           </span>
         </div>
 
@@ -880,7 +1113,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                     </span>
 
                     <span className="text-[10px] font-semibold tracking-[.18em] text-muted-foreground">
-                      0{idx + 3}
+                      0{idx + 4}
                     </span>
                   </div>
 

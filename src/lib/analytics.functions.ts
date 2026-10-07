@@ -79,6 +79,7 @@ const ROTAS_INTERNAS = [
   "/pedidos",
   "/pipeline",
   "/projetos",
+  "/satisfacao",
   "/tarefas",
 ];
 
@@ -100,7 +101,11 @@ function filtroSitePublico() {
 function paginaInterna(path: string) {
   const normalizado = path.split("?")[0].split("#")[0];
 
-  return ROTAS_INTERNAS.some((rota) => normalizado === rota || normalizado.startsWith(`${rota}/`));
+  return ROTAS_INTERNAS.some((rota) => {
+    // /satisfacao é o dashboard interno; /satisfacao/<token> é o formulário público.
+    if (rota === "/satisfacao") return normalizado === rota;
+    return normalizado === rota || normalizado.startsWith(`${rota}/`);
+  });
 }
 
 function obterCredenciais() {

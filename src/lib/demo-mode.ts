@@ -26,6 +26,7 @@ import type {
   Task,
   WebsiteRequest,
 } from "./crm";
+import type { SatisfactionSurvey, PublicSurveyView, SubmitSurveyPayload } from "./satisfacao";
 
 export function isDemoMode(): boolean {
   // Production deployment is NEVER allowed to enter demo mode or bypass auth.
@@ -376,6 +377,54 @@ const sampleWebsiteRequests: WebsiteRequest[] = [
   },
 ];
 
+const sampleSurveys: SatisfactionSurvey[] = [
+  {
+    id: "demo-survey-1",
+    business_id: "demo-biz-1",
+    token: "a".repeat(64),
+    client_display_name: "Restaurante Demo",
+    project_name: "Website & Ementa Digital",
+    active: true,
+    responded_at: new Date(Date.now() - 2 * 86400000).toISOString(),
+    recommendation_score: 19,
+    service_score: 10,
+    result_score: 10,
+    communication_score: 9,
+    deadlines_score: 9,
+    ease_score: 10,
+    liked_text: "A clareza do processo e a rapidez das revisões.",
+    improvement_text: "Nada de relevante a apontar nesta demonstração.",
+    testimonial:
+      "A Nova Web Studio tornou a nossa presença digital muito mais clara e fácil de usar.",
+    testimonial_authorized: true,
+    created_by: "demo-admin-id",
+    created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
+    updated_at: new Date(Date.now() - 2 * 86400000).toISOString(),
+  },
+  {
+    id: "demo-survey-2",
+    business_id: "demo-biz-2",
+    token: "b".repeat(64),
+    client_display_name: "Clube Demo",
+    project_name: "Plataforma Digital",
+    active: true,
+    responded_at: null,
+    recommendation_score: null,
+    service_score: null,
+    result_score: null,
+    communication_score: null,
+    deadlines_score: null,
+    ease_score: null,
+    liked_text: null,
+    improvement_text: null,
+    testimonial: null,
+    testimonial_authorized: false,
+    created_by: "demo-admin-id",
+    created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
+    updated_at: new Date(Date.now() - 1 * 86400000).toISOString(),
+  },
+];
+
 // ============================================================================
 // STORE EM MEMÓRIA (INICIALIZA VAZIO POR OMISSÃO PARA FIDELIDADE AOS DADOS REAIS)
 // ============================================================================
@@ -421,6 +470,7 @@ class DemoStore {
   businesses: Business[] = [...sampleBusinesses];
   tasks: Task[] = [...sampleTasks];
   websiteRequests: WebsiteRequest[] = [...sampleWebsiteRequests];
+  satisfactionSurveys: SatisfactionSurvey[] = [...sampleSurveys];
 
   loadSampleData() {
     const now = Date.now();
@@ -430,6 +480,7 @@ class DemoStore {
     this.products = [...sampleProducts];
     this.tables = [...sampleTables];
     this.staff = [...sampleStaff];
+    this.satisfactionSurveys = [...sampleSurveys];
 
     this.orders = [
       {
@@ -510,6 +561,7 @@ class DemoStore {
     this.requests = [];
     this.reservations = [];
     this.staff = [...initialStaff];
+    this.satisfactionSurveys = [];
     this.persistLocalTestTables();
   }
 
@@ -620,7 +672,7 @@ class DemoStore {
     }
   }
 
-  saveTable(t: { id?: string; number: number; seats: number; active: boolean }) {
+  saveTable(t: { id?: string; number: number; seats: number; active: boolean }): string {
     if (t.id) {
       this.tables = this.tables.map((table) =>
         table.id === t.id
@@ -634,6 +686,8 @@ class DemoStore {
             }
           : table,
       );
+      this.persistLocalTestTables();
+      return t.id;
     } else {
       const newId = `demo-t-${Date.now()}`;
       this.tables.push({
@@ -644,8 +698,9 @@ class DemoStore {
         name: `Mesa ${t.number}`,
         slug: `mesa-${t.number}`,
       });
+      this.persistLocalTestTables();
+      return newId;
     }
-    this.persistLocalTestTables();
   }
 
   setTableActive(tableId: string, active: boolean) {
@@ -667,12 +722,13 @@ class DemoStore {
     image: string;
     available: boolean;
     featured?: boolean;
-  }) {
+  }): string {
     const cat = this.categories.find((c) => c.id === p.categoryId)?.name ?? "Outros";
     if (p.id) {
       this.products = this.products.map((prod) =>
         prod.id === p.id ? { ...prod, ...p, category: cat, featured: p.featured ?? false } : prod,
       );
+      return p.id;
     } else {
       const newId = `demo-prod-${Date.now()}`;
       this.products.push({
@@ -686,6 +742,7 @@ class DemoStore {
         available: p.available,
         featured: p.featured ?? false,
       });
+      return newId;
     }
   }
 
@@ -697,11 +754,18 @@ class DemoStore {
     this.products = this.products.filter((p) => p.id !== productId);
   }
 
-  saveCategory(c: { id?: string; name: string; sortOrder?: number }) {
+  saveCategory(c: { id?: string; name: string; sortOrder?: number }): string {
     if (c.id) {
       this.categories = this.categories.map((cat) =>
-        cat.id === c.id ? { ...cat, name: c.name } : cat,
+        cat.id === c.id
+          ? {
+              ...cat,
+              name: c.name,
+              ...(c.sortOrder !== undefined ? { sortOrder: c.sortOrder } : {}),
+            }
+          : cat,
       );
+      return c.id;
     } else {
       const newId = `demo-cat-${Date.now()}`;
       this.categories.push({
@@ -709,6 +773,7 @@ class DemoStore {
         name: c.name,
         sortOrder: c.sortOrder ?? this.categories.length + 1,
       });
+      return newId;
     }
   }
 
@@ -730,7 +795,7 @@ class DemoStore {
     tableNumber?: number;
     notes: string;
     status?: ReservationStatus;
-  }) {
+  }): string {
     const newId = `demo-res-${Date.now()}`;
     this.reservations.push({
       id: newId,
@@ -746,6 +811,29 @@ class DemoStore {
       status: r.status ?? "confirmada",
       createdAt: Date.now(),
     });
+    return newId;
+  }
+
+  updateReservation(id: string, patch: Partial<Omit<Reservation, "id" | "createdAt">>) {
+    this.reservations = this.reservations.map((r) =>
+      r.id === id
+        ? {
+            ...r,
+            ...(patch.name !== undefined ? { name: patch.name } : {}),
+            ...(patch.phone !== undefined ? { phone: patch.phone } : {}),
+            ...(patch.email !== undefined ? { email: patch.email } : {}),
+            ...(patch.date !== undefined ? { date: patch.date } : {}),
+            ...(patch.time !== undefined ? { time: patch.time } : {}),
+            ...(patch.guests !== undefined ? { guests: patch.guests } : {}),
+            ...(patch.tableNumber !== undefined
+              ? { tableNumber: patch.tableNumber ?? undefined }
+              : {}),
+            ...(patch.notes !== undefined ? { notes: patch.notes } : {}),
+            ...(patch.status !== undefined ? { status: patch.status } : {}),
+            ...(patch.origin !== undefined ? { origin: patch.origin } : {}),
+          }
+        : r,
+    );
   }
 
   setReservationStatus(reservationId: string, status: ReservationStatus) {
@@ -814,6 +902,113 @@ class DemoStore {
   deleteBusiness(id: string) {
     this.businesses = this.businesses.filter((b) => b.id !== id);
   }
+
+  getSatisfactionSurveys(businessId?: string): SatisfactionSurvey[] {
+    const list = businessId
+      ? this.satisfactionSurveys.filter((s) => s.business_id === businessId)
+      : this.satisfactionSurveys;
+    return list.map((s) => {
+      const biz = this.businesses.find((b) => b.id === s.business_id);
+      return {
+        ...s,
+        business: biz
+          ? { id: biz.id, nome: biz.nome, categoria: biz.categoria, localidade: biz.localidade }
+          : null,
+      };
+    });
+  }
+
+  createSatisfactionSurvey(data: {
+    businessId: string;
+    clientDisplayName: string;
+    projectName: string;
+  }): SatisfactionSurvey {
+    const biz = this.businesses.find((b) => b.id === data.businessId);
+    const tokenBytes = Array.from({ length: 64 }, () =>
+      Math.floor(Math.random() * 16).toString(16),
+    ).join("");
+    const now = new Date().toISOString();
+    const newSurvey: SatisfactionSurvey = {
+      id: `demo-survey-${Date.now()}`,
+      business_id: data.businessId,
+      token: tokenBytes,
+      client_display_name: data.clientDisplayName || biz?.nome || "Cliente",
+      project_name: data.projectName || "Projeto Nova Web Studio",
+      active: true,
+      responded_at: null,
+      recommendation_score: null,
+      service_score: null,
+      result_score: null,
+      communication_score: null,
+      deadlines_score: null,
+      ease_score: null,
+      liked_text: null,
+      improvement_text: null,
+      testimonial: null,
+      testimonial_authorized: false,
+      created_by: "demo-admin-id",
+      created_at: now,
+      updated_at: now,
+      business: biz
+        ? { id: biz.id, nome: biz.nome, categoria: biz.categoria, localidade: biz.localidade }
+        : null,
+    };
+    this.satisfactionSurveys.unshift(newSurvey);
+    return newSurvey;
+  }
+
+  toggleSatisfactionSurvey(id: string, active: boolean): SatisfactionSurvey {
+    const target = this.satisfactionSurveys.find((survey) => survey.id === id);
+    if (!target) throw new Error("Inquérito não encontrado.");
+    if (target.responded_at) {
+      throw new Error("Um inquérito respondido fica preservado no histórico.");
+    }
+    this.satisfactionSurveys = this.satisfactionSurveys.map((survey) =>
+      survey.id === id
+        ? { ...survey, active, updated_at: new Date().toISOString() }
+        : survey,
+    );
+    return this.satisfactionSurveys.find((survey) => survey.id === id)!;
+  }
+
+  getPublicSurvey(token: string): PublicSurveyView | null {
+    const survey = this.satisfactionSurveys.find((item) => item.token === token);
+    if (!survey) return null;
+    return {
+      client_display_name: survey.client_display_name,
+      project_name: survey.project_name,
+      active: survey.active,
+      responded: survey.responded_at !== null,
+    };
+  }
+
+  submitPublicSurvey(
+    data: SubmitSurveyPayload,
+  ): { ok: boolean } {
+    const survey = this.satisfactionSurveys.find((item) => item.token === data.token);
+    if (!survey || !survey.active || survey.responded_at) {
+      throw new Error(
+        "Este inquérito já foi respondido, foi desativado ou a ligação deixou de ser válida.",
+      );
+    }
+
+    survey.responded_at = new Date().toISOString();
+    survey.recommendation_score = data.recommendation_score;
+    survey.service_score = data.service_score;
+    survey.result_score = data.result_score;
+    survey.communication_score = data.communication_score;
+    survey.deadlines_score = data.deadlines_score;
+    survey.ease_score = data.ease_score;
+    survey.liked_text = data.liked_text?.trim() || null;
+    survey.improvement_text = data.improvement_text?.trim() || null;
+    survey.testimonial = data.testimonial?.trim() || null;
+    survey.testimonial_authorized =
+      Boolean(data.testimonial_authorized) && Boolean(survey.testimonial);
+    survey.updated_at = new Date().toISOString();
+
+    return { ok: true };
+  }
+
 }
 
 export const demoStore = new DemoStore();

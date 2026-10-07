@@ -37,11 +37,11 @@ import {
 } from "@/components/restaurant/RestaurantBits";
 import { todayISO } from "@/lib/restaurant/demo-data";
 import {
-  adminActions,
   formatPrice,
   getTableState,
   tableStateLabel,
   useAdmin,
+  useRestaurantActions,
 } from "@/lib/restaurant/store";
 import { useQueryClient } from "@tanstack/react-query";
 import { isDemoMode, demoStore } from "@/lib/demo-mode";
@@ -53,6 +53,7 @@ export const Route = createFileRoute("/_authenticated/produtos/restaurantes/")({
 
 function RestaurantOverview() {
   const { data: app, restaurantId } = useAdmin();
+  const actions = useRestaurantActions(restaurantId);
   const qc = useQueryClient();
   const [periodo, setPeriodo] = useState<"hoje" | "7d" | "30d">("hoje");
   const [secondsAgo, setSecondsAgo] = useState(0);
@@ -152,9 +153,8 @@ function RestaurantOverview() {
 
   const resolve = async (id: string) => {
     try {
-      await adminActions.resolveRequest(id, restaurantId);
+      await actions.resolveRequest(id, restaurantId);
       toast.success("Pedido de mesa resolvido.");
-      qc.invalidateQueries();
     } catch (e) {
       toast.error((e as Error).message);
     }
