@@ -105,6 +105,11 @@ const EXTRA: Record<
     solutionLead: string;
 
     gmdSection: string;
+    vinilartText: string;
+    vinilartSportText: string;
+    otherProjects: string;
+    gmdShort: string;
+    radioShort: string;
     gmdBadge: string;
     gmdMeta: string;
     gmdTitle: string;
@@ -189,7 +194,12 @@ const EXTRA: Record<
     solutionLead:
       "Criamos websites pensados para apresentar melhor o negócio, facilitar a navegação e tornar o contacto simples.",
 
-    gmdSection: "Projeto em destaque",
+    gmdSection: "Projetos em destaque",
+    vinilartText: "Comunicação visual, impressão e personalização com uma presença digital forte e clara.",
+    vinilartSportText: "Uma experiência dedicada à personalização desportiva para atletas, clubes e adeptos.",
+    otherProjects: "Outros projetos reais",
+    gmdShort: "Website institucional da coletividade de Manique de Baixo.",
+    radioShort: "Presença digital da rádio local e da sua comunidade online.",
     gmdBadge: "Projeto real",
     gmdMeta: "01 — Website institucional",
     gmdTitle: "Manique de Baixo",
@@ -292,7 +302,12 @@ const EXTRA: Record<
     solutionLead:
       "We build websites designed to present the business clearly, make navigation easy and turn contact into a natural next step.",
 
-    gmdSection: "Featured project",
+    gmdSection: "Featured projects",
+    vinilartText: "Visual communication, printing and personalisation presented through a strong, clear digital presence.",
+    vinilartSportText: "A dedicated sports personalisation experience for athletes, clubs and supporters.",
+    otherProjects: "Other live projects",
+    gmdShort: "Institutional website for the Manique de Baixo community organisation.",
+    radioShort: "Digital presence for the local radio station and its online community.",
     gmdBadge: "Live project",
     gmdMeta: "01 — Institutional website",
     gmdTitle: "Manique de Baixo",
@@ -394,7 +409,12 @@ const EXTRA: Record<
     solutionLead:
       "Wir erstellen Websites, die Unternehmen klar präsentieren, einfach zu bedienen sind und den Kontakt erleichtern.",
 
-    gmdSection: "Projekt im Fokus",
+    gmdSection: "Projekte im Fokus",
+    vinilartText: "Visuelle Kommunikation, Druck und Personalisierung mit einem starken, klaren digitalen Auftritt.",
+    vinilartSportText: "Ein eigenes Erlebnis für Sportpersonalisierung für Athleten, Vereine und Fans.",
+    otherProjects: "Weitere reale Projekte",
+    gmdShort: "Institutionelle Website für den Verein in Manique de Baixo.",
+    radioShort: "Digitaler Auftritt für den lokalen Radiosender und seine Online-Community.",
     gmdBadge: "Reales Projekt",
     gmdMeta: "01 — Unternehmenswebsite",
     gmdTitle: "Manique de Baixo",
@@ -498,7 +518,12 @@ const EXTRA: Record<
     solutionLead:
       "Nous créons des sites clairs, simples à utiliser et conçus pour faciliter le contact.",
 
-    gmdSection: "Projet à la une",
+    gmdSection: "Projets à la une",
+    vinilartText: "Communication visuelle, impression et personnalisation avec une présence digitale forte et claire.",
+    vinilartSportText: "Une expérience dédiée à la personnalisation sportive pour athlètes, clubs et supporters.",
+    otherProjects: "Autres projets réels",
+    gmdShort: "Site institutionnel de l'association de Manique de Baixo.",
+    radioShort: "Présence digitale de la radio locale et de sa communauté en ligne.",
     gmdBadge: "Projet réel",
     gmdMeta: "01 — Site institutionnel",
     gmdTitle: "Manique de Baixo",
@@ -602,7 +627,12 @@ const EXTRA: Record<
     solutionLead:
       "Creamos webs pensadas para presentar mejor el negocio, facilitar la navegación y simplificar el contacto.",
 
-    gmdSection: "Proyecto destacado",
+    gmdSection: "Proyectos destacados",
+    vinilartText: "Comunicación visual, impresión y personalización con una presencia digital sólida y clara.",
+    vinilartSportText: "Una experiencia dedicada a la personalización deportiva para atletas, clubes y aficionados.",
+    otherProjects: "Otros proyectos reales",
+    gmdShort: "Web institucional de la asociación de Manique de Baixo.",
+    radioShort: "Presencia digital de la radio local y de su comunidad online.",
     gmdBadge: "Proyecto real",
     gmdMeta: "01 — Web institucional",
     gmdTitle: "Manique de Baixo",
@@ -978,238 +1008,143 @@ export function HomePage({ locale }: { locale: Locale }) {
         </section>
       </Reveal>
 
-      {/* GMD */}
+      {/* PROJETOS — AMOSTRA COMPACTA */}
       <section className="mt-24">
         <Reveal>
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mb-6 flex items-end justify-between gap-4">
             <div>
               <Chip tone="primary">{extra.gmdSection}</Chip>
-
               <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-                {extra.gmdTitle}
+                VinilArt & VinilArt Sport
               </h2>
             </div>
-
-            <span className="text-[9px] font-semibold uppercase tracking-[.18em] text-muted-foreground">
-              {extra.gmdMeta}
+            <span className="hidden text-[9px] font-semibold uppercase tracking-[.18em] text-muted-foreground sm:block">
+              01 — 02
             </span>
           </div>
         </Reveal>
 
-        <Reveal delay={100}>
-          <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
-            <div className="grid lg:grid-cols-[1fr_1fr]">
-              {/* VISUAL */}
-              <div className="relative flex min-h-[380px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-5 sm:min-h-[440px] sm:p-8 lg:border-b-0 lg:border-r">
-                <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
-
-                <div className="relative w-full max-w-md rounded-[2rem] border border-border/60 bg-background/55 p-5 shadow-2xl backdrop-blur sm:p-8">
-                  <div className="flex items-center gap-4">
-                    <div className="flex size-20 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-white p-2 sm:size-24">
+        <div className="grid gap-5 lg:grid-cols-2">
+          {[
+            {
+              name: "VinilArt",
+              host: "vinilart.pt",
+              url: "https://vinilart.pt",
+              preview: "/vinilart-preview.png",
+              logo: "/vinilart-logo.png",
+              text: extra.vinilartText,
+            },
+            {
+              name: "VinilArt Sport",
+              host: "sport.vinilart.pt",
+              url: "https://sport.vinilart.pt",
+              preview: "/vinilart-sport-preview.png",
+              logo: "/vinilart-sport-logo.png",
+              text: extra.vinilartSportText,
+            },
+          ].map((project, idx) => (
+            <Reveal key={project.name} delay={80 + idx * 80}>
+              <article className="group h-full overflow-hidden rounded-3xl border border-cyan-400/20 bg-card/45 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40">
+                <div className="bg-[#07111b] p-3">
+                  <div className="overflow-hidden rounded-2xl border border-cyan-400/20 bg-[#07101a]">
+                    <div className="flex h-9 items-center gap-1.5 border-b border-white/10 bg-[#0b1723] px-3">
+                      <span className="size-2 rounded-full bg-rose-400/80" />
+                      <span className="size-2 rounded-full bg-amber-300/80" />
+                      <span className="size-2 rounded-full bg-emerald-400/80" />
+                      <span className="ml-2 min-w-0 truncate text-[9px] text-slate-400">
+                        {project.host}
+                      </span>
+                    </div>
+                    <div className="relative aspect-[16/10] overflow-hidden bg-[#050b11]">
                       <img
-                        src="/gmd-manique.png"
-                        alt="Grupo Musical e Desportivo 31 de Janeiro"
-                        className="max-h-full max-w-full object-contain"
+                        src={project.preview}
+                        alt={`${project.name} — homepage`}
+                        className="size-full object-cover object-top transition duration-500 group-hover:scale-[1.012]"
                       />
-                    </div>
-
-                    <div className="min-w-0">
-                      <p className="text-[9px] font-semibold uppercase tracking-[.18em] text-primary">
-                        Grupo Musical e Desportivo
-                      </p>
-
-                      <h3 className="mt-2 text-lg font-semibold sm:text-xl">31 de Janeiro</h3>
-
-                      <p className="mt-1 text-xs text-muted-foreground">Manique de Baixo</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-8">
-                    <h3 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-                      Comunidade, atividades e informação num só espaço
-                    </h3>
-
-                    <div className="mt-5 h-2.5 w-4/5 rounded-full bg-foreground/15" />
-                    <div className="mt-2.5 h-2.5 w-3/5 rounded-full bg-foreground/10" />
-
-                    <div className="mt-6 flex gap-2">
-                      <span className="h-9 w-28 rounded-lg bg-primary" />
-                      <span className="h-9 w-24 rounded-lg border border-border bg-background/70" />
+                      <div className="absolute bottom-3 left-3 flex h-8 max-w-32 items-center rounded-lg border border-white/15 bg-black/70 px-2.5 py-1 backdrop-blur-md">
+                        <img src={project.logo} alt="" aria-hidden="true" className="max-h-full max-w-full object-contain" />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* TEXTO — SEM LOGO REPETIDO */}
-              <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-11">
-                <div className="flex justify-center sm:justify-start">
+                <div className="p-5 sm:p-6">
                   <Chip tone="primary">{extra.gmdBadge}</Chip>
-                </div>
-
-                <div className="mt-6 text-center sm:text-left">
-                  <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                    {extra.gmdTitle}
-                  </h3>
-
-                  <p className="mt-2 text-[9px] uppercase leading-5 tracking-[.15em] text-muted-foreground">
-                    Grupo Musical e Desportivo 31 de Janeiro
-                  </p>
-                </div>
-
-                <p className="mt-5 text-sm leading-7 text-muted-foreground">{extra.gmdText}</p>
-
-                <div className="mt-7 space-y-3">
-                  {[extra.gmdFeature1, extra.gmdFeature2, extra.gmdFeature3].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-2 text-xs text-muted-foreground"
-                    >
-                      <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <h3 className="mt-3 text-xl font-semibold tracking-tight">{project.name}</h3>
+                  <p className="mt-2 text-xs leading-6 text-muted-foreground">{project.text}</p>
                   <a
-                    href="https://31janeiromanique.net"
+                    href={project.url}
                     target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground transition hover:-translate-y-0.5"
                   >
                     {extra.gmdVisit}
-
-                    <ArrowUpRight className="size-4" />
+                    <ArrowUpRight className="size-3.5" />
                   </a>
-
-                  <Link
-                    to={paths.portfolio}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm transition hover:bg-accent"
-                  >
-                    {t.ctaPortfolio}
-
-                    <ArrowRight className="size-4" />
-                  </Link>
                 </div>
-              </div>
-            </div>
-          </article>
-        </Reveal>
-      </section>
+              </article>
+            </Reveal>
+          ))}
+        </div>
 
-      {/* RÁDIO */}
-      <section className="mt-24">
-        <Reveal>
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <Reveal delay={180}>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <Chip tone="primary">{extra.radioBadge}</Chip>
-
-              <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-                {extra.radioTitle}
-              </h2>
+              <span className="text-[10px] font-semibold uppercase tracking-[.2em] text-primary">
+                {extra.otherProjects}
+              </span>
+              <p className="mt-2 text-xs text-muted-foreground">03 — 04</p>
             </div>
-
-            <span className="self-start rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[.16em] text-primary sm:self-auto">
-              {extra.radioPartner}
-            </span>
+            <Link
+              to={paths.portfolio}
+              className="inline-flex items-center gap-2 text-xs font-semibold text-primary hover:underline"
+            >
+              {t.ctaPortfolio}
+              <ArrowRight className="size-3.5" />
+            </Link>
           </div>
         </Reveal>
 
-        <Reveal delay={100}>
-          <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
-            <div className="grid lg:grid-cols-[.9fr_1.1fr]">
-              <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-6 sm:p-8 lg:border-b-0 lg:border-r">
-                <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
-
-                <div className="nws-pulse absolute -bottom-24 right-0 size-64 rounded-full bg-cyan-400/10 blur-3xl" />
-
-                <div className="relative w-full max-w-md">
-                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-sm sm:p-10">
-                    <div className="flex justify-center">
-                      <div className="relative flex size-40 items-center justify-center rounded-[2rem] border border-white/10 bg-white/[0.05] shadow-xl sm:size-52">
-                        <img
-                          src="/radio-alcabidechefm.png"
-                          alt="Rádio AlcabidecheFM"
-                          className="max-h-[100%] max-w-[100%] object-contain sm:max-h-[100%] sm:max-w-[100%]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mt-7 text-center">
-                      <p className="text-[10px] font-semibold uppercase tracking-[.22em] text-primary">
-                        Rádio · Alcabideche
-                      </p>
-
-                      <h3 className="mt-3 text-xl font-semibold text-white sm:text-2xl">
-                        Rádio AlcabidecheFM
-                      </h3>
-
-                      <div className="mx-auto mt-5 flex h-12 max-w-[230px] items-end justify-center gap-1.5">
-                        {[14, 28, 20, 38, 24, 46, 30, 18, 34, 22].map((height, idx) => (
-                          <span
-                            key={idx}
-                            className="nws-wave w-1.5 rounded-full bg-primary/80"
-                            style={{
-                              height,
-                              animationDelay: `${idx * 90}ms`,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {[
+            {
+              name: extra.gmdTitle,
+              text: extra.gmdShort,
+              url: "https://31janeiromanique.net",
+              image: "/gmd-manique.png",
+              alt: "Grupo Musical e Desportivo 31 de Janeiro",
+              visit: extra.gmdVisit,
+            },
+            {
+              name: extra.radioTitle,
+              text: extra.radioShort,
+              url: "https://radioalcabidechefm.eu",
+              image: "/radio-alcabidechefm.png",
+              alt: "Rádio AlcabidecheFM",
+              visit: extra.radioVisit,
+            },
+          ].map((project, idx) => (
+            <Reveal key={project.name} delay={220 + idx * 70}>
+              <article className="flex h-full items-center gap-4 rounded-2xl border border-border/70 bg-card/35 p-4 transition hover:border-primary/30 hover:bg-card/50">
+                <div className="grid size-20 shrink-0 place-items-center rounded-xl border border-border/60 bg-white p-2.5">
+                  <img src={project.image} alt={project.alt} className="max-h-full max-w-full object-contain" />
                 </div>
-              </div>
-
-              <div className="flex flex-col justify-center p-6 sm:p-9 lg:p-11">
-                <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-primary">
-                  <Radio className="size-3.5" />
-                  Rádio · Alcabideche
-                </div>
-
-                <h3 className="mt-4 text-3xl font-semibold tracking-tight">Rádio AlcabidecheFM</h3>
-
-                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
-                  {extra.radioText}
-                </p>
-
-                <div className="mt-7 space-y-3">
-                  {[extra.radioFeature1, extra.radioFeature2, extra.radioFeature3].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-2 text-xs text-muted-foreground"
-                    >
-                      <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-semibold">{project.name}</h3>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">{project.text}</p>
                   <a
-                    href="https://radioalcabidechefm.eu"
+                    href={project.url}
                     target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
                   >
-                    {extra.radioVisit}
-
-                    <ArrowUpRight className="size-4" />
+                    {project.visit}
+                    <ArrowUpRight className="size-3.5" />
                   </a>
-
-                  <Link
-                    to={paths.portfolio}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border px-5 text-sm hover:bg-accent"
-                  >
-                    {t.ctaPortfolio}
-
-                    <ArrowRight className="size-4" />
-                  </Link>
                 </div>
-              </div>
-            </div>
-          </article>
-        </Reveal>
+              </article>
+            </Reveal>
+          ))}
+        </div>
       </section>
 
       {/* RESTAURANTES HIGHLIGHT SECTION */}
