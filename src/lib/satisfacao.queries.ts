@@ -8,6 +8,7 @@ import type { PublicSurveyView, SatisfactionSurvey, SubmitSurveyPayload } from "
 import {
   alternarEstadoInquerito,
   criarInqueritoSatisfacao,
+  listarInqueritosSatisfacao,
   obterInqueritoPublico,
   submeterInqueritoPublico,
 } from "@/lib/satisfacao.functions";
@@ -27,6 +28,7 @@ export function isSatisfactionSchemaUnavailable(error: unknown): boolean {
   return (
     code === "42P01" ||
     code === "PGRST200" ||
+    code === "PGRST202" ||
     code === "PGRST204" ||
     code === "PGRST205" ||
     (message.includes("customer_satisfaction_surveys") &&
@@ -44,8 +46,14 @@ export function useSatisfactionSurveys(businessId?: string) {
   useEffect(() => {
     if (isDemoMode()) return;
 
-    const channel = supabase
-      .channel(`satisfaction-${businessId ?? "dashboard"}-${Math.random().toString(36).slice(2)}`)
+    const invalidate = () => {
+      const key = businessId ? businessSurveysKey(businessId) : allSurveysKey;
+      void qc.invalidateQueries({ queryKey: key });
+      if (businessId) void qc.invalidateQueries({ queryKey: allSurveysKey });
+    };
+
+    const tableChannel = supabase
+      .channel(`satisfaction-table-${businessId ?? "dashboard"}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         {
@@ -54,16 +62,35 @@ export function useSatisfactionSurveys(businessId?: string) {
           table: "customer_satisfaction_surveys",
           ...(businessId ? { filter: `business_id=eq.${businessId}` } : {}),
         },
-        () => {
-          const key = businessId ? businessSurveysKey(businessId) : allSurveysKey;
-          void qc.invalidateQueries({ queryKey: key });
-          if (businessId) void qc.invalidateQueries({ queryKey: allSurveysKey });
+        invalidate,
+      )
+      .subscribe();
+
+    const settingsChannel = supabase
+      .channel(`satisfaction-settings-${businessId ?? "dashboard"}-${Math.random().toString(36).slice(2)}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "app_settings",
+        },
+        (payload) => {
+          const nextKey = String((payload.new as { chave?: unknown } | null)?.chave ?? "");
+          const previousKey = String((payload.old as { chave?: unknown } | null)?.chave ?? "");
+          if (
+            nextKey.startsWith("satisfaction:survey:") ||
+            previousKey.startsWith("satisfaction:survey:")
+          ) {
+            invalidate();
+          }
         },
       )
       .subscribe();
 
     return () => {
-      void supabase.removeChannel(channel);
+      void supabase.removeChannel(tableChannel);
+      void supabase.removeChannel(settingsChannel);
     };
   }, [businessId, qc]);
 
@@ -71,23 +98,13 @@ export function useSatisfactionSurveys(businessId?: string) {
     queryKey,
     queryFn: async (): Promise<SatisfactionSurvey[]> => {
       if (isDemoMode()) return demoStore.getSatisfactionSurveys(businessId);
-
-      let query = (supabase as any)
-        .from("customer_satisfaction_surveys")
-        .select("*, business:businesses(id,nome,categoria,localidade)")
-        .order("created_at", { ascending: false });
-
-      if (businessId) query = query.eq("business_id", businessId);
-      const { data, error } = await query;
-      if (error) throw error;
-      return (data ?? []) as SatisfactionSurvey[];
+      return listarInqueritosSatisfacao({ data: { businessId: businessId ?? null } });
     },
     staleTime: 1_000,
-    retry: (failureCount, error) =>
-      !isSatisfactionSchemaUnavailable(error) && failureCount < 2,
+    retry: (failureCount) => failureCount < 2,
     refetchInterval: (query) => (query.state.status === "error" ? false : 4_000),
     refetchIntervalInBackground: false,
-    refetchOnWindowFocus: (query) => !isSatisfactionSchemaUnavailable(query.state.error),
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -103,9 +120,16 @@ export function useCriarInqueritoSatisfacao() {
       return criarInqueritoSatisfacao({ data: input });
     },
     onSuccess: (survey) => {
-      qc.invalidateQueries({ queryKey: allSurveysKey });
-      qc.invalidateQueries({ queryKey: businessSurveysKey(survey.business_id) });
-      qc.invalidateQueries({ queryKey: ["activity", survey.business_id] });
+      const prepend = (current: SatisfactionSurvey[] | undefined) => [
+        survey,
+        ...(current ?? []).filter((item) => item.id !== survey.id),
+      ];
+
+      qc.setQueryData<SatisfactionSurvey[]>(allSurveysKey, prepend);
+      qc.setQueryData<SatisfactionSurvey[]>(businessSurveysKey(survey.business_id), prepend);
+      void qc.invalidateQueries({ queryKey: allSurveysKey });
+      void qc.invalidateQueries({ queryKey: businessSurveysKey(survey.business_id) });
+      void qc.invalidateQueries({ queryKey: ["activity", survey.business_id] });
       toast.success("Inquérito criado. A ligação já pode ser enviada ao cliente.");
     },
     onError: (error: Error) => toast.error(error.message),
@@ -172,7 +196,7 @@ export function useSubmeterInqueritoPublico() {
       return submeterInqueritoPublico({ data: payload });
     },
     onSuccess: (_result, variables) => {
-      qc.invalidateQueries({ queryKey: ["public_satisfaction_survey", variables.token] });
+      void qc.invalidateQueries({ queryKey: ["public_satisfaction_survey", variables.token] });
     },
   });
 }
