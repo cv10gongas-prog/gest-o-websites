@@ -1,9 +1,28 @@
 import { Link } from "@tanstack/react-router";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import { CookieConsent } from "@/components/site/CookieConsent";
 import { LanguageSwitcher, LOCALE_STORAGE_KEY } from "@/components/site/LanguageSwitcher";
 import { dict, HTML_LANG, PATHS, type Locale, type PageKey } from "@/lib/i18n";
+
+const SOCIAL_LINKS = [
+  {
+    href: "https://www.instagram.com/novaweb_studio.pt/",
+    label: "Nova Web Studio no Instagram",
+    icon: Instagram,
+  },
+  {
+    href: "https://www.facebook.com/novawebstudio.pt",
+    label: "Nova Web Studio no Facebook",
+    icon: Facebook,
+  },
+  {
+    href: "https://www.linkedin.com/company/novawebstudiopt",
+    label: "Nova Web Studio no LinkedIn",
+    icon: Linkedin,
+  },
+] as const;
 
 export function SiteChrome({
   children,
@@ -175,16 +194,31 @@ export function SiteChrome({
       <main className="relative mx-auto w-full max-w-6xl px-5 py-12 sm:py-16">{children}</main>
 
       <footer className="relative border-t border-border/60">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span>
             © {new Date().getFullYear()} Nova Web Studio · {t.footer.rights}
           </span>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Link to={paths.restaurantes}>{t.nav.restaurantes}</Link>
             <Link to={paths.portfolio}>{t.nav.portfolio}</Link>
             <Link to={paths.contact}>{t.nav.contact}</Link>
             <Link to="/auth">{t.nav.team}</Link>
+
+            <span className="hidden h-3.5 w-px bg-border/60 sm:block" aria-hidden="true" />
+
+            {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+              <a
+                key={href}
+                href={href}
+                aria-label={label}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground/60 transition-colors hover:text-primary"
+              >
+                <Icon className="size-4" />
+              </a>
+            ))}
           </div>
         </div>
       </footer>

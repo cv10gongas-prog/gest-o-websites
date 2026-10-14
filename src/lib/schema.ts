@@ -16,6 +16,11 @@ export function localBusinessSchema(locale: Locale) {
         image: `${SITE_URL}/logo.png`,
         email: "geral@novawebstudio.pt",
         telephone: "+351937642061",
+        sameAs: [
+          "https://www.instagram.com/novaweb_studio.pt/",
+          "https://www.facebook.com/novawebstudio.pt",
+          "https://www.linkedin.com/company/novawebstudiopt",
+        ],
         description: dict[locale].meta.home.description,
         areaServed: [
           { "@type": "City", name: "Cascais" },

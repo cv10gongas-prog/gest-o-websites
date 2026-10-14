@@ -8,7 +8,10 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  Facebook,
   Globe2,
+  Instagram,
+  Linkedin,
   Mail,
   MapPin,
   MessageSquareText,
@@ -715,6 +718,39 @@ export function ContactPage({ locale }: { locale: Locale }) {
               <MapPin className="size-3.5 text-primary" />
 
               {t.location}
+            </div>
+          </Reveal>
+
+          <Reveal delay={380}>
+            <div className="mt-5 flex items-center gap-3">
+              {[
+                {
+                  href: "https://www.instagram.com/novaweb_studio.pt/",
+                  label: "Nova Web Studio no Instagram",
+                  icon: Instagram,
+                },
+                {
+                  href: "https://www.facebook.com/novawebstudio.pt",
+                  label: "Nova Web Studio no Facebook",
+                  icon: Facebook,
+                },
+                {
+                  href: "https://www.linkedin.com/company/novawebstudiopt",
+                  label: "Nova Web Studio no LinkedIn",
+                  icon: Linkedin,
+                },
+              ].map(({ href, label, icon: Icon }) => (
+                <a
+                  key={href}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="grid size-9 place-items-center rounded-xl border border-border/60 bg-background/30 text-muted-foreground/70 transition duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
+                >
+                  <Icon className="size-4" />
+                </a>
+              ))}
             </div>
           </Reveal>
         </div>
