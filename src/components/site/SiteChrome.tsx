@@ -214,7 +214,7 @@ export function SiteChrome({
                 aria-label={label}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground/60 transition-colors hover:text-primary"
+                className="grid size-11 place-items-center rounded-xl border border-transparent text-muted-foreground/60 transition duration-200 hover:-translate-y-0.5 hover:border-violet-400/30 hover:bg-gradient-to-br hover:from-violet-400/10 hover:to-transparent hover:text-violet-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <Icon className="size-4" />
               </a>
