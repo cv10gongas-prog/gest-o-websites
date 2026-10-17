@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>NWS — Comparação visual segura | V6</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#070c17;color:#eff7ff;font-family:Inter,Sora,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+body{display:flex;flex-direction:column;min-height:100vh}.toolbar{position:relative;z-index:10;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 19px;background:#0b1322;border-bottom:1px solid #243246;box-shadow:0 10px 25px #0005}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;font-size:13px}.mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #337b93;border-radius:11px;background:linear-gradient(130deg,#123f55,#241d50);font-size:15px;font-weight:800;color:#71e1f4}.brand strong{letter-spacing:.02em}.brand small{display:block;color:#92a3b6;font-size:10px;line-height:1.6}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:7px}.group{display:flex;align-items:center;gap:4px;border:1px solid #253b53;border-radius:11px;padding:4px;background:#0c192a}button{appearance:none;cursor:pointer;border:0;border-radius:8px;padding:9px 12px;background:transparent;color:#a8bbcd;font-size:12px;font-weight:650;transition:background .15s,color .15s}button:hover{background:#1a3145;color:#fff}button.active{background:#77ddef;color:#071721}.linknav{border-color:#283449}.page{font-size:11px}.device{font-size:11px}.notice{display:flex;align-items:center;gap:8px;padding:8px 19px;color:#aebfd0;background:#0b1725;border-bottom:1px solid #21344a;font-size:11px}.dot{display:inline-block;border-radius:50%;width:7px;height:7px;background:#7edbcf;flex:none}.notice strong{color:#d8ebf5}
+.viewport{display:flex;align-items:flex-start;justify-content:center;flex:1;min-height:0;overflow:auto;padding:0;background:#060b14}.viewport.mobile{padding:18px 10px 32px;background:repeating-linear-gradient(45deg,#0c1522 0,#0c1522 8px,#0d1826 8px,#0d1826 16px)}iframe{display:block;width:100%;height:100%;min-height:calc(100vh - 115px);border:none;background:#0d1320}.viewport.mobile iframe{max-width:390px;min-height:760px;height:calc(100vh - 170px);border:1px solid #34455d;border-radius:24px;box-shadow:0 0 0 7px #111c2c,0 28px 60px #0009}
+.status{padding:8px 18px;background:#070f1b;border-top:1px solid #223246;color:#7f99b1;font-size:10px}.status strong{color:#91e2ea}
+@media(max-width:900px){.toolbar{padding:10px;gap:7px}.brand{width:100%;margin-right:0}.actions{gap:5px}.group{padding:3px}button{padding:8px 9px;font-size:11px}.notice{line-height:1.55}.viewport.mobile iframe{height:650px}}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="brand"><div class="mark">N</div><div><strong>NOVA WEB STUDIO · LAB V6</strong><small>Comparação sobre o teu site original, sem substituições</small></div></div>
+  <div class="actions"><div class="group" role="group" aria-label="Página a visualizar"><button class="page active" data-path="/">Início</button><button class="page" data-path="/portefolio">Portefólio</button><button class="page" data-path="/contacto">Contacto</button></div>
+  <div class="group" role="group" aria-label="Comparar visual"><button class="mode active" data-mode="original">Original</button><button class="mode" data-mode="polish">Refinado</button><button class="mode" data-mode="strong">Mais destaque</button></div>
+  <div class="group" role="group" aria-label="Dispositivo"><button class="device active" data-device="desktop">Desktop</button><button class="device" data-device="mobile">Telemóvel</button></div></div>
+</div>
+<div class="notice"><span class="dot"></span><span><strong>Prévia reversível:</strong> só adiciona efeitos visuais temporários dentro desta janela. Não altera o código, o HUB, os clientes nem os dados. <span id="page-note"></span></span></div>
+<div id="viewport" class="viewport"><iframe id="site" title="Website Nova Web Studio — pré-visualização real" src="/" loading="eager"></iframe></div>
+<div class="status" id="status">A carregar o teu site local…</div>
+<template id="polish-css">
+/* NWS — evolução progressiva do design atual, mantendo cores, estrutura, imagens e conteúdos originais. */
+html.nws-v6-enabled body { -webkit-font-smoothing:antialiased; }
+html.nws-v6-enabled body .orbit-glow { filter:saturate(1.13); }
+html.nws-v6-enabled header.sticky { border-bottom-color:color-mix(in srgb,var(--primary) 18%,transparent) !important; box-shadow:0 10px 46px rgba(1,5,17,.27); backdrop-filter:blur(20px) saturate(1.2); }
+html.nws-v6-enabled header nav a,html.nws-v6-enabled footer a {transition:color .18s,border-color .18s,background-color .18s;}
+html.nws-v6-enabled header nav a:focus-visible,html.nws-v6-enabled main a:focus-visible,html.nws-v6-enabled main button:focus-visible,html.nws-v6-enabled main input:focus-visible,html.nws-v6-enabled main textarea:focus-visible{outline:2px solid var(--primary);outline-offset:4px;}
+html.nws-v6-enabled main {isolation:isolate;}
+/* HERO: destaque do mesmo layout existente, nada de mover blocos ou trocar o mockup. */
+html.nws-v6-enabled.nws-home main>section:first-of-type{border-color:color-mix(in srgb,var(--primary) 26%,transparent) !important;box-shadow:0 24px 80px rgba(1,9,24,.36), inset 0 1px 0 rgba(255,255,255,.035);background-image:radial-gradient(ellipse at 90% 6%,rgba(28,181,214,.09),transparent 43%),radial-gradient(ellipse at 4% 95%,rgba(127,90,241,.075),transparent 49%)!important;}
+html.nws-v6-enabled.nws-home main>section:first-of-type h1 {letter-spacing:-.052em;line-height:1.075;max-width:760px;filter:drop-shadow(0 6px 32px rgba(56,203,246,.07));}
+html.nws-v6-enabled.nws-home main>section:first-of-type p {text-wrap:pretty;}
+html.nws-v6-enabled.nws-home main>section:first-of-type a {box-shadow:0 9px 22px rgba(8,33,49,.12);}
+html.nws-v6-enabled.nws-home main>section:first-of-type a:hover {box-shadow:0 13px 28px rgba(8,73,98,.2);}
+/* PROJETOS: manter as imagens reais e respetiva hierarquia; elevar só tratamento visual */
+html.nws-v6-enabled main article[class*="rounded-3xl"] {box-shadow:0 15px 45px rgba(0,0,0,.13);transition:border-color .26s,box-shadow .26s,transform .26s;}
+html.nws-v6-enabled main article[class*="rounded-3xl"]:hover {box-shadow:0 24px 68px rgba(0,0,0,.27),0 0 0 1px rgba(104,218,235,.075);}
+html.nws-v6-enabled main article img {image-rendering:auto;}
+html.nws-v6-enabled main article a[target="_blank"]:hover{filter:brightness(1.07);}
+html.nws-v6-enabled main .orbit-panel {box-shadow:inset 0 1px 0 rgba(255,255,255,.025);transition:border-color .25s,background-color .25s,transform .25s,box-shadow .25s;}
+html.nws-v6-enabled main .orbit-panel:hover{box-shadow:0 15px 34px rgba(0,0,0,.16);background-color:color-mix(in srgb,var(--surface) 84%,transparent);}
+html.nws-v6-enabled main h2 {letter-spacing:-.035em;text-wrap:balance;}
+/* Porto + contacto: preservar conteúdos e formulários, reforçar contraste e hierarquia. */
+html.nws-v6-enabled.nws-portfolio main>section:first-of-type h1,html.nws-v6-enabled.nws-contact main>section:first-of-type h1 {letter-spacing:-.048em;line-height:1.09;}
+html.nws-v6-enabled.nws-portfolio main>section:first-of-type{position:relative;}
+html.nws-v6-enabled.nws-portfolio main>section:first-of-type:after{content:"";position:absolute;bottom:-20px;left:0;width:88px;height:2px;border-radius:9px;background:linear-gradient(90deg,#7be6f2,#9376f1);opacity:.58;}
+html.nws-v6-enabled.nws-contact main input,html.nws-v6-enabled.nws-contact main textarea,html.nws-v6-enabled.nws-contact main select{transition:border-color .2s,box-shadow .2s;}
+html.nws-v6-enabled.nws-contact main input:focus,html.nws-v6-enabled.nws-contact main textarea:focus,html.nws-v6-enabled.nws-contact main select:focus{border-color:var(--primary)!important;box-shadow:0 0 0 3px rgba(70,198,226,.10);}
+/* Contraste e espaçamento móvel. */
+@media(max-width:639px){html.nws-v6-enabled.nws-home main>section:first-of-type{border-radius:22px;}html.nws-v6-enabled main h1{overflow-wrap:break-word}html.nws-v6-enabled main article[class*="rounded-3xl"]{border-radius:22px;}html.nws-v6-enabled header nav a{min-height:32px}}
+@media(prefers-reduced-motion:reduce){html.nws-v6-enabled main *{animation-duration:.01ms!important;scroll-behavior:auto!important}html.nws-v6-enabled main article{transition:none!important}}
+/* A intensidade extra só acrescenta luz nas áreas que já existem. */
+html.nws-v6-strong.nws-home main>section:first-of-type{border-color:rgba(111,223,239,.39)!important;box-shadow:0 27px 100px rgba(0,0,0,.4),0 0 80px rgba(71,143,222,.07),inset 0 1px rgba(255,255,255,.05)!important;}
+html.nws-v6-strong main article[class*="rounded-3xl"]:hover{border-color:rgba(122,228,240,.49)!important;box-shadow:0 25px 65px rgba(0,0,0,.3),0 0 45px rgba(71,143,222,.08)!important;}
+html.nws-v6-strong main .orbit-gradient-text{filter:drop-shadow(0 5px 24px rgba(92,168,239,.15));}
+</template>
+<script>
+(function(){
+ 'use strict';
+ var frame=document.getElementById('site');
+ var viewport=document.getElementById('viewport');
+ var status=document.getElementById('status');
+ var mode='original',device='desktop';
+ var paths={'/':'Início','/portefolio':'Portefólio','/contacto':'Contacto'};
+ var css=document.getElementById('polish-css').textContent;
+ function mark(group,attr,val){document.querySelectorAll(group).forEach(function(el){el.classList.toggle('active',el.getAttribute(attr)===val);});}
+ function update(){
+  try{
+   var w=frame.contentWindow,d=frame.contentDocument;
+   if(!d || !d.documentElement)return;
+   var actual=w.location.pathname;
+   var r=d.documentElement;
+   r.classList.toggle('nws-v6-enabled',mode!=='original');
+   r.classList.toggle('nws-v6-strong',mode==='strong');
+   r.classList.toggle('nws-home',actual==='/' || actual==='/en' || actual==='/es' || actual==='/fr' || actual==='/de');
+   r.classList.toggle('nws-portfolio',actual.includes('portefolio') || actual.includes('portfolio'));
+   r.classList.toggle('nws-contact',actual.includes('contact'));
+   var style=d.getElementById('nws-preview-v6-style');
+   if(!style){style=d.createElement('style');style.id='nws-preview-v6-style';style.textContent=css;d.head.appendChild(style)}
+   status.innerHTML='A mostrar o <strong>site verdadeiro</strong> · '+(mode==='original'?'Original':mode==='polish'?'Refinado':'Mais destaque')+' · '+(device==='mobile'?'390 px':'Desktop')+' · '+actual;
+   var active=Object.keys(paths).find(function(p){return p===actual})||'/';mark('.page','data-path',active);
+  }catch(e){status.textContent='Não foi possível carregar o site neste endereço. Abre esta prévia através de localhost, com o servidor npm run dev a funcionar.';}
+ }
+ document.querySelectorAll('.mode').forEach(function(btn){btn.addEventListener('click',function(){mode=btn.getAttribute('data-mode');mark('.mode','data-mode',mode);update()})});
+ document.querySelectorAll('.device').forEach(function(btn){btn.addEventListener('click',function(){device=btn.getAttribute('data-device');mark('.device','data-device',device);viewport.classList.toggle('mobile',device==='mobile');update()})});
+ document.querySelectorAll('.page').forEach(function(btn){btn.addEventListener('click',function(){var path=btn.getAttribute('data-path');frame.src=path;mark('.page','data-path',path)})});
+ frame.addEventListener('load',update);
+ window.setInterval(function(){if(frame.contentDocument)update()},800);
+ update();
+})();
+</script>
+</body>
+</html>

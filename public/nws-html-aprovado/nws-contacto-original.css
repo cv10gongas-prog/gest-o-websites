@@ -1,0 +1,36 @@
+/* Nova Web Studio: formulario inspirado no original, com o envio React/Supabase. */
+.is-contacto .contactpage .contact-form{padding:clamp(22px,3vw,37px)!important;background:linear-gradient(155deg,#161c32 0%,#14192c 65%,#11172a 100%)!important;border:1px solid rgba(148,160,209,.25)!important;border-radius:24px!important;box-shadow:0 20px 70px rgba(0,0,0,.22)!important}
+.is-contacto .contactpage .contact-form>h2{font-size:clamp(23px,2.1vw,31px)!important;line-height:1.22!important;color:#f9f8ff!important;margin:0 0 8px!important}
+.is-contacto .contactpage .contact-form>p{font-size:13px!important;color:#b9bfd2!important;line-height:1.6!important;margin:0 0 23px!important}
+.is-contacto .nws-c-form{display:block;margin:0;padding:0;max-width:none}
+.is-contacto .nws-c-section-title{font-size:10px;font-weight:800;letter-spacing:.18em;color:#a797ff;text-transform:uppercase;margin:10px 0 18px;padding:0}
+.is-contacto .nws-c-divider{margin:24px 0 18px;padding-top:24px;border-top:1px solid rgba(151,162,205,.17)}
+.is-contacto .nws-c-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;row-gap:18px}
+.is-contacto .nws-c-field{display:flex;flex-direction:column;gap:8px;min-width:0;position:relative;margin:0;padding:0}
+.is-contacto .nws-c-field.is-wide{grid-column:1/-1}
+.is-contacto .nws-c-label{font:600 12px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;color:#e5e7f6;display:block}
+.is-contacto .nws-c-label b{color:#99e7f5}
+.is-contacto .nws-c-field input:not([type=hidden]),.is-contacto .nws-c-field textarea,.is-contacto .nws-choice-trigger{display:block;width:100%;min-width:0;min-height:47px;border:1px solid rgba(153,169,213,.32)!important;border-radius:11px!important;background:#0b1225!important;color:#f6f7ff!important;padding:12px 15px!important;font:500 13px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif!important;letter-spacing:0!important;box-sizing:border-box!important;box-shadow:none!important;outline:none!important;transition:border-color .15s ease,box-shadow .15s ease}
+.is-contacto .nws-c-field input::placeholder,.is-contacto .nws-c-field textarea::placeholder{color:#99a3bc!important;opacity:.75}
+.is-contacto .nws-c-field input:hover,.is-contacto .nws-c-field textarea:hover,.is-contacto .nws-choice-trigger:hover{border-color:#a698ed!important}
+.is-contacto .nws-c-field input:focus-visible,.is-contacto .nws-c-field textarea:focus-visible,.is-contacto .nws-choice-trigger:focus-visible,.is-contacto .nws-choice.open .nws-choice-trigger{border-color:#aea0ff!important;box-shadow:0 0 0 3px rgba(163,148,255,.12)!important}
+.is-contacto .nws-c-field textarea{resize:vertical!important;min-height:130px!important;line-height:1.65!important}
+.is-contacto .nws-choice{position:relative;min-width:0}
+.is-contacto .nws-choice-trigger{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px;text-align:left;cursor:pointer}
+.is-contacto .nws-choice-chevron{display:grid;place-items:center;width:25px;height:25px;flex:none;border-radius:7px;color:#b6a7ff;background:#292541;transition:transform .15s}
+.is-contacto .nws-choice.open .nws-choice-chevron{transform:rotate(180deg)}
+.is-contacto .nws-choice-pop{position:absolute;top:calc(100% + 6px);left:0;width:100%;max-height:230px;overflow:auto;padding:6px;background:#10182e;border:1px solid #4a527b;border-radius:12px;box-shadow:0 22px 50px rgba(0,0,0,.54);z-index:200}
+.is-contacto .nws-choice-pop[hidden]{display:none!important}
+.is-contacto .nws-choice-option{display:flex!important;align-items:center;justify-content:space-between;text-align:left;gap:8px;width:100%;min-height:38px;padding:9px 11px;border:0!important;border-radius:7px;background:transparent;color:#cbd2e9;font:500 12px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer}
+.is-contacto .nws-choice-option:hover,.is-contacto .nws-choice-option:focus-visible{background:#282c4b!important;color:#fff!important;outline:none}
+.is-contacto .nws-choice-option[aria-selected=true]{background:#342c57;color:#fff}
+.is-contacto .nws-choice-check{color:#a4edf2;flex-shrink:0}
+.is-contacto .nws-c-meeting{display:flex;align-items:center;gap:12px;margin:22px 0 0;padding:16px;border:1px solid rgba(153,169,213,.26);border-radius:12px;background:#111a31;color:#eef0ff;font-size:13px;line-height:1.5;cursor:pointer}
+.is-contacto .nws-c-meeting input{appearance:auto!important;width:18px;height:18px;accent-color:#a998ff;flex:none}
+.is-contacto .nws-c-privacy{margin:16px 0 0;color:#a6b0c9;font-size:12px;line-height:1.5}
+.is-contacto .nws-c-hidden{position:absolute;left:-99999px;height:0;width:0;overflow:hidden;opacity:0}
+.is-contacto .nws-c-submit{display:flex;align-items:center;justify-content:center;gap:16px;width:100%;min-height:49px;margin:17px 0 0;padding:12px 18px;border:0!important;border-radius:11px;background:linear-gradient(105deg,#ac91ff,#86e3ec)!important;color:#0a1125!important;font:800 13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;transition:transform .18s ease,filter .18s ease}
+.is-contacto .nws-c-submit span{margin-left:auto;font-size:17px}.is-contacto .nws-c-submit:hover{transform:translateY(-2px);filter:brightness(1.04)}.is-contacto .nws-c-submit:disabled{opacity:.65;cursor:wait;transform:none}
+.is-contacto .nws-c-form .formerror{margin-top:10px;color:#ffb6ba;font-size:12px;line-height:1.5}
+.is-contacto .nws-c-form .status{margin:12px 0 0;color:#92e7cf;font-weight:700;font-size:13px;line-height:1.5}
+@media(max-width:640px){.is-contacto .nws-c-grid{grid-template-columns:1fr}.is-contacto .nws-c-field.is-wide{grid-column:auto}.is-contacto .contactpage .contact-form{padding:20px!important}.is-contacto .nws-choice-pop{max-height:205px}}

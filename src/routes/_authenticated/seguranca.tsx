@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SegurancaPainel } from "@/components/crm/SegurancaPainel";
+import { PinSettings } from "@/components/crm/PinProtecao";
 
 export const Route = createFileRoute("/_authenticated/seguranca")({
   head: () => ({
@@ -16,5 +17,5 @@ export const Route = createFileRoute("/_authenticated/seguranca")({
 });
 
 function SegurancaPage() {
-  return <SegurancaPainel />;
+  return <div className="space-y-6"><PinSettings/><SegurancaPainel/></div>;
 }

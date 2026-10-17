@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import { autorizarOperacaoPin } from "@/lib/pin-protection";
 import type { Database } from "@/integrations/supabase/types";
 import { alterarFuncao, removerMembro } from "@/lib/equipa.functions";
 import { isDemoMode, demoStore } from "@/lib/demo-mode";
@@ -129,6 +130,7 @@ export function useCriarNegocio() {
       if (isDemoMode()) {
         return demoStore.createBusiness(valores);
       }
+      await autorizarOperacaoPin("businesses", "INSERT", "Criar um negócio no CRM");
       const uid = await utilizadorActual();
       const { data, error } = await supabase
         .from("businesses")
@@ -173,6 +175,7 @@ export function useActualizarNegocio() {
       if (isDemoMode()) {
         return demoStore.updateBusiness(id, valores);
       }
+      await autorizarOperacaoPin("businesses", "UPDATE", "Atualizar os dados de um negócio");
       const patch = { ...valores };
       if (valores.website !== undefined) patch.website_dominio = dominio(valores.website);
       const { data, error } = await supabase
@@ -207,6 +210,7 @@ export function useApagarNegocio() {
         demoStore.deleteBusiness(id);
         return;
       }
+      await autorizarOperacaoPin("businesses", "DELETE", "Eliminar definitivamente um negócio");
       const { error } = await supabase.from("businesses").delete().eq("id", id);
       if (error) throw error;
     },
@@ -244,6 +248,7 @@ export function useRegistarChamada() {
       oportunidade?: Partial<Opportunity> | null;
       tarefa?: Partial<Task> | null;
     }) => {
+      await autorizarOperacaoPin("businesses", "UPDATE", "Registar uma interação e atualizar o negócio");
       const uid = await utilizadorActual();
       const { data: chamada, error } = await supabase
         .from("interactions")
@@ -332,6 +337,7 @@ export function useGuardarTarefa() {
       const uid = await utilizadorActual();
       if (valores.id) {
         const { id, ...resto } = valores;
+        await autorizarOperacaoPin("tasks", "UPDATE", "Editar uma tarefa");
         const { error } = await supabase.from("tasks").update(resto).eq("id", id);
         if (error) throw error;
         await registarActividade({
@@ -371,6 +377,7 @@ export function useAlternarTarefa() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (tarefa: Task) => {
+      await autorizarOperacaoPin("tasks", "UPDATE", "Alterar o estado de uma tarefa");
       const concluir = tarefa.estado !== "concluida";
       const { error } = await supabase
         .from("tasks")
@@ -390,6 +397,7 @@ export function useApagarTarefa() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
+      await autorizarOperacaoPin("tasks", "DELETE", "Apagar uma tarefa");
       const { error } = await supabase.from("tasks").delete().eq("id", id);
       if (error) throw error;
     },
@@ -452,6 +460,7 @@ export function useGuardarModelo() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (m: { id: string; nome: string; assunto: string; corpo: string }) => {
+      await autorizarOperacaoPin("email_templates", "UPDATE", "Guardar alterações a um modelo de email");
       const { error } = await supabase
         .from("email_templates")
         .update({ nome: m.nome, assunto: m.assunto, corpo: m.corpo })
@@ -489,6 +498,7 @@ export function useActualizarProjeto() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, valores }: { id: string; valores: Partial<Project> }) => {
+      await autorizarOperacaoPin("projects", "UPDATE", "Alterar um projeto do portefólio");
       const { error } = await supabase.from("projects").update(valores).eq("id", id);
       if (error) throw error;
     },

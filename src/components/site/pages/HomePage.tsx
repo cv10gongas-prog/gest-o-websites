@@ -28,6 +28,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { Chip } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import "./NwsPolishV7.css";
 import { dict, PATHS, type Locale } from "@/lib/i18n";
 
 const SERVICE_ICONS = [LayoutTemplate, Gauge, LineChart];
@@ -764,7 +765,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       `}</style>
 
       {/* HERO */}
-      <section className="relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-5 py-9 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
+      <section className="nws-v7-hero relative overflow-hidden rounded-[2rem] border border-border/60 bg-card/20 px-5 py-9 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <div className="nws-pulse absolute -right-24 -top-24 size-80 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-primary/5 blur-3xl" />
 
@@ -791,7 +792,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
 
             <Reveal delay={150}>
-              <h1 className="orbit-gradient-text mt-4 max-w-3xl text-4xl font-semibold leading-[1.03] tracking-tight sm:text-5xl lg:text-[4rem]">
+              <h1 className="nws-v7-headline orbit-gradient-text mt-4 max-w-3xl text-4xl font-semibold leading-[1.03] tracking-tight sm:text-5xl lg:text-[4rem]">
                 {t.h1}
               </h1>
             </Reveal>
@@ -803,7 +804,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
 
             <Reveal delay={290}>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="nws-v7-hero-actions mt-8 flex flex-wrap gap-3">
                 <Link
                   to={paths.contact}
                   className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/20"
@@ -840,88 +841,63 @@ export function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
           </div>
 
-          {/* HERO MOCKUP */}
+          {/* V7: projeto real, sem placeholders ficticios */}
           <Reveal delay={180}>
-            <div className="nws-float relative min-w-0">
-              <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
+            <div className="nws-v7-showcase nws-float relative min-w-0">
+              <div className="nws-v7-showcase-glow pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-3xl" />
 
-              <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-background shadow-2xl shadow-black/20">
-                <div className="flex h-10 items-center gap-1.5 border-b border-border/60 bg-card/70 px-3">
-                  <span className="size-2 rounded-full bg-muted-foreground/30" />
-                  <span className="size-2 rounded-full bg-muted-foreground/20" />
-                  <span className="size-2 rounded-full bg-muted-foreground/10" />
-
-                  <div className="mx-auto flex h-5 max-w-[55%] flex-1 items-center justify-center rounded-md bg-secondary/60 px-2 text-[8px] text-muted-foreground sm:max-w-none sm:w-44 sm:flex-none">
-                    novawebstudio.pt
-                  </div>
+              <div className="nws-v7-browser overflow-hidden rounded-3xl border border-border/70 bg-background shadow-2xl shadow-black/20">
+                <div className="nws-v7-browser-bar flex h-11 items-center gap-1.5 border-b border-border/60 px-4">
+                  <span className="size-2.5 rounded-full bg-rose-400/85" />
+                  <span className="size-2.5 rounded-full bg-amber-300/85" />
+                  <span className="size-2.5 rounded-full bg-emerald-400/85" />
+                  <span className="ml-3 min-w-0 flex-1 truncate rounded-md border border-white/10 bg-white/[0.04] px-3 py-1 text-center text-[10px] text-muted-foreground">
+                    vinilart.pt
+                  </span>
+                  <ExternalLink className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
                 </div>
 
-                <div className="relative overflow-hidden bg-gradient-to-br from-primary/[0.06] via-background to-secondary/30 p-5 sm:min-h-[400px] sm:p-8">
-                  <div className="absolute right-5 top-5 size-40 rounded-full bg-primary/10 blur-3xl" />
-
-                  <div className="relative flex min-w-0 items-center gap-3">
-                    <img
-                      src="/logo.png"
-                      alt="Nova Web Studio"
-                      className="size-9 shrink-0 object-contain"
-                    />
-
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold">Nova Web Studio</p>
-
-                      <p className="truncate text-[9px] uppercase tracking-[.18em] text-muted-foreground">
-                        {nav.tagline}
-                      </p>
+                <div className="nws-v7-preview relative overflow-hidden">
+                  <img
+                    src="/vinilart-preview.png"
+                    alt="Captura real do website VinilArt desenvolvido pela Nova Web Studio"
+                    className="nws-v7-preview-image block h-full w-full object-cover object-top"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                  <div className="nws-v7-preview-shade pointer-events-none absolute inset-0" />
+                  <div className="nws-v7-preview-caption absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6">
+                    <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-[#06121b]/80 px-3 py-1.5 text-[10px] font-semibold text-cyan-100 backdrop-blur-md">
+                      <CheckCircle2 className="size-3.5 text-cyan-300" />
+                      {extra.heroProof}
                     </div>
-                  </div>
-
-                  <div className="relative mt-9 sm:mt-10">
-                    <span className="block text-[9px] font-semibold uppercase leading-5 tracking-[.15em] text-primary">
-                      {extra.heroProofSmall}
-                    </span>
-
-                    <div className="mt-4 h-3.5 w-4/5 rounded-full bg-foreground/15" />
-                    <div className="mt-3 h-3.5 w-3/5 rounded-full bg-foreground/10" />
-
-                    <div className="mt-7 flex gap-2">
-                      <span className="h-9 flex-1 rounded-lg bg-primary sm:w-28 sm:flex-none" />
-                      <span className="h-9 flex-1 rounded-lg border border-border bg-background/60 sm:w-24 sm:flex-none" />
-                    </div>
-                  </div>
-
-                  <div className="relative mt-9 grid min-w-0 grid-cols-1 gap-2.5 lg:mt-10 lg:grid-cols-3 lg:gap-3">
-                    {t.stats.map((item) => (
-                      <div
-                        key={item.valor}
-                        className="flex min-w-0 items-center justify-between gap-4 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 backdrop-blur lg:min-h-[126px] lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:px-4 lg:py-4"
-                      >
-                        <p className="min-w-0 text-lg font-semibold leading-tight lg:w-full lg:text-[16px] xl:text-[17px]">
-                          {item.valor}
-                        </p>
-
-                        <p className="max-w-[58%] text-right text-[9px] leading-4 text-muted-foreground lg:mt-3 lg:max-w-none lg:text-left">
-                          {item.texto}
+                    <div className="flex items-end justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-xl font-semibold tracking-tight text-white sm:text-2xl">VinilArt</div>
+                        <p className="mt-1 hidden max-w-xs text-[11px] leading-5 text-slate-200/85 sm:block">
+                          {extra.vinilartText}
                         </p>
                       </div>
-                    ))}
-                  </div>
-
-                  <div className="relative mt-4 grid grid-cols-[1.3fr_.7fr] gap-3">
-                    <div className="h-16 rounded-2xl bg-secondary/70 sm:h-20" />
-                    <div className="h-16 rounded-2xl border border-primary/20 bg-primary/10 sm:h-20" />
+                      <a
+                        href="https://vinilart.pt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="nws-v7-project-action inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-cyan-300 px-3 py-2.5 text-xs font-semibold text-[#06111a] transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+                      >
+                        {extra.gmdVisit}
+                        <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="absolute -bottom-5 -left-4 hidden rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-xl backdrop-blur sm:block">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="size-4 shrink-0 text-primary" />
-
-                  <div>
-                    <p className="text-[10px] font-medium">{extra.heroProof}</p>
-
-                    <p className="mt-0.5 text-[9px] text-muted-foreground">31janeiromanique.net</p>
-                  </div>
+                <div className="nws-v7-proof-strip grid grid-cols-3 divide-x divide-white/10 border-t border-white/10">
+                  {t.stats.map((item) => (
+                    <div key={item.valor} className="min-w-0 px-2 py-3.5 text-center sm:px-3 sm:py-4">
+                      <p className="text-[12px] font-semibold tracking-tight text-foreground sm:text-base">{item.valor}</p>
+                      <p className="mt-1 text-[9px] leading-4 text-muted-foreground sm:text-[10px]">{item.texto}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1044,7 +1020,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             },
           ].map((project, idx) => (
             <Reveal key={project.name} delay={80 + idx * 80}>
-              <article className="group h-full overflow-hidden rounded-3xl border border-cyan-400/20 bg-card/45 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40">
+              <article className="nws-v7-work-card group h-full overflow-hidden rounded-3xl border border-cyan-400/20 bg-card/45 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40">
                 <div className="bg-[#07111b] p-3">
                   <div className="overflow-hidden rounded-2xl border border-cyan-400/20 bg-[#07101a]">
                     <div className="flex h-9 items-center gap-1.5 border-b border-white/10 bg-[#0b1723] px-3">
@@ -1059,7 +1035,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                       <img
                         src={project.preview}
                         alt={`${project.name} — homepage`}
-                        className="size-full object-cover object-top transition duration-500 group-hover:scale-[1.012]"
+                        className="nws-v7-work-image size-full object-cover object-top transition duration-500 group-hover:scale-[1.012]"
                       />
                       <div className="absolute bottom-3 left-3 flex h-8 max-w-32 items-center rounded-lg border border-white/15 bg-black/70 px-2.5 py-1 backdrop-blur-md">
                         <img src={project.logo} alt="" aria-hidden="true" className="max-h-full max-w-full object-contain" />
@@ -1075,7 +1051,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground transition hover:-translate-y-0.5"
+                    className="nws-v7-work-cta mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground transition hover:-translate-y-0.5"
                   >
                     {extra.gmdVisit}
                     <ArrowUpRight className="size-3.5" />
@@ -1124,7 +1100,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             },
           ].map((project, idx) => (
             <Reveal key={project.name} delay={220 + idx * 70}>
-              <article className="flex h-full items-center gap-4 rounded-2xl border border-border/70 bg-card/35 p-4 transition hover:border-primary/30 hover:bg-card/50">
+              <article className="nws-v7-secondary-work flex h-full items-center gap-4 rounded-2xl border border-border/70 bg-card/35 p-4 transition hover:border-primary/30 hover:bg-card/50">
                 <div className="grid size-20 shrink-0 place-items-center rounded-xl border border-border/60 bg-white p-2.5">
                   <img src={project.image} alt={project.alt} className="max-h-full max-w-full object-contain" />
                 </div>

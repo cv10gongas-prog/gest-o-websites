@@ -1,0 +1,25 @@
+/* Apenas os dois retoques finais pedidos; restante design aprovado mantido literalmente. */
+.v3-minicase:has(img[src*="gespool"]) img,
+.v3-minicase:has(img[src*="gmd-"]) img,
+.v3-minicase:has(img[src*="radio-"]) img {
+  background:#fff !important;
+  border-radius:12px !important;
+  padding:10px !important;
+  object-fit:contain !important;
+}
+.v3-port-image.v3-port-logo,
+.case-art.logo-only { background:#fff!important; border-color:#e5e7eb!important; }
+.v3-port-image.v3-port-logo img,
+.case-art.logo-only img { object-fit:contain!important; filter:none!important; }
+.is-restaurantes .cta-band .btn-dark,
+.is-restaurantes .btn.btn-dark,
+.is-restaurantes .btn.btn-main {
+  background:linear-gradient(110deg,#b09aff,#76e6ef)!important;
+  color:#071224!important;
+  border-color:rgba(255,255,255,.28)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-shadow:none!important;
+  font-weight:800!important;
+}
+.is-restaurantes .btn.btn-dark:hover {filter:brightness(1.06);}

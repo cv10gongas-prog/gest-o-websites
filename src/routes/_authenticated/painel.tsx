@@ -31,6 +31,7 @@ import { useMemo, useState } from "react";
 
 import { Avatar, Chip, Dot, Vazio } from "@/components/crm/Bits";
 import { DialogNegocio } from "@/components/crm/DialogNegocio";
+import { PainelComercialV35 } from "@/components/crm/PainelComercialV35";
 import { useUtilizador } from "@/hooks/useAuth";
 import {
   dataExtenso,
@@ -168,6 +169,7 @@ function PainelCRM() {
 
   return (
     <div className="space-y-8">
+      <PainelComercialV35 negocios={negocios} tarefas={tarefas} />
       {/* HERO BANNER COMMAND CENTER */}
       <section className="relative overflow-hidden rounded-3xl border border-border/70 bg-surface/50 p-6 sm:p-9 backdrop-blur-2xl">
         <div className="pointer-events-none absolute -right-20 -top-20 size-80 rounded-full bg-primary/10 blur-3xl" />
@@ -209,6 +211,9 @@ function PainelCRM() {
 
           {/* Ações Rápidas */}
           <div className="flex flex-wrap items-center gap-2.5">
+            <Link to="/operacoes" className="flex items-center gap-2 rounded-2xl border border-violet-400/40 bg-violet-500/15 px-4 py-2.5 text-xs font-bold text-violet-200 shadow-sm transition hover:bg-violet-500/25">
+              <Sparkles className="size-4" /> Sala de Operações V4 <ArrowRight className="size-3.5" />
+            </Link>
             <Link
               to="/pipeline"
               className="flex items-center gap-2 rounded-2xl border border-border/70 bg-surface/80 px-4 py-2.5 text-xs font-semibold text-foreground transition hover:border-primary/40 hover:bg-surface-strong shadow-sm"

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Chip, Panel, Vazio } from "@/components/crm/Bits";
 import { btnPequeno, btnPrimario, inputClass } from "@/components/crm/Modal";
 import { supabase } from "@/integrations/supabase/client";
+import { estadoProtecaoPin } from "@/lib/pin-protection";
 import { useActualizarProjeto, useProjects } from "@/lib/queries";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -62,13 +63,18 @@ function Projetos() {
         atualizado_em: r.pushed_at,
         is_demo: false,
       }));
-      const { error } = await supabase.from("projects").upsert(linhas, { onConflict: "repo_id" });
+      // Não tentar atualizar dezenas de projetos sem confirmações individuais de PIN.
+      // Com proteção ativa, importar apenas repositórios novos.
+      const seguranca = await estadoProtecaoPin();
+      const { error } = seguranca.enabled
+        ? await supabase.from("projects").upsert(linhas, { onConflict: "repo_id", ignoreDuplicates: true })
+        : await supabase.from("projects").upsert(linhas, { onConflict: "repo_id" });
       if (error) throw error;
       await supabase
         .from("app_settings")
         .upsert({ chave: "github_user", valor: utilizador.trim() }, { onConflict: "chave" });
       qc.invalidateQueries({ queryKey: ["projects"] });
-      toast.success(`${linhas.length} projetos importados do GitHub.`);
+      toast.success(seguranca.enabled ? "Novos projetos importados; os existentes não foram alterados por proteção do PIN." : `${linhas.length} projetos sincronizados do GitHub.`);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Falhou a importação.");
     } finally {

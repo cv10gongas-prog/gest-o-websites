@@ -594,9 +594,9 @@ export const dict: Record<Locale, Dict> = {
   pt: {
     meta: {
       home: {
-        title: "Criação de Sites em Cascais | Nova Web Studio",
+        title: "Nova Web Studio | Criação de Websites Profissionais em Portugal",
         description:
-          "Criação de sites em Cascais, Oeiras e Lisboa. Desenvolvimento de websites profissionais para empresas, criação de lojas online e web design para atrair mais clientes.",
+          "Criamos websites profissionais, lojas online e soluções web à medida em Portugal. Design moderno, SEO e desenvolvimento focado no teu negócio.",
       },
       portfolio: {
         title: "Portefólio de Websites | Nova Web Studio",

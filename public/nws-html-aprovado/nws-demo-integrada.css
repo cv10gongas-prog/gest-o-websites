@@ -1,0 +1,11 @@
+/* Demo original integrada no website aprovado: apenas nesta página. */
+.nws-rest-demo-section{position:relative;padding:clamp(32px,5vw,80px) 0 58px;background:linear-gradient(160deg,#080d1a 0%,#111b2d 70%,#090e1d 100%);border-top:1px solid rgba(159,169,212,.18);border-bottom:1px solid rgba(159,169,212,.14)}
+.nws-rest-demo-section .nws-rest-demo-tag{font-size:11px;letter-spacing:.21em;text-transform:uppercase;font-weight:700;color:#91e5f3}
+.nws-rest-demo-section h2{font-size:clamp(27px,3.1vw,43px)!important;line-height:1.16!important;max-width:840px;color:#f7f8ff!important;margin:10px 0 12px!important}
+.nws-rest-demo-section p{color:#c8cfde;max-width:680px;line-height:1.75;font-size:clamp(14px,1.1vw,16px)}
+.nws-rest-demo-frame{display:block;border:1px solid rgba(117,164,220,.24);border-radius:20px;background:#080f1e;width:100%;min-height:920px;height:1400px;margin:28px 0 0;overflow:hidden;box-shadow:0 25px 85px rgba(0,0,0,.26)}
+.nws-rest-demo-actions{margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.nws-rest-demo-actions a{font-size:14px!important;font-weight:650;text-decoration:none!important;color:#070d19!important;display:inline-flex;align-items:center;padding:12px 20px;background:linear-gradient(110deg,#aa91ff,#88e6ee);border-radius:11px;transition:transform .2s,filter .2s}
+.nws-rest-demo-actions a:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.nws-rest-demo-actions small{font-size:12px;color:#a5b2ce}
+@media(max-width:600px){.nws-rest-demo-section{padding:36px 0}.nws-rest-demo-frame{border-radius:12px;margin-top:18px;min-height:900px}.nws-rest-demo-actions a{width:100%;justify-content:center}}
