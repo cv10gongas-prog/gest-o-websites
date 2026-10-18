@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -268,8 +269,14 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const pathname = useRouterState({ select: state => state.location.pathname });
+  const language = pathname.startsWith('/en/') || pathname === '/en' ? 'en'
+    : pathname.startsWith('/es/') || pathname === '/es' ? 'es'
+    : pathname.startsWith('/fr/') || pathname === '/fr' ? 'fr'
+    : pathname.startsWith('/de/') || pathname === '/de' ? 'de'
+    : 'pt-PT';
   return (
-    <html lang="pt-PT" className="dark">
+    <html lang={language} className="dark">
       <head>
         <HeadContent />
 

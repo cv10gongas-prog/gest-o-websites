@@ -22,12 +22,7 @@ export function localBusinessSchema(locale: Locale) {
           "https://www.linkedin.com/company/novawebstudiopt",
         ],
         description: dict[locale].meta.home.description,
-        areaServed: [
-          { "@type": "City", name: "Cascais" },
-          { "@type": "City", name: "Oeiras" },
-          { "@type": "City", name: "Sintra" },
-          { "@type": "City", name: "Lisboa" },
-        ],
+        areaServed: { "@type": "Country", name: "Portugal" },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: isPt

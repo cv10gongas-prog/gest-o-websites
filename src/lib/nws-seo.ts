@@ -49,5 +49,19 @@ export function buildStandaloneSeoHead({ path, title, description }: PageSeo) {
       { name: "twitter:image", content: image },
     ],
     links: [{ rel: "canonical", href: url }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": url + "#webpage",
+        url,
+        name: title,
+        description,
+        inLanguage: "pt-PT",
+        isPartOf: { "@id": SITE_ORIGIN + "/#website" },
+        publisher: { "@id": SITE_ORIGIN + "/#organization" },
+      }),
+    }],
   };
 }
