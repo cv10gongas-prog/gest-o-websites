@@ -73,6 +73,8 @@
     panel.querySelector('.nws-cookie-accept').textContent = t[2];
     panel.querySelector('.nws-cookie-deny').textContent = t[3];
     panel.querySelector('.nws-cookie-learn').textContent = t[4] + ' ↗';
+    const pageLang = (new URLSearchParams(location.search).get('lang') || document.documentElement.lang || 'pt').slice(0, 2);
+    if (['en', 'es', 'fr', 'de'].includes(pageLang)) panel.querySelector('.nws-cookie-learn').href = '/cookies?lang=' + pageLang;
     panel.querySelector('.nws-cookie-accept').addEventListener('click', () => choose('granted'));
     panel.querySelector('.nws-cookie-deny').addEventListener('click', () => choose('denied'));
     wrap.appendChild(panel);

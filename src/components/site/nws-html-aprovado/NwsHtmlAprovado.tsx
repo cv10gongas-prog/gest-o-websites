@@ -11,6 +11,11 @@ export function NwsHtmlAprovado({ ficheiro }: { ficheiro: string }) {
       if (event.origin !== window.location.origin || event.source !== iframe.current?.contentWindow) return;
       const msg = event.data;
       if (!msg || msg.nwsBridge !== true) return;
+      if (msg.type === "scroll-top") {
+        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: 0, left: 0, behavior: reduced ? "instant" : "smooth" });
+        return;
+      }
       if (msg.type === "navigate") {
         const target = String(msg.path || "");
         const parsed = new URL(target, window.location.origin);

@@ -8,6 +8,7 @@
  document.addEventListener('click',event=>{
    const a=event.target?.closest?.('a[href]');
    if(!a||event.defaultPrevented||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||a.hasAttribute('download')||a.target==='_blank')return;
+   if(a.classList.contains('final-backtotop'))return;
    const href=a.getAttribute('href')||'';
    if(!href||href.startsWith('mailto:')||href.startsWith('tel:'))return;
    if(href.startsWith('#')){const id=decodeURIComponent(href.slice(1));const el=document.getElementById(id);if(el){event.preventDefault();location.hash=id;el.scrollIntoView();}return;}

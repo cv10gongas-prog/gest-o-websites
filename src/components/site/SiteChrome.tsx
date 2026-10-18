@@ -211,10 +211,10 @@ export function SiteChrome({
             <Link to={paths.restaurantes}>{t.nav.restaurantes}</Link>
             <Link to={paths.portfolio}>{t.nav.portfolio}</Link>
             <Link to={paths.contact}>{t.nav.contact}</Link>
-            <Link to="/auth">{t.nav.team}</Link>
-            <a href="/privacidade">{legal[0]}</a>
-            <a href="/cookies">{legal[1]}</a>
-            <a href="/termos">{legal[2]}</a>
+            <a href="/hub" className="text-[10px] opacity-50 transition hover:opacity-100 focus-visible:opacity-100">{t.nav.team}</a>
+            <a href={"/privacidade" + (locale === "pt" ? "" : "?lang=" + locale)}>{legal[0]}</a>
+            <a href={"/cookies" + (locale === "pt" ? "" : "?lang=" + locale)}>{legal[1]}</a>
+            <a href={"/termos" + (locale === "pt" ? "" : "?lang=" + locale)}>{legal[2]}</a>
             <button type="button" data-nws-cookies-open className="cursor-pointer hover:text-foreground">{legal[3]}</button>
 
             <span className="hidden h-3.5 w-px bg-border/60 sm:block" aria-hidden="true" />
