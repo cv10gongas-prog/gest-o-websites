@@ -100,13 +100,13 @@ export const Route = createRootRouteWithContext<{
 
       // Nome base
       {
-        title: "Nova Web Studio | Web Design e Criação de Sites",
+        title: "Nova Web Studio | Criação de Websites Profissionais em Portugal",
       },
 
       {
         name: "description",
         content:
-          "Criação e modernização de websites para negócios locais em Cascais, Oeiras, Sintra e Lisboa.",
+          "Criamos websites profissionais, lojas online e soluções web à medida em Portugal. Design moderno, SEO e desenvolvimento focado no teu negócio.",
       },
 
       // Cor do browser / Android

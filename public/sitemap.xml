@@ -246,4 +246,13 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Paginas institucionais com metadados proprios. -->
+  <url><loc>https://www.novawebstudio.pt/servicos</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.novawebstudio.pt/sobre</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Projetos publicos do portfolio. -->
+  <url><loc>https://www.novawebstudio.pt/projetos/vinilart</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.novawebstudio.pt/projetos/vinilart-sport</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.novawebstudio.pt/projetos/gespool</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.novawebstudio.pt/projetos/31-janeiro</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.novawebstudio.pt/projetos/radio-alcabideche</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
