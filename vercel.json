@@ -1,0 +1,45 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/nws-html-aprovado/index.html"
+    },
+    {
+      "source": "/portefolio",
+      "destination": "/nws-html-aprovado/trabalhos.html"
+    },
+    {
+      "source": "/servicos",
+      "destination": "/nws-html-aprovado/servicos.html"
+    },
+    {
+      "source": "/restaurantes",
+      "destination": "/nws-html-aprovado/restaurantes.html"
+    },
+    {
+      "source": "/sobre",
+      "destination": "/nws-html-aprovado/sobre.html"
+    },
+    {
+      "source": "/projetos/vinilart",
+      "destination": "/nws-html-aprovado/projetos/vinilart.html"
+    },
+    {
+      "source": "/projetos/vinilart-sport",
+      "destination": "/nws-html-aprovado/projetos/vinilart-sport.html"
+    },
+    {
+      "source": "/projetos/gespool",
+      "destination": "/nws-html-aprovado/projetos/gespool.html"
+    },
+    {
+      "source": "/projetos/31-janeiro",
+      "destination": "/nws-html-aprovado/projetos/31-janeiro.html"
+    },
+    {
+      "source": "/projetos/radio-alcabideche",
+      "destination": "/nws-html-aprovado/projetos/radio-alcabideche.html"
+    }
+  ]
+}
