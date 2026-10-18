@@ -40,6 +40,18 @@
     {
       "source": "/projetos/radio-alcabideche",
       "destination": "/nws-html-aprovado/projetos/radio-alcabideche.html"
+    },
+    {
+      "source": "/privacidade",
+      "destination": "/nws-html-aprovado/privacidade.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/nws-html-aprovado/cookies.html"
+    },
+    {
+      "source": "/termos",
+      "destination": "/nws-html-aprovado/termos.html"
     }
   ]
 }

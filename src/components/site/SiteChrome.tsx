@@ -2,9 +2,16 @@ import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
-import { CookieConsent } from "@/components/site/CookieConsent";
 import { LanguageSwitcher, LOCALE_STORAGE_KEY } from "@/components/site/LanguageSwitcher";
 import { dict, HTML_LANG, PATHS, type Locale, type PageKey } from "@/lib/i18n";
+
+const LEGAL_LABELS: Record<Locale, [string,string,string,string]> = {
+  pt: ['Privacidade','Cookies','Termos','Preferências de cookies'],
+  en: ['Privacy','Cookies','Terms','Cookie preferences'],
+  es: ['Privacidad','Cookies','Términos','Preferencias de cookies'],
+  fr: ['Confidentialité','Cookies','Conditions','Préférences cookies'],
+  de: ['Datenschutz','Cookies','Bedingungen','Cookie-Einstellungen'],
+};
 
 const SOCIAL_LINKS = [
   {
@@ -35,6 +42,7 @@ export function SiteChrome({
 }) {
   const t = dict[locale];
   const paths = PATHS[locale];
+  const legal = LEGAL_LABELS[locale];
 
   useEffect(() => {
     document.documentElement.lang = HTML_LANG[locale];
@@ -204,6 +212,10 @@ export function SiteChrome({
             <Link to={paths.portfolio}>{t.nav.portfolio}</Link>
             <Link to={paths.contact}>{t.nav.contact}</Link>
             <Link to="/auth">{t.nav.team}</Link>
+            <a href="/privacidade">{legal[0]}</a>
+            <a href="/cookies">{legal[1]}</a>
+            <a href="/termos">{legal[2]}</a>
+            <button type="button" data-nws-cookies-open className="cursor-pointer hover:text-foreground">{legal[3]}</button>
 
             <span className="hidden h-3.5 w-px bg-border/60 sm:block" aria-hidden="true" />
 
@@ -223,7 +235,6 @@ export function SiteChrome({
         </div>
       </footer>
 
-      <CookieConsent />
     </div>
   );
 }

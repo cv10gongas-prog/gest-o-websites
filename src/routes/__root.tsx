@@ -14,7 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
-const GOOGLE_ANALYTICS_ID = "G-4BM9SVN2RZ";
+// GA4 é carregado apenas após consentimento pelo script partilhado.
 
 function NotFoundComponent() {
   return (
@@ -280,33 +280,8 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
 
-        {/* Google Analytics */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-
-              function gtag() {
-                dataLayer.push(arguments);
-              }
-
-              window.gtag = gtag;
-
-              gtag('consent', 'default', {
-                analytics_storage: 'denied',
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied'
-              });
-
-              gtag('js', new Date());
-
-              gtag('config', '${GOOGLE_ANALYTICS_ID}');
-            `,
-          }}
-        />
-
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`} />
+        <link rel="stylesheet" href="/nws-html-aprovado/nws-consentimento.css" />
+        <script defer src="/nws-html-aprovado/nws-consentimento.js" />
       </head>
 
       <body>

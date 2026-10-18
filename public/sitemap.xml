@@ -255,4 +255,8 @@
   <url><loc>https://www.novawebstudio.pt/projetos/gespool</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.novawebstudio.pt/projetos/31-janeiro</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.novawebstudio.pt/projetos/radio-alcabideche</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Politicas e informacoes legais -->
+  <url><loc>https://www.novawebstudio.pt/privacidade</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.novawebstudio.pt/cookies</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.novawebstudio.pt/termos</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
