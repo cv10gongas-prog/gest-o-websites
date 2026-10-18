@@ -32,6 +32,16 @@
     script.dataset.nwsAnalytics = 'consented';
     script.onerror = () => { console.warn('[NWS] Google Analytics indisponível (rede ou bloqueador).'); };
     document.head.appendChild(script);
+    // Vercel Web Analytics: apenas paginas publicas e so depois do opt-in.
+    // Script HTML oficial da Vercel, servido pelo proprio dominio no deploy.
+    if (!document.querySelector('script[data-nws-vercel-analytics]')) {
+      const vercelScript = document.createElement('script');
+      vercelScript.defer = true;
+      vercelScript.src = '/_vercel/insights/script.js';
+      vercelScript.dataset.nwsVercelAnalytics = 'consented';
+      vercelScript.onerror = () => { console.warn('[NWS] Vercel Web Analytics indisponivel. Confirmar ativacao no dashboard Vercel.'); };
+      document.head.appendChild(vercelScript);
+    }
   }
 
   function clearAnalyticsCookies() {
@@ -47,11 +57,11 @@
     const q = new URLSearchParams(location.search).get('lang');
     const l = (q || document.documentElement.lang || 'pt').slice(0, 2);
     const dict = {
-      pt: ['Cookies e estatísticas', 'Usamos cookies analíticos do Google Analytics apenas com a tua autorização, para perceber as visitas e melhorar o website. Podes aceitar, recusar ou mudar a escolha quando quiseres.', 'Aceitar analítica', 'Recusar', 'Saber mais sobre cookies', 'Preferências de cookies', 'Preferência guardada.'],
-      en: ['Cookies & statistics', 'We use Google Analytics only with your permission. You can accept, refuse or change your choice at any time.', 'Accept analytics', 'Decline', 'Cookie information', 'Cookie preferences', 'Preference saved.'],
-      es: ['Cookies y estadísticas', 'Usamos Google Analytics solo con tu autorización. Puedes aceptar, rechazar o cambiar tu elección.', 'Aceptar analítica', 'Rechazar', 'Información sobre cookies', 'Preferencias de cookies', 'Preferencia guardada.'],
-      fr: ['Cookies et statistiques', 'Nous utilisons Google Analytics uniquement avec votre consentement. Vous pouvez accepter, refuser ou changer votre choix.', 'Accepter', 'Refuser', 'À propos des cookies', 'Préférences cookies', 'Préférence enregistrée.'],
-      de: ['Cookies und Statistik', 'Wir nutzen Google Analytics nur mit deiner Einwilligung. Du kannst zustimmen, ablehnen oder deine Wahl jederzeit ändern.', 'Zustimmen', 'Ablehnen', 'Cookie-Informationen', 'Cookie-Einstellungen', 'Einstellung gespeichert.']
+      pt: ['Cookies e estatísticas', 'Usamos Google Analytics e Vercel Web Analytics apenas com a tua autorização, para perceber as visitas e melhorar o website. Podes aceitar, recusar ou mudar a escolha quando quiseres.', 'Aceitar analítica', 'Recusar', 'Saber mais sobre cookies', 'Preferências de cookies', 'Preferência guardada.'],
+      en: ['Cookies & statistics', 'We use Google Analytics and Vercel Web Analytics only with your permission. You can accept, refuse or change your choice at any time.', 'Accept analytics', 'Decline', 'Cookie information', 'Cookie preferences', 'Preference saved.'],
+      es: ['Cookies y estadísticas', 'Usamos Google Analytics y Vercel Web Analytics solo con tu autorización. Puedes aceptar, rechazar o cambiar tu elección.', 'Aceptar analítica', 'Rechazar', 'Información sobre cookies', 'Preferencias de cookies', 'Preferencia guardada.'],
+      fr: ['Cookies et statistiques', 'Nous utilisons Google Analytics et Vercel Web Analytics uniquement avec votre consentement. Vous pouvez accepter, refuser ou changer votre choix.', 'Accepter', 'Refuser', 'À propos des cookies', 'Préférences cookies', 'Préférence enregistrée.'],
+      de: ['Cookies und Statistik', 'Wir nutzen Google Analytics und Vercel Web Analytics nur mit deiner Einwilligung. Du kannst zustimmen, ablehnen oder deine Wahl jederzeit ändern.', 'Zustimmen', 'Ablehnen', 'Cookie-Informationen', 'Cookie-Einstellungen', 'Einstellung gespeichert.']
     };
     return dict[l] || dict.pt;
   }
