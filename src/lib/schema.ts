@@ -22,7 +22,7 @@ export function localBusinessSchema(locale: Locale) {
           "https://www.linkedin.com/company/novawebstudiopt",
         ],
         description: dict[locale].meta.home.description,
-        areaServed: { "@type": "Country", name: "Portugal" },
+        ...(isPt ? { areaServed: { "@type": "Country", name: "Portugal" } } : {}),
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: isPt

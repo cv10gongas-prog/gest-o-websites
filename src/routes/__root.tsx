@@ -101,13 +101,13 @@ export const Route = createRootRouteWithContext<{
 
       // Nome base
       {
-        title: "Nova Web Studio | Criação de Websites Profissionais em Portugal",
+        title: "Criação de Websites Profissionais em Portugal | Nova Web Studio",
       },
 
       {
         name: "description",
         content:
-          "Criamos websites profissionais, lojas online e soluções web à medida em Portugal. Design moderno, SEO e desenvolvimento focado no teu negócio.",
+          "Criamos websites profissionais, lojas online e soluções digitais para empresas em todo o país. Design moderno, redesign e desenvolvimento à medida.",
       },
 
       // Cor do browser / Android
