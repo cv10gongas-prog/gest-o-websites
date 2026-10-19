@@ -16,6 +16,7 @@ import {
 
 import { Chip } from "@/components/crm/Bits";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import "./NwsPolishV7.css";
 import { dict, PATHS, type Locale } from "@/lib/i18n";
 
 const CONCEPT_ICONS = [Waves, BedDouble, Hammer];
@@ -691,10 +692,10 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
       `}</style>
 
       {/* INTRO */}
-      <section className="max-w-4xl">
+      <section className="nws-v7-portfolio-intro relative max-w-4xl">
         <Chip tone="primary">{extra.introBadge}</Chip>
 
-        <h1 className="orbit-gradient-text mt-5 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.4rem]">
+        <h1 className="nws-v7-portfolio-headline orbit-gradient-text mt-5 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.4rem]">
           {t.h1}
         </h1>
 
@@ -745,7 +746,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           ].map((project) => (
             <article
               key={project.name}
-              className="group overflow-hidden rounded-3xl border border-primary/25 bg-card/50 shadow-xl shadow-black/5 transition duration-300 hover:-translate-y-1 hover:border-primary/50"
+              className="nws-v7-work-card nws-v7-portfolio-work group overflow-hidden rounded-3xl border border-primary/25 bg-card/50 shadow-xl shadow-black/5 transition duration-300 hover:-translate-y-1 hover:border-primary/50"
             >
               <div className="relative bg-[#07111b] p-3 sm:p-4">
                 <div className="overflow-hidden rounded-2xl border border-cyan-400/25 bg-[#07101a] shadow-2xl shadow-cyan-950/30">
@@ -761,7 +762,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                     <img
                       src={project.preview}
                       alt={`${project.name} — homepage`}
-                      className="size-full object-cover object-top transition duration-500 group-hover:scale-[1.015]"
+                      className="nws-v7-work-image size-full object-cover object-top transition duration-500 group-hover:scale-[1.015]"
                     />
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#050b11]/60 to-transparent" />
                     <div className="absolute bottom-3 left-3 flex h-9 max-w-36 items-center rounded-xl border border-white/15 bg-black/70 px-3 py-1.5 shadow-lg backdrop-blur-md">
@@ -783,7 +784,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
                   href={project.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
+                  className="nws-v7-work-cta mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:-translate-y-0.5"
                 >
                   {extra.vinilartVisit}
                   <ArrowUpRight className="size-4" />
@@ -806,7 +807,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
         </div>
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
+        <article className="nws-v7-portfolio-detail overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[1.15fr_.85fr]">
             {/* MOCKUP */}
             <div className="relative min-h-[430px] overflow-hidden border-b border-border/60 bg-gradient-to-br from-primary/[0.08] via-background to-secondary/30 p-5 sm:p-8 lg:border-b-0 lg:border-r">
@@ -953,7 +954,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
         </div>
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
+        <article className="nws-v7-portfolio-detail overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[.9fr_1.1fr]">
             <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#07111c] via-[#0b1b27] to-[#0d2a32] p-6 sm:p-8 lg:border-b-0 lg:border-r">
               <div className="absolute -left-20 -top-20 size-72 rounded-full bg-primary/10 blur-3xl" />
@@ -1083,7 +1084,7 @@ export function PortfolioPage({ locale }: { locale: Locale }) {
           </span>
         </div>
 
-        <article className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
+        <article className="nws-v7-portfolio-detail overflow-hidden rounded-3xl border border-border/70 bg-card/40 shadow-xl shadow-black/5">
           <div className="grid lg:grid-cols-[.9fr_1.1fr]">
             <div className="relative flex min-h-[420px] items-center justify-center overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#021827] via-[#04243a] to-[#07364f] p-6 sm:p-8 lg:border-b-0 lg:border-r">
               <div className="absolute -left-20 -top-20 size-72 rounded-full bg-cyan-400/10 blur-3xl" />

@@ -14,6 +14,8 @@ export const SECCOES = [
   { chave: "/painel", label: "Gestão" },
   { chave: "/negocios", label: "Criação e Modernização de Sites" },
   { chave: "/pipeline", label: "Pipeline" },
+  { chave: "/descobrir", label: "Descobrir Negócios" },
+  { chave: "/analisar", label: "Website Analyzer" },
   { chave: "/tarefas", label: "Tarefas" },
   { chave: "/satisfacao", label: "Satisfação" },
   { chave: "/emails", label: "Modelos de email" },
@@ -153,6 +155,7 @@ export type Preferencias = {
   marcaSubtitulo: string;
   /* menu */
   seccoes: string[];
+  ordemMenu: string[];
   rotulosSeccoes: Record<string, string>;
   mostrarAtalhos: boolean;
   atalhos: string[];
@@ -198,6 +201,7 @@ export const PREFERENCIAS_PADRAO: Preferencias = {
   marcaNome: "Nova Web CRM",
   marcaSubtitulo: "Um site mais moderno para si",
   seccoes: SECCOES.map((s) => s.chave),
+  ordemMenu: SECCOES.map((s) => s.chave),
   rotulosSeccoes: {},
   mostrarAtalhos: true,
   atalhos: ATALHOS.map((a) => a.chave),

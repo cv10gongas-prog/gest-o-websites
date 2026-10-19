@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
+  ArrowUpRight,
   BarChart3,
   BriefcaseBusiness,
   Building2,
@@ -18,6 +19,7 @@ import {
   Key,
   Layers,
   LayoutDashboard,
+  ListChecks,
   LogOut,
   Mail,
   Menu,
@@ -26,6 +28,7 @@ import {
   Plus,
   QrCode,
   Search,
+  Radar,
   Settings,
   Shield,
   ShieldAlert,
@@ -33,6 +36,7 @@ import {
   Sparkles,
   Table2,
   Trophy,
+  TrendingUp,
   Users,
   UtensilsCrossed,
   X,
@@ -42,7 +46,9 @@ import { useMemo, useState, type ReactNode } from "react";
 
 import { Avatar } from "@/components/crm/Bits";
 import { CommandPalette } from "@/components/crm/CommandPalette";
+import { PinGateProvider } from "@/components/crm/PinProtecao";
 import { NotificationCenter } from "@/components/crm/NotificationCenter";
+import { FaixaComercialV42 } from "@/components/crm/FaixaComercialV42";
 import { DialogNegocio } from "@/components/crm/DialogNegocio";
 import { DialogTarefa } from "@/components/crm/DialogTarefa";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,6 +67,12 @@ const NAVEGACAO_CRM = [
   {
     titulo: "Gestão Comercial",
     itens: [
+      {
+        to: "/operacoes",
+        label: "Sala de Operações",
+        sublabel: "Prioridades e Modo Foco",
+        icon: ListChecks,
+      },
       {
         to: "/painel",
         label: "Command Center",
@@ -97,6 +109,29 @@ const NAVEGACAO_CRM = [
     ],
   },
   {
+    titulo: "Inteligência Comercial",
+    itens: [
+      {
+        to: "/descobrir",
+        label: "Descobrir Negócios",
+        sublabel: "Potenciais clientes locais",
+        icon: Radar,
+      },
+      {
+        to: "/analisar",
+        label: "Website Analyzer",
+        sublabel: "Auditorias e oportunidades",
+        icon: Globe,
+      },
+      {
+        to: "/emails",
+        label: "NWS Email Studio",
+        sublabel: "Propostas HTML",
+        icon: Mail,
+      },
+    ],
+  },
+  {
     titulo: "Recursos & Produção",
     itens: [
       {
@@ -104,12 +139,6 @@ const NAVEGACAO_CRM = [
         label: "Inquéritos de Satisfação",
         sublabel: "Recomendação & Avaliações",
         icon: MessageSquareHeart,
-      },
-      {
-        to: "/emails",
-        label: "Modelos de Email",
-        sublabel: "Templates Comerciais",
-        icon: Mail,
       },
       {
         to: "/projetos",
@@ -136,7 +165,7 @@ const NAVEGACAO_CRM = [
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <PreferenciasProvider>
-      <AppShellInner>{children}</AppShellInner>
+      <PinGateProvider><AppShellInner>{children}</AppShellInner></PinGateProvider>
     </PreferenciasProvider>
   );
 }
@@ -155,6 +184,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
   const { data: tarefas = [] } = useTasks();
   const { data: pedidos = [] } = useWebsiteRequests();
   const { prefs } = usePreferencias();
+  const ordemMenu = (chave: string) => { const ordem = prefs.ordemMenu?.indexOf(chave) ?? -1; return ordem < 0 ? 999 : ordem; };
 
   const pathname = useRouterState({
     select: (s) => s.location.pathname,
@@ -210,6 +240,8 @@ function AppShellInner({ children }: { children: ReactNode }) {
   // Breadcrumbs contextuais
   const breadcrumb = useMemo(() => {
     if (ehHub) return { app: "NWS Workspace", tela: "Hub Central" };
+    if (pathname === "/direcao") return { app: "Administração", tela: "Dashboard CEO" };
+    if (pathname === "/controlo-ceo") return { app: "Administração", tela: "Controlo CEO" };
     if (ehAdmin) return { app: "Administração", tela: "Governança da Plataforma" };
 
     // Breadcrumbs detalhados do NWS Restaurantes
@@ -243,8 +275,17 @@ function AppShellInner({ children }: { children: ReactNode }) {
     if (pathname.startsWith("/negocios/")) {
       return { app: "Nova Web Studio CRM", tela: "Ficha do Cliente" };
     }
+    if (pathname.startsWith("/operacoes")) {
+      return { app: "NWS Intelligence", tela: "Sala de Operações" };
+    }
     if (pathname.startsWith("/negocios")) {
       return { app: "Nova Web Studio CRM", tela: "Negócios & Clientes" };
+    }
+    if (pathname.startsWith("/descobrir")) {
+      return { app: "NWS Intelligence", tela: "Descobrir Negócios" };
+    }
+    if (pathname.startsWith("/analisar")) {
+      return { app: "NWS Intelligence", tela: "Website Analyzer" };
     }
     if (pathname.startsWith("/pipeline")) {
       return { app: "Nova Web Studio CRM", tela: "Pipeline Comercial" };
@@ -259,7 +300,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
       return { app: "Nova Web Studio CRM", tela: "Inquéritos de Satisfação" };
     }
     if (pathname.startsWith("/emails")) {
-      return { app: "Nova Web Studio CRM", tela: "Modelos de Email" };
+      return { app: "NWS Intelligence", tela: "Email Studio" };
     }
     if (pathname.startsWith("/projetos")) {
       return { app: "Nova Web Studio CRM", tela: "Portfólio" };
@@ -332,12 +373,17 @@ function AppShellInner({ children }: { children: ReactNode }) {
       {!ehHub && (
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-border/70 bg-sidebar/95 backdrop-blur-2xl transition-transform duration-200 lg:translate-x-0",
+            "fixed inset-y-0 left-0 z-50 flex w-[286px] flex-col border-r border-violet-400/15 bg-sidebar/95 shadow-[16px_0_64px_-44px_rgba(124,58,237,.55)] backdrop-blur-2xl transition-transform duration-200 lg:translate-x-0",
             menu ? "translate-x-0" : "-translate-x-full",
           )}
         >
           {/* Topo da Sidebar: Botão de Retorno ao Workspace Hub */}
-          <div className="p-3 border-b border-border/60">
+          <div className="border-b border-border/60 p-3">
+            <div className="mb-3 flex items-center gap-2.5 px-1 py-1">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-primary/20 bg-primary/10 shadow-sm"><img src="/logo.png" alt="" className="size-7 object-contain" /></span>
+              <div className="min-w-0 flex-1"><div className="truncate text-sm font-black tracking-tight">Nova Web Studio</div><div className="mt-0.5 text-[10px] font-semibold uppercase tracking-[.18em] text-primary/80">Workspace · V4.3</div></div>
+              <span className="rounded-md border border-primary/20 bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary">CRM</span>
+            </div>
             <Link
               to="/hub"
               className="flex w-full items-center gap-2.5 rounded-2xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-bold text-primary transition hover:bg-primary/20 hover:border-primary/50 shadow-sm"
@@ -349,7 +395,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
           </div>
 
           {/* Nome da Aplicação Atual */}
-          <div className="px-4 py-3 border-b border-border/40 flex items-center justify-between">
+          <div className="mx-3 mt-3 flex items-center justify-between rounded-xl border border-border/60 bg-surface-strong/50 px-3 py-2.5">
             <div className="flex items-center gap-2">
               <span className="grid size-6 place-items-center rounded-lg bg-surface-strong text-primary">
                 {ehAdmin ? (
@@ -387,14 +433,14 @@ function AppShellInner({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => setCmdAberto(true)}
-              className="flex w-full items-center justify-between rounded-xl border border-border/70 bg-surface/50 px-3 py-2 text-xs text-muted-foreground transition hover:border-primary/50 hover:bg-surface-strong hover:text-foreground"
+              className="flex w-full items-center justify-between rounded-xl border border-border/70 bg-surface/50 px-3 py-2.5 text-xs text-muted-foreground transition hover:border-primary/50 hover:bg-surface-strong hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
             >
               <div className="flex items-center gap-2">
                 <Search className="size-3.5 text-primary" />
                 <span>Pesquisar...</span>
               </div>
               <kbd className="rounded border border-border/80 bg-background/80 px-1.5 py-0.5 text-[9px] font-mono">
-                ⌘K
+                Ctrl K
               </kbd>
             </button>
           </div>
@@ -404,6 +450,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
             {/* Navegação Normal do CRM */}
             {!ehAdmin && !ehRestaurantes && !ehMatch && (
               <>
+                {isAdmin && <div className="space-y-1"><div className="px-2.5 text-[10px] font-bold uppercase tracking-[.2em] text-muted-foreground/70">Administração</div><NavItem to="/direcao" icon={TrendingUp} label="Dashboard CEO" active={pathname === "/direcao"} onClick={() => setMenu(false)} /><NavItem to="/controlo-ceo" icon={ShieldCheck} label="Controlo CEO" active={pathname === "/controlo-ceo"} onClick={() => setMenu(false)} /></div>}
                 {NAVEGACAO_CRM.map((categoria) => (
                   <div key={categoria.titulo} className="space-y-1">
                     <div className="px-2.5 text-[10px] font-bold uppercase tracking-[.2em] text-muted-foreground/70">
@@ -411,7 +458,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                     </div>
 
                     <div className="space-y-0.5">
-                      {categoria.itens.map((item) => (
+                      {[...categoria.itens].filter(item => prefs.seccoes.includes(item.to)).sort((a, b) => ordemMenu(a.to) - ordemMenu(b.to)).map((item) => (
                         <NavItem
                           key={item.to}
                           to={item.to}
@@ -545,6 +592,27 @@ function AppShellInner({ children }: { children: ReactNode }) {
             )}
           </div>
 
+          {/* Radar diário, apenas na secção CRM. Os números são do CRM, não são simulações. */}
+          {!ehAdmin && !ehRestaurantes && !ehMatch && pathname !== "/controlo-ceo" && (
+            <div className="px-3 pb-3">
+              <div className="overflow-hidden rounded-2xl border border-violet-400/20 bg-gradient-to-br from-violet-500/15 via-surface-strong/70 to-cyan-500/5 p-3.5 shadow-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-2 text-xs font-extrabold"><Radar className="size-4 text-violet-300" /> No radar</span>
+                  <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary">ATIVOS</span>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <Link to="/tarefas" onClick={() => setMenu(false)} className="rounded-xl border border-border/50 bg-background/40 p-2.5 transition hover:border-violet-400/50" aria-label={`${contagens.tarefas} tarefas pendentes`}>
+                    <span className="block text-lg font-black tabular-nums">{contagens.tarefas}</span><span className="text-[10px] text-muted-foreground">Tarefas</span>
+                  </Link>
+                  <Link to="/operacoes" onClick={() => setMenu(false)} className="rounded-xl border border-border/50 bg-background/40 p-2.5 transition hover:border-violet-400/50" aria-label={`${contagens.prioridade} negócios com prioridade alta`}>
+                    <span className="block text-lg font-black tabular-nums">{contagens.prioridade}</span><span className="text-[10px] text-muted-foreground">Prioridade alta</span>
+                  </Link>
+                </div>
+                <Link to="/operacoes" onClick={() => setMenu(false)} className="mt-3 flex items-center justify-between gap-2 text-[11px] font-bold text-violet-300 transition hover:text-violet-200">Abrir Sala de Operações <ArrowUpRight className="size-3.5" /></Link>
+              </div>
+            </div>
+          )}
+
           {/* Rodapé da Sidebar */}
           <div className="border-t border-border/60 bg-surface/30 p-3 space-y-2">
             <div className="flex items-center gap-2.5 rounded-xl border border-border/40 bg-surface/50 p-2">
@@ -573,7 +641,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
       {/* ============================================================ */}
       {/* CONTEÚDO PRINCIPAL (COM HEADER CONTEXTUAL)                   */}
       {/* ============================================================ */}
-      <div className={cn("flex-1 flex flex-col min-w-0 relative z-10", !ehHub && "lg:pl-[260px]")}>
+      <div className={cn("flex-1 flex flex-col min-w-0 relative z-10", !ehHub && "lg:pl-[286px]")}>
         {/* Banner de Identificação de Staging / Modo de Demonstração */}
         {isDemoMode() && (
           <div className="bg-gradient-to-r from-amber-500/20 via-primary/15 to-info/20 border-b border-warning/40 px-4 py-1.5 text-center text-[11px] font-bold text-warning backdrop-blur-md flex flex-wrap items-center justify-between gap-2">
@@ -667,7 +735,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
                     {breadcrumb.app}
                   </span>
                   <ChevronRight className="hidden size-3.5 shrink-0 text-muted-foreground/50 lg:inline" />
-                  <span className="min-w-0 truncate text-foreground" title={breadcrumb.tela}>
+                  <span className="min-w-0 truncate font-semibold text-foreground" title={breadcrumb.tela}>
                     {breadcrumb.tela}
                   </span>
                 </div>
@@ -697,7 +765,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
               <Search className="size-3.5 text-primary" />
               <span>Pesquisar...</span>
               <kbd className="rounded border border-border/80 bg-background/80 px-1.5 py-0.5 text-[9px] font-mono">
-                ⌘K
+                Ctrl K
               </kbd>
             </button>
 
@@ -718,6 +786,17 @@ function AppShellInner({ children }: { children: ReactNode }) {
                   <span>Novo Negócio</span>
                 </button>
               </div>
+            )}
+
+            {/* Atalho adicional: tarefas sem sair da página comercial */}
+            {!ehHub && !ehAdmin && !ehRestaurantes && !ehMatch && (
+              <button
+                type="button"
+                onClick={() => setModalNovaTarefa(true)}
+                className="hidden items-center gap-1.5 rounded-xl border border-border/70 bg-surface/60 px-3 py-1.5 text-xs font-semibold text-foreground transition hover:border-primary/50 hover:bg-primary/10 xl:inline-flex"
+              >
+                <CalendarClock className="size-3.5 text-primary" /> Nova tarefa
+              </button>
             )}
 
             {/* 2. No Restaurante: Ações contextuais rápidas */}
@@ -755,6 +834,17 @@ function AppShellInner({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
+
+        {/* Barra de produtividade CRM (não altera Restaurantes, Match, Hub ou Admin). */}
+        {!ehHub && !ehAdmin && !ehRestaurantes && !ehMatch && pathname !== "/controlo-ceo" && (
+          <FaixaComercialV42
+            pagina={breadcrumb.tela}
+            pendentes={contagens.tarefas}
+            oportunidades={contagens.prioridade}
+            onPesquisar={() => setCmdAberto(true)}
+            onNovaTarefa={() => setModalNovaTarefa(true)}
+          />
+        )}
 
         {/* Corpo da Página */}
         <main
@@ -810,10 +900,10 @@ function NavItem({
       search={search as never}
       onClick={onClick}
       className={cn(
-        "group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-xs transition duration-150",
+        "group flex w-full items-center gap-2.5 rounded-xl border border-transparent px-3 py-2.5 text-left text-xs transition duration-150 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary",
         active
-          ? "bg-primary/10 font-semibold text-primary ring-1 ring-inset ring-primary/20 shadow-sm"
-          : "text-muted-foreground hover:bg-surface-strong hover:text-foreground",
+          ? "border-primary/25 bg-gradient-to-r from-primary/15 via-primary/10 to-transparent font-semibold text-primary shadow-sm"
+          : "text-muted-foreground hover:border-border/70 hover:bg-surface-strong hover:text-foreground",
       )}
     >
       <Icon

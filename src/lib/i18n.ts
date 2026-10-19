@@ -594,9 +594,9 @@ export const dict: Record<Locale, Dict> = {
   pt: {
     meta: {
       home: {
-        title: "Criação de Sites em Cascais | Nova Web Studio",
+        title: "Criação de Websites Profissionais em Portugal | Nova Web Studio",
         description:
-          "Criação de sites em Cascais, Oeiras e Lisboa. Desenvolvimento de websites profissionais para empresas, criação de lojas online e web design para atrair mais clientes.",
+          "Criamos websites profissionais, lojas online e soluções digitais para empresas em todo o país. Design moderno, redesign e desenvolvimento à medida.",
       },
       portfolio: {
         title: "Portefólio de Websites | Nova Web Studio",
@@ -631,12 +631,12 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Web Designer & Criação de Sites em Cascais",
+      chip: "Criação de Websites e Web Design em Portugal",
       h1: "Criação de sites profissionais e websites para empresas",
-      lead: "Criamos e modernizamos websites para empresas em Cascais, Oeiras, Sintra e Lisboa. Foco em desenvolvimento de websites modernos, lojas online e geração de contactos.",
+      lead: "Criamos e modernizamos websites para empresas em todo o país. Sites profissionais, lojas online e soluções digitais pensadas para gerar contactos.",
       ctaProposal: "Pedir proposta",
       ctaPortfolio: "Ver portefólio",
-      badgeArea: "Cascais, Oeiras, Sintra e Lisboa",
+      badgeArea: "Projetos para todo o território nacional",
       badgeMobile: "Sites adaptados a telemóvel",
       stats: [
         { valor: "24 h", texto: "Resposta a novos pedidos" },
@@ -647,7 +647,7 @@ export const dict: Record<Locale, Dict> = {
       aboutP1:
         "Um website é muitas vezes o primeiro contacto entre um potencial cliente e uma empresa. A Nova Web Studio desenvolve websites modernos para pequenos negócios que precisam de apresentar os seus serviços de forma clara, transmitir confiança e facilitar o contacto com novos clientes.",
       aboutP2:
-        "Trabalhamos principalmente com negócios em Cascais, Oeiras, Sintra e Lisboa, tanto na criação de novos websites como na modernização de sites existentes.",
+        "Trabalhamos com empresas e negócios em todo o país, na criação de novos websites e na modernização de sites existentes, com acompanhamento à distância.",
       servicesTitle: "O que fazemos",
       services: [
         {
@@ -1263,9 +1263,9 @@ export const dict: Record<Locale, Dict> = {
   en: {
     meta: {
       home: {
-        title: "Web Design in Cascais & Websites | Nova Web Studio",
+        title: "Professional Web Design & Websites | Nova Web Studio",
         description:
-          "Professional web design in Cascais, Oeiras and Lisbon. Custom website creation, business websites and online stores built to grow your local presence and leads.",
+          "Professional web design, business websites, online stores and website redesigns. Custom digital solutions to help brands attract more enquiries.",
       },
       portfolio: {
         title: "Website Portfolio | Nova Web Studio",
@@ -1300,12 +1300,12 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Web Designer & Website Creation in Cascais",
+      chip: "Professional Web Design & Website Development",
       h1: "Professional web design and custom business websites",
-      lead: "We build and modernise websites for businesses across Cascais, Oeiras, Sintra and Lisbon, delivering high-performance design, mobile clarity, and steady enquiries.",
+      lead: "We build and modernise professional websites and online stores for businesses, combining clear design, mobile performance and easy ways to get in touch.",
       ctaProposal: "Request a proposal",
       ctaPortfolio: "View portfolio",
-      badgeArea: "Cascais, Oeiras, Sintra and Lisbon",
+      badgeArea: "Remote collaboration for businesses",
       badgeMobile: "Mobile-friendly websites",
       stats: [
         { valor: "24 h", texto: "Reply to new enquiries" },
@@ -1316,7 +1316,7 @@ export const dict: Record<Locale, Dict> = {
       aboutP1:
         "A website is often the first contact between a potential client and a company. Nova Web Studio builds modern websites for small businesses that need to present their services clearly, convey trust and make it easy for new clients to get in touch.",
       aboutP2:
-        "We work mainly with businesses in Cascais, Oeiras, Sintra and Lisbon, both creating new websites and modernising existing ones.",
+        "We collaborate remotely with businesses on new websites and redesigns, from initial planning to launch.",
       servicesTitle: "What we do",
       services: [
         {
@@ -1932,9 +1932,9 @@ export const dict: Record<Locale, Dict> = {
   de: {
     meta: {
       home: {
-        title: "Webdesign in Cascais & Webseiten | Nova Web Studio",
+        title: "Professionelles Webdesign & Websites | Nova Web Studio",
         description:
-          "Professionelles Webdesign in Cascais, Oeiras und Lissabon. Website-Erstellung, Onlineshops und Websites für Unternehmen zur Steigerung von Anfragen und Kunden.",
+          "Professionelles Webdesign, Unternehmenswebsites, Onlineshops und Website-Relaunches. Individuelle digitale Lösungen für einen starken Online-Auftritt.",
       },
       portfolio: {
         title: "Website-Portfolio | Nova Web Studio",
@@ -1969,12 +1969,12 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Webdesigner & Website-Erstellung in Cascais",
+      chip: "Professionelles Webdesign & Website-Erstellung",
       h1: "Professionelles Webdesign und Websites für Unternehmen",
-      lead: "Wir erstellen und modernisieren Websites für Betriebe in Cascais, Oeiras, Sintra und Lissabon – optimiert für mobile Nutzung, schnelle Ladezeiten und mehr Kundenanfragen.",
+      lead: "Wir erstellen und modernisieren professionelle Websites und Onlineshops für Unternehmen – mit klarem Design, guter mobiler Nutzung und einfacher Kontaktaufnahme.",
       ctaProposal: "Angebot anfragen",
       ctaPortfolio: "Portfolio ansehen",
-      badgeArea: "Cascais, Oeiras, Sintra und Lissabon",
+      badgeArea: "Digitale Zusammenarbeit aus der Ferne",
       badgeMobile: "Für Mobilgeräte optimiert",
       stats: [
         { valor: "24 Std.", texto: "Antwort auf neue Anfragen" },
@@ -1985,7 +1985,7 @@ export const dict: Record<Locale, Dict> = {
       aboutP1:
         "Eine Website ist oft der erste Kontakt zwischen einem potenziellen Kunden und einem Unternehmen. Nova Web Studio entwickelt moderne Websites für kleine Betriebe, die ihre Leistungen klar darstellen, Vertrauen schaffen und die Kontaktaufnahme erleichtern möchten.",
       aboutP2:
-        "Wir arbeiten hauptsächlich mit Unternehmen in Cascais, Oeiras, Sintra und Lissabon – sowohl bei neuen Websites als auch bei der Modernisierung bestehender Seiten.",
+        "Wir arbeiten auch aus der Ferne mit Unternehmen zusammen, um neue Websites zu entwickeln oder bestehende Auftritte zu modernisieren.",
       servicesTitle: "Was wir tun",
       services: [
         {
@@ -2598,9 +2598,9 @@ export const dict: Record<Locale, Dict> = {
   fr: {
     meta: {
       home: {
-        title: "Création de Sites Web à Cascais | Nova Web Studio",
+        title: "Création de Sites Web Professionnels | Nova Web Studio",
         description:
-          "Création de sites internet et web design à Cascais, Oeiras et Lisbonne. Sites pour entreprises, refonte et boutiques en ligne conçus pour générer des contacts.",
+          "Création et refonte de sites web professionnels, boutiques en ligne et solutions digitales sur mesure pour valoriser votre activité et attirer des clients.",
       },
       portfolio: {
         title: "Portfolio de Sites Web | Nova Web Studio",
@@ -2635,12 +2635,12 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Web Designer & Création de Sites à Cascais",
+      chip: "Création de Sites Web et Web Design Professionnel",
       h1: "Création de sites internet et web design pour entreprises",
-      lead: "Création et refonte de sites web professionnels à Cascais, Oeiras, Sintra et Lisbonne. Design moderne, performance mobile et génération de contacts qualifiés.",
+      lead: "Nous créons et modernisons des sites web et des boutiques en ligne pour les entreprises, avec un design soigné et une expérience adaptée aux mobiles.",
       ctaProposal: "Demander une proposition",
       ctaPortfolio: "Voir le portfolio",
-      badgeArea: "Cascais, Oeiras, Sintra et Lisbonne",
+      badgeArea: "Collaboration à distance pour les entreprises",
       badgeMobile: "Sites adaptés au mobile",
       stats: [
         { valor: "24 h", texto: "Réponse aux nouvelles demandes" },
@@ -2651,7 +2651,7 @@ export const dict: Record<Locale, Dict> = {
       aboutP1:
         "Un site web est souvent le premier contact entre un client potentiel et une entreprise. Nova Web Studio développe des sites modernes pour les petites entreprises qui doivent présenter clairement leurs services, inspirer confiance et faciliter la prise de contact.",
       aboutP2:
-        "Nous travaillons principalement avec des entreprises de Cascais, Oeiras, Sintra et Lisbonne, aussi bien pour la création que pour la modernisation de sites existants.",
+        "Nous collaborons à distance avec des entreprises pour créer de nouveaux sites ou moderniser leur présence en ligne.",
       servicesTitle: "Ce que nous faisons",
       services: [
         {
@@ -3272,9 +3272,9 @@ export const dict: Record<Locale, Dict> = {
   es: {
     meta: {
       home: {
-        title: "Diseño Web en Cascais & Páginas | Nova Web Studio",
+        title: "Diseño Web y Páginas Profesionales | Nova Web Studio",
         description:
-          "Creación de páginas web y diseño web en Cascais, Oeiras y Lisboa. Sitios web para empresas, tiendas online y rediseño profesional para captar más clientes.",
+          "Diseño y desarrollo de páginas web profesionales, tiendas online y rediseño de sitios. Soluciones digitales a medida para atraer más clientes.",
       },
       portfolio: {
         title: "Portafolio de Sitios Web | Nova Web Studio",
@@ -3309,12 +3309,12 @@ export const dict: Record<Locale, Dict> = {
     },
     footer: { rights: "Portugal" },
     home: {
-      chip: "Diseñador Web & Creación de Páginas en Cascais",
+      chip: "Diseño Web Profesional y Creación de Páginas",
       h1: "Diseño web profesional y creación de páginas para empresas",
-      lead: "Creamos y modernizamos páginas web para empresas en Cascais, Oeiras, Sintra y Lisboa. Diseño moderno, adaptado a móviles y optimizado para captar clientes.",
+      lead: "Creamos y modernizamos páginas web y tiendas online para empresas, con un diseño atractivo, adaptable a móviles y pensado para conseguir contactos.",
       ctaProposal: "Pedir propuesta",
       ctaPortfolio: "Ver portafolio",
-      badgeArea: "Cascais, Oeiras, Sintra y Lisboa",
+      badgeArea: "Colaboración a distancia con empresas",
       badgeMobile: "Webs adaptadas a móvil",
       stats: [
         { valor: "24 h", texto: "Respuesta a nuevas solicitudes" },
@@ -3325,7 +3325,7 @@ export const dict: Record<Locale, Dict> = {
       aboutP1:
         "Una web es muchas veces el primer contacto entre un cliente potencial y una empresa. Nova Web Studio desarrolla webs modernas para pequeños negocios que necesitan presentar sus servicios con claridad, transmitir confianza y facilitar el contacto con nuevos clientes.",
       aboutP2:
-        "Trabajamos sobre todo con negocios en Cascais, Oeiras, Sintra y Lisboa, tanto en la creación de nuevas webs como en la modernización de sitios existentes.",
+        "Colaboramos a distancia con empresas para crear nuevas páginas web o modernizar las que ya tienen.",
       servicesTitle: "Qué hacemos",
       services: [
         {

@@ -1,0 +1,141 @@
+/* NOVA WEB STUDIO — Identidade visual unificada.
+   Esta folha altera APENAS estilos. Sem projetos ou métricas inventados.
+   Inspirada na paleta da marca e nos posts reais do Instagram.
+   A Homepage aprovada mantém a sua composição original. */
+:root {
+  --nws-night:#080b18;
+  --nws-night-2:#0e1326;
+  --nws-panel:#121a31;
+  --nws-violet:#a78bfa;
+  --nws-cyan:#6be5ef;
+  --nws-on:#f8f7ff;
+  --nws-description:#c1c9dc;
+  --nws-stroke:rgba(162,172,232,.21);
+}
+.nws-final {background:var(--nws-night);}
+.nws-final .header {background:rgba(8,11,24,.94);border-color:rgba(157,153,226,.17);}
+.nws-final .mobmenu {background:#0d1225;border-color:#514d98;}
+.nws-final .footer {border-top:1px solid rgba(157,153,226,.2);background:#070a16;}
+.nws-final :is(.v3-portfolio-hero,.v3-services-hero,.pagehero,.case-hero) {
+  position:relative;isolation:isolate;overflow:hidden;
+  background:
+    radial-gradient(ellipse 46% 75% at 83% 15%,rgba(109,79,215,.22),transparent 75%),
+    radial-gradient(ellipse 31% 75% at -5% 90%,rgba(25,148,201,.12),transparent 85%),
+    linear-gradient(138deg,#090c1b,#10142b 72%,#0b1022);
+  border-bottom:1px solid rgba(132,145,218,.16);
+}
+.nws-final :is(.v3-portfolio-hero,.v3-services-hero,.pagehero):before {
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(177,173,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(177,173,255,.045) 1px,transparent 1px);
+  background-size:82px 82px;mask-image:linear-gradient(90deg,transparent,#000 45%,transparent 92%);
+}
+.nws-final :is(.v3-portfolio-hero,.v3-services-hero,.pagehero) h1 {color:#fff;text-shadow:0 14px 75px rgba(98,80,180,.12);}
+.nws-final :is(.v3-portfolio-hero,.v3-services-hero,.pagehero) h1 :is(span,em) {
+  background:linear-gradient(105deg,#b79cff 9%,#989bff 55%,#6ee8f0 100%);
+  background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+.nws-final :is(.v3-portfolio-hero,.v3-services-hero,.pagehero) :is(p,.intro) {color:var(--nws-description);}
+.nws-final .v3-portfolio-hero:after{color:#9a8bfa;opacity:.055;}
+/* TRABALHOS — retirar secção creme e manter os mesmos trabalhos */
+.nws-final .v3-portfolio-content {
+  background:radial-gradient(ellipse 54% 55% at 89% 10%,rgba(80,69,177,.11),transparent 80%),#0a0e1d;
+  color:var(--nws-on);padding-block:88px 118px;
+}
+.nws-final .v3-port-head,.nws-final .v3-portfolio-filters{color:var(--nws-on);}
+.nws-final .v3-portfolio-filters button {
+  background:#151b30;color:#d0d6e8;border:1px solid var(--nws-stroke);
+  border-radius:999px;padding:11px 17px;
+}
+.nws-final .v3-portfolio-filters button:hover,.nws-final .v3-portfolio-filters button.active {
+  background:linear-gradient(108deg,#a991ff,#76ddea);color:#0b1223;border-color:transparent;
+  box-shadow:0 5px 23px rgba(112,91,230,.16);
+}
+.nws-final .v3-port-card {min-width:0;transition:transform .3s ease;}
+.nws-final .v3-port-card:hover {transform:translateY(-5px);}
+.nws-final .v3-port-image {border:1px solid rgba(156,154,242,.25);box-shadow:0 17px 42px rgba(0,0,0,.21);}
+.nws-final .v3-port-meta {color:var(--nws-on);border-bottom:1px solid var(--nws-stroke);}
+.nws-final .v3-port-meta h2 {color:var(--nws-on);}
+.nws-final .v3-port-meta p {color:#b9c1d7;}
+.nws-final .v3-port-meta a,.nws-final .v3-port-head a {color:#95eaf1;}
+/* SERVIÇOS — tirar lilás opaco e usar cartões de identidade NWS */
+.nws-final .v3-services-explain {
+  background:radial-gradient(ellipse 43% 76% at 5% 85%,rgba(71,88,195,.11),transparent 84%),#0c1122;
+  color:var(--nws-on);border-top:1px solid var(--nws-stroke);
+}
+.nws-final .v3-services-explain h2,.nws-final .v3-services-explain h3 {color:var(--nws-on);}
+.nws-final .v3-services-explain p {color:var(--nws-description);}
+.nws-final .v3-explain-grid {gap:15px;border-top:none;}
+.nws-final .v3-explain-grid > * {
+  border:1px solid var(--nws-stroke)!important;border-radius:18px;
+  background:linear-gradient(140deg,#18213b,#0e1629);padding:30px 25px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+.nws-final .v3-explain-grid h3 {margin-top:22px;}
+.nws-final .v3-explain-grid p {color:#bfc7db;}
+/* RESTAURANTES — preservar o produto real; retirar azul pastel dos blocos */
+.nws-final .restaurant-page {
+  background:radial-gradient(ellipse 50% 80% at 94% 0%,rgba(27,142,161,.12),transparent 75%),#0b1020;
+  color:var(--nws-on);
+}
+.nws-final .restaurant-page h2 {color:var(--nws-on);}
+.nws-final .restaurant-page .note,.nws-final .restaurant-page p {color:var(--nws-description);}
+.nws-final .rest-list {gap:15px;}
+.nws-final .rest-list .value {
+  color:var(--nws-on);background:linear-gradient(145deg,#19243a,#11192e);
+  border:1px solid var(--nws-stroke);border-radius:18px;box-shadow:0 15px 40px rgba(0,0,0,.11);
+}
+.nws-final .rest-list .value strong,.nws-final .rest-list .value h3 {color:#f8f7ff;}
+.nws-final .rest-list .value p,.nws-final .rest-list .value small {color:#bac7da;}
+/* ESTÚDIO — colunas, valores e trabalhos sem branco/bege */
+.nws-final .aboutpage {
+  background:radial-gradient(ellipse 55% 72% at 95% 10%,rgba(116,72,204,.12),transparent 80%),#0c1122;
+  color:var(--nws-on);
+}
+.nws-final .aboutpage :is(h2,h3,p,strong) {color:var(--nws-on);}
+.nws-final .aboutpage .about-cols p {color:var(--nws-description);}
+.nws-final .aboutpage .value {
+  background:linear-gradient(145deg,#1a223b,#121a2d);
+  border:1px solid var(--nws-stroke);border-radius:16px;
+}
+.nws-final .aboutpage .value p {color:var(--nws-description);}
+.nws-final .works {
+  background:radial-gradient(ellipse 45% 60% at 9% 6%,rgba(31,123,174,.1),transparent 85%),#090d1c;
+  color:var(--nws-on);border-top:1px solid var(--nws-stroke);
+}
+.nws-final .works :is(h2,h3,h4) {color:#fff;}
+.nws-final .works :is(.works-top p,.cardmeta p,.work-details p) {color:var(--nws-description);}
+.nws-final .works .eyebrow {color:#b69cff;}
+.nws-final .work-feature {border:1px solid rgba(159,140,255,.32);box-shadow:0 28px 70px rgba(0,0,0,.25);}
+.nws-final .work-duo .project-card {background:linear-gradient(145deg,#17203a,#0f1529);border:1px solid var(--nws-stroke);color:#fff;}
+.nws-final .work-duo .project-card :is(h3,p) {color:var(--nws-on);}
+.nws-final .works .btn-dark {background:#ab97ff;color:#101226;}
+/* CTA das páginas Restaurantes / Estúdio. Não muda o CTA aprovado da homepage. */
+.nws-final .cta-band {
+  color:var(--nws-on);isolation:isolate;
+  background:radial-gradient(ellipse 57% 80% at 99% 0%,rgba(128,86,216,.23),transparent 85%),
+             radial-gradient(ellipse 40% 80% at 0% 100%,rgba(43,151,205,.15),transparent 82%),
+             linear-gradient(117deg,#0a0c1b,#14172e);
+  border-top:1px solid var(--nws-stroke);
+}
+.nws-final .cta-band:before {z-index:-1;border-color:rgba(161,144,250,.18);box-shadow:0 0 0 85px rgba(106,102,221,.04),0 0 0 170px rgba(106,102,221,.025);}
+.nws-final .cta-band h2 {color:#fff;}
+.nws-final .cta-band p {color:var(--nws-description);}
+.nws-final .cta-band .btn-dark {
+  background:linear-gradient(110deg,#ac8dff,#8fdaef);color:#0c1020;
+  box-shadow:0 12px 40px rgba(98,91,220,.20);
+}
+/* Integridade e leitura em todos os ecrãs */
+.nws-final :is(.is-restaurantes,.is-sobre) {color:var(--nws-on);}
+.nws-final .rest-feature {border-top:1px solid var(--nws-stroke);}
+@media (max-width:890px){
+  .nws-final .v3-explain-grid{grid-template-columns:1fr;gap:14px;}
+  .nws-final .v3-explain-grid > * {padding:26px;}
+}
+@media (max-width:610px){
+  .nws-final .v3-portfolio-content{padding-block:62px 75px;}
+  .nws-final .restaurant-page{padding-block:62px;}
+  .nws-final .v3-port-card:hover{transform:none;}
+  .nws-final .v3-portfolio-filters{gap:8px;}
+  .nws-final .v3-portfolio-filters button{padding:10px 13px;}
+}
+@media (prefers-reduced-motion:reduce){.nws-final .v3-port-card{transition:none;}}

@@ -1,0 +1,21 @@
+/* Nova Web Studio — banner e links de privacidade (isolado do HUB) */
+#nws-consent-wrap{position:fixed;left:0;bottom:0;z-index:2147483000;pointer-events:none;width:100%;font-family:'DM Sans','Sora',Arial,sans-serif}
+#nws-cookie-banner{pointer-events:auto;box-sizing:border-box;max-width:540px;margin:0 0 20px 20px;padding:22px;border:1px solid rgba(148,169,216,.37);border-radius:20px;background:linear-gradient(140deg,#151e33 0%,#0d1427 100%);color:#f5f7ff;box-shadow:0 24px 78px rgba(0,0,0,.48);line-height:1.55}
+#nws-cookie-banner *{box-sizing:border-box}
+#nws-cookie-banner .nws-cookie-top{display:flex;align-items:center;gap:11px;font-size:15px}
+#nws-cookie-banner .nws-cookie-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#25364a;color:#92e8ec;font-size:20px}
+#nws-cookie-banner p{margin:12px 0 18px;font-size:13px;line-height:1.65;color:#d1d9eb}
+#nws-cookie-banner .nws-cookie-actions{display:flex;gap:9px;flex-wrap:wrap}
+#nws-cookie-banner button{flex:1;min-width:145px;padding:11px 13px;border:1px solid #879ab9;border-radius:11px;font:700 12px 'Sora',Arial,sans-serif;cursor:pointer;transition:filter .2s}
+#nws-cookie-banner .nws-cookie-accept{color:#081c27;background:#8fe7eb;border-color:#8fe7eb}
+#nws-cookie-banner .nws-cookie-deny{color:#f5f7ff;background:#1c2940}
+#nws-cookie-banner button:hover{filter:brightness(1.13)}
+#nws-cookie-banner :is(button,a):focus-visible,.nws-legal-links :is(a,button):focus-visible{outline:3px solid #8fe7eb;outline-offset:3px}
+#nws-cookie-banner .nws-cookie-learn{display:inline-block;color:#c0e8f8;font-size:12px;margin-top:16px;text-decoration:underline;text-underline-offset:3px}
+.nws-legal-links{display:inline-flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:11px}
+.nws-legal-links a,.nws-legal-links button{color:#bac7df!important;text-decoration:none!important;background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.nws-legal-links a:hover,.nws-legal-links button:hover{color:#8fe7eb!important;text-decoration:underline!important}
+/* Apenas a logomarca da rádio no portefólio; não altera os restantes cartões. */
+.v3-port-radio .v3-port-logo img{transform:scale(1.18);transform-origin:center center}
+@media(max-width:600px){#nws-cookie-banner{margin:0 12px 12px;max-width:none;padding:17px;border-radius:16px}#nws-cookie-banner button{min-width:120px}.nws-legal-links{gap:9px}}
+@media(prefers-reduced-motion:reduce){#nws-cookie-banner button{transition:none}}

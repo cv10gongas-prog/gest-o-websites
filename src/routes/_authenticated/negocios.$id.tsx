@@ -225,6 +225,8 @@ function FichaNegocio() {
                 ))}
               </select>
 
+              <Link to="/emails" search={{negocio: negocio.id}} className="flex items-center gap-1.5 rounded-xl border border-violet-400/40 bg-violet-500/10 px-3.5 py-2 text-xs font-bold text-violet-200 hover:bg-violet-500/20"><Mail className="size-3.5"/> Preparar proposta</Link>
+
               <button
                 type="button"
                 onClick={() => setChamada(true)}

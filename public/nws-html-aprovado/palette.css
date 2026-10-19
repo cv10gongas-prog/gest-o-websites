@@ -1,0 +1,176 @@
+/* NWS • Harmonização de cores após aprovação da edição final.
+   Mantém o hero, layout, conteúdo, links e todas as interações originais.
+   Apenas substitui os fundos claros e roxo chapado por superfícies dark premium.
+   Para reverter, retirar a referência a palette.css de cada HTML. */
+:root {
+  --nws-midnight: #090c19;
+  --nws-surface: #101728;
+  --nws-elevated: #171e33;
+  --nws-lilac: #af98ff;
+  --nws-cyan: #82e9ed;
+  --nws-on-dark: #f6f5ff;
+  --nws-soft-text: #b8bed2;
+  --nws-edge: rgba(169,175,236,.23);
+}
+/* 01 — Trabalhos, anteriormente branco / creme */
+.nws-final .v3-work-section {
+  color: var(--nws-on-dark);
+  background:
+    radial-gradient(ellipse 55% 52% at 6% 2%, rgba(106,72,190,.14),transparent 85%),
+    radial-gradient(ellipse 49% 45% at 100% 74%, rgba(30,132,160,.12),transparent 85%),
+    #0c1020;
+  border-top: 1px solid #ffffff12;
+}
+.nws-final .v3-work-section .v3-section-heading h2 {color:var(--nws-on-dark)}
+.nws-final .v3-work-section .v3-section-heading h2 span {
+  color:#baa7ff;
+  background:linear-gradient(115deg,#b19dff 6%,#918bff 52%,#76e0e9);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nws-final .v3-work-section .v3-kicker {color:#b8a3ff}
+.nws-final .v3-work-section .v3-section-heading > p {color:var(--nws-soft-text)}
+.nws-final .v3-feature-meta small {color:#acacc7}
+.nws-final .v3-feature-meta h3 {color:#f6f5ff}
+.nws-final .v3-feature-meta p {color:#b5bbcf}
+.nws-final .v3-feature-meta > a {color:#d5eaff;border:1px solid #929bcc70;background:#ffffff06}
+.nws-final .v3-feature-meta > a:hover {background:#917cf1;color:#101326}
+.nws-final .v3-feature-image {border:1px solid rgba(192,178,255,.23);box-shadow:0 30px 70px rgba(0,0,0,.28)}
+.nws-final .v3-feature-vinil .v3-feature-image {border-color:rgba(119,218,239,.26)}
+.nws-final .v3-minicase {background:linear-gradient(140deg,#1a2037,#131a2c);border:1px solid var(--nws-edge);color:#f6f5ff}
+.nws-final .v3-minicase:hover {background:#202943;border-color:#a28bef}
+.nws-final .v3-minicase img {background:#212a42}
+.nws-final .v3-minicase b {color:#f4f5ff}
+.nws-final .v3-minicase small {color:#afb6cc}
+.nws-final .v3-minicase strong {color:#8fe6ef}
+.nws-final .final-small-project-head {border-color:#ffffff29;color:#b9bbd0}
+.nws-final .final-small-project-head a {color:#9fe9f0}
+.nws-final .v3-section-end {border-color:#ffffff2a}
+.nws-final .v3-section-end > span {color:#adb1ca}
+.nws-final .v3-section-end .v3-textlink {color:#a5eaf0}
+/* 02 — Serviços, anteriormente creme */
+.nws-final .v3-services {
+  color:var(--nws-on-dark);
+  background:
+    radial-gradient(ellipse 53% 57% at 95% 9%,rgba(64,94,187,.17),transparent 80%),
+    radial-gradient(ellipse 36% 62% at 0% 94%,rgba(80,54,158,.14),transparent 80%),
+    #0d1121;
+  border-top:1px solid #ffffff12;
+}
+.nws-final .v3-services .v3-section-heading h2 {color:#faf8ff}
+.nws-final .v3-services .v3-section-heading h2 span {color:#ac9bff}
+.nws-final .v3-services .v3-section-heading > p {color:var(--nws-soft-text)}
+.nws-final .v3-services .v3-kicker {color:#b6a4ff}
+.nws-final .v3-service-tabs button {background:#161b2e;border:1px solid #7783ab4b;color:#9cabc9}
+.nws-final .v3-service-tabs button b {color:#d9dced}
+.nws-final .v3-service-tabs button span {color:#9aa5bf}
+.nws-final .v3-service-tabs button:is(.active,:hover) {background:#292449;border-color:#b49bff;color:#a4eaf2}
+.nws-final .v3-service-tabs button:is(.active,:hover) b {color:#fff}
+.nws-final .final-services-preview {background:#121a2f;border:1px solid #91a0c44d;box-shadow:0 28px 80px #0004}
+.nws-final .final-service-preview-visual {background:radial-gradient(circle at 68% 21%,#5c48a26b,transparent 60%),#1b1e39}
+/* 03 — Como trabalhamos, anteriormente roxo plano */
+.nws-final .v3-how {
+  color:#f7f6ff;
+  background:
+    radial-gradient(ellipse 60% 86% at 98% 4%,rgba(102,69,191,.18),transparent 80%),
+    radial-gradient(ellipse 43% 65% at 10% 95%,rgba(36,117,159,.12),transparent 85%),
+    #0a0f20;
+  border-top:1px solid #ffffff14;
+  border-bottom:1px solid #ffffff18;
+}
+.nws-final .v3-how .v3-kicker {color:#b7a3ff}
+.nws-final .v3-how .v3-section-heading h2 {color:#fff}
+.nws-final .v3-how .v3-section-heading h2 span {
+  color:#a99cff;
+  background:linear-gradient(100deg,#b49aff 8%,#9697ff 55%,#7be5ef 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nws-final .v3-how .v3-section-heading p {color:var(--nws-soft-text)}
+.nws-final .v3-how-grid {gap:14px;border:0}
+.nws-final .v3-how-step,
+.nws-final .v3-how-step:first-child,
+.nws-final .v3-how-step:last-child {
+  padding:30px 26px 34px;
+  border:1px solid var(--nws-edge);
+  border-radius:16px;
+  background:linear-gradient(142deg,rgba(37,44,79,.64),rgba(14,20,38,.92));
+  box-shadow:inset 0 1px 0 #ffffff09,0 15px 38px #00000018;
+  transition:transform .24s,border-color .24s,background .24s;
+}
+.nws-final .v3-how-step:hover {transform:translateY(-4px);border-color:#a08cf788;background:linear-gradient(142deg,#262344,#101b32)}
+.nws-final .v3-how-no {color:#a5a5c3}
+.nws-final .v3-how-icon {color:#ac91ff;text-shadow:0 0 30px #9f7cf645}
+.nws-final .v3-how-step h3 {color:#fff}
+.nws-final .v3-how-step p {color:#b6bfd3}
+.nws-final .v3-how-outro {color:#bec4d8;border-top:1px solid #ffffff20;padding-top:26px}
+.nws-final .v3-how-outro a {color:#9ee8f0}
+/* 04 — CTA final, anteriormente lilás chapado */
+.nws-final .v3-last {
+  color:#f9f8ff;
+  background:
+    radial-gradient(ellipse 62% 88% at 92% 0%,rgba(101,69,186,.29),transparent 79%),
+    radial-gradient(ellipse 40% 89% at 100% 100%,rgba(41,151,173,.24),transparent 77%),
+    linear-gradient(125deg,#0b0c1e 5%,#15172e 61%,#11182b);
+  border-top:1px solid #ffffff1b;
+  position:relative;isolation:isolate;overflow:hidden;
+}
+.nws-final .v3-last:before {content:'';position:absolute;z-index:-1;width:580px;height:580px;border:1px solid #b0a0ff29;border-radius:50%;right:-330px;top:-200px;box-shadow:0 0 0 85px #8b82ee06,0 0 0 170px #8b82ee04;pointer-events:none}
+.nws-final .v3-last-top,.nws-final .v3-last-bottom {border-color:#ffffff27}
+.nws-final .v3-last .v3-kicker {color:#bca8ff}
+.nws-final .v3-last-top > span:last-child {color:#c2cadc}
+.nws-final .v3-last h2 {color:#fff}
+.nws-final .v3-last h2 em {color:#fff}
+.nws-final .v3-last h2 > span {color:#9c9aff}
+.nws-final .v3-last h2 em,.nws-final .v3-last h2>span {text-shadow:0 12px 50px #928afa20}
+.nws-final .v3-last-bottom p {color:#bec6dd}
+.nws-final .v3-last .v3-action-black {background:linear-gradient(112deg,#a88bff,#8fd7e9);color:#101427;box-shadow:0 16px 44px #6652c441}
+.nws-final .v3-last .v3-action-black:hover {background:linear-gradient(112deg,#c4b3ff,#adf4f4);color:#101427}
+/* Outras páginas: a mesma linguagem escura, sem blocos brancos isolados */
+.nws-final .portfolio,.nws-final .services-detail,.nws-final .aboutpage,.nws-final .case-details {
+  color:var(--nws-on-dark);
+  background:radial-gradient(ellipse 51% 46% at 94% 1%,rgba(83,64,154,.11),transparent 80%),#0c1020;
+}
+.nws-final .v3-portfolio-note {border-color:#ffffff30}
+.nws-final .v3-portfolio-note p {color:#f6f5ff}
+.nws-final .v3-portfolio-note > span {color:#c0aaff}
+.nws-final .portfolio-intro {color:#b6bed3}
+.nws-final .filterbar button {color:#c5cadb;border-color:#626b8b;background:#ffffff05}
+.nws-final .filterbar button.active,.nws-final .filterbar button:hover {color:#0c1221;background:#a99afa;border-color:#a99afa}
+.nws-final .project-card,.nws-final .portfolio .project-card {background:#171e32;border:1px solid #7785ae4a;color:#f7f6ff}
+.nws-final .project-card .cardmeta p,.nws-final .portfolio .cardmeta p {color:#b4bbd1}
+.nws-final .cardmeta .round-arrow {border-color:#667b9e;color:#a2eef0}
+.nws-final .portfolio-linkrow a {color:#9ee8f0}
+.nws-final .service-detail-row {border-color:#ffffff26}
+.nws-final .service-detail-row .id {color:#b49bff}
+.nws-final .service-detail-row h2 {color:#fff}
+.nws-final .service-detail-row p,.nws-final .about-cols p,.nws-final .value p,.nws-final .case-grid p {color:#b6bed2}
+.nws-final .service-detail-row li:before {color:#90e2ec}
+.nws-final .aboutpage h2,.nws-final .case-grid h2 {color:#fff}
+.nws-final .value {background:linear-gradient(140deg,#1c2238,#15192b);border:1px solid var(--nws-edge)}
+.nws-final .value strong {color:#fff}
+.nws-final .case-facts div {border-color:#ffffff2a}
+.nws-final .case-facts strong {color:#f5f6ff}
+.nws-final .case-facts small {color:#b9c1d6}
+.nws-final .final-case-note {background:#1d2439;color:#bfc6da;border:1px solid #ffffff21}
+.nws-final .v3-next-case {background:#1b2036;border:1px solid #ffffff20}
+/* O formulário continua claro para máxima legibilidade dos campos. */
+.nws-final .contact-form {background:#161b30;color:#f8f7ff;border:1px solid #757ea054}
+.nws-final .contact-form > p {color:#b8c1d6}
+.nws-final .contact-form label {color:#f0f0ff}
+.nws-final .contact-form .field input,
+.nws-final .contact-form .field textarea,
+.nws-final .contact-form .field select {background:#0d1426;color:#f7f7ff;border:1px solid #727caa78}
+.nws-final .contact-form .field :is(input,textarea,select):focus {border-color:#a9a1ff;box-shadow:0 0 0 3px #a09af31f}
+.nws-final .contact-form :is(input,textarea)::placeholder {color:#a2acc5}
+.nws-final .final-mail-notice {background:#1c2c37;color:#bde0e5}
+/* Responsive: cartões fluídos e a largura original preservada */
+@media(max-width:900px){
+  .nws-final .v3-how-grid {gap:12px}
+  .nws-final .v3-how-step,.nws-final .v3-how-step:first-child,.nws-final .v3-how-step:last-child{border:1px solid var(--nws-edge);padding:24px}
+}
+@media(max-width:610px){
+  .nws-final .v3-how-grid {gap:12px}
+  .nws-final .v3-how-step,.nws-final .v3-how-step:first-child,.nws-final .v3-how-step:last-child {min-height:220px;padding:22px}
+  .nws-final .v3-minicase img {background:#202941}
+  .nws-final .v3-last:before {width:330px;height:330px;right:-210px;top:-75px}
+}
+@media(prefers-reduced-motion:reduce){.nws-final .v3-how-step{transition:none}}

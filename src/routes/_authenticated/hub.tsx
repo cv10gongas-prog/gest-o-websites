@@ -216,6 +216,44 @@ function WorkspaceHub() {
         </div>
       </section>
 
+      {/* NWS Intelligence V3 — circuito comercial ligado a rotas existentes */}
+      <section aria-labelledby="nws-hub-v3" className="space-y-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.2em] text-violet-300"><Sparkles className="size-4"/> NWS Hub V3</p>
+            <h2 id="nws-hub-v3" className="mt-2 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Inteligência comercial</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Do primeiro contacto à proposta, sem perder a ligação ao CRM.</p>
+          </div>
+          <Link to="/negocios" className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-violet-400/30 bg-violet-500/5 px-4 text-xs font-bold text-violet-200 hover:bg-violet-500/10">Ver pipeline de negócios <ArrowRight className="size-4"/></Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          {[
+            { rotulo:"Negócios por contactar", numero: negocios.filter(n=>n.estado==="por_contactar").length, icon:Building2 },
+            { rotulo:"Com email registado", numero: negocios.filter(n=>Boolean(n.email?.trim())).length, icon:Globe },
+            { rotulo:"Sem website registado no CRM", numero: negocios.filter(n=>!n.website?.trim()).length, icon:Search },
+            { rotulo:"Tarefas por concluir", numero: tarefas.filter(t=>t.estado!=="concluida").length, icon:CalendarClock },
+          ].map(({rotulo,numero,icon: Icon})=><div key={rotulo} className="rounded-2xl border border-violet-400/15 bg-surface/60 p-4"><Icon className="size-4 text-violet-300"/><p className="mt-3 font-mono text-2xl font-extrabold tabular-nums text-foreground">{numero}</p><p className="mt-1 text-xs text-muted-foreground">{rotulo} <span className="opacity-70">· CRM</span></p></div>)}
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {([
+            { to:"/descobrir",nome:"1 · Descobrir", detalhe:"Estabelecimentos locais no catálogo Overture",icon:Search },
+            { to:"/analisar",nome:"2 · Analisar",detalhe:"Auditorias com evidências reais",icon:Globe },
+            { to:"/negocios",nome:"3 · Qualificar",detalhe:"Prioridades, contactos e acompanhamento",icon:BriefcaseBusiness },
+            { to:"/emails",nome:"4 · Preparar email",detalhe:"HTML, propostas e pré-visualização",icon:Sparkles },
+          ] as const).map(({to,nome,detalhe,icon:Icon})=><Link key={to} to={to} className="group flex min-h-[145px] flex-col justify-between rounded-2xl border border-violet-400/20 bg-surface/65 p-5 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500/10"><div className="flex items-center justify-between"><span className="grid size-10 place-items-center rounded-xl bg-violet-500/15 text-violet-200"><Icon className="size-5"/></span><ArrowRight className="size-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-violet-300"/></div><div><p className="mt-3 text-sm font-extrabold">{nome}</p><p className="mt-1 text-xs text-muted-foreground">{detalhe}</p></div></Link>)}
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-400/25 bg-gradient-to-r from-violet-500/10 to-transparent p-4 sm:p-5">
+          <div className="flex items-center gap-3"><ShieldCheck className="size-6 shrink-0 text-violet-300"/><div><p className="text-sm font-bold">Segurança adicional por PIN</p><p className="mt-1 text-xs text-muted-foreground">Opcional. Confirma operações sensíveis no próprio CRM com uma proteção de base de dados.</p></div></div>
+          <Link to="/seguranca" className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-violet-400/40 px-4 text-xs font-bold text-violet-200 hover:bg-violet-500/10">Configurar segurança <ArrowRight className="size-4"/></Link>
+        </div>
+      </section>
+
+      <div className="space-y-2">
+        <p className="text-[11px] font-bold uppercase tracking-[.2em] text-muted-foreground">Ecossistema NWS</p>
+        <h2 className="text-xl font-extrabold text-foreground sm:text-2xl">Aplicações & gestão</h2>
+        <p className="text-xs text-muted-foreground">Acesso aos produtos e à administração sem sair do Workspace.</p>
+      </div>
+
       {/* GRELHA 2x2 DAS 4 GRANDES APLICAÇÕES */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* ============================================================ */}
@@ -510,7 +548,7 @@ function WorkspaceHub() {
       {/* FOOTER DISCRETO DO WORKSPACE */}
       <footer className="pt-4 text-center text-xs text-muted-foreground">
         <p>
-          Nova Web Studio © 2026 • Command Center Workspace v2.0 • Infraestrutura de Alta
+          Nova Web Studio © 2026 • Hub Intelligence v3.1 • Infraestrutura de Alta
           Performance
         </p>
       </footer>

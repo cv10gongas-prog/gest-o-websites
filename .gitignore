@@ -37,3 +37,7 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+/apps/desktop/src-tauri/target/
+/apps/desktop/src-tauri/gen/schemas/
+/apps/desktop/dist/
+/supabase/.temp/

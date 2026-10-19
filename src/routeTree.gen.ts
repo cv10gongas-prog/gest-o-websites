@@ -13,14 +13,23 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactoRouteImport } from './routes/contacto'
+import { Route as DemoRestaurantesRouteImport } from './routes/demo-restaurantes'
+import { Route as NwsRestaurantesInterativoRouteImport } from './routes/nws-restaurantes-interativo'
 import { Route as PortefolioRouteImport } from './routes/portefolio'
 import { Route as RestaurantesRouteImport } from './routes/restaurantes'
+import { Route as ServicosRouteImport } from './routes/servicos'
+import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAnalisarRouteImport } from './routes/_authenticated/analisar'
 import { Route as AuthenticatedArquivosRouteImport } from './routes/_authenticated/arquivos'
+import { Route as AuthenticatedControloCeoRouteImport } from './routes/_authenticated/controlo-ceo'
 import { Route as AuthenticatedDefinicoesRouteImport } from './routes/_authenticated/definicoes'
+import { Route as AuthenticatedDescobrirRouteImport } from './routes/_authenticated/descobrir'
+import { Route as AuthenticatedDirecaoRouteImport } from './routes/_authenticated/direcao'
 import { Route as AuthenticatedEmailsRouteImport } from './routes/_authenticated/emails'
 import { Route as AuthenticatedEquipaRouteImport } from './routes/_authenticated/equipa'
 import { Route as AuthenticatedHubRouteImport } from './routes/_authenticated/hub'
+import { Route as AuthenticatedOperacoesRouteImport } from './routes/_authenticated/operacoes'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedPedidosRouteImport } from './routes/_authenticated/pedidos'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
@@ -44,6 +53,7 @@ import { Route as FrIndexRouteImport } from './routes/fr.index'
 import { Route as FrContactRouteImport } from './routes/fr.contact'
 import { Route as FrPortfolioRouteImport } from './routes/fr.portfolio'
 import { Route as FrRestaurantsRouteImport } from './routes/fr.restaurants'
+import { Route as ProjetosSlugRouteImport } from './routes/projetos.$slug'
 import { Route as SatisfacaoTokenRouteImport } from './routes/satisfacao.$token'
 import { Route as AuthenticatedNegociosIndexRouteImport } from './routes/_authenticated/negocios.index'
 import { Route as AuthenticatedNegociosIdRouteImport } from './routes/_authenticated/negocios.$id'
@@ -77,6 +87,17 @@ const ContactoRoute = ContactoRouteImport.update({
   path: '/contacto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DemoRestaurantesRoute = DemoRestaurantesRouteImport.update({
+  id: '/demo-restaurantes',
+  path: '/demo-restaurantes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NwsRestaurantesInterativoRoute =
+  NwsRestaurantesInterativoRouteImport.update({
+    id: '/nws-restaurantes-interativo',
+    path: '/nws-restaurantes-interativo',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PortefolioRoute = PortefolioRouteImport.update({
   id: '/portefolio',
   path: '/portefolio',
@@ -87,9 +108,24 @@ const RestaurantesRoute = RestaurantesRouteImport.update({
   path: '/restaurantes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicosRoute = ServicosRouteImport.update({
+  id: '/servicos',
+  path: '/servicos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnalisarRoute = AuthenticatedAnalisarRouteImport.update({
+  id: '/analisar',
+  path: '/analisar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedArquivosRoute = AuthenticatedArquivosRouteImport.update({
@@ -97,9 +133,25 @@ const AuthenticatedArquivosRoute = AuthenticatedArquivosRouteImport.update({
   path: '/arquivos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedControloCeoRoute =
+  AuthenticatedControloCeoRouteImport.update({
+    id: '/controlo-ceo',
+    path: '/controlo-ceo',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDefinicoesRoute = AuthenticatedDefinicoesRouteImport.update({
   id: '/definicoes',
   path: '/definicoes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDescobrirRoute = AuthenticatedDescobrirRouteImport.update({
+  id: '/descobrir',
+  path: '/descobrir',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDirecaoRoute = AuthenticatedDirecaoRouteImport.update({
+  id: '/direcao',
+  path: '/direcao',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedEmailsRoute = AuthenticatedEmailsRouteImport.update({
@@ -115,6 +167,11 @@ const AuthenticatedEquipaRoute = AuthenticatedEquipaRouteImport.update({
 const AuthenticatedHubRoute = AuthenticatedHubRouteImport.update({
   id: '/hub',
   path: '/hub',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOperacoesRoute = AuthenticatedOperacoesRouteImport.update({
+  id: '/operacoes',
+  path: '/operacoes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
@@ -232,6 +289,11 @@ const FrRestaurantsRoute = FrRestaurantsRouteImport.update({
   path: '/fr/restaurants',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjetosSlugRoute = ProjetosSlugRouteImport.update({
+  id: '/projetos/$slug',
+  path: '/projetos/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SatisfacaoTokenRoute = SatisfacaoTokenRouteImport.update({
   id: '/satisfacao/$token',
   path: '/satisfacao/$token',
@@ -313,14 +375,23 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contacto': typeof ContactoRoute
+  '/demo-restaurantes': typeof DemoRestaurantesRoute
+  '/nws-restaurantes-interativo': typeof NwsRestaurantesInterativoRoute
   '/portefolio': typeof PortefolioRoute
   '/restaurantes': typeof RestaurantesRoute
+  '/servicos': typeof ServicosRoute
+  '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/analisar': typeof AuthenticatedAnalisarRoute
   '/arquivos': typeof AuthenticatedArquivosRoute
+  '/controlo-ceo': typeof AuthenticatedControloCeoRoute
   '/definicoes': typeof AuthenticatedDefinicoesRoute
+  '/descobrir': typeof AuthenticatedDescobrirRoute
+  '/direcao': typeof AuthenticatedDirecaoRoute
   '/emails': typeof AuthenticatedEmailsRoute
   '/equipa': typeof AuthenticatedEquipaRoute
   '/hub': typeof AuthenticatedHubRoute
+  '/operacoes': typeof AuthenticatedOperacoesRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
@@ -340,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/fr/contact': typeof FrContactRoute
   '/fr/portfolio': typeof FrPortfolioRoute
   '/fr/restaurants': typeof FrRestaurantsRoute
+  '/projetos/$slug': typeof ProjetosSlugRoute
   '/satisfacao/$token': typeof SatisfacaoTokenRoute
   '/de/': typeof DeIndexRoute
   '/en/': typeof EnIndexRoute
@@ -362,14 +434,23 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contacto': typeof ContactoRoute
+  '/demo-restaurantes': typeof DemoRestaurantesRoute
+  '/nws-restaurantes-interativo': typeof NwsRestaurantesInterativoRoute
   '/portefolio': typeof PortefolioRoute
   '/restaurantes': typeof RestaurantesRoute
+  '/servicos': typeof ServicosRoute
+  '/sobre': typeof SobreRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/analisar': typeof AuthenticatedAnalisarRoute
   '/arquivos': typeof AuthenticatedArquivosRoute
+  '/controlo-ceo': typeof AuthenticatedControloCeoRoute
   '/definicoes': typeof AuthenticatedDefinicoesRoute
+  '/descobrir': typeof AuthenticatedDescobrirRoute
+  '/direcao': typeof AuthenticatedDirecaoRoute
   '/emails': typeof AuthenticatedEmailsRoute
   '/equipa': typeof AuthenticatedEquipaRoute
   '/hub': typeof AuthenticatedHubRoute
+  '/operacoes': typeof AuthenticatedOperacoesRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/pedidos': typeof AuthenticatedPedidosRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
@@ -389,6 +470,7 @@ export interface FileRoutesByTo {
   '/fr/contact': typeof FrContactRoute
   '/fr/portfolio': typeof FrPortfolioRoute
   '/fr/restaurants': typeof FrRestaurantsRoute
+  '/projetos/$slug': typeof ProjetosSlugRoute
   '/satisfacao/$token': typeof SatisfacaoTokenRoute
   '/de': typeof DeIndexRoute
   '/en': typeof EnIndexRoute
@@ -412,14 +494,23 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/contacto': typeof ContactoRoute
+  '/demo-restaurantes': typeof DemoRestaurantesRoute
+  '/nws-restaurantes-interativo': typeof NwsRestaurantesInterativoRoute
   '/portefolio': typeof PortefolioRoute
   '/restaurantes': typeof RestaurantesRoute
+  '/servicos': typeof ServicosRoute
+  '/sobre': typeof SobreRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/analisar': typeof AuthenticatedAnalisarRoute
   '/_authenticated/arquivos': typeof AuthenticatedArquivosRoute
+  '/_authenticated/controlo-ceo': typeof AuthenticatedControloCeoRoute
   '/_authenticated/definicoes': typeof AuthenticatedDefinicoesRoute
+  '/_authenticated/descobrir': typeof AuthenticatedDescobrirRoute
+  '/_authenticated/direcao': typeof AuthenticatedDirecaoRoute
   '/_authenticated/emails': typeof AuthenticatedEmailsRoute
   '/_authenticated/equipa': typeof AuthenticatedEquipaRoute
   '/_authenticated/hub': typeof AuthenticatedHubRoute
+  '/_authenticated/operacoes': typeof AuthenticatedOperacoesRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/pedidos': typeof AuthenticatedPedidosRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
@@ -439,6 +530,7 @@ export interface FileRoutesById {
   '/fr/contact': typeof FrContactRoute
   '/fr/portfolio': typeof FrPortfolioRoute
   '/fr/restaurants': typeof FrRestaurantsRoute
+  '/projetos/$slug': typeof ProjetosSlugRoute
   '/satisfacao/$token': typeof SatisfacaoTokenRoute
   '/de/': typeof DeIndexRoute
   '/en/': typeof EnIndexRoute
@@ -463,14 +555,23 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/contacto'
+    | '/demo-restaurantes'
+    | '/nws-restaurantes-interativo'
     | '/portefolio'
     | '/restaurantes'
+    | '/servicos'
+    | '/sobre'
     | '/admin'
+    | '/analisar'
     | '/arquivos'
+    | '/controlo-ceo'
     | '/definicoes'
+    | '/descobrir'
+    | '/direcao'
     | '/emails'
     | '/equipa'
     | '/hub'
+    | '/operacoes'
     | '/painel'
     | '/pedidos'
     | '/pipeline'
@@ -490,6 +591,7 @@ export interface FileRouteTypes {
     | '/fr/contact'
     | '/fr/portfolio'
     | '/fr/restaurants'
+    | '/projetos/$slug'
     | '/satisfacao/$token'
     | '/de/'
     | '/en/'
@@ -512,14 +614,23 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/contacto'
+    | '/demo-restaurantes'
+    | '/nws-restaurantes-interativo'
     | '/portefolio'
     | '/restaurantes'
+    | '/servicos'
+    | '/sobre'
     | '/admin'
+    | '/analisar'
     | '/arquivos'
+    | '/controlo-ceo'
     | '/definicoes'
+    | '/descobrir'
+    | '/direcao'
     | '/emails'
     | '/equipa'
     | '/hub'
+    | '/operacoes'
     | '/painel'
     | '/pedidos'
     | '/pipeline'
@@ -539,6 +650,7 @@ export interface FileRouteTypes {
     | '/fr/contact'
     | '/fr/portfolio'
     | '/fr/restaurants'
+    | '/projetos/$slug'
     | '/satisfacao/$token'
     | '/de'
     | '/en'
@@ -561,14 +673,23 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/contacto'
+    | '/demo-restaurantes'
+    | '/nws-restaurantes-interativo'
     | '/portefolio'
     | '/restaurantes'
+    | '/servicos'
+    | '/sobre'
     | '/_authenticated/admin'
+    | '/_authenticated/analisar'
     | '/_authenticated/arquivos'
+    | '/_authenticated/controlo-ceo'
     | '/_authenticated/definicoes'
+    | '/_authenticated/descobrir'
+    | '/_authenticated/direcao'
     | '/_authenticated/emails'
     | '/_authenticated/equipa'
     | '/_authenticated/hub'
+    | '/_authenticated/operacoes'
     | '/_authenticated/painel'
     | '/_authenticated/pedidos'
     | '/_authenticated/pipeline'
@@ -588,6 +709,7 @@ export interface FileRouteTypes {
     | '/fr/contact'
     | '/fr/portfolio'
     | '/fr/restaurants'
+    | '/projetos/$slug'
     | '/satisfacao/$token'
     | '/de/'
     | '/en/'
@@ -612,8 +734,12 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ContactoRoute: typeof ContactoRoute
+  DemoRestaurantesRoute: typeof DemoRestaurantesRoute
+  NwsRestaurantesInterativoRoute: typeof NwsRestaurantesInterativoRoute
   PortefolioRoute: typeof PortefolioRoute
   RestaurantesRoute: typeof RestaurantesRoute
+  ServicosRoute: typeof ServicosRoute
+  SobreRoute: typeof SobreRoute
   DeContactRoute: typeof DeContactRoute
   DePortfolioRoute: typeof DePortfolioRoute
   DeRestaurantsRoute: typeof DeRestaurantsRoute
@@ -626,6 +752,7 @@ export interface RootRouteChildren {
   FrContactRoute: typeof FrContactRoute
   FrPortfolioRoute: typeof FrPortfolioRoute
   FrRestaurantsRoute: typeof FrRestaurantsRoute
+  ProjetosSlugRoute: typeof ProjetosSlugRoute
   SatisfacaoTokenRoute: typeof SatisfacaoTokenRoute
   DeIndexRoute: typeof DeIndexRoute
   EnIndexRoute: typeof EnIndexRoute
@@ -663,6 +790,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/demo-restaurantes': {
+      id: '/demo-restaurantes'
+      path: '/demo-restaurantes'
+      fullPath: '/demo-restaurantes'
+      preLoaderRoute: typeof DemoRestaurantesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nws-restaurantes-interativo': {
+      id: '/nws-restaurantes-interativo'
+      path: '/nws-restaurantes-interativo'
+      fullPath: '/nws-restaurantes-interativo'
+      preLoaderRoute: typeof NwsRestaurantesInterativoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portefolio': {
       id: '/portefolio'
       path: '/portefolio'
@@ -677,11 +818,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RestaurantesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/servicos': {
+      id: '/servicos'
+      path: '/servicos'
+      fullPath: '/servicos'
+      preLoaderRoute: typeof ServicosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analisar': {
+      id: '/_authenticated/analisar'
+      path: '/analisar'
+      fullPath: '/analisar'
+      preLoaderRoute: typeof AuthenticatedAnalisarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/arquivos': {
@@ -691,11 +853,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedArquivosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/controlo-ceo': {
+      id: '/_authenticated/controlo-ceo'
+      path: '/controlo-ceo'
+      fullPath: '/controlo-ceo'
+      preLoaderRoute: typeof AuthenticatedControloCeoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/definicoes': {
       id: '/_authenticated/definicoes'
       path: '/definicoes'
       fullPath: '/definicoes'
       preLoaderRoute: typeof AuthenticatedDefinicoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/descobrir': {
+      id: '/_authenticated/descobrir'
+      path: '/descobrir'
+      fullPath: '/descobrir'
+      preLoaderRoute: typeof AuthenticatedDescobrirRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/direcao': {
+      id: '/_authenticated/direcao'
+      path: '/direcao'
+      fullPath: '/direcao'
+      preLoaderRoute: typeof AuthenticatedDirecaoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/emails': {
@@ -717,6 +900,13 @@ declare module '@tanstack/react-router' {
       path: '/hub'
       fullPath: '/hub'
       preLoaderRoute: typeof AuthenticatedHubRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/operacoes': {
+      id: '/_authenticated/operacoes'
+      path: '/operacoes'
+      fullPath: '/operacoes'
+      preLoaderRoute: typeof AuthenticatedOperacoesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/painel': {
@@ -880,6 +1070,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrRestaurantsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projetos/$slug': {
+      id: '/projetos/$slug'
+      path: '/projetos/$slug'
+      fullPath: '/projetos/$slug'
+      preLoaderRoute: typeof ProjetosSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/satisfacao/$token': {
       id: '/satisfacao/$token'
       path: '/satisfacao/$token'
@@ -1012,11 +1209,16 @@ const AuthenticatedProdutosRestaurantesRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAnalisarRoute: typeof AuthenticatedAnalisarRoute
   AuthenticatedArquivosRoute: typeof AuthenticatedArquivosRoute
+  AuthenticatedControloCeoRoute: typeof AuthenticatedControloCeoRoute
   AuthenticatedDefinicoesRoute: typeof AuthenticatedDefinicoesRoute
+  AuthenticatedDescobrirRoute: typeof AuthenticatedDescobrirRoute
+  AuthenticatedDirecaoRoute: typeof AuthenticatedDirecaoRoute
   AuthenticatedEmailsRoute: typeof AuthenticatedEmailsRoute
   AuthenticatedEquipaRoute: typeof AuthenticatedEquipaRoute
   AuthenticatedHubRoute: typeof AuthenticatedHubRoute
+  AuthenticatedOperacoesRoute: typeof AuthenticatedOperacoesRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedPedidosRoute: typeof AuthenticatedPedidosRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
@@ -1032,11 +1234,16 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAnalisarRoute: AuthenticatedAnalisarRoute,
   AuthenticatedArquivosRoute: AuthenticatedArquivosRoute,
+  AuthenticatedControloCeoRoute: AuthenticatedControloCeoRoute,
   AuthenticatedDefinicoesRoute: AuthenticatedDefinicoesRoute,
+  AuthenticatedDescobrirRoute: AuthenticatedDescobrirRoute,
+  AuthenticatedDirecaoRoute: AuthenticatedDirecaoRoute,
   AuthenticatedEmailsRoute: AuthenticatedEmailsRoute,
   AuthenticatedEquipaRoute: AuthenticatedEquipaRoute,
   AuthenticatedHubRoute: AuthenticatedHubRoute,
+  AuthenticatedOperacoesRoute: AuthenticatedOperacoesRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedPedidosRoute: AuthenticatedPedidosRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
@@ -1059,8 +1266,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ContactoRoute: ContactoRoute,
+  DemoRestaurantesRoute: DemoRestaurantesRoute,
+  NwsRestaurantesInterativoRoute: NwsRestaurantesInterativoRoute,
   PortefolioRoute: PortefolioRoute,
   RestaurantesRoute: RestaurantesRoute,
+  ServicosRoute: ServicosRoute,
+  SobreRoute: SobreRoute,
   DeContactRoute: DeContactRoute,
   DePortfolioRoute: DePortfolioRoute,
   DeRestaurantsRoute: DeRestaurantsRoute,
@@ -1073,6 +1284,7 @@ const rootRouteChildren: RootRouteChildren = {
   FrContactRoute: FrContactRoute,
   FrPortfolioRoute: FrPortfolioRoute,
   FrRestaurantsRoute: FrRestaurantsRoute,
+  ProjetosSlugRoute: ProjetosSlugRoute,
   SatisfacaoTokenRoute: SatisfacaoTokenRoute,
   DeIndexRoute: DeIndexRoute,
   EnIndexRoute: EnIndexRoute,
