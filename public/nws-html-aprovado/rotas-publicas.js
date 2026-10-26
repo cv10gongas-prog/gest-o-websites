@@ -4,7 +4,7 @@
  'use strict';
  if(window.parent!==window)return;
  const prefix='/nws-html-aprovado/';
- const paths={"index.html":"/","trabalhos.html":"/portefolio","servicos.html":"/servicos","restaurantes.html":"/restaurantes","sobre.html":"/sobre","projetos/vinilart.html":"/projetos/vinilart","projetos/vinilart-sport.html":"/projetos/vinilart-sport","projetos/gespool.html":"/projetos/gespool","projetos/31-janeiro.html":"/projetos/31-janeiro","projetos/radio-alcabideche.html":"/projetos/radio-alcabideche","contacto.html":"/contacto"};
+ const paths={"index.html":"/","trabalhos.html":"/portefolio","servicos.html":"/servicos","restaurantes.html":"/restaurantes","sobre.html":"/sobre","projetos/vinilart.html":"/projetos/vinilart","projetos/vinilart-sport.html":"/projetos/vinilart-sport","projetos/gespool.html":"/projetos/gespool","projetos/31-janeiro.html":"/projetos/31-janeiro","projetos/radio-alcabideche.html":"/projetos/radio-alcabideche","projetos/rj-producoes.html":"/projetos/rj-producoes","contacto.html":"/contacto"};
  document.addEventListener('click',event=>{
    const a=event.target?.closest?.('a[href]');
    if(!a||event.defaultPrevented||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||a.hasAttribute('download')||a.target==='_blank')return;

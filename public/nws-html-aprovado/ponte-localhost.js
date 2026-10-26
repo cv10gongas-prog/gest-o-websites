@@ -8,7 +8,8 @@
     'projetos/vinilart-sport.html':'/projetos/vinilart-sport',
     'projetos/gespool.html':'/projetos/gespool',
     'projetos/31-janeiro.html':'/projetos/31-janeiro',
-    'projetos/radio-alcabideche.html':'/projetos/radio-alcabideche'
+    'projetos/radio-alcabideche.html':'/projetos/radio-alcabideche',
+    'projetos/rj-producoes.html':'/projetos/rj-producoes'
   };
   // O HTML conserva os estilos e scripts originais: esta ponte só comunica com a rota React.
   if(window.parent===window) return;

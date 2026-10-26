@@ -19,7 +19,7 @@ export function NwsHtmlAprovado({ ficheiro }: { ficheiro: string }) {
       if (msg.type === "navigate") {
         const target = String(msg.path || "");
         const parsed = new URL(target, window.location.origin);
-        const routes = new Set(["/", "/portefolio", "/servicos", "/restaurantes", "/sobre", "/contacto", "/projetos/vinilart", "/projetos/vinilart-sport", "/projetos/gespool", "/projetos/31-janeiro", "/projetos/radio-alcabideche"]);
+        const routes = new Set(["/", "/portefolio", "/servicos", "/restaurantes", "/sobre", "/contacto", "/projetos/vinilart", "/projetos/vinilart-sport", "/projetos/gespool", "/projetos/31-janeiro", "/projetos/radio-alcabideche", "/projetos/rj-producoes"]);
         if (parsed.origin === location.origin && routes.has(parsed.pathname)) {
           window.location.assign(parsed.pathname + parsed.search + parsed.hash);
         }

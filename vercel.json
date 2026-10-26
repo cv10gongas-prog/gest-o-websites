@@ -42,6 +42,10 @@
       "destination": "/nws-html-aprovado/projetos/radio-alcabideche.html"
     },
     {
+      "source": "/projetos/rj-producoes",
+      "destination": "/nws-html-aprovado/projetos/rj-producoes.html"
+    },
+    {
       "source": "/privacidade",
       "destination": "/nws-html-aprovado/privacidade.html"
     },
