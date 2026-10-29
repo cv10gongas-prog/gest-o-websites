@@ -725,7 +725,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
             <div className="mt-5 flex items-center gap-3">
               {[
                 {
-                  href: "https://www.instagram.com/novaweb_studio.pt/",
+                  href: "https://www.instagram.com/novawebstudio.pt/",
                   label: "Nova Web Studio no Instagram",
                   icon: Instagram,
                 },

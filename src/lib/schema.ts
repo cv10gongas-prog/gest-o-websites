@@ -17,7 +17,7 @@ export function localBusinessSchema(locale: Locale) {
         email: "geral@novawebstudio.pt",
         telephone: "+351937642061",
         sameAs: [
-          "https://www.instagram.com/novaweb_studio.pt/",
+          "https://www.instagram.com/novawebstudio.pt/",
           "https://www.facebook.com/novawebstudio.pt",
           "https://www.linkedin.com/company/novawebstudiopt",
         ],

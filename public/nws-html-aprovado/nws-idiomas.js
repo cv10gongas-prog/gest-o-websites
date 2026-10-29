@@ -145,7 +145,7 @@ for(const link of document.querySelectorAll('a[href]')){let raw=link.getAttribut
       const row=document.createElement('div');
       row.className='nws-contact-socials-row';
       const links=[
-        {name:'Instagram',url:'https://www.instagram.com/novaweb_studio.pt/',icon:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>'},
+        {name:'Instagram',url:'https://www.instagram.com/novawebstudio.pt/',icon:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>'},
         {name:'Facebook',url:'https://www.facebook.com/novawebstudio.pt',icon:'<path d="M15 21v-8h3l.5-4H15V7.5c0-1.2.4-2 2-2h2V2.2C18.4 2 17.6 2 16.5 2 13.2 2 11 4 11 7.5V9H8v4h3v8"/>'},
         {name:'LinkedIn',url:'https://www.linkedin.com/company/novawebstudiopt',icon:'<rect x="2.5" y="2.5" width="19" height="19" rx="2"/><path d="M7 10v7M7 7.2v.2M11 17v-7h3v1.3c.5-.8 1.3-1.4 2.6-1.4 2 0 2.4 1.2 2.4 3.2V17"/>'}
       ];

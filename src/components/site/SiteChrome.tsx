@@ -15,7 +15,7 @@ const LEGAL_LABELS: Record<Locale, [string,string,string,string]> = {
 
 const SOCIAL_LINKS = [
   {
-    href: "https://www.instagram.com/novaweb_studio.pt/",
+    href: "https://www.instagram.com/novawebstudio.pt/",
     label: "Nova Web Studio no Instagram",
     icon: Instagram,
   },
